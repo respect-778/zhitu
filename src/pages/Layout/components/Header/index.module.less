@@ -1,0 +1,133 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Glassmorphism
+  background: var(--bg-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  :global(.dark) & {
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-decoration: none;
+
+    .img {
+      height: 50px;
+      width: auto;
+    }
+
+    .text {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--logo-color, #000);
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #1677ff 0%, #00b96b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .navItem {
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      color: var(--text-color, #333);
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: #1677ff;
+      }
+
+      :global(.dark) &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #1677ff;
+      }
+
+      &.active {
+        background: #e6f4ff;
+        color: #1677ff;
+
+        :global(.dark) & {
+          background: #111b26;
+        }
+      }
+    }
+  }
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  .dropdown {
+    color: var(--text-color);
+    cursor: pointer;
+  }
+
+  .actionBtn {
+    padding: 6px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: var(--text-color);
+
+    &:hover {
+      border-color: #1677ff;
+      color: #1677ff;
+      transform: translateY(-1px);
+    }
+  }
+
+  .primaryBtn {
+    background: #1677ff;
+    color: #fff;
+    border: none;
+
+    &:hover {
+      background: #4096ff;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+    }
+  }
+}

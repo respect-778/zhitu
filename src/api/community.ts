@@ -1,0 +1,46 @@
+import type { IContent } from "@/types/community";
+import httpInstance from "@/utils/http";
+
+// 获取帖子列表
+export const getCommunityListAPI = () => {
+  return httpInstance({
+    url: "/api/community/list",
+    method: "get"
+  })
+}
+
+// 搜索帖子
+export const searchCommunityAPI = (params: { keyword: string; pageNum?: number; pageSize?: number }) => {
+  return httpInstance({
+    url: "/api/community/search",
+    method: "get",
+    params
+  })
+}
+
+// 分页获取帖子
+export const getCommunityPageAPI = (params: { pageNum: number; pageSize: number; keyword?: string }) => {
+  return httpInstance({
+    url: "/api/community/page",
+    method: "get",
+    params
+  })
+}
+
+// 上传图片接口，后端返回正确的图片格式
+export const uploadImageAPI = (formData: FormData) => {
+  return httpInstance({
+    url: "/api/community/image",
+    method: "post",
+    data: formData,
+  })
+}
+
+// 发布帖子
+export const addCommunityAPI = (data: IContent) => {
+  return httpInstance({
+    url: "api/community/add",
+    method: 'post',
+    data
+  })
+}

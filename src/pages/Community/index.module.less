@@ -1,0 +1,583 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.left {
+  width: 15%;
+  padding: 20px 0px 20px 20px; // 上 右 下 左
+
+  .leftSidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .navCard {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    // 左侧边栏顶部
+    .input {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      background-color: transparent;
+      width: 100%;
+      height: 50px;
+      box-sizing: border-box;
+      padding-inline: 0.5em;
+      padding-block: 0.7em;
+      border: none;
+      border-bottom: var(--border-height) solid var(--border-before-color);
+      box-shadow: 0 2px 4px var(--border-color);
+    }
+
+    .inputBorder {
+      position: absolute;
+      background: var(--border-after-color);
+      width: 0%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      transition: width 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    .input:focus {
+      outline: none;
+    }
+
+    .input:focus+.inputBorder {
+      width: 100%;
+    }
+
+    .formControl {
+      position: relative;
+      --width-of-input: 300px;
+    }
+
+    .searchButton {
+      position: absolute;
+      right: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      padding: 8px;
+      font-size: 1.2rem;
+    }
+
+    .inputAlt {
+      font-size: 1.0rem;
+      padding-inline: 1em;
+      padding-block: 0.8em;
+      padding-right: 2.5rem;
+      box-shadow: 0 2px 4px var(--border-color);
+    }
+
+    .inputBorderAlt {
+      height: 3px;
+      background: linear-gradient(90deg, #FF6464 0%, #FFBF59 50%, #47C9FF 100%);
+      transition: width 0.4s cubic-bezier(0.42, 0, 0.58, 1.00);
+    }
+
+    .inputAlt:focus+.inputBorderAlt {
+      width: 100%;
+    }
+
+    .navBar {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .navItem {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+        color: var(--text-color);
+      }
+
+      &.active {
+        background: rgba(22, 119, 255, 0.08);
+        color: var(--primary-color);
+        font-weight: 600;
+
+        [data-theme='dark'] & {
+          background: rgba(10, 132, 255, 0.15);
+        }
+      }
+    }
+
+    // 左侧边栏-热门关键词部分
+    .navKeyword {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .navKey {
+      background: rgba(22, 119, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--primary-color);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+
+      &:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+      }
+    }
+  }
+
+  // 每日一句卡片
+  .dailyCard {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    color: #555;
+
+    .dailyTitle {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dailyContent {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      font-style: italic;
+      color: #444;
+    }
+
+    .dailyAuthor {
+      text-align: right;
+      font-size: 0.8rem;
+      margin-top: 8px;
+      color: #666;
+    }
+
+    // 装饰背景
+    &::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      font-size: 100px;
+      font-family: serif;
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+    }
+  }
+}
+
+.middle {
+  width: 60%; // Adjusted width
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+
+  .middleTop {
+    display: none; // Post button moved
+  }
+
+  // 帖子卡片
+  .feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .cardSty {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px; // Consistent radius
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--text-color);
+
+    // 卡片头部（头像、名字、时间）
+    .cardTop {
+      display: flex;
+      justify-items: flex-start;
+      align-items: center;
+      gap: 16px;
+
+      .cardAvatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #fff;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .userInfo {
+        flex: 1;
+
+        .cardName {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--text-color);
+          margin-bottom: 2px;
+        }
+
+        .cardTime {
+          font-size: 0.8rem;
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    // 卡片中间（内容）
+    .cardMiddle {
+      color: var(--text-color);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    // 卡片底部（喜欢、评论、收藏）
+    .cardBottom {
+      display: flex;
+      gap: 30px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+
+      >div {
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        padding: 4px 8px;
+        border-radius: 6px;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.03);
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+.right {
+  width: 20%;
+  padding: 20px 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  // 通用卡片样式
+  .rightCard {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+
+    .cardHeader {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  // 用户资料卡片
+  .profileCard {
+    align-items: center;
+    text-align: center;
+
+    .profileAvatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      font-weight: bold;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(132, 250, 176, 0.4);
+    }
+
+    .profileName {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .profileBio {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .statsGrid {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-bottom: 20px;
+
+      .statItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .statValue {
+          font-weight: 700;
+          font-size: 1.1rem;
+          color: var(--text-color);
+        }
+
+        .statLabel {
+          font-size: 0.8rem;
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    // 移动过来的发帖按钮
+    .postBtn {
+      width: 100%;
+      background: linear-gradient(90deg, #4dc7d9 0%, #66a6ff 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(77, 199, 217, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 166, 255, 0.4);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      svg {
+        fill: currentColor;
+      }
+    }
+  }
+
+  // 公告栏
+  .noticeCard {
+    .noticeItem {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      transition: background 0.2s;
+      cursor: pointer;
+      margin-bottom: 5px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      .noticeIcon {
+        color: #FFBF59;
+        font-size: 1.2rem;
+        margin-top: 2px;
+      }
+
+      .noticeContent {
+        flex: 1;
+
+        .noticeTitle {
+          font-size: 0.9rem;
+          color: var(--text-color);
+          font-weight: 500;
+          margin-bottom: 2px;
+        }
+
+        .noticeTime {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  // 推荐话题/规则
+  .trendingCard {
+    .trendItem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .trendLeft {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .trendRank {
+          font-style: italic;
+          font-weight: 900;
+          color: #eee;
+          text-shadow: 1px 1px 0 #999;
+          font-size: 1.1rem;
+
+          &.top1 {
+            color: #FFD700;
+            text-shadow: 1px 1px 0 #d4af37;
+          }
+
+          &.top2 {
+            color: #C0C0C0;
+            text-shadow: 1px 1px 0 #a9a9a9;
+          }
+
+          &.top3 {
+            color: #CD7F32;
+            text-shadow: 1px 1px 0 #8b4513;
+          }
+        }
+
+        .trendName {
+          font-size: 0.9rem;
+          color: var(--text-color);
+          cursor: pointer;
+
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
+      }
+
+      .trendHot {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+    }
+  }
+}
+
+.pagination {
+
+  :global(.ant-pagination .ant-pagination-prev .ant-pagination-item-link svg),
+  :global(.ant-pagination .ant-pagination-next .ant-pagination-item-link svg) {
+    color: var(--text-color);
+    transition: color 0.2s ease;
+  }
+
+  :global(.ant-pagination .ant-pagination-prev .ant-pagination-item-link:hover svg),
+  :global(.ant-pagination .ant-pagination-next .ant-pagination-item-link:hover svg) {
+    color: var(--primary-color);
+  }
+
+  :global(.ant-pagination .ant-pagination-prev .ant-pagination-item-link:active svg),
+  :global(.ant-pagination .ant-pagination-next .ant-pagination-item-link:active svg) {
+    color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  :global(.ant-pagination .ant-pagination-item) {
+    background: transparent;
+    border: 1px solid var(--border-color, #d9d9d9);
+    border-radius: 8px;
+  }
+
+  :global(.ant-pagination .ant-pagination-item a) {
+    color: var(--text-color);
+    transition: all 0.2s ease;
+  }
+
+  :global(.ant-pagination .ant-pagination-item:hover) {
+    border-color: var(--primary-color);
+  }
+
+  :global(.ant-pagination .ant-pagination-item-active) {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  :global(.ant-pagination .ant-pagination-item-active a) {
+    color: white;
+    font-weight: 500;
+  }
+}
