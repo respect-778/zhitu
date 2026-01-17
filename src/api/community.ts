@@ -39,7 +39,7 @@ export const uploadImageAPI = (formData: FormData) => {
 // 发布帖子
 export const addCommunityAPI = (data: IContent) => {
   return httpInstance({
-    url: "api/community/add",
+    url: "/api/community/add",
     method: 'post',
     data
   })

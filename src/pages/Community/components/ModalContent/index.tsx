@@ -27,7 +27,7 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [videoList, setVideoList] = useState<UploadFile[]>([])
   const [linkValue, setLinkValue] = useState<string>('')
-  const [navType, setNavType] = useState<string>('image') // tab类型判断
+  const [navType, setNavType] = useState<string>('') // tab类型判断
   const [form] = useForm()
 
   const handleNavType = (type: string) => {
@@ -40,63 +40,88 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
   // 上传图片/视频/链接
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户信息，后续要用到
 
+  // 确定弹框
   const handleOk = async () => {
+    let flag = false // 判断是否发布了帖子
+
     await form.validateFields() // 校验表单
 
-    if (navType === 'image') {
-      if (fileList.length === 0) {
-        message.warning('请至少上传一张图片')
-        return
+    if (flag === false) {
+      // 如果选中图片，用户至少选择一张照片
+      if (navType === 'image') {
+        if (fileList.length === 0) {
+          message.warning('请至少上传一张图片')
+          return
+        }
+      }
+
+      // 对上传图片做处理
+      if (navType === 'image') {
+        // 上传图片到后端
+        const formData = new FormData()
+        fileList.forEach((file) => {
+          if (file.originFileObj) {
+            formData.append('files', file.originFileObj)
+          }
+        })
+
+        try {
+          // 第一步：上传图片给后端做处理
+          const imgs = await uploadImageAPI(formData)
+
+          // 第二步：发布帖子
+          const data: IContent = {
+            id: uuidv4(),
+            avatar: userInfo.data.photo,
+            name: userInfo.data.username,
+            time: formatDateTime(JSON.stringify(new Date())),
+            title: form.getFieldValue('title'),
+            content: form.getFieldValue('content'),
+            likes: 0,
+            comments: 0,
+            collection: 0,
+            photo: imgs.data.urls,
+          }
+
+          await addCommunityAPI(data) // 调用发布接口
+          flag = true
+        } catch (error) {
+          console.log(error)
+          message.error('发布失败')
+        }
       }
     }
 
-    if (navType === 'image') {
-      // 上传图片到后端
-      const formData = new FormData()
-      fileList.forEach((file) => {
-        if (file.originFileObj) {
-          formData.append('files', file.originFileObj)
-        }
-      })
-
-      try {
-        // 第一步：上传图片给后端做处理
-        const imgs = await uploadImageAPI(formData)
-        console.log(imgs)
-
-        // 第二步：发布帖子
-        const data: IContent = {
-          id: uuidv4(),
-          avatar: userInfo.data.photo,
-          name: userInfo.data.username,
-          time: formatDateTime(JSON.stringify(new Date())),
-          content: form.getFieldValue('content'),
-          likes: 0,
-          comments: 0,
-          collection: 0,
-          photo: imgs.data.urls,
-        }
-
-        const res = await addCommunityAPI(data) // 调用发布接口
-        console.log(res)
-
-        handlePageSize() // 刷新界面
-      } catch (error) {
-        console.log(error)
-        message.error('发布失败')
+    if (flag === false) {
+      // 当用户没有图片、视频、链接上传时
+      const data: IContent = {
+        id: uuidv4(),
+        avatar: userInfo.data.photo,
+        name: userInfo.data.username,
+        time: formatDateTime(JSON.stringify(new Date())),
+        title: form.getFieldValue('title'),
+        content: form.getFieldValue('content'),
+        likes: 0,
+        comments: 0,
+        collection: 0,
       }
+
+      await addCommunityAPI(data) // 调用发布接口
+      message.success('发布成功')
     }
 
+    handlePageSize() // 刷新界面
     form.resetFields() // 重置
     setFileList([]) // 滞空图片列表
+    setNavType('') // 清空选中类型
     handleOpen() // 关闭弹框
   };
 
+  // 取消弹框
   const handleCancel = () => {
-
-    console.log(userInfo)
     form.resetFields() // 重置
     setFileList([]) // 滞空图片列表
+    setNavType('') // 清空选中类型
     handleOpen() // 关闭弹框
   };
 
@@ -163,32 +188,46 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
           </div>
           {/* 表单 */}
           <Form form={form} layout="vertical">
+            {/* 标题 */}
+            <Form.Item name="title" rules={[{ required: true, message: '标题不能为空哟！' }]}>
+              <Input placeholder="起一个响亮的标题！"></Input>
+            </Form.Item>
+            {/* 内容 */}
             <Form.Item name="content" rules={[{ required: true, message: '分享不能为空哟！' }]}>
               <Input.TextArea
                 placeholder="分享您的成神之路..."
                 autoSize={{ minRows: 4, maxRows: 8 }}
-                className={styles.customTextArea}
+              // className={styles.customTextArea}
               />
             </Form.Item>
-
+            {/* 图片/视频/链接 */}
             {navType === 'image' && (
-              <Form.Item name='image'>
-                <div className={styles.uploadArea}>
-                  <Upload
-                    listType="picture-card"
-                    fileList={fileList}
-                    onChange={({ fileList }) => setFileList(fileList)}
-                    beforeUpload={beforeUploadImage}
-                  >
-                    {fileList.length >= 9 ? null : (
-                      <div className={styles.uploadButton}>
-                        <div className={styles.icon}><PlusOutlined /></div>
-                        <div className={styles.text}>上传图片</div>
-                      </div>
-                    )}
-                  </Upload>
-                </div>
-              </Form.Item>
+              <div>
+                <Form.Item name='image'>
+                  <div className={styles.uploadArea}>
+                    <Upload
+                      listType="picture-card"
+                      fileList={fileList}
+                      onChange={({ fileList }) => setFileList(fileList)}
+                      beforeUpload={beforeUploadImage}
+                    >
+                      {/* 选择文章封面 */}
+                      {/* {fileList.length === 0 &&
+                        <div>
+
+                        </div>} */}
+                      {/* 最多只能上传五张图片 */}
+                      {fileList.length >= 5 ? null : (
+                        <div className={styles.uploadButton}>
+                          <div className={styles.icon}><PlusOutlined /></div>
+                          <div className={styles.text}>上传图片</div>
+                        </div>
+                      )}
+                    </Upload>
+                  </div>
+                </Form.Item>
+                <div style={{ color: 'rgb(199, 199, 201)' }}>{fileList.length}/5 张图片，最多上传5张</div>
+              </div>
             )}
             {navType === 'video' && (
               <Form.Item name='video'>

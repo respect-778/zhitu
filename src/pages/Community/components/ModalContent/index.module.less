@@ -8,7 +8,7 @@
 .navBar {
   display: flex;
   justify-content: center;
-  background-color: var(--bg-secondary);
+  background-color: #f5f5f7;
   padding: 4px;
   border-radius: 12px;
   width: fit-content;
@@ -22,23 +22,23 @@
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: #86868b;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      color: var(--text-color);
+      color: #1d1d1f;
       background-color: rgba(0, 0, 0, 0.05);
     }
   }
 
   .activeNav {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: #ffffff;
+    color: #1d1d1f;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
     &:hover {
-      background-color: var(--bg-color);
+      background-color: #ffffff;
     }
   }
 }
@@ -70,9 +70,9 @@
   color: var(--text-secondary);
 
   .icon {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 8px;
-    color: var(--primary-color);
+    color: #1d1d1f;
   }
 
   .text {
@@ -83,31 +83,11 @@
 .customInput {
   border-radius: 12px;
   padding: 12px;
-  background-color: var(--bg-secondary);
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
-
-  &:hover,
-  &:focus {
-    background-color: var(--bg-color);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
-  }
 }
 
 .customTextArea {
   border-radius: 16px;
   padding: 16px;
-  background-color: var(--bg-secondary);
-  border: 1px solid transparent;
   resize: none;
   font-size: 15px;
-  transition: all 0.3s ease;
-
-  &:hover,
-  &:focus {
-    background-color: var(--bg-color);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
-  }
 }

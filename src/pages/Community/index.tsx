@@ -13,7 +13,7 @@ const Community = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 弹框状态
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
-  const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: 5, total: 0 }) // 分页
+  const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: 3, total: 0 }) // 分页
 
   // 左侧侧边栏
   const navItems: INavItems[] = [
@@ -158,10 +158,16 @@ const Community = () => {
                       </div>
                     </div>
                     <div className={styles.cardMiddle}>
-                      <div>{item.content}</div>
-                      <div>{item.photo || ''}</div>
-                      <div>{item.video || ''}</div>
-                      <div>{item.link || ''}</div>
+                      <div className={styles.tc}>
+                        <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
+                        <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
+                      </div>
+                      {item.photo ?
+                        <div className={styles.photoContainer}>
+                          <img src={item.photo[0]} alt="" className={styles.photo} />
+                        </div> : ''}
+                      {item.video ? <div>{item.video || ''}</div> : ''}
+                      {item.link ? <div>{item.link || ''}</div> : ''}
                     </div>
                     <div className={styles.cardBottom}>
                       <div> <HeartOutlined /> {item.likes}</div>

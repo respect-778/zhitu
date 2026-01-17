@@ -17,6 +17,7 @@ export interface IContent {
   avatar: string
   name: string
   time: string
+  title: string
   content: string
   likes: number
   comments: number
