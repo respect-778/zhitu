@@ -71,7 +71,6 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
 
           // 第二步：发布帖子
           const data: IContent = {
-            id: uuidv4(),
             avatar: userInfo.data.photo,
             name: userInfo.data.username,
             time: formatDateTime(JSON.stringify(new Date())),
@@ -95,7 +94,6 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
     if (flag === false) {
       // 当用户没有图片、视频、链接上传时
       const data: IContent = {
-        id: uuidv4(),
         avatar: userInfo.data.photo,
         name: userInfo.data.username,
         time: formatDateTime(JSON.stringify(new Date())),
@@ -190,76 +188,92 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
           <Form form={form} layout="vertical">
             {/* 标题 */}
             <Form.Item name="title" rules={[{ required: true, message: '标题不能为空哟！' }]}>
-              <Input placeholder="起一个响亮的标题！"></Input>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ width: '40px' }}>标题:</div>
+                <Input placeholder="起一个响亮的标题！"></Input>
+              </div>
             </Form.Item>
             {/* 内容 */}
             <Form.Item name="content" rules={[{ required: true, message: '分享不能为空哟！' }]}>
-              <Input.TextArea
-                placeholder="分享您的成神之路..."
-                autoSize={{ minRows: 4, maxRows: 8 }}
-              // className={styles.customTextArea}
-              />
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ width: '40px' }}>内容:</div>
+                <Input.TextArea
+                  placeholder="分享您的成神之路..."
+                  autoSize={{ minRows: 4, maxRows: 8 }}
+                />
+              </div>
             </Form.Item>
             {/* 图片/视频/链接 */}
             {navType === 'image' && (
               <div>
                 <Form.Item name='image'>
                   <div className={styles.uploadArea}>
-                    <Upload
-                      listType="picture-card"
-                      fileList={fileList}
-                      onChange={({ fileList }) => setFileList(fileList)}
-                      beforeUpload={beforeUploadImage}
-                    >
-                      {/* 选择文章封面 */}
-                      {/* {fileList.length === 0 &&
-                        <div>
-
-                        </div>} */}
-                      {/* 最多只能上传五张图片 */}
-                      {fileList.length >= 5 ? null : (
-                        <div className={styles.uploadButton}>
-                          <div className={styles.icon}><PlusOutlined /></div>
-                          <div className={styles.text}>上传图片</div>
-                        </div>
-                      )}
-                    </Upload>
+                    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                      <div style={{ width: '40px' }}>图片:</div>
+                      <Upload
+                        listType="picture-card"
+                        fileList={fileList}
+                        onChange={({ fileList }) => setFileList(fileList)}
+                        beforeUpload={beforeUploadImage}
+                      >
+                        {/* 将第一张照片作为封面 */}
+                        {fileList.length === 0 ? (
+                          <div className={styles.uploadButton}>
+                            <div className={styles.icon}><PlusOutlined /></div>
+                            <div className={styles.text}>选择封面</div>
+                          </div>
+                        ) : null}
+                        {/* 最多只能上传五张图片 */}
+                        {fileList.length <= 5 && fileList.length !== 0 ? (
+                          <div className={styles.uploadButton}>
+                            <div className={styles.icon}><PlusOutlined /></div>
+                            <div className={styles.text}>上传图片</div>
+                          </div>
+                        ) : null}
+                      </Upload>
+                    </div>
                   </div>
                 </Form.Item>
-                <div style={{ color: 'rgb(199, 199, 201)' }}>{fileList.length}/5 张图片，最多上传5张</div>
+                <div style={{ color: 'rgb(199, 199, 201)' }}>{fileList.length}/5 张图片，最多上传5张，第一张图片将作为封面哟！</div>
               </div>
             )}
             {navType === 'video' && (
               <Form.Item name='video'>
                 <div className={styles.uploadArea}>
-                  <Upload
-                    accept=".mp4,.mov"
-                    listType="picture-card"
-                    fileList={videoList}
-                    onChange={({ fileList }) => setVideoList(fileList)}
-                    beforeUpload={beforeUploadVideo}
-                    maxCount={1}
-                  >
-                    {videoList.length >= 1 ? null : (
-                      <div className={styles.uploadButton}>
-                        <div className={styles.icon}><PlusOutlined /></div>
-                        <div className={styles.text}>上传视频</div>
-                      </div>
-                    )}
-                  </Upload>
+                  <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                    <div style={{ width: '40px' }}>视频:</div>
+                    <Upload
+                      accept=".mp4,.mov"
+                      listType="picture-card"
+                      fileList={videoList}
+                      onChange={({ fileList }) => setVideoList(fileList)}
+                      beforeUpload={beforeUploadVideo}
+                      maxCount={1}
+                    >
+                      {videoList.length >= 1 ? null : (
+                        <div className={styles.uploadButton}>
+                          <div className={styles.icon}><PlusOutlined /></div>
+                          <div className={styles.text}>上传视频</div>
+                        </div>
+                      )}
+                    </Upload>
+                  </div>
                 </div>
               </Form.Item>
             )}
             {navType === 'link' && (
               <Form.Item name='link' rules={[{ required: true, message: '链接不能为空' }]}>
-                <Input
-                  prefix={<LinkOutlined style={{ color: 'var(--text-secondary)' }} />}
-                  placeholder="请输入要分享的链接地址"
-                  value={linkValue}
-                  onChange={e => setLinkValue(e.target.value)}
-                  className={styles.customInput}
-                  size="large"
-                />
+                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <div style={{ width: '40px' }}>链接:</div>
+                  <Input
+                    prefix={<LinkOutlined style={{ color: 'var(--text-secondary)' }} />}
+                    placeholder="请输入要分享的链接地址"
+                    value={linkValue}
+                    onChange={e => setLinkValue(e.target.value)}
+                    className={styles.customInput}
+                    size="large"
+                  />
+                </div>
               </Form.Item>
             )}
           </Form>

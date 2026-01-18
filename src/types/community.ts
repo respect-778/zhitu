@@ -13,7 +13,7 @@ export interface IHotkeyword {
 
 // 帖子类型
 export interface IContent {
-  id: string
+  id?: number
   avatar: string
   name: string
   time: string

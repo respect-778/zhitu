@@ -86,6 +86,11 @@ const Community = () => {
     setContent(res.data.list)
   }
 
+  // 进入详情页
+  const handleDetail = (id: number) => {
+    window.open(`/community/${id}`, '_blank')
+  }
+
   useEffect(() => {
     handlePageSize(1, pageParams.pageSize)
   }, [pageParams.pageSize])
@@ -150,24 +155,26 @@ const Community = () => {
               return (
                 <div key={item.id} className={styles.cardSty}>
                   <div className={styles.content}>
-                    <div className={styles.cardTop}>
-                      <div className={styles.cardAvatar}>{item.avatar}</div>
-                      <div className={styles.userInfo}>
-                        <div className={styles.cardName}>{item.name}</div>
-                        <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
+                    <div onClick={() => handleDetail(item.id!)}>
+                      <div className={styles.cardTop}>
+                        <div className={styles.cardAvatar}>{item.avatar}</div>
+                        <div className={styles.userInfo}>
+                          <div className={styles.cardName}>{item.name}</div>
+                          <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className={styles.cardMiddle}>
-                      <div className={styles.tc}>
-                        <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
-                        <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
+                      <div className={styles.cardMiddle}>
+                        <div className={styles.tc}>
+                          <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
+                          <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
+                        </div>
+                        {item.photo ?
+                          <div className={styles.photoContainer}>
+                            <img src={item.photo[0]} alt="" className={styles.photo} />
+                          </div> : ''}
+                        {item.video ? <div>{item.video || ''}</div> : ''}
+                        {item.link ? <div>{item.link || ''}</div> : ''}
                       </div>
-                      {item.photo ?
-                        <div className={styles.photoContainer}>
-                          <img src={item.photo[0]} alt="" className={styles.photo} />
-                        </div> : ''}
-                      {item.video ? <div>{item.video || ''}</div> : ''}
-                      {item.link ? <div>{item.link || ''}</div> : ''}
                     </div>
                     <div className={styles.cardBottom}>
                       <div> <HeartOutlined /> {item.likes}</div>

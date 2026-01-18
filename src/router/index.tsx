@@ -6,12 +6,15 @@ import Welcome from "@/pages/Welcome";
 import Path from "@/pages/Path";
 import Community from "@/pages/Community";
 import AI from "@/pages/AI";
+import DetailContent from "@/pages/Community/components/DetailContent";
 
 const router = createBrowserRouter([
+  // 一级路由
   {
     path: '/',
     element: <Layout />,
     children: [
+      // 二级路由
       {
         index: true,
         element: <Welcome />
@@ -33,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/community/:id',
+    element: <DetailContent />
   },
   {
     path: '*',

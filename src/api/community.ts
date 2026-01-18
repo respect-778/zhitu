@@ -27,6 +27,14 @@ export const getCommunityPageAPI = (params: { pageNum: number; pageSize: number;
   })
 }
 
+// 根据 id 获取帖子数据
+export const getCommunityByIdAPI = (id: number) => {
+  return httpInstance({
+    url: `/api/community/:${id}`,
+    method: 'get'
+  })
+}
+
 // 上传图片接口，后端返回正确的图片格式
 export const uploadImageAPI = (formData: FormData) => {
   return httpInstance({
