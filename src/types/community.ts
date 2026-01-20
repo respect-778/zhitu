@@ -25,6 +25,8 @@ export interface IContent {
   photo?: string[]
   video?: string[]
   link?: string[]
+  isLiked: boolean
+  isCollected: boolean
 }
 
 // 搜索参数

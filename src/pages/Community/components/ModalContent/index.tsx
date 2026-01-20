@@ -8,7 +8,6 @@ import { useForm } from "antd/es/form/Form"
 import { addCommunityAPI, uploadImageAPI } from "@/api/community"
 import { useAppSelector } from "@/store/hooks"
 import { formatDateTime } from "@/utils/formatDateTime"
-import { v4 as uuidv4 } from 'uuid';
 
 interface IModal {
   isModalOpen: boolean
@@ -80,6 +79,8 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
             comments: 0,
             collection: 0,
             photo: imgs.data.urls,
+            isLiked: false,
+            isCollected: false
           }
 
           await addCommunityAPI(data) // 调用发布接口
@@ -102,6 +103,8 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
         likes: 0,
         comments: 0,
         collection: 0,
+        isLiked: false,
+        isCollected: false
       }
 
       await addCommunityAPI(data) // 调用发布接口

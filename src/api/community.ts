@@ -30,7 +30,7 @@ export const getCommunityPageAPI = (params: { pageNum: number; pageSize: number;
 // 根据 id 获取帖子数据
 export const getCommunityByIdAPI = (id: number) => {
   return httpInstance({
-    url: `/api/community/:${id}`,
+    url: `/api/community/${id}`,
     method: 'get'
   })
 }
@@ -50,5 +50,29 @@ export const addCommunityAPI = (data: IContent) => {
     url: "/api/community/add",
     method: 'post',
     data
+  })
+}
+
+// 点赞接口
+export const likeCommunityAPI = (id: number, isLiked: boolean) => {
+  return httpInstance({
+    url: "/api/community/like",
+    method: 'get',
+    params: {
+      id,
+      isLiked
+    }
+  })
+}
+
+// 收藏接口
+export const collectedCommunityAPI = (id: number, isLiked: boolean) => {
+  return httpInstance({
+    url: "/api/community/collected",
+    method: 'get',
+    params: {
+      id,
+      isLiked
+    }
   })
 }

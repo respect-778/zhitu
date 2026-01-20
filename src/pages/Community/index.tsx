@@ -1,12 +1,13 @@
 import styles from './index.module.less'
 import type { IContent, IHotkeyword, INavItems } from '@/types/community'
-import { HeartOutlined, CommentOutlined, TagOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined } from '@ant-design/icons'
 import { Pagination, ConfigProvider } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import ModalContent from './components/ModalContent'
-import { getCommunityPageAPI, searchCommunityAPI } from '@/api/community';
+import { collectedCommunityAPI, getCommunityPageAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
+import { useNavigate } from 'react-router';
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<string>('recommend') // tab
@@ -30,7 +31,7 @@ const Community = () => {
     { id: 1, name: 'AI' },
     { id: 2, name: 'Agent' },
     { id: 3, name: '前端工程化' },
-    { id: 4, name: 'AGIC' },
+    { id: 4, name: 'AIGC' },
     { id: 5, name: 'langchain' },
     { id: 6, name: 'nextjs' }
   ]
@@ -87,8 +88,28 @@ const Community = () => {
   }
 
   // 进入详情页
+  const navigate = useNavigate()
   const handleDetail = (id: number) => {
-    window.open(`/community/${id}`, '_blank')
+    navigate(`/community/${id}`)
+  }
+
+  // 点击喜欢时触发
+  const handleLike = async (id: number, isLiked: boolean) => {
+    // 当后一个状态依赖前一个状态时，需要使用 pre => pre 这种形式
+    setContent(pre => pre.map(item =>
+      item.id === id ? { ...item, isLiked: !item.isLiked, likes: item.isLiked ? item.likes = item.likes - 1 : item.likes = item.likes + 1 } : item
+    ))
+
+    await likeCommunityAPI(id, isLiked) // 调用接口，提醒后端同步修改赞
+  }
+
+  // 点击收藏时触发
+  const handleCollection = async (id: number, isCollected: boolean) => {
+    setContent(pre => pre.map(item => {
+      return item.id === id ? { ...item, isCollected: !item.isCollected, collection: item.isCollected ? item.collection - 1 : item.collection + 1 } : item
+    }))
+
+    await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
   }
 
   useEffect(() => {
@@ -177,9 +198,15 @@ const Community = () => {
                       </div>
                     </div>
                     <div className={styles.cardBottom}>
-                      <div> <HeartOutlined /> {item.likes}</div>
-                      <div> <CommentOutlined /> {item.comments}</div>
-                      <div> <TagOutlined /> {item.collection}</div>
+                      <div className={`${styles.actionItem} ${item.isLiked ? styles.active : ''}`} onClick={() => handleLike(item.id!, item.isLiked)}>
+                        {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
+                        <span>{item.likes}</span>
+                      </div>
+                      <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
+                      <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
+                        {item.isCollected ? <StarFilled /> : <StarOutlined />}
+                        <span>{item.collection}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
