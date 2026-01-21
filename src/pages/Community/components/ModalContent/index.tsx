@@ -29,6 +29,7 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
   const [navType, setNavType] = useState<string>('') // tab类型判断
   const [form] = useForm()
 
+  // 处理发帖类型tab
   const handleNavType = (type: string) => {
     setNavType(type)
     setFileList([])
@@ -112,10 +113,7 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
     }
 
     handlePageSize() // 刷新界面
-    form.resetFields() // 重置
-    setFileList([]) // 滞空图片列表
-    setNavType('') // 清空选中类型
-    handleOpen() // 关闭弹框
+    handleCancel() // 重置
   };
 
   // 取消弹框

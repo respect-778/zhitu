@@ -5,9 +5,11 @@ import { Pagination, ConfigProvider } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import ModalContent from './components/ModalContent'
-import { collectedCommunityAPI, getCommunityPageAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
+import { collectedCommunityAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useNavigate } from 'react-router';
+import { useAppSelector } from '@/store/hooks';
+import { debounce } from 'lodash'
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<string>('recommend') // tab
@@ -15,6 +17,9 @@ const Community = () => {
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: 3, total: 0 }) // 分页
+
+  const userInfo = useAppSelector(state => state.user.userInfo)
+  console.log(userInfo)
 
   // 左侧侧边栏
   const navItems: INavItems[] = [
@@ -36,12 +41,13 @@ const Community = () => {
     { id: 6, name: 'nextjs' }
   ]
 
-  // Mock Data for Right Sidebar
+  // 右侧公告栏
   const notices = [
     { id: 1, title: '知途社区 1.2 版本更新公告', time: '2小时前' },
     { id: 2, title: '关于规范社区发帖的通知', time: '1天前' },
   ]
 
+  // 右侧热榜
   const trendings = [
     { id: 1, name: 'DeepSeek R1 发布', hot: '1.2w' },
     { id: 2, name: 'React 19 新特性', hot: '8.5k' },
@@ -77,7 +83,7 @@ const Community = () => {
 
   // 分页
   const handlePageSize = async (page: number, pageSize: number) => {
-    const res = await getCommunityPageAPI({ pageNum: page, pageSize })
+    const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
     setPageParams(pre => ({
       ...pre,
       pageNum: page,
@@ -127,7 +133,7 @@ const Community = () => {
             <div className={styles.formControl}>
               <input onChange={handleSearchChange} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
               <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
-              <button onClick={searchCommunity} className={styles.searchButton} type="submit">
+              <button onClick={debounce(searchCommunity, 300)} className={styles.searchButton} type="submit">
                 <SearchOutlined />
               </button>
             </div>
@@ -178,7 +184,7 @@ const Community = () => {
                   <div className={styles.content}>
                     <div onClick={() => handleDetail(item.id!)}>
                       <div className={styles.cardTop}>
-                        <div className={styles.cardAvatar}>{item.avatar}</div>
+                        <div><img src="/imgs/admin.png" alt="" className={styles.cardAvatar} /></div>
                         <div className={styles.userInfo}>
                           <div className={styles.cardName}>{item.name}</div>
                           <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
@@ -215,7 +221,7 @@ const Community = () => {
           }
         </div>
           :
-          <div>未找到对应的内容</div>
+          <div> </div>
         }
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className={styles.pagination}>
@@ -230,21 +236,21 @@ const Community = () => {
       <div className={styles.right}>
         {/* 用户个人资料 */}
         <div className={`${styles.rightCard} ${styles.profileCard}`}>
-          <div className={styles.profileAvatar}>A</div>
-          <div className={styles.profileName}>admin</div>
-          <div className={styles.profileBio}>知识改变世界💻</div>
+          <div className={styles.profileAvatar}><img style={{ width: '100%' }} src="/imgs/admin.png" alt="" /></div>
+          <div className={styles.profileName}>{userInfo.data.username}</div>
+          <div className={styles.profileBio}>知识改变世界</div>
 
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>12</span>
+              <span className={styles.statValue}>{userInfo.data.art_count}</span>
               <span className={styles.statLabel}>帖子</span>
             </div>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>34</span>
+              <span className={styles.statValue}>{userInfo.data.favorites_count}</span>
               <span className={styles.statLabel}>收藏</span>
             </div>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>89</span>
+              <span className={styles.statValue}>{userInfo.data.like_count}</span>
               <span className={styles.statLabel}>喜欢</span>
             </div>
           </div>

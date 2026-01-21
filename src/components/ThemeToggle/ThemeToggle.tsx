@@ -13,7 +13,6 @@ const ThemeToggle: React.FC = () => {
   const toggleTheme = () => {
     const newTheme = theme === 'default' ? 'dark' : 'default'
     setStore('data-theme', newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
     setTheme(newTheme)
   }
 

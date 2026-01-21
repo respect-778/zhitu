@@ -28,6 +28,10 @@ const router = createBrowserRouter([
         element: <Community />
       },
       {
+        path: '/community/:id',
+        element: <DetailContent />
+      },
+      {
         path: '/ai',
         element: <AI />
       }
@@ -36,10 +40,6 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />
-  },
-  {
-    path: '/community/:id',
-    element: <DetailContent />
   },
   {
     path: '*',

@@ -2,7 +2,7 @@ import type React from 'react'
 import { useEffect, useLayoutEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
-import { HomeOutlined, CompassOutlined, TeamOutlined, RobotOutlined, DownOutlined } from '@ant-design/icons'
+import { HomeOutlined, CompassOutlined, TeamOutlined, DownOutlined, CommentOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 import styles from './index.module.less'
@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     { key: '/', label: '首页', icon: <HomeOutlined /> },
     { key: '/path', label: '学习路线', icon: <CompassOutlined /> },
     { key: '/community', label: '道友圈', icon: <TeamOutlined /> },
-    { key: '/ai', label: 'AI辨析', icon: <RobotOutlined /> },
+    { key: '/ai', label: 'AI小助手', icon: <CommentOutlined /> },
   ]
 
 

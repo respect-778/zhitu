@@ -21,6 +21,12 @@ export interface IUserInfo {
     gender: number
     birthday: string
     degree: string
+    art_count: number // 发布帖子数量
+    fans_count: number // 粉丝数量
+    follow_count: number // 关注数量
+    like_count: number // 喜欢数量
+    community_count: number // 评论数量
+    favorites_count: number // 收藏数量
   }
   token: string
 }

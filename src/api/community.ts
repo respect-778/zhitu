@@ -9,19 +9,10 @@ export const getCommunityListAPI = () => {
   })
 }
 
-// 搜索帖子
-export const searchCommunityAPI = (params: { keyword: string; pageNum?: number; pageSize?: number }) => {
+// 搜索/分页接口
+export const searchCommunityAPI = (params: { pageNum: number; pageSize: number; keyword?: string }) => {
   return httpInstance({
     url: "/api/community/search",
-    method: "get",
-    params
-  })
-}
-
-// 分页获取帖子
-export const getCommunityPageAPI = (params: { pageNum: number; pageSize: number; keyword?: string }) => {
-  return httpInstance({
-    url: "/api/community/page",
     method: "get",
     params
   })

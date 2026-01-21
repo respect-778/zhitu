@@ -41,7 +41,7 @@ const Login: React.FC = () => {
             rules={[{ required: true, message: '请输入用户名！' }]}
           >
             <Input
-              prefix={<UserOutlined style={{ color: '#aaa', fontSize: 18 }} />}
+              prefix={<UserOutlined style={{ color: '#aaa', fontSize: 18, padding: '8px 5px' }} />}
               placeholder="输入用户名"
             />
           </Form.Item>
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
             rules={[{ required: true, message: '请输入密码！' }]}
           >
             <Input.Password
-              prefix={<LockOutlined style={{ color: '#aaa', fontSize: 18 }} />}
+              prefix={<LockOutlined style={{ color: '#aaa', fontSize: 18, padding: '8px 5px' }} />}
               placeholder="输入密码"
             />
           </Form.Item>
