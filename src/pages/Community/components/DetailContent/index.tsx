@@ -6,7 +6,6 @@ import type { IContent } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/api/community'
-import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取 url 参数
@@ -27,6 +26,7 @@ const DetailContent: React.FC = () => {
     isLiked: false,
     isCollected: false
   })
+  const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true)
 
   // 根据 id 获取对应帖子详情
@@ -58,6 +58,11 @@ const DetailContent: React.FC = () => {
     await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
   }
 
+  // 处理评论
+  const handleComment = () => {
+
+  }
+
   useEffect(() => {
     getCommunityById()
   }, [])
@@ -83,7 +88,6 @@ const DetailContent: React.FC = () => {
           <ArrowLeftOutlined />
           <span>返回社区</span>
         </div>
-        <ThemeToggle />
       </header>
 
       <main className={styles.container}>
@@ -136,13 +140,20 @@ const DetailContent: React.FC = () => {
 
           {/* 这里可以扩展评论列表 */}
           <section className={styles.commentsPlaceholder}>
-            <h3>评论 ({detail.comments})</h3>
-            {detail.comments === 0 ?
+            <h3>留言 {detail.comments}</h3>
+            <div className={styles.postComments}>
+              <div className={styles.authorAvatar}><img src="/imgs/admin.png" alt="作者" className={styles.avatar} /></div>
+              <div className={styles.inputMulti}>
+                <input type="text" placeholder='写留言' className={styles.inputComments} />
+              </div>
+              <div onClick={() => setIsComment(!isComment)} className={styles.commentsBtn}>发送</div>
+            </div>
+            {/* {detail.comments === 0 || isComment ? */}
+            {isComment ?
               <div className={styles.emptyCard}>
                 <div className={styles.emptyComments}>
                   快来发布你的第一条评论吧...
                 </div>
-                <div className={styles.commentsBtn}>评论</div>
               </div>
               :
               <div>11</div>
@@ -160,10 +171,6 @@ const DetailContent: React.FC = () => {
           {detail.isLiked ? <HeartFilled /> : <HeartOutlined />}
           <span>{detail.likes}</span>
         </div>
-        <div className={styles.actionItem}>
-          <CommentOutlined />
-          <span>{detail.comments}</span>
-        </div>
         <div
           className={`${styles.actionItem} ${detail.isCollected ? styles.active : ''}`}
           onClick={() => handleCollection(detail.id!, detail.isCollected)}
@@ -171,8 +178,12 @@ const DetailContent: React.FC = () => {
           {detail.isCollected ? <StarFilled /> : <StarOutlined />}
           <span>{detail.collection}</span>
         </div>
+        <div className={styles.actionItem}>
+          <CommentOutlined />
+          <span>{detail.comments}</span>
+        </div>
         <div className={styles.dividerSmall} />
-        <div className={styles.actionItem} onClick={() => message.success('链接已复制到剪贴板')}>
+        <div className={styles.actionItem} onClick={() => message.success('文章已复制到剪贴板')}>
           <ShareAltOutlined />
         </div>
       </aside>

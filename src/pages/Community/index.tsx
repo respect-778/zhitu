@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import ModalContent from './components/ModalContent'
 import { collectedCommunityAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useAppSelector } from '@/store/hooks';
 import { debounce } from 'lodash'
 
@@ -16,10 +16,14 @@ const Community = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 弹框状态
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
-  const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: 3, total: 0 }) // 分页
+  const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
+  const [pageParams, setPageParams] = useState(() => {
+    const search = searchParams.get('page') // 获取 page 参数
+    const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
+    return { pageNum, pageSize: 3, total: 0 }
+  }) // 分页
 
   const userInfo = useAppSelector(state => state.user.userInfo)
-  console.log(userInfo)
 
   // 左侧侧边栏
   const navItems: INavItems[] = [
@@ -91,6 +95,12 @@ const Community = () => {
       total: res.data.total
     }))
     setContent(res.data.list)
+
+    // setSearchParams 里会自动修改浏览器地址的查询字符串（内部自动使用了 ）
+    setSearchParams(pre => { // 把当前选中的页数给到 searchParams
+      pre.set('page', String(page))
+      return pre
+    }, { replace: true })
   }
 
   // 进入详情页
@@ -119,8 +129,8 @@ const Community = () => {
   }
 
   useEffect(() => {
-    handlePageSize(1, pageParams.pageSize)
-  }, [pageParams.pageSize])
+    handlePageSize(pageParams.pageNum, pageParams.pageSize)
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -208,11 +218,11 @@ const Community = () => {
                         {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
                         <span>{item.likes}</span>
                       </div>
-                      <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
                       <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
                         {item.isCollected ? <StarFilled /> : <StarOutlined />}
                         <span>{item.collection}</span>
                       </div>
+                      <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
                     </div>
                   </div>
                 </div>
