@@ -1,27 +1,29 @@
 import styles from './index.module.less'
-import type { IContent, IHotkeyword, INavItems } from '@/types/community'
+import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
 import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined } from '@ant-design/icons'
-import { Pagination, ConfigProvider } from 'antd'
+import { Pagination, ConfigProvider, Skeleton } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import ModalContent from './components/ModalContent'
-import { collectedCommunityAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
+import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useAppSelector } from '@/store/hooks';
 import { debounce } from 'lodash'
 
 const Community = () => {
-  const [activeTab, setActiveTab] = useState<string>('recommend') // tab
   const [isModalOpen, setIsModalOpen] = useState(false); // 弹框状态
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
+  const initialTab = searchParams.get('type') // 获取当前 url 查询参数
+  const [activeTab, setActiveTab] = useState<string>(initialTab || 'recommend') // tab
   const [pageParams, setPageParams] = useState(() => {
     const search = searchParams.get('page') // 获取 page 参数
     const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
     return { pageNum, pageSize: 3, total: 0 }
   }) // 分页
+  const [loading, setLoading] = useState(true)
 
   const userInfo = useAppSelector(state => state.user.userInfo)
 
@@ -63,6 +65,18 @@ const Community = () => {
     setIsModalOpen(!isModalOpen)
   }
 
+  // 左侧 nav
+  const handleNavBar = async (id: string) => {
+    setActiveTab(id)
+    if (id === 'recommend') {
+      handlePageSize(1, pageParams.pageSize, id)
+    } else if (id === 'hot') {
+      handlePageSize(1, pageParams.pageSize, id)
+    } else if (id === 'new') {
+      handlePageSize(1, pageParams.pageSize, id)
+    }
+  }
+
   // 获取输入框中的内容
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
@@ -72,7 +86,7 @@ const Community = () => {
   const searchCommunity = async () => {
     // 如果搜索框为空，重置为所有帖子列表
     if (!searchValue && searchValue.trim() === '') { // 判断搜索框中的值是否为空
-      handlePageSize(1, pageParams.pageSize)
+      handlePageSize(1, pageParams.pageSize, activeTab)
       return
     }
     const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: 1, pageSize: pageParams.pageSize })
@@ -85,20 +99,35 @@ const Community = () => {
     setContent(res.data.list)
   }
 
-  // 分页
-  const handlePageSize = async (page: number, pageSize: number) => {
-    const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
-    setPageParams(pre => ({
+  // 处理分页中统一的逻辑
+  const tabPage = (data: IContentPageParams, page: number, pageSize: number) => {
+    setLoading(false) // 当加载出了数据就关闭加载动画
+    setPageParams(pre => ({ // 修改页数
       ...pre,
       pageNum: page,
       pageSize: pageSize,
-      total: res.data.total
+      total: data.total
     }))
-    setContent(res.data.list)
+    setContent(data.list) // 更新帖子
+  }
+
+  // 分页（也是推荐）
+  const handlePageSize = async (page: number, pageSize: number, navType: string) => {
+    if (navType === 'recommend') {
+      const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
+      tabPage(res.data, page, pageSize)
+    } else if (navType === 'hot') {
+      const res = await getHotCommunityListAPI({ pageNum: page, pageSize })
+      tabPage(res.data, page, pageSize)
+    } else if (navType === 'new') {
+      const res = await getNewCommunityListAPI({ pageNum: page, pageSize })
+      tabPage(res.data, page, pageSize)
+    }
 
     // setSearchParams 里会自动修改浏览器地址的查询字符串（内部自动使用了 ）
     setSearchParams(pre => { // 把当前选中的页数给到 searchParams
       pre.set('page', String(page))
+      pre.set('type', navType)
       return pre
     }, { replace: true })
   }
@@ -129,7 +158,7 @@ const Community = () => {
   }
 
   useEffect(() => {
-    handlePageSize(pageParams.pageNum, pageParams.pageSize)
+    handlePageSize(pageParams.pageNum, pageParams.pageSize, activeTab)
   }, [])
 
   return (
@@ -153,7 +182,7 @@ const Community = () => {
                 return (
                   <div
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
+                    onClick={() => handleNavBar(item.id)}
                     className={`${styles.navItem} ${activeTab === item.id ? styles.active : ""}`}
                   >
                     {item.label}
@@ -186,60 +215,68 @@ const Community = () => {
 
       {/* 中间区域 */}
       <div className={styles.middle}>
-        {content.length !== 0 ? <div className={styles.feed}>
-          {
-            content.map(item => {
-              return (
-                <div key={item.id} className={styles.cardSty}>
-                  <div className={styles.content}>
-                    <div onClick={() => handleDetail(item.id!)}>
-                      <div className={styles.cardTop}>
-                        <div><img src="/imgs/admin.png" alt="" className={styles.cardAvatar} /></div>
-                        <div className={styles.userInfo}>
-                          <div className={styles.cardName}>{item.name}</div>
-                          <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
+        {content.length !== 0 ?
+          <div className={styles.feed}>
+            {
+              content.map(item => {
+                return (
+                  <Skeleton key={item.id} loading={loading} active avatar>
+                    <div className={styles.cardSty}>
+                      <div className={styles.content}>
+                        <div onClick={() => handleDetail(item.id!)}>
+                          <div className={styles.cardTop}>
+                            <div><img src="/imgs/admin.png" alt="" className={styles.cardAvatar} /></div>
+                            <div className={styles.userInfo}>
+                              <div className={styles.cardName}>{item.name}</div>
+                              <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
+                            </div>
+                          </div>
+                          <div className={styles.cardMiddle}>
+                            <div className={styles.tc}>
+                              <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
+                              <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
+                            </div>
+                            {item.photo ?
+                              <div className={styles.photoContainer}>
+                                <img src={item.photo[0]} alt="" className={styles.photo} />
+                              </div> : ''}
+                            {item.video ? <div>{item.video || ''}</div> : ''}
+                            {item.link ? <div>{item.link || ''}</div> : ''}
+                          </div>
+                        </div>
+                        <div className={styles.cardBottom}>
+                          <div className={`${styles.actionItem} ${item.isLiked ? styles.active : ''}`} onClick={() => handleLike(item.id!, item.isLiked)}>
+                            {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
+                            <span>{item.likes}</span>
+                          </div>
+                          <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
+                            {item.isCollected ? <StarFilled /> : <StarOutlined />}
+                            <span>{item.collection}</span>
+                          </div>
+                          <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
                         </div>
                       </div>
-                      <div className={styles.cardMiddle}>
-                        <div className={styles.tc}>
-                          <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
-                          <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
-                        </div>
-                        {item.photo ?
-                          <div className={styles.photoContainer}>
-                            <img src={item.photo[0]} alt="" className={styles.photo} />
-                          </div> : ''}
-                        {item.video ? <div>{item.video || ''}</div> : ''}
-                        {item.link ? <div>{item.link || ''}</div> : ''}
-                      </div>
                     </div>
-                    <div className={styles.cardBottom}>
-                      <div className={`${styles.actionItem} ${item.isLiked ? styles.active : ''}`} onClick={() => handleLike(item.id!, item.isLiked)}>
-                        {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
-                        <span>{item.likes}</span>
-                      </div>
-                      <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
-                        {item.isCollected ? <StarFilled /> : <StarOutlined />}
-                        <span>{item.collection}</span>
-                      </div>
-                      <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })
-          }
-        </div>
-          :
-          <div> </div>
-        }
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div className={styles.pagination}>
-            <ConfigProvider locale={zhCN}>
-              <Pagination onChange={handlePageSize} current={pageParams.pageNum} pageSize={pageParams.pageSize} total={pageParams.total} />
-            </ConfigProvider>
+                  </Skeleton>
+                )
+              })
+            }
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <div className={styles.pagination}>
+                <ConfigProvider locale={zhCN}>
+                  <Pagination onChange={(page, pageSize) => handlePageSize(page, pageSize, activeTab)} current={pageParams.pageNum} pageSize={pageParams.pageSize} total={pageParams.total} />
+                </ConfigProvider>
+              </div>
+            </div>
           </div>
-        </div>
+          :
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', width: '100%', height: '800px' }}>
+            <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
+            <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到 “<div style={{ color: 'var(--text-color)' }}>{searchValue.trim()}</div>” 相关的内容</div>
+          </div>
+        }
+
+
       </div>
 
       {/* 右侧区域 */}
@@ -303,7 +340,7 @@ const Community = () => {
         </div>
       </div>
 
-      <ModalContent isModalOpen={isModalOpen} handleOpen={handleOpen} handlePageSize={() => handlePageSize(1, pageParams.pageSize)} />
+      <ModalContent isModalOpen={isModalOpen} handleOpen={handleOpen} handlePageSize={() => handlePageSize(1, pageParams.pageSize, activeTab)} />
     </div>
   )
 }

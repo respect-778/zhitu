@@ -9,6 +9,24 @@ export const getCommunityListAPI = () => {
   })
 }
 
+// 热门接口
+export const getHotCommunityListAPI = (params: { pageNum: number; pageSize: number; }) => {
+  return httpInstance({
+    url: "/api/community/hot",
+    method: "get",
+    params
+  })
+}
+
+// 最新接口
+export const getNewCommunityListAPI = (params: { pageNum: number; pageSize: number; }) => {
+  return httpInstance({
+    url: "/api/community/new",
+    method: "get",
+    params
+  })
+}
+
 // 搜索/分页接口
 export const searchCommunityAPI = (params: { pageNum: number; pageSize: number; keyword?: string }) => {
   return httpInstance({

@@ -37,6 +37,7 @@ export interface IContentSearchParams {
 
 // 分页参数
 export interface IContentPageParams {
+  list: []
   pageNum: number
   pageSize: number
   total: number

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, ShareAltOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, ShareAltOutlined, UpCircleOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
 import type { IContent } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/api/community'
+import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取 url 参数
@@ -28,6 +29,7 @@ const DetailContent: React.FC = () => {
   })
   const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true)
+  const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 
   // 根据 id 获取对应帖子详情
   const getCommunityById = async () => {
@@ -59,9 +61,10 @@ const DetailContent: React.FC = () => {
   }
 
   // 处理评论
-  const handleComment = () => {
+  // const handleComment = () => {
 
-  }
+  // }
+
 
   useEffect(() => {
     getCommunityById()
@@ -187,6 +190,14 @@ const DetailContent: React.FC = () => {
           <ShareAltOutlined />
         </div>
       </aside>
+
+      {/* 回到顶部按钮 */}
+      {scrollYPosition >= 1000 ?
+        <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.upCircle}>
+          <UpCircleOutlined />
+        </div>
+        :
+        ''}
     </div>
   )
 }

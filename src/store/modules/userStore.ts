@@ -13,7 +13,7 @@ interface UserState {
 const initialState: UserState = {
   username: '',
   token: '',
-  userInfo: { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '' }, token: '' }
+  userInfo: { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
 }
 
 const userStore = createSlice({
@@ -34,7 +34,7 @@ const userStore = createSlice({
     clearUserInfo(state) {
       state.token = ''
       state.username = ''
-      state.userInfo = { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '' }, token: '' }
+      state.userInfo = { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
       delStore('token')
     }
   }
