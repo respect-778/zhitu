@@ -235,7 +235,7 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
                     </div>
                   </div>
                 </Form.Item>
-                <div style={{ color: 'rgb(199, 199, 201)' }}>{fileList.length}/5 张图片，最多上传5张，第一张图片将作为封面哟！</div>
+                <div style={{ color: 'rgb(199, 199, 201)', display: 'flex' }}>{fileList.length}/5 张图片，最多上传5张，第一张图片将作为封面哟！</div>
               </div>
             )}
             {navType === 'video' && (

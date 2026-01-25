@@ -5,7 +5,7 @@ import Layout from "@/pages/Layout";
 import Welcome from "@/pages/Welcome";
 import Path from "@/pages/Path";
 import Community from "@/pages/Community";
-import AI from "@/pages/AI";
+import Chat from "@/pages/Chat";
 import DetailContent from "@/pages/Community/components/DetailContent";
 
 const router = createBrowserRouter([
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
         element: <DetailContent />
       },
       {
-        path: '/ai',
-        element: <AI />
+        path: '/chat',
+        element: <Chat />
       }
     ]
   },

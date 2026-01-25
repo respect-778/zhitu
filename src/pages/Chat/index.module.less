@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 15%;
+  height: 800px;
+  background-color: var(--bg-secondary);
+  padding: 20px;
+
+  .newChat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    color: var(--text-color);
+    border-radius: 25px;
+    background-color: var(--bg-color);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    transition-delay: 0s;
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  .historyChat {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .historyList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .historyTitle {
+      font-size: 13px;
+      color: #96999f;
+      user-select: none;
+    }
+
+    .historyCard {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .historyItem {
+        color: var(--text-color);
+        font-size: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.right {
+  width: 85%;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  .introductory {
+    display: flex;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .chatBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    width: 50%;
+    height: 14%;
+    border: 0.5px solid rgba(197, 196, 196, 0.6);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    cursor: text;
+
+    .chatInput {
+      width: 655px;
+      padding: 5px 10px;
+      border: none;
+      outline: none;
+      font-size: 1.1rem;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+    }
+
+    .chatSubmit {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding: 0 15px;
+
+      .chatThinking {
+        border: 1px solid var(--border-color);
+        border-radius: 30px;
+        padding: 5px 10px;
+        cursor: pointer;
+        background-color: #ffffff;
+        transition: background-color 0.3s ease;
+        transition-delay: 0s;
+        user-select: none;
+
+        &:hover {
+          background-color: #f2f3f4;
+        }
+
+        &.active {
+          background-color: #edf3fe;
+          color: #3964fe;
+          border: 1px solid #b7c8fe;
+        }
+      }
+
+      .submitImg {
+        width: 35px;
+        user-select: none;
+        cursor: pointer;
+      }
+    }
+
+
+  }
+}

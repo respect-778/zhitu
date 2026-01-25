@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     { key: '/', label: '首页', icon: <HomeOutlined /> },
     { key: '/path', label: '学习路线', icon: <CompassOutlined /> },
     { key: '/community', label: '道友圈', icon: <TeamOutlined /> },
-    { key: '/ai', label: 'AI小助手', icon: <CommentOutlined /> },
+    { key: '/chat', label: 'AI小助手', icon: <CommentOutlined /> },
   ]
 
 

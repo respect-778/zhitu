@@ -1,41 +1,38 @@
 .container {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 64px - 100px); // Adjust based on header/footer
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+  min-height: 100vh;
   color: #fff;
-
-  :global(.light) & {
-    // Fallback if system is light mode but we want dark hero, or just support light mode
-    background: radial-gradient(circle at 50% 50%, #f0f2f5 0%, #fff 100%);
-    color: #000;
-  }
+  overflow-x: hidden;
+  // z-index removed to avoid stacking context issues
 }
 
-.canvasContainer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+// Fixed background for stars
+.fixedBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; // Base layer
+  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
 }
 
-.content {
+// --- Hero Section ---
+.heroSection {
   position: relative;
-  z-index: 1;
-  flex: 1;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 80px 24px;
-  pointer-events: none; // Let clicks pass through to canvas if needed, but buttons need pointer-events: auto
+  z-index: 2; // Above stars
+}
 
-  * {
-    pointer-events: auto;
-  }
+.heroContent {
+  text-align: center;
+  padding: 0 24px;
 }
 
 .heroTitle {
@@ -54,7 +51,7 @@
   font-size: 24px;
   color: rgba(255, 255, 255, 0.85);
   max-width: 600px;
-  margin-bottom: 48px;
+  margin: 0 auto 48px;
   line-height: 1.6;
   animation: fadeInUp 1s ease-out 0.2s backwards;
 
@@ -64,7 +61,7 @@
 }
 
 .ctaButton {
-  padding: 16px 48px;
+  padding: 14px 40px;
   font-size: 18px;
   font-weight: 600;
   color: #fff;
@@ -75,69 +72,341 @@
   transition: all 0.3s;
   box-shadow: 0 10px 30px rgba(22, 119, 255, 0.4);
   animation: fadeInUp 1s ease-out 0.4s backwards;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 15px 40px rgba(22, 119, 255, 0.5);
     background: #4096ff;
   }
+
+  &.large {
+    padding: 18px 50px;
+    font-size: 22px;
+  }
 }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 32px;
-  max-width: 1200px;
-  width: 100%;
-  margin-top: 100px;
-  padding: 0 24px;
+.scrollIndicator {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.7;
+  animation: bounce 2s infinite;
 
-  .featureCard {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 32px;
-    border-radius: 24px;
-    text-align: left;
-    transition: all 0.3s;
-    animation: fadeInUp 1s ease-out 0.6s backwards;
+  span {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(45deg);
+  }
+}
+
+// --- Scroll Content ---
+.scrollContent {
+  position: relative;
+  z-index: 2;
+  // Use a very subtle gradient overlay to ensure content readability if stars are too bright,
+  // but keep it mostly transparent to show the stars
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+  padding-bottom: 100px;
+}
+
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  background: linear-gradient(to right, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  :global(.light) & {
+    background: linear-gradient(to right, #000, #555);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+// Reveal Animation Classes
+.hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-out;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s ease-out;
+}
+
+// --- Features Grid (Compact) ---
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); // Slightly smaller min-width
+  gap: 24px; // Reduced gap
+  justify-content: center;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px; // Slightly smaller radius
+  text-align: left;
+  transition: all 0.3s;
+  overflow: hidden; // For the image
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.cardImage {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+
+    // Add a slight blue tint/overlay effect if desired, but raw image is fine too
+  }
+
+  // Zoom effect on hover
+  .featureCard:hover & img {
+    transform: scale(1.1);
+  }
+}
+
+.cardContent {
+  padding: 24px; // Reduced padding
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .icon {
+    font-size: 32px;
+    color: #1677ff;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #fff;
 
     :global(.light) & {
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    &:hover {
-      transform: translateY(-10px);
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .icon {
-      font-size: 32px;
-      color: #1677ff;
-      margin-bottom: 20px;
-    }
-
-    h3 {
-      font-size: 20px;
-      margin-bottom: 12px;
-      color: #fff;
-
-      :global(.light) & {
-        color: #000;
-      }
-    }
-
-    p {
-      color: rgba(255, 255, 255, 0.65);
-      line-height: 1.6;
-
-      :global(.light) & {
-        color: rgba(0, 0, 0, 0.65);
-      }
+      color: #000;
     }
   }
+
+  p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 0;
+
+    :global(.light) & {
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+// --- Stats Section ---
+.statsContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 50px;
+  // No background, just floating numbers over stars
+  background: transparent;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #1677ff 0%, #fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+
+  :global(.light) & {
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+// --- Timeline Section ---
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 36px; // Adjusted for smaller icon
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: linear-gradient(180deg, #1677ff 0%, rgba(22, 119, 255, 0.1) 100%);
+  }
+}
+
+.timelineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 12px;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.timelineIcon {
+  width: 72px;
+  height: 72px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border: 2px solid #1677ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #1677ff;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timelineContent {
+  text-align: left;
+  padding-top: 8px;
+
+  h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+
+  p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+// --- Community Section ---
+.communityPreview {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.communityCard {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  border-radius: 16px;
+  width: 320px;
+  text-align: left;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  :global(.light) & {
+    background: #fff;
+    border: 1px solid #eee;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .name {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .role {
+    font-size: 12px;
+  }
+}
+
+.cardBody {
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer {
+  position: relative;
+  z-index: 3; // Ensure it's above everything
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.3); // Add subtle background for visibility
+  backdrop-filter: blur(10px);
 }
 
 @keyframes fadeInUp {
@@ -149,5 +418,24 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-10px);
+  }
+
+  60% {
+    transform: translateY(-5px);
   }
 }

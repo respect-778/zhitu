@@ -1,4 +1,9 @@
-# ui-ux-pro-max
+---
+description: Plan and implement UI
+auto_execution_mode: 3
+---
+
+# UI/UX Pro Max - Design Intelligence
 
 Searchable database of UI styles, color palettes, font pairings, chart types, product recommendations, UX guidelines, and stack-specific best practices.
 

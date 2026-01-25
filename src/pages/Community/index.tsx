@@ -1,6 +1,6 @@
 import styles from './index.module.less'
 import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
-import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined, CloseCircleFilled } from '@ant-design/icons'
 import { Pagination, ConfigProvider, Skeleton } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
@@ -16,7 +16,7 @@ const Community = () => {
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
-  const initialTab = searchParams.get('type') // 获取当前 url 查询参数
+  const initialTab = searchParams.get('tab') // 获取当前 url 查询参数
   const [activeTab, setActiveTab] = useState<string>(initialTab || 'recommend') // tab
   const [pageParams, setPageParams] = useState(() => {
     const search = searchParams.get('page') // 获取 page 参数
@@ -24,6 +24,7 @@ const Community = () => {
     return { pageNum, pageSize: 3, total: 0 }
   }) // 分页
   const [loading, setLoading] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(false) // 这个 state 不是证明搜索框是否空，而是搜索的内容是否存在
 
   const userInfo = useAppSelector(state => state.user.userInfo)
 
@@ -82,21 +83,49 @@ const Community = () => {
     setSearchValue(e.target.value)
   }
 
-  // 搜索
-  const searchCommunity = async () => {
-    // 如果搜索框为空，重置为所有帖子列表
-    if (!searchValue && searchValue.trim() === '') { // 判断搜索框中的值是否为空
+  // 清空输入框中的内容并回到最初页
+  const clearSearchValue = async (navType: string) => {
+    setSearchValue('')
+    setIsEmpty(false) // 重置 搜索内容存在态
+    // 处理两种情况：
+    // 1. 用户在输入框中输入了内容，但是没有回车进行搜索，那么点击 X 就不回到首页，不用做处理
+    // 2. 用户回车搜索，但是没有搜索到内容时，点击 X 要调用接口，回到首页
+    if (isEmpty) { // 当搜索内容不存在时
+      if (navType === 'recommend') { // 如果是推荐，要特殊处理，因为 类型为 recommend 的 handlePageSize 有 keyWord 要求！！
+        const res = await searchCommunityAPI({ pageNum: 1, pageSize: pageParams.pageSize })
+        tabPage(res.data, 1, pageParams.pageSize)
+        return
+      }
+      // 其他类型正常
       handlePageSize(1, pageParams.pageSize, activeTab)
-      return
     }
-    const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: 1, pageSize: pageParams.pageSize })
-    setPageParams(pre => ({
-      ...pre,
-      pageNum: 1,
-      pageSize: pageParams.pageSize,
-      total: res.data.total
-    }))
-    setContent(res.data.list)
+
+  }
+
+  // 搜索
+  const searchCommunity = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      // 如果搜索框为空，重置为所有帖子列表
+      if (searchValue.trim() === '') { // 判断搜索框中的值是否为空
+        handlePageSize(1, pageParams.pageSize, activeTab)
+        return
+      }
+
+      const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: 1, pageSize: pageParams.pageSize })
+
+      if (res.data.list.length === 0) { // 当没有搜索到结果时
+        setIsEmpty(true) // 设置内容不存在
+      }
+
+      setPageParams(pre => ({
+        ...pre,
+        pageNum: 1,
+        pageSize: pageParams.pageSize,
+        total: res.data.total
+      }))
+
+      setContent(res.data.list)
+    }
   }
 
   // 处理分页中统一的逻辑
@@ -127,7 +156,7 @@ const Community = () => {
     // setSearchParams 里会自动修改浏览器地址的查询字符串（内部自动使用了 ）
     setSearchParams(pre => { // 把当前选中的页数给到 searchParams
       pre.set('page', String(page))
-      pre.set('type', navType)
+      pre.set('tab', navType)
       return pre
     }, { replace: true })
   }
@@ -170,11 +199,16 @@ const Community = () => {
           <div className={styles.navCard}>
             {/* 搜索框 */}
             <div className={styles.formControl}>
-              <input onChange={handleSearchChange} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
-              <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
-              <button onClick={debounce(searchCommunity, 300)} className={styles.searchButton} type="submit">
+              <button className={styles.searchButton} type="submit">
                 <SearchOutlined />
               </button>
+              <input onChange={handleSearchChange} onKeyDown={debounce(searchCommunity, 300)} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
+              <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
+              {searchValue !== '' &&
+                <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>
+                  <CloseCircleFilled />
+                </button>
+              }
             </div>
             {/* 侧边栏 */}
             <div className={styles.navBar}>
@@ -215,7 +249,7 @@ const Community = () => {
 
       {/* 中间区域 */}
       <div className={styles.middle}>
-        {content.length !== 0 ?
+        {content.length !== 0 &&
           <div className={styles.feed}>
             {
               content.map(item => {
@@ -269,14 +303,14 @@ const Community = () => {
               </div>
             </div>
           </div>
-          :
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', width: '100%', height: '800px' }}>
-            <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
-            <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到 “<div style={{ color: 'var(--text-color)' }}>{searchValue.trim()}</div>” 相关的内容</div>
-          </div>
         }
 
-
+        {isEmpty ?
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', width: '100%', height: '800px' }}>
+            <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
+            <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到相关的内容</div>
+          </div> : ''
+        }
       </div>
 
       {/* 右侧区域 */}
