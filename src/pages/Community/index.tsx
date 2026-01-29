@@ -17,7 +17,7 @@ const Community = () => {
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
   const initialTab = searchParams.get('tab') // 获取当前 url 查询参数
-  const [activeTab, setActiveTab] = useState<string>(initialTab || 'recommend') // tab
+  const [activeTab, setActiveTab] = useState<string>(initialTab || 'new') // tab
   const [pageParams, setPageParams] = useState(() => {
     const search = searchParams.get('page') // 获取 page 参数
     const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
@@ -30,9 +30,9 @@ const Community = () => {
 
   // 左侧侧边栏
   const navItems: INavItems[] = [
+    { id: 'new', label: '最新' },
     { id: 'recommend', label: '推荐' },
     { id: 'hot', label: '热门' },
-    { id: 'new', label: '最新' },
     { id: 'relax', label: '放松' },
     { id: 'following', label: '关注' },
     { id: 'oneself', label: '我' }
@@ -67,14 +67,17 @@ const Community = () => {
   }
 
   // 左侧 nav
-  const handleNavBar = async (id: string) => {
-    setActiveTab(id)
-    if (id === 'recommend') {
-      handlePageSize(1, pageParams.pageSize, id)
-    } else if (id === 'hot') {
-      handlePageSize(1, pageParams.pageSize, id)
-    } else if (id === 'new') {
-      handlePageSize(1, pageParams.pageSize, id)
+  const handleNavBar = async (navType: string) => {
+    setActiveTab(navType)
+    if (navType === 'recommend') {
+      setSearchValue('')
+      handlePageSize(1, pageParams.pageSize, navType)
+    } else if (navType === 'hot') {
+      setSearchValue('')
+      handlePageSize(1, pageParams.pageSize, navType)
+    } else if (navType === 'new') {
+      setSearchValue('')
+      handlePageSize(1, pageParams.pageSize, navType)
     }
   }
 
@@ -83,26 +86,24 @@ const Community = () => {
     setSearchValue(e.target.value)
   }
 
-  // 清空输入框中的内容并回到最初页
+  // 清空输入框和当前搜索内容并回到最初页
   const clearSearchValue = async (navType: string) => {
-    setSearchValue('')
+    setSearchValue('') // 滞空搜索框
     setIsEmpty(false) // 重置 搜索内容存在态
-    // 处理两种情况：
-    // 1. 用户在输入框中输入了内容，但是没有回车进行搜索，那么点击 X 就不回到首页，不用做处理
-    // 2. 用户回车搜索，但是没有搜索到内容时，点击 X 要调用接口，回到首页
-    if (isEmpty) { // 当搜索内容不存在时
-      if (navType === 'recommend') { // 如果是推荐，要特殊处理，因为 类型为 recommend 的 handlePageSize 有 keyWord 要求！！
-        const res = await searchCommunityAPI({ pageNum: 1, pageSize: pageParams.pageSize })
-        tabPage(res.data, 1, pageParams.pageSize)
-        return
-      }
-      // 其他类型正常
-      handlePageSize(1, pageParams.pageSize, activeTab)
+    if (navType === 'recommend') { // 这里使用原始的接口调用，是因为 如果使用 handlePageSize 方法的话，会有 keyword 干扰，导致点击重置还是在搜索后的列表
+      const res = await searchCommunityAPI({ pageNum: 1, pageSize: pageParams.pageSize })
+      tabPage(res.data, 1, pageParams.pageSize)
+      return
+    } else if (navType === 'new') {
+      const res = await getNewCommunityListAPI({ pageNum: 1, pageSize: pageParams.pageSize })
+      tabPage(res.data, 1, pageParams.pageSize)
+    } else if (navType === 'hot') {
+      const res = await getHotCommunityListAPI({ pageNum: 1, pageSize: pageParams.pageSize })
+      tabPage(res.data, 1, pageParams.pageSize)
     }
-
   }
 
-  // 搜索
+  // 搜索 （是通过 推荐 的内容去搜索的，本质上 使用哪个接口都没有关系）
   const searchCommunity = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       // 如果搜索框为空，重置为所有帖子列表
@@ -146,10 +147,10 @@ const Community = () => {
       const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     } else if (navType === 'hot') {
-      const res = await getHotCommunityListAPI({ pageNum: page, pageSize })
+      const res = await getHotCommunityListAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     } else if (navType === 'new') {
-      const res = await getNewCommunityListAPI({ pageNum: page, pageSize })
+      const res = await getNewCommunityListAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     }
 

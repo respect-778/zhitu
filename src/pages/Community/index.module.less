@@ -225,7 +225,7 @@
   width: 60%; // Adjusted width
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   padding: 20px;
 
   .middleTop {
@@ -312,13 +312,12 @@
 
         .titleContainer {
           width: 820px;
-          height: 100%;
           font-weight: 400;
           font-size: 18px;
 
           .cardTitle {
-            /* 超过两行显示省略号 */
-            -webkit-line-clamp: 2;
+            /* 超过一行显示省略号 */
+            -webkit-line-clamp: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -330,7 +329,6 @@
 
         .contentContainer {
           width: 820px;
-          height: 100%;
           color: rgb(109, 118, 126);
 
           .contentSty {

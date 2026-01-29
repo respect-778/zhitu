@@ -217,18 +217,11 @@ const ModalContent = ({ isModalOpen, handleOpen, handlePageSize }: IModal) => {
                         onChange={({ fileList }) => setFileList(fileList)}
                         beforeUpload={beforeUploadImage}
                       >
-                        {/* 将第一张照片作为封面 */}
-                        {fileList.length === 0 ? (
-                          <div className={styles.uploadButton}>
-                            <div className={styles.icon}><PlusOutlined /></div>
-                            <div className={styles.text}>选择封面</div>
-                          </div>
-                        ) : null}
                         {/* 最多只能上传五张图片 */}
-                        {fileList.length <= 5 && fileList.length !== 0 ? (
+                        {fileList.length < 5 ? (
                           <div className={styles.uploadButton}>
                             <div className={styles.icon}><PlusOutlined /></div>
-                            <div className={styles.text}>上传图片</div>
+                            <div className={styles.text}>{fileList.length === 0 ? '上传封面' : '上传图片'}</div>
                           </div>
                         ) : null}
                       </Upload>

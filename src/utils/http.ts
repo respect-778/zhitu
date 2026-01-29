@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 
 const httpInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 3000
+  // timeout: 3000
 })
 
 // 请求拦截器

@@ -10,7 +10,7 @@ export const getCommunityListAPI = () => {
 }
 
 // 热门接口
-export const getHotCommunityListAPI = (params: { pageNum: number; pageSize: number; }) => {
+export const getHotCommunityListAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
     url: "/api/community/hot",
     method: "get",
@@ -19,7 +19,7 @@ export const getHotCommunityListAPI = (params: { pageNum: number; pageSize: numb
 }
 
 // 最新接口
-export const getNewCommunityListAPI = (params: { pageNum: number; pageSize: number; }) => {
+export const getNewCommunityListAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
     url: "/api/community/new",
     method: "get",
@@ -27,8 +27,8 @@ export const getNewCommunityListAPI = (params: { pageNum: number; pageSize: numb
   })
 }
 
-// 搜索/分页接口
-export const searchCommunityAPI = (params: { pageNum: number; pageSize: number; keyword?: string }) => {
+// 搜索/分页/推荐 接口
+export const searchCommunityAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
     url: "/api/community/search",
     method: "get",

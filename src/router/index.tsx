@@ -7,6 +7,7 @@ import Path from "@/pages/Path";
 import Community from "@/pages/Community";
 import Chat from "@/pages/Chat";
 import DetailContent from "@/pages/Community/components/DetailContent";
+import ChatId from "@/pages/Chat/components/ChatId";
 
 const router = createBrowserRouter([
   // 一级路由
@@ -32,8 +33,14 @@ const router = createBrowserRouter([
         element: <DetailContent />
       },
       {
-        path: '/chat',
-        element: <Chat />
+        path: '/chat/',
+        element: <Chat />,
+        children: [
+          {
+            path: '/chat/:id',
+            element: <ChatId />
+          }
+        ]
       }
     ]
   },
