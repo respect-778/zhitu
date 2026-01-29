@@ -43,8 +43,16 @@ export const addChatMessageAPI = (data: { session_id: number, role: string, cont
 // 创建聊天会话
 export const addChatSessionAPI = (data: { user_id: number, session_title: string }) => {
   return httpInstance({
-    url: '/api/chat/session',
+    url: '/api/chat/addSession',
     method: 'post',
     data
+  })
+}
+
+// 删除聊天会话
+export const delChatSessionAPI = (session_id: number) => {
+  return httpInstance({
+    url: 'api/chat/delSession/' + session_id,
+    method: 'delete',
   })
 }

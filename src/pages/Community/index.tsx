@@ -103,7 +103,7 @@ const Community = () => {
     }
   }
 
-  // 搜索 （是通过 推荐 的内容去搜索的，本质上 使用哪个接口都没有关系）
+  // 搜索（是通过 推荐 的内容去搜索的，本质上 使用哪个接口都没有关系）
   const searchCommunity = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       // 如果搜索框为空，重置为所有帖子列表
@@ -118,7 +118,7 @@ const Community = () => {
         setIsEmpty(true) // 设置内容不存在
       }
 
-      setPageParams(pre => ({
+      setPageParams(pre => ({ // 设置分页需要的参数，使分页组件的显示为当前搜索过后的结果
         ...pre,
         pageNum: 1,
         pageSize: pageParams.pageSize,

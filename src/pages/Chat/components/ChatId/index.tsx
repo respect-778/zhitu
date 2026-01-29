@@ -17,6 +17,7 @@ const ChatId = () => {
     historySession: IChatSession[]
   }>()
 
+
   // 深度思考模式
   const handleThinking = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -73,7 +74,7 @@ const ChatId = () => {
     // 3. 创建 ai 聊天记录
     try {
       await addChatMessageAPI({ session_id: parseInt(id!), role: 'ai', content: aiMessage }) // 创建 ai 聊天记录
-      await getCurrentChatMessage() // 获取最新消息列表
+      getCurrentChatMessage() // 获取最新消息列表
     } catch (error) {
       console.log(error)
     }

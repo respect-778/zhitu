@@ -1,51 +1,41 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, OpenAIOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatMessageAPI, addChatSessionAPI, callChatAPI, getHistorySessionAPI } from "@/api/chat";
+import { addChatMessageAPI, addChatSessionAPI, callChatAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
 import type { IChatSession } from "@/types/chat";
+import { isTimeInRange } from "@/utils/isTimeInRange";
+
+type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
 
 const Chat: React.FC = () => {
-  const today = [
-    { id: 1, user: 'JavaScript 回车事件监听方法' },
-    { id: 2, user: '点击div聚焦内部input方法总结' },
-  ]
-
-  const yesterday = [
-    { id: 1, user: 'React 列表渲染缺少 key 属性错误' }
-  ]
-
-  const sevendays = [
-    { id: 1, user: 'AI向量与向量数据库详解' }
-  ]
-
-  const thirtydays = [
-    { id: 1, user: 'React图片路径显示问题解决方案' }
-  ]
-
+  const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内']
+  const { id } = useParams() // 获取动态路由 id
+  const navigate = useNavigate()
   const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const inputRef = useRef<HTMLInputElement>(null) // 输入框 dom 实例
   const [searchValue, setSearchValue] = useState('') // 输入框内容
+  const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
-  const [historySession, setHistorySession] = useState<IChatSession[]>([])
+  const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
-  const { id } = useParams() // 获取动态路由 id
-  const navigate = useNavigate()
 
-  // 开启新对话
+
+  // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
+    setHistoryActive(0)
     navigate('/chat')
   }
 
-  // 深度思考模式
+  // 深度思考模式 （进入界面 -> 没有调用方法）
   const handleThinking = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setMode(mode === 0 ? 1 : 0)
   }
 
-  // 获取当前输入框最新值 并 监听输入框是否为空
+  // 获取当前输入框最新值 并 监听输入框是否为空 （进入界面 -> 没有调用方法）
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
     if (e.target.value.trim() !== '') {
@@ -55,13 +45,29 @@ const Chat: React.FC = () => {
     }
   }
 
-  //  获取历史对话框中对应 会话 id 的聊天记录
-  const getHistoryChatMesaage = async () => {
+  // 点击任意历史会话记录 （进入界面 -> 没有调用方法）
+  const handleClickHistory = (id: number) => {
+    setHistoryActive(id) // 设置选中历史记录高亮
+    navigate(`/chat/${id}`)
+  }
+
+  // 点击多功能按钮，弹出选项框 （进入界面 -> 没有调用方法）
+  const handleMultifunctional = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation() // 阻止点击事件冒泡
+  }
+
+  // 删除会话记录 （进入界面 -> 没有调用方法）
+  const delChatSession = async () => {
+    // await delChatSessionAPI()
+  }
+
+  //  获取历史对话框中对应 会话 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
+  const getHistoryChatSession = async () => {
     const res = await getHistorySessionAPI()
     setHistorySession(res.data)
   }
 
-  // handleSubmit 统一提交问题逻辑
+  // handleSubmit 统一提交问题逻辑 （进入界面 -> 没有调用方法）
   const handleSubmit = async () => {
     // 输入框为空，直接返回
     if (searchValue.trim() === '') return
@@ -102,23 +108,24 @@ const Chat: React.FC = () => {
     navigate(`/chat/${sessionId}`)
   }
 
-  // 点击按钮 -> 提交问题
+  // 点击按钮 -> 提交问题 （进入界面 -> 没有调用方法）
   const clickQuestion = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
     handleSubmit() // 提交
   }
 
-  // 回车 -> 提交问题
+  // 回车 -> 提交问题 （进入界面 -> 没有调用方法）
   const keydownQuestion = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') { // 回车按键
       handleSubmit() // 提交
     }
   }
 
+  // 在 dom 渲染完成之后或动态路由 id 发生变化的时候，会调用方法
   useEffect(() => {
     // 这里会有一个思考：为什么要依赖 id 呢，只在组件第一次渲染完之后调用一次 获取到历史记录不就好了吗？
     // 这里需要考虑的点是，当用户是创建一个新会话的情况下，当用户点击提交问题之后，会发现历史记录并不是最新的，这里就需要依赖 id，拿到最新的历史记录。
-    getHistoryChatMesaage()
+    getHistoryChatSession()
   }, [id])
 
 
@@ -132,50 +139,26 @@ const Chat: React.FC = () => {
         </div>
         {/* 历史记录 */}
         <div className={styles.historyChat}>
-          <div className={styles.historyList}>
-            <div className={styles.historyTitle}>今天</div>
-            <div className={styles.historyCard}>
-              {historySession.map(item => {
-                return (
-                  <div onClick={() => navigate(`/chat/${item.id}`)} key={item.id} className={styles.historyItem}>{item.session_title}</div>
-                )
-              })
-              }
-            </div>
-          </div>
-          {/* <div className={styles.historyList}>
-            <div className={styles.historyTitle}>昨天</div>
-            <div className={styles.historyCard}>
-              {yesterday.map(item => {
-                return (
-                  <div key={item.id} className={styles.historyItem}>{item.user}</div>
-                )
-              })
-              }
-            </div>
-          </div> */}
-          {/* <div className={styles.historyList}>
-            <div className={styles.historyTitle}>7天内</div>
-            <div className={styles.historyCard}>
-              {sevendays.map(item => {
-                return (
-                  <div key={item.id} className={styles.historyItem}>{item.user}</div>
-                )
-              })
-              }
-            </div>
-          </div> */}
-          {/* <div className={styles.historyList}>
-            <div className={styles.historyTitle}>30天内</div>
-            <div className={styles.historyCard}>
-              {thirtydays.map(item => {
-                return (
-                  <div key={item.id} className={styles.historyItem}>{item.user}</div>
-                )
-              })
-              }
-            </div>
-          </div> */}
+          {days.map(day => {
+            return (
+              <div key={day} className={styles.historyList}>
+                <div className={styles.historyTitle}>{day}</div>
+                <div className={styles.historyCard}>
+                  {historySession.map(item => {
+                    if (isTimeInRange(item.created_at!, day)) { // 给历史记录按照时间进行分类
+                      return (
+                        <div key={item.id} onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
+                          <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
+                          <div onClick={handleMultifunctional} className={styles.historyBtn}><EllipsisOutlined /></div>
+                        </div>
+                      )
+                    }
+                  })
+                  }
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
       {id === undefined ?

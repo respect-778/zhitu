@@ -5,6 +5,7 @@
 }
 
 .left {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -15,6 +16,8 @@
   padding: 10px;
 
   .newChat {
+    position: fixed;
+    width: 12.5%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,6 +40,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-top: 80px;
 
     .historyList {
       display: flex;
@@ -56,17 +60,44 @@
       flex-direction: column;
 
       .historyItem {
-        padding: 10px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         border-radius: 10px;
-        color: var(--text-color);
-        font-size: 15px;
+        padding: 6px 10px;
         cursor: pointer;
+
+        .historySessionTitle {
+          color: var(--text-color);
+          font-size: 15px;
+
+          &.historyActive {
+            color: #3964fe;
+          }
+        }
+
+        .historyBtn {
+          padding: 2px 4px;
+          color: var(--text-secondary);
+          font-size: 16px;
+          border-radius: 50%;
+          transition: all 0.3s ease 0s;
+
+          &:hover {
+            background-color: #dcdfe2;
+          }
+        }
 
         &:hover {
           background: rgba(0, 0, 0, 0.03);
-
         }
+
+        &.historyActive {
+          background-color: #e4edfd;
+        }
+
       }
+
     }
   }
 }
