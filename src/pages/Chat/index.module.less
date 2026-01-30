@@ -2,6 +2,30 @@
   display: flex;
   align-items: flex-start;
   width: 100%;
+
+  // 下拉菜单样式覆盖
+  :global {
+    .ant-dropdown-menu {
+      padding: 6px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ant-dropdown-menu-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      .anticon {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
+  }
 }
 
 .left {
@@ -68,8 +92,11 @@
         cursor: pointer;
 
         .historySessionTitle {
+          width: 85%;
           color: var(--text-color);
           font-size: 15px;
+          overflow: hidden; // 超出部分隐藏
+          white-space: nowrap; // 不换行
 
           &.historyActive {
             color: #3964fe;
@@ -95,9 +122,7 @@
         &.historyActive {
           background-color: #e4edfd;
         }
-
       }
-
     }
   }
 }
@@ -188,7 +213,5 @@
         }
       }
     }
-
-
   }
 }

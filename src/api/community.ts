@@ -4,7 +4,7 @@ import httpInstance from "@/utils/http";
 // 获取帖子列表
 export const getCommunityListAPI = () => {
   return httpInstance({
-    url: "/api/community/list",
+    url: "/community/list",
     method: "get"
   })
 }
@@ -12,7 +12,7 @@ export const getCommunityListAPI = () => {
 // 热门接口
 export const getHotCommunityListAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
-    url: "/api/community/hot",
+    url: "/community/hot",
     method: "get",
     params
   })
@@ -21,7 +21,7 @@ export const getHotCommunityListAPI = (params: { keyword?: string; pageNum: numb
 // 最新接口
 export const getNewCommunityListAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
-    url: "/api/community/new",
+    url: "/community/new",
     method: "get",
     params
   })

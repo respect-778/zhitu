@@ -1,12 +1,15 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatMessageAPI, addChatSessionAPI, callChatAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
+import { addChatMessageAPI, addChatSessionAPI, callChatStreamAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
 import type { IChatSession } from "@/types/chat";
+import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
+import { Dropdown, Modal } from "antd";
+
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
 
@@ -21,6 +24,8 @@ const Chat: React.FC = () => {
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
+  const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
+  const [getNewMessage, setGetNewMessage] = useState(false) // 控制子组件，调用获取全部聊天记录的接口
 
 
   // 开启新对话 （进入界面 -> 没有调用方法）
@@ -51,14 +56,62 @@ const Chat: React.FC = () => {
     navigate(`/chat/${id}`)
   }
 
-  // 点击多功能按钮，弹出选项框 （进入界面 -> 没有调用方法）
-  const handleMultifunctional = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation() // 阻止点击事件冒泡
+  // 重命名
+  const handleResetName = (e: any) => {
+    e.domEvent.stopPropagation()
   }
+
+  // 分享
+  const handleShare = (e: any) => {
+    e.domEvent.stopPropagation()
+  }
+
+  // 打开删除弹窗
+  const handleDel = (e: any) => {
+    setIsModalOpen(true)
+    e.domEvent.stopPropagation()
+  }
+
+  // 多功能弹窗按钮
+  const multiDropdown: MenuProps['items'] = [
+    {
+      key: '0',
+      onClick: handleResetName,
+      label: (
+        <div style={{ padding: '3px 2px' }}>
+          <span style={{ paddingRight: '7px' }}><EditOutlined /></span>
+          <span>重命名</span>
+        </div>
+      )
+    },
+    {
+      key: '1',
+      onClick: handleShare,
+      label: (
+        <div style={{ padding: '3px 2px' }}>
+          <span style={{ paddingRight: '7px' }}><ShareAltOutlined /></span>
+          <span>分享</span>
+        </div>
+      )
+    },
+    {
+      key: '2',
+      onClick: handleDel,
+      label: (
+        <div>
+          <span style={{ paddingRight: '7px', color: '#ff4d4f' }}><DeleteOutlined /></span>
+          <span style={{ color: '#ff4d4f' }}>删除</span>
+        </div>
+      )
+    },
+  ]
 
   // 删除会话记录 （进入界面 -> 没有调用方法）
   const delChatSession = async () => {
-    // await delChatSessionAPI()
+    await delChatSessionAPI(parseInt(id!))
+    setIsModalOpen(false)
+    navigate('/chat') // 删除后回到起始页去
+    getHistoryChatSession() // 重新加载一次历史对话框
   }
 
   //  获取历史对话框中对应 会话 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
@@ -87,26 +140,36 @@ const Chat: React.FC = () => {
       return // 如果聊天会话创建失败，就终止
     }
 
-    // 2. 调用 ai 大模型
-    let aiMessage = ''
-    try {
-      const res = await callChatAPI(mode, userMessage) // 调用 ai
-      aiMessage = res.data // ai 的回复
-    } catch (error) {
-      console.log(error)
-    }
-
-    // 3. 创建聊天记录
+    // 2. 创建 user 聊天记录
     try {
       await addChatMessageAPI({ session_id: sessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
-      await addChatMessageAPI({ session_id: sessionId, role: 'ai', content: aiMessage }) // 创建 ai 聊天记录
     } catch (error) {
       console.log(error)
     }
 
-    // 跳转到对应会话id界面
+    // 3. 先跳转到会话页面（让用户看到界面）
     navigate(`/chat/${sessionId}`)
+
+    // 4. 流式调用 ai 大模型（在后台继续，结果会通过数据库更新到页面）
+    try {
+      await callChatStreamAPI(
+        mode,
+        userMessage,
+        sessionId,
+        () => { /* 流式回调，但页面已跳转，这里不需要处理 */ },
+        async (error) => {
+          console.error('AI 流式调用错误:', error)
+          // 失败时创建一条错误消息
+          await addChatMessageAPI({ session_id: sessionId, role: 'ai', content: '当前网络不稳定，请再试试看' })
+        }
+      )
+    } catch (error) {
+      console.error('AI 调用失败:', error)
+    }
+
+    setGetNewMessage(!getNewMessage) // 控制子组件去调用 getCurrentChatMessage 接口方法，刷新界面
   }
+
 
   // 点击按钮 -> 提交问题 （进入界面 -> 没有调用方法）
   const clickQuestion = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -145,11 +208,11 @@ const Chat: React.FC = () => {
                 <div className={styles.historyTitle}>{day}</div>
                 <div className={styles.historyCard}>
                   {historySession.map(item => {
-                    if (isTimeInRange(item.created_at!, day)) { // 给历史记录按照时间进行分类
+                    if (isTimeInRange(item.updated_at!, day)) { // 给历史记录按照时间进行分类
                       return (
                         <div key={item.id} onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
                           <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
-                          <div onClick={handleMultifunctional} className={styles.historyBtn}><EllipsisOutlined /></div>
+                          <Dropdown menu={{ items: multiDropdown }} trigger={['click']}><div className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
                         </div>
                       )
                     }
@@ -181,8 +244,22 @@ const Chat: React.FC = () => {
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession }} />
+        <Outlet context={{ historySession, getNewMessage }} />
       }
+
+      <Modal
+        title="永久删除对话"
+        closable={{ 'aria-label': '关闭对话框' }}
+        open={isModalOpen}
+        onOk={delChatSession}
+        onCancel={() => setIsModalOpen(false)}
+        okText={'删除'}
+        cancelText={'取消'}
+        width={'450px'}
+        centered={true}
+      >
+        <p>删除后，该对话将不可恢复，由该对话生成的分享链接也将失效。确认删除吗？</p>
+      </Modal>
     </div >
   )
 }

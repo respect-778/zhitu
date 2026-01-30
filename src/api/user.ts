@@ -4,7 +4,7 @@ import type { IUser, ILoginResponse, IUserInfo } from "@/types/user";
 // 登录接口
 export const loginAPI = (params: IUser): Promise<ILoginResponse> => {
   return httpInstance({
-    url: "/api/user/login",
+    url: "/user/login",
     method: "post",
     data: params
   })
@@ -13,7 +13,7 @@ export const loginAPI = (params: IUser): Promise<ILoginResponse> => {
 // 获取用户信息接口
 export const getUserInfoAPI = (): Promise<IUserInfo> => {
   return httpInstance({
-    url: "/api/user/info",  
+    url: "/user/info",
     method: "get"
   })
 }
