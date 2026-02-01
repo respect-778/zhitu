@@ -30,7 +30,7 @@ export const getNewCommunityListAPI = (params: { keyword?: string; pageNum: numb
 // 搜索/分页/推荐 接口
 export const searchCommunityAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
-    url: "/api/community/search",
+    url: "/community/search",
     method: "get",
     params
   })
@@ -39,7 +39,7 @@ export const searchCommunityAPI = (params: { keyword?: string; pageNum: number; 
 // 根据 id 获取帖子数据
 export const getCommunityByIdAPI = (id: number) => {
   return httpInstance({
-    url: `/api/community/${id}`,
+    url: `/community/${id}`,
     method: 'get'
   })
 }
@@ -47,7 +47,7 @@ export const getCommunityByIdAPI = (id: number) => {
 // 上传图片接口，后端返回正确的图片格式
 export const uploadImageAPI = (formData: FormData) => {
   return httpInstance({
-    url: "/api/community/image",
+    url: "/community/image",
     method: "post",
     data: formData,
   })

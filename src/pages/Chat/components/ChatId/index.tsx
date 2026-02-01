@@ -37,8 +37,6 @@ const ChatId = () => {
     }
   }
 
-  // useImperativeHandle()
-
   // 获取当前 会话id 对应的聊天记录
   const getCurrentChatMessage = async () => {
     try {
