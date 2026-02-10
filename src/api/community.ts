@@ -56,7 +56,7 @@ export const uploadImageAPI = (formData: FormData) => {
 // 发布帖子
 export const addCommunityAPI = (data: IContent) => {
   return httpInstance({
-    url: "/api/community/add",
+    url: "/community/add",
     method: 'post',
     data
   })
@@ -65,7 +65,7 @@ export const addCommunityAPI = (data: IContent) => {
 // 点赞接口
 export const likeCommunityAPI = (id: number, isLiked: boolean) => {
   return httpInstance({
-    url: "/api/community/like",
+    url: "/community/like",
     method: 'get',
     params: {
       id,
@@ -77,7 +77,7 @@ export const likeCommunityAPI = (id: number, isLiked: boolean) => {
 // 收藏接口
 export const collectedCommunityAPI = (id: number, isLiked: boolean) => {
   return httpInstance({
-    url: "/api/community/collected",
+    url: "/community/collected",
     method: 'get',
     params: {
       id,

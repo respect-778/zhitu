@@ -1,16 +1,16 @@
 import httpInstance from "@/utils/http"
 
-// 调用 AI 大模型（非流式，兼容旧接口）
-export const callChatAPI = (mode: number, userMessage: string) => {
-  return httpInstance({
-    url: '/chat/call',
-    method: 'post',
-    data: {
-      mode,
-      userMessage
-    }
-  })
-}
+// // 调用 AI 大模型（非流式，兼容旧接口）
+// export const callChatAPI = (mode: number, userMessage: string) => {
+//   return httpInstance({
+//     url: '/chat/call',
+//     method: 'post',
+//     data: {
+//       mode,
+//       userMessage
+//     }
+//   })
+// }
 
 // 流式调用 AI 大模型（SSE）
 export const callChatStreamAPI = async (
@@ -32,16 +32,24 @@ export const callChatStreamAPI = async (
     throw new Error('无法获取响应流')
   }
 
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder()
+  const reader = response.body.getReader() // 获取流的读取器
+  const decoder = new TextDecoder() // 创建文本解码器 -> 因为网络传输的是二进制，需要使用把二进制转为人类可读的字符串
   let fullContent = ''
 
   try {
     while (true) {
+      // done: 流是否结束（boolean）
+      // value: 这次读取到的二进制数据（Uint8Array）
       const { done, value } = await reader.read()
+
+      // 数据全部传完了，结束了，就退出循环
       if (done) break
 
+      // 把二进制转成字符串
+      // { stream: true } 表示可能还有后续数据，保持解码器状态
       const chunk = decoder.decode(value, { stream: true })
+
+      // SSE 格式是多行文本，按 \n 分割
       const lines = chunk.split('\n')
 
       for (const line of lines) {
@@ -90,11 +98,14 @@ export const getChatMessageAPI = (session_id: number) => {
   })
 }
 
-// 获取所有历史会话记录
-export const getHistorySessionAPI = () => {
+// 根据 user_id 获取用户对应的历史会话记录
+export const getHistorySessionAPI = (user_id: number) => {
   return httpInstance({
     url: '/chat/history',
     method: 'get',
+    params: {
+      user_id
+    }
   })
 }
 

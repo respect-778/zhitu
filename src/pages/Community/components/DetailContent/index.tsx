@@ -61,9 +61,9 @@ const DetailContent: React.FC = () => {
   }
 
   // 处理评论
-  // const handleComment = () => {
+  const handleComment = () => {
 
-  // }
+  }
 
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const DetailContent: React.FC = () => {
             <div className={styles.postComments}>
               <div className={styles.authorAvatar}><img src="/imgs/admin.png" alt="作者" className={styles.avatar} /></div>
               <div className={styles.inputMulti}>
-                <input type="text" placeholder='写留言' className={styles.inputComments} />
+                <input onKeyDown={handleComment} type="text" placeholder='写留言' className={styles.inputComments} />
               </div>
               <div onClick={() => setIsComment(!isComment)} className={styles.commentsBtn}>发送</div>
             </div>

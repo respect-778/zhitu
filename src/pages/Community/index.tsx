@@ -1,7 +1,7 @@
 import styles from './index.module.less'
 import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
 import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined, CloseCircleFilled } from '@ant-design/icons'
-import { Pagination, ConfigProvider, Skeleton } from 'antd'
+import { Pagination, ConfigProvider, Skeleton, message } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import ModalContent from './components/ModalContent'
@@ -18,12 +18,12 @@ const Community = () => {
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
   const initialTab = searchParams.get('tab') // 获取当前 url 查询参数
   const [activeTab, setActiveTab] = useState<string>(initialTab || 'new') // tab
-  const [pageParams, setPageParams] = useState(() => {
+  const [pageParams, setPageParams] = useState(() => { // 当前页、页数、总数
     const search = searchParams.get('page') // 获取 page 参数
     const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
     return { pageNum, pageSize: 3, total: 0 }
   }) // 分页
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // 帖子加载效果
   const [isEmpty, setIsEmpty] = useState(false) // 这个 state 不是证明搜索框是否空，而是搜索的内容是否存在
 
   const userInfo = useAppSelector(state => state.user.userInfo)
@@ -131,7 +131,7 @@ const Community = () => {
 
   // 处理分页中统一的逻辑
   const tabPage = (data: IContentPageParams, page: number, pageSize: number) => {
-    setLoading(false) // 当加载出了数据就关闭加载动画
+    // setLoading(false) // 当加载出了数据就关闭加载动画
     setPageParams(pre => ({ // 修改页数
       ...pre,
       pageNum: page,
@@ -143,6 +143,7 @@ const Community = () => {
 
   // 分页（也是推荐）
   const handlePageSize = async (page: number, pageSize: number, navType: string) => {
+    // setLoading(true)
     if (navType === 'recommend') {
       const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
@@ -168,23 +169,33 @@ const Community = () => {
     navigate(`/community/${id}`)
   }
 
-  // 点击喜欢时触发
+
+  // 点击喜欢时触发（做了乐观更新 -> 用户在网络不加的情况下，点击喜欢按钮也会显示，不会出现点击没反应）
   const handleLike = async (id: number, isLiked: boolean) => {
-    // 当后一个状态依赖前一个状态时，需要使用 pre => pre 这种形式
+    // 乐观更新 UI，当后一个状态依赖前一个状态时，需要使用 pre => pre 这种形式
     setContent(pre => pre.map(item =>
-      item.id === id ? { ...item, isLiked: !item.isLiked, likes: item.isLiked ? item.likes = item.likes - 1 : item.likes = item.likes + 1 } : item
+      item.id === id ? { ...item, isLiked: !isLiked, likes: isLiked ? item.likes - 1 : item.likes + 1 } : item
     ))
 
-    await likeCommunityAPI(id, isLiked) // 调用接口，提醒后端同步修改赞
+    try {
+      // 成功调用接口，无序额外操作，后端同步 UI 变化
+      await likeCommunityAPI(id, isLiked) // 调用接口，提醒后端同步修改赞
+    } catch (error) {
+      message.error(`网络错误，点赞失败`)
+    }
   }
 
   // 点击收藏时触发
   const handleCollection = async (id: number, isCollected: boolean) => {
     setContent(pre => pre.map(item => {
-      return item.id === id ? { ...item, isCollected: !item.isCollected, collection: item.isCollected ? item.collection - 1 : item.collection + 1 } : item
+      return item.id === id ? { ...item, isCollected: !isCollected, collection: isCollected ? item.collection - 1 : item.collection + 1 } : item
     }))
 
-    await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
+    try {
+      await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
+    } catch (error) {
+      message.error(`网络错误，收藏失败`)
+    }
   }
 
   useEffect(() => {

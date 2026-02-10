@@ -12,6 +12,7 @@ export default defineConfig({
   },
 
   server: {
+    // 配置代理
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
@@ -23,5 +24,11 @@ export default defineConfig({
     }
   },
 
-  plugins: [react()],
+  // 插件
+  plugins: [react({
+    babel: {
+      // 使用 react-compiler 编辑器自动优化项目
+      plugins: ['babel-plugin-react-compiler'],
+    },
+  })],
 })

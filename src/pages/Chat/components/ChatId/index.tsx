@@ -7,18 +7,21 @@ import { useOutletContext, useParams } from "react-router"
 
 
 const ChatId = () => {
+  const { id } = useParams() // 获取动态路由
+  const sessionId = parseInt(id!) // 获取当前会话id
   const [mode, setmode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const inputRef = useRef<HTMLInputElement>(null) // 输入框 dom 实例
   const [searchValue, setSearchValue] = useState('') // 输入框内容
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [isStreaming, setIsStreaming] = useState(false) // 是否正在流式生成中
   const [streamingContent, setStreamingContent] = useState('') // 正在流式生成的 AI 内容
-  const { id } = useParams() // 获取动态路由 id
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
   const chatContainerRef = useRef<HTMLDivElement>(null) // 聊天容器 ref，用于自动滚动
-  const { historySession, getNewMessage } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
+  const { historySession, searchValueFa, isNewChat, handleNewChatComplete } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
-    getNewMessage: boolean // 当父组件传递过来的这个 prop 发生了改变，就调用子组件的 getCurrentChatMessage 方法
+    searchValueFa: string,
+    isNewChat: boolean,
+    handleNewChatComplete: () => void
   }>()
 
   // 深度思考模式
@@ -40,7 +43,7 @@ const ChatId = () => {
   // 获取当前 会话id 对应的聊天记录
   const getCurrentChatMessage = async () => {
     try {
-      const res = await getChatMessageAPI(parseInt(id!))
+      const res = await getChatMessageAPI(sessionId)
       setMessages(res.data)
     } catch (error) {
       console.error('获取聊天记录失败:', error)
@@ -57,18 +60,27 @@ const ChatId = () => {
   // 监听消息变化和流式内容变化，自动滚动
   useEffect(() => {
     scrollToBottom()
-  }, [messages, streamingContent])
+  }, [messages, streamingContent]) // 当信息列表和ai流式回复的时候，自动滚动到底部
 
-  // handleSubmit 统一提交问题逻辑 （子路由里 不需要 创建聊天会话）
+  // handleSubmit 统一提交问题逻辑 （子路由里 不需要 创建聊天会话）（这里分 新对话 和 旧对话）
   const handleSubmit = async () => {
-    // 输入框为空，直接返回
-    if (searchValue.trim() === '') return
-    // 输入框不为空时处理
-    const userMessage = searchValue // user 的提问
+    if (isNewChat) {
+      if (searchValueFa.trim() === '') return
+    } else {
+      // 输入框为空，直接返回
+      if (searchValue.trim() === '') return
+    }
+
+    let userMessage = ''
+    if (isNewChat) {
+      userMessage = searchValueFa
+    } else {
+      userMessage = searchValue
+    }
 
     // 1. 创建 user 聊天记录
     try {
-      await addChatMessageAPI({ session_id: parseInt(id!), role: 'user', content: userMessage }) // 创建 用户 聊天记录
+      await addChatMessageAPI({ session_id: sessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
       getCurrentChatMessage() // 获取最新消息列表
     } catch (error) {
       console.log(error)
@@ -79,13 +91,12 @@ const ChatId = () => {
 
     // 2. 流式调用 ai 大模型
     setIsStreaming(true) // 开始流式生成
-    setStreamingContent('') // 清空之前的流式内容
 
     try {
       await callChatStreamAPI(
         mode,
         userMessage,
-        parseInt(id!),
+        sessionId,
         (content) => {
           // 每次收到新内容就更新
           setStreamingContent(content)
@@ -99,6 +110,7 @@ const ChatId = () => {
       // 如果流式调用失败，显示错误信息
       setStreamingContent('当前网络不稳定，请再试试看')
     } finally {
+      handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天为 不是新聊天
       setIsStreaming(false) // 流式生成结束
       setStreamingContent('') // 清空流式内容
       getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
@@ -121,14 +133,20 @@ const ChatId = () => {
   // 当 动态路由 id 发生改变，就调用方法，获取当前 会话id 下的聊天记录
   useEffect(() => {
     getCurrentChatMessage() // 获取到当前 会话id 的数据，显示在界面中
-  }, [id, getNewMessage])
+  }, [sessionId])
+
+  useEffect(() => {
+    if (isNewChat) { // 如果当前是新会话，才调用一次
+      handleSubmit()
+    }
+  }, [isNewChat])
 
 
   return (
     <div className={styles.container}>
       {/* 聊天对话框 */}
       <div className={styles.top}>
-        <div className={styles.title}>{historySession.find(item => item.id === parseInt(id!))?.session_title}</div>
+        <div className={styles.title}>{historySession.find(item => item.id === sessionId)?.session_title}</div>
         <div className={styles.chatConversation} ref={chatContainerRef}>
           {/* 历史消息 */}
           {messages.map((message) => (

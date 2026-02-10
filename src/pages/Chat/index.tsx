@@ -3,12 +3,12 @@ import styles from "./index.module.less"
 import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatMessageAPI, addChatSessionAPI, callChatStreamAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
+import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
 import type { IChatSession } from "@/types/chat";
 import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
-import { Dropdown, Modal } from "antd";
+import { Dropdown, message, Modal } from "antd";
 
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
@@ -19,18 +19,19 @@ const Chat: React.FC = () => {
   const navigate = useNavigate()
   const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const inputRef = useRef<HTMLInputElement>(null) // 输入框 dom 实例
-  const [searchValue, setSearchValue] = useState('') // 输入框内容
+  const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
   const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
   const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
-  const [getNewMessage, setGetNewMessage] = useState(false) // 控制子组件，调用获取全部聊天记录的接口
+  const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
 
 
   // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
     setHistoryActive(0)
+    setSearchValueFa('')
     navigate('/chat')
   }
 
@@ -42,7 +43,7 @@ const Chat: React.FC = () => {
 
   // 获取当前输入框最新值 并 监听输入框是否为空 （进入界面 -> 没有调用方法）
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
+    setSearchValueFa(e.target.value)
     if (e.target.value.trim() !== '') {
       setIsInputEmpty(false) // 输入框不为空
     } else {
@@ -59,11 +60,13 @@ const Chat: React.FC = () => {
   // 重命名
   const handleResetName = (e: any) => {
     e.domEvent.stopPropagation()
+    message.warning('功能还在开发中')
   }
 
   // 分享
   const handleShare = (e: any) => {
     e.domEvent.stopPropagation()
+    message.warning('功能还在开发中')
   }
 
   // 打开删除弹窗
@@ -116,18 +119,18 @@ const Chat: React.FC = () => {
 
   //  获取历史对话框中对应 会话 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
   const getHistoryChatSession = async () => {
-    const res = await getHistorySessionAPI()
+    const res = await getHistorySessionAPI(parseInt(userInfo.data.id)) // 获取用户自己的历史记录
     setHistorySession(res.data)
   }
 
   // handleSubmit 统一提交问题逻辑 （进入界面 -> 没有调用方法）
   const handleSubmit = async () => {
     // 输入框为空，直接返回
-    if (searchValue.trim() === '') return
+    if (searchValueFa.trim() === '') return
     // 输入框不为空时处理
-    const userMessage = searchValue // user 的提问
-    setSearchValue('') // 提交后，清空输入框
+    const userMessage = searchValueFa // user 的提问
     setIsInputEmpty(true) // 输入框为空
+    setIsNewChat(true) // 控制子组件调用父组件 -> 设定当前为 新聊天界面
 
     // 1. 创建聊天会话
     let sessionId = 0
@@ -140,36 +143,15 @@ const Chat: React.FC = () => {
       return // 如果聊天会话创建失败，就终止
     }
 
-    // 2. 创建 user 聊天记录
-    try {
-      await addChatMessageAPI({ session_id: sessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
-    } catch (error) {
-      console.log(error)
-    }
-
-    // 3. 先跳转到会话页面（让用户看到界面）
+    // 2. 跳转到会话页面
     navigate(`/chat/${sessionId}`)
-
-    // 4. 流式调用 ai 大模型（在后台继续，结果会通过数据库更新到页面）
-    try {
-      await callChatStreamAPI(
-        mode,
-        userMessage,
-        sessionId,
-        () => { /* 流式回调，但页面已跳转，这里不需要处理 */ },
-        async (error) => {
-          console.error('AI 流式调用错误:', error)
-          // 失败时创建一条错误消息
-          await addChatMessageAPI({ session_id: sessionId, role: 'ai', content: '当前网络不稳定，请再试试看' })
-        }
-      )
-    } catch (error) {
-      console.error('AI 调用失败:', error)
-    }
-
-    setGetNewMessage(!getNewMessage) // 控制子组件去调用 getCurrentChatMessage 接口方法，刷新界面
   }
 
+  // 处理重置新对话逻辑
+  const handleNewChatComplete = () => {
+    setIsNewChat(false) // 重置为 不是 新聊天
+    setSearchValueFa('')
+  }
 
   // 点击按钮 -> 提交问题 （进入界面 -> 没有调用方法）
   const clickQuestion = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -188,8 +170,10 @@ const Chat: React.FC = () => {
   useEffect(() => {
     // 这里会有一个思考：为什么要依赖 id 呢，只在组件第一次渲染完之后调用一次 获取到历史记录不就好了吗？
     // 这里需要考虑的点是，当用户是创建一个新会话的情况下，当用户点击提交问题之后，会发现历史记录并不是最新的，这里就需要依赖 id，拿到最新的历史记录。
-    getHistoryChatSession()
-  }, [id])
+    if (userInfo.data.id) { // 这里考虑到 从 redux 中获取数据是异步的，所以要等待 userInfo 加载出来之后再调用
+      getHistoryChatSession()
+    }
+  }, [id, userInfo])
 
 
   return (
@@ -234,7 +218,7 @@ const Chat: React.FC = () => {
           {/* ai 聊天输入框 */}
           <div className={styles.chatBox} onClick={() => inputRef.current?.focus()}>
             {/* 输入框 */}
-            <input ref={inputRef} value={searchValue} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} type="text" placeholder="给 ai小助手 发送消息" />
+            <input ref={inputRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} type="text" placeholder="给 ai小助手 发送消息" />
             {/* 按钮 */}
             <div className={styles.chatSubmit}>
               <div onClick={handleThinking} className={`${styles.chatThinking} ${mode === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
@@ -244,7 +228,7 @@ const Chat: React.FC = () => {
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession, getNewMessage }} />
+        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete }} />
       }
 
       <Modal
