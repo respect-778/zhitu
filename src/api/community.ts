@@ -1,6 +1,12 @@
 import type { IContent } from "@/types/community";
 import httpInstance from "@/utils/http";
 
+export interface UploadImageResponse {
+  url?: string
+  urls?: string[]
+}
+
+
 // 获取帖子列表
 export const getCommunityListAPI = () => {
   return httpInstance({
@@ -46,7 +52,7 @@ export const getCommunityByIdAPI = (id: number) => {
 
 // 上传图片接口，后端返回正确的图片格式
 export const uploadImageAPI = (formData: FormData) => {
-  return httpInstance({
+  return httpInstance<UploadImageResponse>({
     url: "/community/image",
     method: "post",
     data: formData,

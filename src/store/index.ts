@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./modules/userStore"
+import communityReducer from "./modules/communityStore"
 
 const store = configureStore({
   reducer: {
     user: userReducer,
+    community: communityReducer
   }
 })
 

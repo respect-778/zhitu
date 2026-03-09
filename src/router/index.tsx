@@ -1,13 +1,22 @@
 import { createBrowserRouter } from "react-router";
+import React, { Suspense } from "react";
+// 一级路由
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 import Layout from "@/pages/Layout";
+// 二级路由（懒加载）
 import Welcome from "@/pages/Welcome";
-import Path from "@/pages/Path";
-import Community from "@/pages/Community";
-import Chat from "@/pages/Chat";
-import DetailContent from "@/pages/Community/components/DetailContent";
+const Path = React.lazy(() => import('@/pages/Path'))
+const Community = React.lazy(() => import('@/pages/Community'))
+const PublishContent = React.lazy(() => import('@/pages/Community/components/PublishContent'))
+const Chat = React.lazy(() => import('@/pages/Chat'))
+const DetailContent = React.lazy(() => import('@/pages/Community/components/DetailContent'))
+// 三级路由
 import ChatId from "@/pages/Chat/components/ChatId";
+import Loading from "@/components/Loading";
+
+
+
 
 const router = createBrowserRouter([
   // 一级路由
@@ -22,27 +31,35 @@ const router = createBrowserRouter([
       },
       {
         path: '/path',
-        element: <Path />
+        element: <Suspense fallback={<Loading />}><Path /></Suspense>
       },
       {
         path: '/community',
-        element: <Community />
+        element: <Suspense fallback={<Loading />}><Community /></Suspense>
       },
+      // {
+      //   path: '/community/:id',
+      //   element: <Suspense fallback={<Loading />}><DetailContent /></Suspense>
+      // },
       {
-        path: '/community/:id',
-        element: <DetailContent />
-      },
-      {
-        path: '/chat/',
-        element: <Chat />,
+        path: '/chat',
+        element: <Suspense fallback={<Loading />}><Chat /></Suspense>,
         children: [
           {
             path: '/chat/:id',
-            element: <ChatId />
+            element: <Suspense fallback={<Loading />}><ChatId /></Suspense>
           }
         ]
       }
     ]
+  },
+  {
+    path: '/community/:id',
+    element: <DetailContent />
+  },
+  {
+    path: '/community/publish',
+    element: <PublishContent />
   },
   {
     path: '/login',

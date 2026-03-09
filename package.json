@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
+    "@bytemd/plugin-gfm": "^1.22.0",
+    "@bytemd/plugin-highlight": "^1.22.0",
+    "@bytemd/react": "^1.22.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@reduxjs/toolkit": "^2.11.2",

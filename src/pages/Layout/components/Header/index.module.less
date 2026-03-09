@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 64px;
+  height: 80px;
   padding: 0 24px;
   display: flex;
   align-items: center;
@@ -43,7 +43,7 @@
       font-weight: 700;
       color: var(--logo-color, #000);
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #1677ff 0%, #00b96b 100%);
+      background: linear-gradient(135deg, #1677ff 0%, #5ba6f1 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -97,8 +97,16 @@
   gap: 25px;
 
   .dropdown {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     color: var(--text-color);
     cursor: pointer;
+
+    .dropdownImg {
+      width: 35px;
+      border-radius: 50%;
+    }
   }
 
   .actionBtn {

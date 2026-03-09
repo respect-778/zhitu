@@ -1,5 +1,5 @@
 import type React from "react"
-import Footer from "./components/Footer"
+// import Footer from "./components/Footer"
 import Header from "./components/Header"
 import { Outlet } from "react-router"
 import styles from "./index.module.less"
@@ -16,7 +16,7 @@ const Layout: React.FC = () => {
           <Outlet />
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

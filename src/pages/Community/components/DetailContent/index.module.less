@@ -102,53 +102,53 @@
     }
   }
 
-  .content {
-    .text {
-      font-size: 18px;
-      line-height: 1.8;
-      margin-bottom: 40px;
-      white-space: pre-wrap;
-      color: var(--text-color);
-      opacity: 0.9;
-    }
+  // .content {
+  //   .text {
+  //     font-size: 18px;
+  //     line-height: 1.8;
+  //     margin-bottom: 40px;
+  //     white-space: pre-wrap;
+  //     color: var(--text-color);
+  //     opacity: 0.9;
+  //   }
 
-    .photoGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
+  //   .photoGrid {
+  //     display: grid;
+  //     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  //     gap: 20px;
+  //     margin-bottom: 40px;
 
-      .photo {
-        width: 280px;
-        height: auto;
-        display: block;
-        border-radius: 2px;
-      }
-    }
+  //     .photo {
+  //       width: 280px;
+  //       height: auto;
+  //       display: block;
+  //       border-radius: 2px;
+  //     }
+  //   }
 
-    .mediaPlaceholder,
-    .linkCard {
-      padding: 30px;
-      background-color: var(--bg-secondary);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 40px;
-      border: 1px dashed var(--border-color);
-    }
+  //   .mediaPlaceholder,
+  //   .linkCard {
+  //     padding: 30px;
+  //     background-color: var(--bg-secondary);
+  //     border-radius: 12px;
+  //     display: flex;
+  //     align-items: center;
+  //     gap: 12px;
+  //     color: var(--text-secondary);
+  //     margin-bottom: 40px;
+  //     border: 1px dashed var(--border-color);
+  //   }
 
-    .linkCard {
-      background-color: var(--bg-secondary);
-      border-style: solid;
-      cursor: pointer;
+  //   .linkCard {
+  //     background-color: var(--bg-secondary);
+  //     border-style: solid;
+  //     cursor: pointer;
 
-      &:hover {
-        background-color: var(--glass-bg);
-      }
-    }
-  }
+  //     &:hover {
+  //       background-color: var(--glass-bg);
+  //     }
+  //   }
+  // }
 
   .divider {
     height: 1px;
@@ -273,17 +273,18 @@
 
 .upCircle {
   position: fixed;
-  right: 40px;
+  right: 100px;
   bottom: 120px;
   z-index: 999;
   cursor: pointer;
-  font-size: 35px;
+  font-size: 40px;
   color: #989AA9;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   transition-delay: 0s;
 
   &:hover {
     color: #6c6c6c;
+    transform: translateY(-1px);
   }
 }
 

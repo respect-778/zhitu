@@ -1,6 +1,6 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, DownOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
@@ -8,7 +8,7 @@ import { useAppSelector } from "@/store/hooks";
 import type { IChatSession } from "@/types/chat";
 import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
-import { Dropdown, message, Modal } from "antd";
+import { Dropdown, message, Modal, Space } from "antd";
 
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
@@ -16,9 +16,9 @@ type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
 const Chat: React.FC = () => {
   const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内']
   const { id } = useParams() // 获取动态路由 id
-  const navigate = useNavigate()
+  const navigate = useNavigate() // 路由导航
   const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
-  const inputRef = useRef<HTMLInputElement>(null) // 输入框 dom 实例
+  const inputRef = useRef<HTMLTextAreaElement>(null) // 输入框 dom 实例
   const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
   const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
@@ -26,7 +26,19 @@ const Chat: React.FC = () => {
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
   const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
   const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
+  const [llmItem, setLLMItem] = useState('glm-4.6')
 
+  // 大模型
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <div onClick={() => setLLMItem('glm-4.6')}>glm-4.6</div>
+    },
+    {
+      key: '2',
+      label: <div onClick={() => setLLMItem('deepseek-r1')}>deepseek-r1</div>
+    },
+  ]
 
   // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
@@ -42,7 +54,7 @@ const Chat: React.FC = () => {
   }
 
   // 获取当前输入框最新值 并 监听输入框是否为空 （进入界面 -> 没有调用方法）
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSearchValueFa(e.target.value)
     if (e.target.value.trim() !== '') {
       setIsInputEmpty(false) // 输入框不为空
@@ -117,9 +129,9 @@ const Chat: React.FC = () => {
     getHistoryChatSession() // 重新加载一次历史对话框
   }
 
-  //  获取历史对话框中对应 会话 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
+  //  获取历史对话框中对应 用户 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
   const getHistoryChatSession = async () => {
-    const res = await getHistorySessionAPI(parseInt(userInfo.data.id)) // 获取用户自己的历史记录
+    const res = await getHistorySessionAPI(parseInt(userInfo.data.id)) // 获取登录用户自己的历史记录
     setHistorySession(res.data)
   }
 
@@ -160,7 +172,7 @@ const Chat: React.FC = () => {
   }
 
   // 回车 -> 提交问题 （进入界面 -> 没有调用方法）
-  const keydownQuestion = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const keydownQuestion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') { // 回车按键
       handleSubmit() // 提交
     }
@@ -196,7 +208,7 @@ const Chat: React.FC = () => {
                       return (
                         <div key={item.id} onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
                           <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
-                          <Dropdown menu={{ items: multiDropdown }} trigger={['click']}><div className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
+                          <Dropdown menu={{ items: multiDropdown }} placement='bottom' trigger={['click']}><div className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
                         </div>
                       )
                     }
@@ -218,17 +230,25 @@ const Chat: React.FC = () => {
           {/* ai 聊天输入框 */}
           <div className={styles.chatBox} onClick={() => inputRef.current?.focus()}>
             {/* 输入框 */}
-            <input ref={inputRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} type="text" placeholder="给 ai小助手 发送消息" />
+            <textarea ref={inputRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} placeholder="给 ai小助手 发送消息" />
             {/* 按钮 */}
             <div className={styles.chatSubmit}>
               <div onClick={handleThinking} className={`${styles.chatThinking} ${mode === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
+              <Dropdown menu={{ items }} trigger={['click']} placement="top">
+                <div className={styles.llmMode}>
+                  <Space>
+                    {llmItem}
+                    <DownOutlined />
+                  </Space>
+                </div>
+              </Dropdown>
               <div onClick={clickQuestion}><div className={`${styles.submitImg} ${isInputEmpty ? styles.inputActive : ''} `}><ArrowUpOutlined /></div></div>
             </div>
           </div>
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete }} />
+        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession }} />
       }
 
       <Modal

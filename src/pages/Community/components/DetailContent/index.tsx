@@ -7,6 +7,7 @@ import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/api/community'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
+import { Viewer } from '@bytemd/react'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取 url 参数
@@ -108,10 +109,14 @@ const DetailContent: React.FC = () => {
           </header>
 
           {/* 文章正文 */}
-          <section className={styles.content}>
+          <Viewer
+            value={detail.content}
+          >
+          </Viewer>
+
+          {/* <section className={styles.content}>
             <p className={styles.text}>{detail.content}</p>
 
-            {/* 媒体展示 */}
             {detail.photo && detail.photo.length > 0 && (
               <div className={styles.photoGrid}>
                 {detail.photo.map((url, index) => (
@@ -122,21 +127,19 @@ const DetailContent: React.FC = () => {
               </div>
             )}
 
-            {/* 视频占位 (如果将来有视频) */}
             {detail.video && detail.video.length > 0 && (
               <div className={styles.mediaPlaceholder}>
                 <span>视频预览 (开发中)</span>
               </div>
             )}
 
-            {/* 链接占位 (如果将来有链接) */}
             {detail.link && detail.link.length > 0 && (
               <div className={styles.linkCard}>
                 <ShareAltOutlined />
                 <span>{detail.link[0]}</span>
               </div>
             )}
-          </section>
+          </section> */}
 
           {/* 分隔线 */}
           <div className={styles.divider} />
@@ -192,7 +195,7 @@ const DetailContent: React.FC = () => {
       </aside>
 
       {/* 回到顶部按钮 */}
-      {scrollYPosition >= 1000 ?
+      {scrollYPosition >= 900 ?
         <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.upCircle}>
           <UpCircleOutlined />
         </div>

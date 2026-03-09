@@ -1,37 +1,68 @@
-import { ArrowUpOutlined, BulbOutlined, LoadingOutlined } from "@ant-design/icons"
+import { ArrowUpOutlined, BulbOutlined, DownOutlined, LoadingOutlined, DownCircleOutlined } from "@ant-design/icons"
 import styles from './index.module.less'
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
 import type { IChatMessage, IChatSession } from "@/types/chat"
 import { useOutletContext, useParams } from "react-router"
+import { Dropdown, Space } from "antd"
+import type { MenuProps } from "antd/lib"
+import { Viewer } from "@bytemd/react"
+import { markdownPlugins, normalizeMarkdownText } from "@/utils/markdown"
+import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
 
 
 const ChatId = () => {
   const { id } = useParams() // 获取动态路由
   const sessionId = parseInt(id!) // 获取当前会话id
   const [mode, setmode] = useState(0) // 是否选中思考模型，默认 0 为不选择
-  const inputRef = useRef<HTMLInputElement>(null) // 输入框 dom 实例
+  const inputRef = useRef<HTMLTextAreaElement>(null) // 输入框 dom 实例
   const [searchValue, setSearchValue] = useState('') // 输入框内容
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [isStreaming, setIsStreaming] = useState(false) // 是否正在流式生成中
   const [streamingContent, setStreamingContent] = useState('') // 正在流式生成的 AI 内容
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
-  const chatContainerRef = useRef<HTMLDivElement>(null) // 聊天容器 ref，用于自动滚动
-  const { historySession, searchValueFa, isNewChat, handleNewChatComplete } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
+  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
     searchValueFa: string,
     isNewChat: boolean,
-    handleNewChatComplete: () => void
+    handleNewChatComplete: () => void,
+    getHistoryChatSession: () => void
   }>()
+  const [llmItem, setLLMItem] = useState('glm-4.6')
 
-  // 深度思考模式
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <div onClick={() => setLLMItem('glm-4.6')}>glm-4.6</div>
+    },
+    {
+      key: '2',
+      label: <div onClick={() => setLLMItem('deepseek-r1')}>deepseek-r1</div>
+    },
+  ]
+
+  // ai回复时，自动跟随 ai 的 hook
+  const {
+    containerRef: chatContainerRef,
+    endRef,
+    showJumpToBottom,
+    onUserScroll,
+    scrollToBottomAndLock
+  } = useStreamingAutoFollow({
+    isStreaming,
+    depKey: `${messages.length}-${streamingContent.length}`,
+    bottomThreshold: 24,
+  })
+
+  // 切换深度思考模式
   const handleThinking = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setmode(mode === 0 ? 1 : 0)
   }
 
   // 获取当前输入框最新值 并 监听输入框是否为空
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSearchValue(e.target.value)
     if (e.target.value.trim() !== '') {
       setIsInputEmpty(false) // 输入框不为空
@@ -50,18 +81,6 @@ const ChatId = () => {
     }
   }
 
-  // 自动滚动到底部
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
-    }
-  }
-
-  // 监听消息变化和流式内容变化，自动滚动
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages, streamingContent]) // 当信息列表和ai流式回复的时候，自动滚动到底部
-
   // handleSubmit 统一提交问题逻辑 （子路由里 不需要 创建聊天会话）（这里分 新对话 和 旧对话）
   const handleSubmit = async () => {
     if (isNewChat) {
@@ -78,10 +97,14 @@ const ChatId = () => {
       userMessage = searchValue
     }
 
+    // 新问题提交时，优先锁定到底部，确保马上跟随 AI 回复区域
+    scrollToBottomAndLock()
+
     // 1. 创建 user 聊天记录
     try {
       await addChatMessageAPI({ session_id: sessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
-      getCurrentChatMessage() // 获取最新消息列表
+      await getCurrentChatMessage() // 获取最新消息列表
+      scrollToBottomAndLock()
     } catch (error) {
       console.log(error)
     }
@@ -111,9 +134,11 @@ const ChatId = () => {
       setStreamingContent('当前网络不稳定，请再试试看')
     } finally {
       handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天为 不是新聊天
+      getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
+      await getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
       setIsStreaming(false) // 流式生成结束
       setStreamingContent('') // 清空流式内容
-      getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
+      scrollToBottomAndLock() // 回复结束后停留在最新回复位置
     }
   }
 
@@ -124,19 +149,28 @@ const ChatId = () => {
   }
 
   // 回车 -> 提交问题
-  const keydownQuestion = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const keydownQuestion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') { // 回车按键
       handleSubmit() // 提交
     }
   }
+
+  // 进入到界面滚动到底部
+  useLayoutEffect(() => {
+    // 这里需要考虑的是：在组件挂载完之后，ai聊天框这里还需要加载出聊天记录，所以如果不先让聊天记录加载出来
+    // 那么滚动到底部的效果就是在聊天记录都没有出现的情况下就触发了，也就导致了后续聊天记录加载出来时，发现没有滚动到底部的效果。
+    if (messages.length === 0) return
+    scrollToBottomAndLock()
+  }, [messages.length])
 
   // 当 动态路由 id 发生改变，就调用方法，获取当前 会话id 下的聊天记录
   useEffect(() => {
     getCurrentChatMessage() // 获取到当前 会话id 的数据，显示在界面中
   }, [sessionId])
 
+  // 如果当前是新会话，才调用一次
   useEffect(() => {
-    if (isNewChat) { // 如果当前是新会话，才调用一次
+    if (isNewChat) {
       handleSubmit()
     }
   }, [isNewChat])
@@ -147,38 +181,62 @@ const ChatId = () => {
       {/* 聊天对话框 */}
       <div className={styles.top}>
         <div className={styles.title}>{historySession.find(item => item.id === sessionId)?.session_title}</div>
-        <div className={styles.chatConversation} ref={chatContainerRef}>
+        <div className={styles.chatConversation} ref={chatContainerRef} onScroll={onUserScroll}>
           {/* 历史消息 */}
           {messages.map((message) => (
             <div
               key={message.id}
               className={message.role === 'user' ? styles.userQuestion : styles.aiReply}
             >
-              {message.content}
+              {message.role === 'user'
+                ? message.content
+                : (
+                  <div className={styles.markdownContent}>
+                    <Viewer
+                      value={normalizeMarkdownText(message.content)}
+                      plugins={markdownPlugins}
+                    />
+                  </div>
+                )}
             </div>
           ))}
           {/* 正在流式生成的 AI 消息 */}
           {isStreaming && (
             <div className={styles.aiReply}>
               <div className={styles.streamingContent}>
-                {streamingContent}
-                <span className={styles.cursor}>▋</span>
+                <div className={styles.markdownContent}>
+                  {streamingContent
+                    ? (
+                      <Viewer
+                        value={normalizeMarkdownText(streamingContent)}
+                        plugins={markdownPlugins}
+                      />
+                    )
+                    : (
+                      <span className={styles.cursorInline}>▋</span>
+                    )}
+                </div>
               </div>
             </div>
           )}
+          <div ref={endRef} className={styles.scrollSentinel} aria-hidden="true" />
         </div>
+        {showJumpToBottom && (
+          <div className={styles.jumpToBottomBtn} onClick={scrollToBottomAndLock}>
+            <DownCircleOutlined />
+          </div>
+        )}
       </div>
       <div className={styles.bottom}>
         {/* ai 聊天输入框 */}
         <div className={styles.chatBox} onClick={() => inputRef.current?.focus()}>
           {/* 输入框 */}
-          <input
+          <textarea
             ref={inputRef}
             value={searchValue}
             onKeyDown={keydownQuestion}
             onChange={handleInputChange}
             className={styles.chatInput}
-            type="text"
             placeholder="给 ai小助手 发送消息"
             disabled={isStreaming} // 生成中时禁用输入
           />
@@ -187,6 +245,15 @@ const ChatId = () => {
             <div onClick={handleThinking} className={`${styles.chatThinking} ${mode ? styles.active : ''}`}>
               <BulbOutlined /> 深度思考
             </div>
+
+            <Dropdown menu={{ items }} trigger={['click']} placement="top">
+              <div className={styles.llmMode}>
+                <Space>
+                  {llmItem}
+                  <DownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
             <div onClick={clickQuestion}>
               <div className={`${styles.submitImg} ${isInputEmpty || isStreaming ? styles.inputActive : ''} `}>
                 {isStreaming ? <LoadingOutlined /> : <ArrowUpOutlined />}
@@ -202,3 +269,4 @@ const ChatId = () => {
 }
 
 export default ChatId
+

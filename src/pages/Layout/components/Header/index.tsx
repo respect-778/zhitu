@@ -2,7 +2,7 @@ import type React from 'react'
 import { useEffect, useLayoutEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
-import { HomeOutlined, CompassOutlined, TeamOutlined, DownOutlined, CommentOutlined } from '@ant-design/icons'
+import { HomeOutlined, CompassOutlined, TeamOutlined, CommentOutlined, GithubOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 import styles from './index.module.less'
@@ -16,14 +16,17 @@ const Header: React.FC = () => {
   const activeTab = pathname
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  // 从 redux 中拿到 username 状态
+  const username = useAppSelector(state => state.user.username)
+  const token = useAppSelector(state => state.user.token)
 
   const navItems = [
     { key: '/', label: '首页', icon: <HomeOutlined /> },
     { key: '/path', label: '学习路线', icon: <CompassOutlined /> },
     { key: '/community', label: '道友圈', icon: <TeamOutlined /> },
-    { key: '/chat', label: 'AI小助手', icon: <CommentOutlined /> },
+    { key: '/chat', label: 'AI助手', icon: <CommentOutlined /> },
+    { key: 'https://github.com/respect-778/zhitu', label: 'Github', icon: <GithubOutlined /> }
   ]
-
 
   // 退出登录
   const handleLogout = () => {
@@ -36,6 +39,12 @@ const Header: React.FC = () => {
   const items: MenuProps['items'] = [
     {
       key: '1',
+      label: (
+        <div>{username}</div>
+      ),
+    },
+    {
+      key: '2',
       label: (
         <div onClick={handleLogout}>
           退出登录
@@ -53,13 +62,15 @@ const Header: React.FC = () => {
     window.scrollTo(0, 0) // 每次切换路由时，滚轮滑到顶部
   }, [pathname])
 
-  // 从 redux 中拿到 username 状态
-  const username = useAppSelector(state => state.user.username)
-  const token = useAppSelector(state => state.user.token)
+
 
   // tab 切换
   const handleTabChange = (key: string) => {
-    navigate(key)
+    if (key === 'https://github.com/respect-778/zhitu') {
+      window.open(key)
+    } else {
+      navigate(key)
+    }
   }
 
   return (
@@ -85,17 +96,19 @@ const Header: React.FC = () => {
       <div className={styles.right}>
         <ThemeToggle />
         {token ?
-          <div className={styles.dropdown}>
-            <Dropdown menu={{ items }} trigger={['click']}>
-              <Space>
-                {username}
-                <DownOutlined />
-              </Space>
-            </Dropdown>
-          </div>
+
+          <Dropdown menu={{ items }} trigger={['click']} placement={'bottom'}>
+            <Space>
+              <div className={styles.dropdown}>
+                <img className={styles.dropdownImg} src="/imgs/admin.png" alt="" />
+              </div>
+            </Space>
+          </Dropdown>
           :
-          <button onClick={() => navigate('/login')} className={styles.actionBtn}>登录</button>}
-        <button className={`${styles.actionBtn} ${styles.primaryBtn}`}>开始探索</button>
+          <div>
+            <button onClick={() => navigate('/login')} className={styles.actionBtn}>登录</button>
+          </div>
+        }
       </div>
     </header>
   )

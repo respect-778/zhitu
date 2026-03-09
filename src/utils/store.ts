@@ -4,7 +4,7 @@ export const getStore = (key: string) => {
 }
 
 // 存对应 key 的值在本地
-export const setStore = (key: string, value: string) => {
+export const setStore = (key: string, value: any) => {
   return localStorage.setItem(key, value)
 }
 

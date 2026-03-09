@@ -4,6 +4,7 @@ import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, 
 import { Pagination, ConfigProvider, Skeleton, message } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
+import ModalContent from './components/PublishContent'
 import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useNavigate, useSearchParams } from 'react-router';
@@ -11,6 +12,7 @@ import { useAppSelector } from '@/store/hooks';
 import { debounce } from 'lodash'
 
 const Community = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false); // 弹框状态
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
@@ -59,9 +61,9 @@ const Community = () => {
     { id: 3, name: 'Web3 开发入门', hot: '5.2k' },
   ]
 
-  // 进入 编辑界面
+  // 打开/关闭 弹框
   const handleOpen = () => {
-    window.open('/community/publish')
+    setIsModalOpen(!isModalOpen)
   }
 
   // 左侧 nav
@@ -348,7 +350,7 @@ const Community = () => {
 
           {/* Post Button (Moved) */}
           <button onClick={handleOpen} className={styles.postBtn}>
-            <EditOutlined /> 发布文章
+            <EditOutlined /> 发布帖子
           </button>
         </div>
 
@@ -383,6 +385,8 @@ const Community = () => {
           ))}
         </div>
       </div>
+
+      {/* <ModalContent isModalOpen={isModalOpen} handleOpen={handleOpen} handlePageSize={() => handlePageSize(1, pageParams.pageSize, activeTab)} /> */}
     </div>
   )
 }
