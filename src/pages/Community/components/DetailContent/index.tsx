@@ -8,6 +8,7 @@ import styles from './index.module.less'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/api/community'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
+import { markdownPlugins } from '@/utils/markdown'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取 url 参数
@@ -111,6 +112,7 @@ const DetailContent: React.FC = () => {
           {/* 文章正文 */}
           <Viewer
             value={detail.content}
+            plugins={markdownPlugins}
           >
           </Viewer>
 

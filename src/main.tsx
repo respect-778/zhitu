@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import './index.less'
 import './styles/theme.less'
+import "github-markdown-css/github-markdown.css" // bytemd 全局样式
 import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 

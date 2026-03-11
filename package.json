@@ -22,6 +22,7 @@
     "@types/three": "^0.182.0",
     "antd": "^6.1.0",
     "axios": "^1.13.2",
+    "github-markdown-css": "^5.9.0",
     "less": "^4.5.1",
     "lodash": "^4.17.21",
     "react": "^19.2.0",

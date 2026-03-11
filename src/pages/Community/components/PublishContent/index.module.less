@@ -1,4 +1,4 @@
-.publishContainer {
+﻿.publishContainer {
   display: flex;
   flex-direction: column;
 }
@@ -58,73 +58,86 @@
 
 .center {
   position: relative;
+}
 
+.titleOverlay {
+  z-index: 10;
+  position: absolute;
+  top: 33px;
+  left: 0;
+  width: 50%;
+  pointer-events: none;
+}
+
+.titleOverlayNarrow {
+  width: calc(50% - 140px);
+
+  // 标题变窄时，输入起点与编辑区正文起点对齐
   .centerTitle {
-    z-index: 10;
-    position: absolute;
-    top: 33px;
-    font-size: 22px;
-    font-weight: 600;
-    outline: none;
-    resize: none;
-    border: none;
-    width: 50%;
-    height: 60px;
-    padding: 15px 60px;
-    border-bottom: 1px solid #e2e2e2;
-    box-sizing: border-box;
-    color: #1a1a1a;
-    overflow: hidden;
-    font-family: inherit;
-
-    &::placeholder {
-      color: #c0c0c0;
-      font-weight: 500;
-    }
-  }
-
-  .centerTitleLength {
-    position: absolute;
-    top: 53px;
-    left: 800px;
-    font-size: 13px;
-    z-index: 10;
+    padding-left: 4%;
   }
 }
 
-// 设置 markdown 编辑器
+.titleOverlayWriteOnly {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.titleOverlayWriteOnlyWide {
+  width: calc(100% - 570px);
+}
+
+.titleOverlayHidden {
+  display: none;
+}
+
+.titleOverlayFullscreen {
+  top: 18px;
+
+  .centerTitle {
+    height: 72px;
+    padding-top: 5px;
+    font-size: 18px;
+  }
+}
+
+.centerTitle {
+  pointer-events: auto;
+  display: block;
+  width: 100%;
+  height: 100px;
+  padding: 20px 60px 36px;
+  border: none;
+  border-bottom: 1px solid #e2e2e2;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: inherit;
+  background: transparent;
+
+  &::placeholder {
+    color: #c0c0c0;
+    font-weight: 500;
+  }
+}
+
+.centerTitleLength {
+  position: absolute;
+  right: 22px;
+  bottom: 10px;
+  font-size: 13px;
+  color: #00000090;
+}
+
 .center :global(.bytemd) {
   width: 100vw;
   height: calc(100vh - 51px);
 }
 
 .center :global(.bytemd-editor) {
-  padding-top: 60px;
-}
-
-// 代码块 字体颜色显示
-.center :global(.bytemd-preview .markdown-body code:not(pre code)) {
-  padding: 0.2em 0.4em;
-  margin: 0 0.2em;
-  font-size: 85%;
-  color: #cf222e;
-  background-color: rgba(175, 184, 193, 0.2);
-  border-radius: 6px;
-}
-
-// 代码块 灰度背景
-.center :global(.bytemd-preview .markdown-body pre) {
-  padding: 16px;
-  border-radius: 8px;
-  overflow: auto;
-  background: #f6f8fa;
-}
-
-// 代码块 去除掉一些默认的样式设定
-.center :global(.bytemd-preview .markdown-body pre code) {
-  padding: 0;
-  margin: 0;
-  color: inherit;
-  background: transparent;
-  border-radius: 0;
+  padding-top: 100px;
 }
