@@ -1,4 +1,4 @@
-import { setStore } from "@/utils/store"
+import { delStore, setStore } from "@/utils/store"
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 interface CommunityState {
@@ -32,16 +32,26 @@ const communityStore = createSlice({
       state.savedTitleValue = action.payload
       setStore('savedTitleValue', state.savedTitleValue) // 在本地存一份
     },
+    // 清空保存下来的文章标题
+    delSavedTitleValue(state) {
+      state.savedTitleValue = ''
+      delStore('savedTitleValue')
+    },
     // 保存下来的文章内容
     setSavedContentValue(state, action: PayloadAction<string>) {
       state.savedContentValue = action.payload
       setStore('savedContentValue', state.savedContentValue) // 在本地存一份
+    },
+    // 清空保存下来的文章内容
+    delSavedContentValue(state) {
+      state.savedContentValue = ''
+      delStore('savedContentValue')
     }
   }
 })
 
-const { confirmSave, cancelSave, setSavedTitleValue, setSavedContentValue } = communityStore.actions
+const { confirmSave, cancelSave, setSavedTitleValue, delSavedTitleValue, setSavedContentValue, delSavedContentValue } = communityStore.actions
 const reducer = communityStore.reducer
 
-export { confirmSave, cancelSave, setSavedTitleValue, setSavedContentValue }
+export { confirmSave, cancelSave, setSavedTitleValue, delSavedTitleValue, setSavedContentValue, delSavedContentValue }
 export default reducer

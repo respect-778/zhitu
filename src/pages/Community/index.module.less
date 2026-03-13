@@ -10,8 +10,8 @@
 }
 
 .left {
-  width: 15%;
-  padding: 20px 0px 20px 20px; // 上 右 下 左
+  width: 13%;
+  padding: 20px 0px 20px 150px; // 上 右 下 左
 
   .leftSidebar {
     width: 100%;
@@ -222,7 +222,7 @@
 }
 
 .middle {
-  width: 60%; // Adjusted width
+  width: 50%; // Adjusted width
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -311,7 +311,7 @@
 
 
         .titleContainer {
-          width: 820px;
+          max-width: calc(100% - 24px);
           font-weight: 400;
           font-size: 18px;
 
@@ -334,7 +334,7 @@
           .contentSty {
             /* 单行时超出850px换行 */
             width: fit-content;
-            max-width: 100%;
+            max-width: calc(100% - 24px);
             word-break: break-word;
             overflow-wrap: break-word;
 
@@ -397,8 +397,8 @@
 }
 
 .right {
-  width: 20%;
-  padding: 20px 20px 20px 0;
+  width: 16%;
+  padding: 20px 150px 20px 0;
   display: flex;
   flex-direction: column;
   gap: 20px;

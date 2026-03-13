@@ -129,7 +129,6 @@ const Community = () => {
 
   // 处理分页中统一的逻辑
   const tabPage = (data: IContentPageParams, page: number, pageSize: number) => {
-    // setLoading(false) // 当加载出了数据就关闭加载动画
     setPageParams(pre => ({ // 修改页数
       ...pre,
       pageNum: page,
@@ -141,7 +140,6 @@ const Community = () => {
 
   // 分页（也是推荐）
   const handlePageSize = async (page: number, pageSize: number, navType: string) => {
-    // setLoading(true)
     if (navType === 'recommend') {
       const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
@@ -166,7 +164,6 @@ const Community = () => {
   const handleDetail = (id: number) => {
     navigate(`/community/${id}`)
   }
-
 
   // 点击喜欢时触发（做了乐观更新 -> 用户在网络不加的情况下，点击喜欢按钮也会显示，不会出现点击没反应）
   const handleLike = async (id: number, isLiked: boolean) => {

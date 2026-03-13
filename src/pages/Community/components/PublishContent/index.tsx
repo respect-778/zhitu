@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react"
+﻿import { useCallback, useEffect, useRef, useState } from "react"
 import "bytemd/dist/index.css"
 import { markdownPlugins } from "@/utils/markdown"
 import "highlight.js/styles/github.css"
@@ -6,11 +6,11 @@ import { Editor } from "@bytemd/react"
 import type { BytemdLocale } from "bytemd"
 import type { Image as MdastImage } from "mdast"
 import styles from "./index.module.less"
-import { useNavigate } from "react-router"
+import { useBeforeUnload, useBlocker, useNavigate } from "react-router"
 import { addCommunityAPI, uploadImageAPI } from "@/api/community"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { confirmSave, cancelSave, setSavedContentValue, setSavedTitleValue } from "@/store/modules/communityStore"
-import { delStore, getStore } from "@/utils/store"
+import { confirmSave, cancelSave, setSavedContentValue, setSavedTitleValue, delSavedTitleValue, delSavedContentValue } from "@/store/modules/communityStore"
+import { getStore } from "@/utils/store"
 import { message, Modal } from "antd"
 import type { IContent } from "@/types/community"
 import { formatDateTime } from "@/utils/formatDateTime"
@@ -114,8 +114,9 @@ const readTitleLayout = (root: HTMLElement): TitleLayoutState => {
 const PublishContent = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+
   const userInfo = useAppSelector((state) => state.user.userInfo) // 用户信息
-  const isSaveContentValue = getStore("isSaveContent") === "true" // 是否保存草稿
+  const isSaveContentValue = getStore("isSaveContent") === "true"
   const savedTitleValue = getStore("savedTitleValue") // 保存的文章标题
   const savedContentValue = getStore("savedContentValue") // 保存的文章内容
 
@@ -123,21 +124,70 @@ const PublishContent = () => {
   const editorHostRef = useRef<HTMLDivElement>(null) // 外层容器，用于拿到 <Editor /> 内部生成的 ".bytemd" 根节点。
   const [titleValue, setTitleValue] = useState("") // 文章标题
   const [contentValue, setContentValue] = useState("") // 文章内容
-  const [isModalOpen, setIsModalOpen] = useState(false) // 是否打开"返回"弹框
+  const [isBackModalOpen, setIsBackModalOpen] = useState(false) // 是否打开"返回"弹框
+  const [isContinueEdit, setIsContinueEdit] = useState(false) // 是否继续编辑
   const [titleLayout, setTitleLayout] = useState<TitleLayoutState>(initialTitleLayoutState) // 仅用于标题位置与显隐控制的布局状态。
 
-  const handleOk = () => {
-    navigate("/community")
+  // 当有标题或内容时，要关闭/刷新/地址栏跳转，进行浏览器（BOM）拦截
+  const isDirty = titleValue.trim().length > 0 || contentValue.trim().length > 0 // 当前标题或内容是否不为空
+  const allowLeaveRef = useRef(false) // 用于放行 “发布成功后跳转” 等程序化跳转
+
+  //  处理关闭/刷新/地址栏跳转（BOM）
+  useBeforeUnload(
+    useCallback((event) => {
+      // 如果当前标题和内容都为空
+      if (!isDirty || allowLeaveRef.current) return
+      event.preventDefault()
+      event.returnValue = "" // 必须设置，浏览器才会弹原生确认
+    }, [isDirty])
+  )
+
+  // 处理站内跳转/浏览器后退（SPA）
+  const blocker = useBlocker(
+    // 这里是在对 
+    ({ currentLocation, nextLocation }) =>
+      !allowLeaveRef.current &&
+      isDirty &&
+      (
+        currentLocation.pathname !== nextLocation.pathname ||
+        currentLocation.search !== nextLocation.search ||
+        currentLocation.hash !== nextLocation.hash
+      )
+  )
+
+  // 继续编辑确定按钮
+  const handleEditOk = () => {
+    // 继续编辑保存下来的文章
+    setTitleValue(savedTitleValue ?? "")
+    setContentValue(savedContentValue ?? "")
+    setIsContinueEdit(false)
   }
 
-  // 弹框取消按钮
-  const handleCancel = () => {
-    setIsModalOpen(false)
+  // 继续编辑取消按钮
+  const handleEditCancel = () => {
+    dispatch(cancelSave())
+    // 清空保存下来的标题和内容
+    dispatch(delSavedTitleValue())
+    dispatch(delSavedContentValue())
+    setIsContinueEdit(false)
+  }
+
+  // 返回弹框确定按钮
+  const handleBackOk = () => {
+    setIsBackModalOpen(false)
+    if (blocker.state === "blocked") blocker.proceed() // 放行刚才那次跳转
+  }
+
+  // 返回弹框取消按钮
+  const handleBackCancel = () => {
+    setIsBackModalOpen(false)
+    if (blocker.state === "blocked") blocker.reset() // 取消跳转，留在当前页
   }
 
   // 点击返回按钮
   const goBack = () => {
-    setIsModalOpen(true)
+    setIsBackModalOpen(true)
+    navigate("/community")
   }
 
   // 在笔记中输入标题时触发
@@ -197,8 +247,10 @@ const PublishContent = () => {
 
     message.success("文章发布成功")
     dispatch(cancelSave())
-    delStore("savedTitleValue")
-    delStore("savedContentValue")
+    // 清空保存的文章标题和内容
+    dispatch(delSavedTitleValue())
+    dispatch(delSavedContentValue())
+    allowLeaveRef.current = true // 不被拦截
     navigate("/community")
   }
 
@@ -226,13 +278,12 @@ const PublishContent = () => {
     )
   }
 
-  // 组件挂载时，检查是否有保存草稿
+  // 组件挂载后，检查是否有保存草稿
   useEffect(() => {
     if (!isSaveContentValue) return
-    // 本地草稿存在时，恢复标题与正文内容。
-    setTitleValue(savedTitleValue ?? "")
-    setContentValue(savedContentValue ?? "")
-  }, [isSaveContentValue, savedTitleValue, savedContentValue])
+    // 打开是否继续编辑文章弹框
+    setIsContinueEdit(true)
+  }, [isSaveContentValue])
 
   // 监听 bytemd 中几种模式的变化
   useEffect(() => {
@@ -356,13 +407,30 @@ const PublishContent = () => {
       <Modal
         title="是否离开网站"
         closable={{ "aria-label": "Custom Close Button" }}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        open={isBackModalOpen}
+        onOk={handleBackOk}
+        onCancel={handleBackCancel}
+        centered
         okText="确定"
         cancelText="取消"
       >
         <p>你所做的更改可能未保存。</p>
+      </Modal>
+
+      {/* 询问弹框 */}
+      <Modal
+        title="编辑文章"
+        closable={false}
+        open={isContinueEdit}
+        onOk={handleEditOk}
+        onCancel={handleEditCancel}
+        maskClosable={false}
+        centered
+        okText="继续"
+        cancelText="取消"
+      >
+        <p>文章：<strong>{savedTitleValue}</strong></p>
+        <p>是否继续编辑</p>
       </Modal>
     </div>
   )
