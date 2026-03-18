@@ -1,4 +1,6 @@
-import httpInstance from "@/utils/http"
+﻿import httpInstance from "@/utils/http"
+import { delStore, getStore, setStore } from "@/utils/store"
+import { message } from "antd"
 
 // // 调用 AI 大模型（非流式，兼容旧接口）
 // export const callChatAPI = (mode: number, userMessage: string) => {
@@ -12,21 +14,83 @@ import httpInstance from "@/utils/http"
 //   })
 // }
 
+// 刷新 access token（refresh token 在 HttpOnly Cookie 里，所以要带 credentials）
+const refreshAccessTokenByFetch = async (): Promise<string> => {
+  const res = await fetch('/api/user/refresh', {
+    method: 'POST',
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    throw new Error('刷新 token 失败')
+  }
+
+  const data = await res.json()
+  const newToken = data?.token
+
+  if (!newToken) {
+    throw new Error('刷新 token 失败')
+  }
+
+  setStore('token', newToken)
+  return newToken
+}
+
 // 流式调用 AI 大模型（SSE）
 export const callChatStreamAPI = async (
   mode: number,
   userMessage: string,
   session_id: number | null,
   onMessage: (content: string) => void,
-  onError?: (error: string) => void
-) => {
+  onError?: (error: string) => void,
+  _retried: boolean = false // 默认第一次是 false
+): Promise<string> => {
   const response = await fetch('/api/chat/call', { // 这里走的 fetch 所以没有基地址，这里需要加上 /api
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getStore('token')}` // 添加 access token
     },
     body: JSON.stringify({ mode, userMessage, session_id }),
   })
+
+  // 对 access token 授权失效情况的处理
+  if (response.status === 401 && !_retried) { // 状态为 401 并且是第一次调用
+    try {
+      await refreshAccessTokenByFetch() // 设置最新 token
+      return callChatStreamAPI(mode, userMessage, session_id, onMessage, onError, true) // 重新调用原请求
+    } catch (error) {
+      // 双 token 都失效时，清理并回登录页
+      delStore('token')
+      delStore('username')
+      delStore('userInfo')
+      message.error('登录已过期，请重新登录')
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 2000)
+
+      throw error
+    }
+  }
+
+  // 非 2xx 的响应不进入 SSE 解析，直接抛错给上层
+  if (!response.ok) {
+    let errorMessage = '请求失败'
+    try {
+      const data = await response.json() as { message?: string }
+      if (data?.message) {
+        errorMessage = data.message
+      }
+    } catch {
+      // 忽略解析失败，走默认错误文案
+    }
+
+    if (onError) {
+      onError(errorMessage)
+    }
+
+    throw new Error(errorMessage)
+  }
 
   if (!response.body) {
     throw new Error('无法获取响应流')

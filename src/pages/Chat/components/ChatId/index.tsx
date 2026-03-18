@@ -29,6 +29,9 @@ const ChatId = () => {
     getHistoryChatSession: () => void
   }>()
   const [llmItem, setLLMItem] = useState('glm-4.6')
+  const titleRef = useRef<HTMLDivElement>(null)
+  const [isTitleOverflow, setIsTitleOverflow] = useState(false)
+  const currentSessionTitle = historySession.find(item => item.id === sessionId)?.session_title ?? ''
 
 
   const items: MenuProps['items'] = [
@@ -130,8 +133,6 @@ const ChatId = () => {
       )
     } catch (error) {
       console.error('AI 调用失败:', error)
-      // 如果流式调用失败，显示错误信息
-      setStreamingContent('当前网络不稳定，请再试试看')
     } finally {
       handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天为 不是新聊天
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
@@ -175,12 +176,29 @@ const ChatId = () => {
     }
   }, [isNewChat])
 
+  useLayoutEffect(() => {
+    const el = titleRef.current
+    if (!el) return
+    setIsTitleOverflow(el.scrollWidth > el.clientWidth)
+  }, [currentSessionTitle])
+
+  useEffect(() => {
+    const handleResize = () => {
+      const el = titleRef.current
+      if (!el) return
+      setIsTitleOverflow(el.scrollWidth > el.clientWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [currentSessionTitle])
+
 
   return (
     <div className={styles.container}>
       {/* 聊天对话框 */}
       <div className={styles.top}>
-        <div className={styles.title}>{historySession.find(item => item.id === sessionId)?.session_title}</div>
+        <div ref={titleRef} className={`${styles.title} ${isTitleOverflow ? styles.titleOverflow : ''}`}>{currentSessionTitle}</div>
         <div className={styles.chatConversation} ref={chatContainerRef} onScroll={onUserScroll}>
           {/* 历史消息 */}
           {messages.map((message) => (

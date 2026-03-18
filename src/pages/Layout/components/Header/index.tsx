@@ -1,4 +1,4 @@
-import type React from 'react'
+﻿import type React from 'react'
 import { useEffect, useLayoutEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
@@ -6,9 +6,9 @@ import { HomeOutlined, CompassOutlined, TeamOutlined, CommentOutlined, GithubOut
 import type { MenuProps } from 'antd';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 import styles from './index.module.less'
-import { getUserInfo } from '@/store/modules/userStore'
-import { delStore } from '@/utils/store'
+import { clearUserInfo, getUserInfo } from '@/store/modules/userStore'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { logoutAPI } from '@/api/user'
 
 
 const Header: React.FC = () => {
@@ -29,11 +29,17 @@ const Header: React.FC = () => {
   ]
 
   // 退出登录
-  const handleLogout = () => {
-    delStore('token')
-    delStore('userInfo')
-    message.success('退出登录成功')
-    navigate('/login')
+  const handleLogout = async () => {
+    try {
+      await logoutAPI()
+    } catch (error) {
+      console.log('退出失败', error)
+    } finally {
+      dispatch(clearUserInfo())
+      message.success('退出登录成功')
+      navigate('/login')
+    }
+
   }
 
   const items: MenuProps['items'] = [
@@ -55,13 +61,14 @@ const Header: React.FC = () => {
 
   // 获取用户信息
   useEffect(() => {
-    dispatch(getUserInfo())
-  }, [dispatch])
+    if (token) {
+      dispatch(getUserInfo())
+    }
+  }, [dispatch, token])
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0) // 每次切换路由时，滚轮滑到顶部
   }, [pathname])
-
 
 
   // tab 切换
@@ -96,11 +103,10 @@ const Header: React.FC = () => {
       <div className={styles.right}>
         <ThemeToggle />
         {token ?
-
           <Dropdown menu={{ items }} trigger={['click']} placement={'bottom'}>
             <Space>
               <div className={styles.dropdown}>
-                <img className={styles.dropdownImg} src="/imgs/admin.png" alt="" />
+                <img className={styles.dropdownImg} draggable="false" src="/imgs/admin.png" alt="" />
               </div>
             </Space>
           </Dropdown>

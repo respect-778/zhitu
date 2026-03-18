@@ -3,9 +3,15 @@ export interface IUser {
   password: string
 }
 
+// 登录响应类型
 export interface ILoginResponse {
   message: string
   token: string
+}
+
+// 退出响应类型
+export interface ILogoutResponse {
+  message: string
 }
 
 // 用户个人资料
@@ -28,7 +34,7 @@ export interface IUserInfo {
     community_count: number // 评论数量
     favorites_count: number // 收藏数量
   }
-  token: string
+  token?: string // 双 token 模式一般不依赖 /user/info 返回 token
 }
 
 // 用户详细资料

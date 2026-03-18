@@ -25,6 +25,7 @@ const Chat: React.FC = () => {
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
   const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
+  const [isMulSessionId, setIsMulSessionId] = useState<number | null>(null) // 选中的多功能会话 id
   const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
   const [llmItem, setLLMItem] = useState('glm-4.6')
 
@@ -69,29 +70,14 @@ const Chat: React.FC = () => {
     navigate(`/chat/${id}`)
   }
 
-  // 重命名
-  const handleResetName = (e: any) => {
-    e.domEvent.stopPropagation()
-    message.warning('功能还在开发中')
-  }
-
-  // 分享
-  const handleShare = (e: any) => {
-    e.domEvent.stopPropagation()
-    message.warning('功能还在开发中')
-  }
-
-  // 打开删除弹窗
-  const handleDel = (e: any) => {
-    setIsModalOpen(true)
-    e.domEvent.stopPropagation()
-  }
-
-  // 多功能弹窗按钮
-  const multiDropdown: MenuProps['items'] = [
+  // 多功能弹窗按钮（数组 -> 函数（该函数直接返回数组！！！）新思路）
+  const multiDropdown = (sessionId: number): MenuProps['items'] => [
     {
       key: '0',
-      onClick: handleResetName,
+      onClick: (e) => {
+        e.domEvent.stopPropagation()
+        message.warning('功能还在开发中')
+      },
       label: (
         <div style={{ padding: '3px 2px' }}>
           <span style={{ paddingRight: '7px' }}><EditOutlined /></span>
@@ -101,7 +87,10 @@ const Chat: React.FC = () => {
     },
     {
       key: '1',
-      onClick: handleShare,
+      onClick: (e) => {
+        e.domEvent.stopPropagation()
+        message.warning('功能还在开发中')
+      },
       label: (
         <div style={{ padding: '3px 2px' }}>
           <span style={{ paddingRight: '7px' }}><ShareAltOutlined /></span>
@@ -111,7 +100,11 @@ const Chat: React.FC = () => {
     },
     {
       key: '2',
-      onClick: handleDel,
+      onClick: (e) => {
+        e.domEvent.stopPropagation()
+        setIsModalOpen(true)
+        setIsMulSessionId(sessionId)
+      },
       label: (
         <div>
           <span style={{ paddingRight: '7px', color: '#ff4d4f' }}><DeleteOutlined /></span>
@@ -123,7 +116,8 @@ const Chat: React.FC = () => {
 
   // 删除会话记录 （进入界面 -> 没有调用方法）
   const delChatSession = async () => {
-    await delChatSessionAPI(parseInt(id!))
+    if (isMulSessionId == null) return
+    await delChatSessionAPI(isMulSessionId) // 删除被选中的会话记录
     setIsModalOpen(false)
     navigate('/chat') // 删除后回到起始页去
     getHistoryChatSession() // 重新加载一次历史对话框
@@ -208,7 +202,7 @@ const Chat: React.FC = () => {
                       return (
                         <div key={item.id} onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
                           <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
-                          <Dropdown menu={{ items: multiDropdown }} placement='bottom' trigger={['click']}><div className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
+                          <Dropdown menu={{ items: multiDropdown(item.id!) }} placement='bottom' trigger={['click']}><div onClick={(e) => e.stopPropagation()} className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
                         </div>
                       )
                     }
