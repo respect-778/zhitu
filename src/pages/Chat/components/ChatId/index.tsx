@@ -3,23 +3,26 @@ import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
 import type { IChatMessage, IChatSession } from "@/types/chat"
-import { useOutletContext, useParams } from "react-router"
+import { useNavigate, useOutletContext, useParams } from "react-router"
 import { Dropdown, Space } from "antd"
 import type { MenuProps } from "antd/lib"
 import { Viewer } from "@bytemd/react"
-import { markdownPlugins, normalizeMarkdownText } from "@/utils/markdown"
+// import hljs from "highlight.js"
+import { markdownPlugins, markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markdown"
 import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea"
 
 
 const ChatId = () => {
   const { id } = useParams() // 获取动态路由
   const sessionId = parseInt(id!) // 获取当前会话id
+  const navigate = useNavigate()
   const [mode, setmode] = useState(0) // 是否选中思考模型，默认 0 为不选择
-  const inputRef = useRef<HTMLTextAreaElement>(null) // 输入框 dom 实例
   const [searchValue, setSearchValue] = useState('') // 输入框内容
+  const { textareaRef } = useAutoResizeTextarea({ value: searchValue })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
-  const [isStreaming, setIsStreaming] = useState(false) // 是否正在流式生成中
-  const [streamingContent, setStreamingContent] = useState('') // 正在流式生成的 AI 内容
+  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
+  const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
   const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
@@ -53,8 +56,8 @@ const ChatId = () => {
     onUserScroll,
     scrollToBottomAndLock
   } = useStreamingAutoFollow({
-    isStreaming,
-    depKey: `${messages.length}-${streamingContent.length}`,
+    isStreaming: currentStream.isStreaming,
+    depKey: `${messages.length}-${currentStream.content.length}`,
     bottomThreshold: 24,
   })
 
@@ -80,7 +83,9 @@ const ChatId = () => {
       const res = await getChatMessageAPI(sessionId)
       setMessages(res.data)
     } catch (error) {
+      navigate('/chat', { replace: true })
       console.error('获取聊天记录失败:', error)
+
     }
   }
 
@@ -100,12 +105,15 @@ const ChatId = () => {
       userMessage = searchValue
     }
 
+    const activeSessionId = sessionId
+    // handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
+
     // 新问题提交时，优先锁定到底部，确保马上跟随 AI 回复区域
     scrollToBottomAndLock()
 
     // 1. 创建 user 聊天记录
     try {
-      await addChatMessageAPI({ session_id: sessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
+      await addChatMessageAPI({ session_id: activeSessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
       await getCurrentChatMessage() // 获取最新消息列表
       scrollToBottomAndLock()
     } catch (error) {
@@ -115,17 +123,19 @@ const ChatId = () => {
     setSearchValue('') // 提交后，清空输入框
     setIsInputEmpty(true) // 输入框为空
 
-    // 2. 流式调用 ai 大模型
-    setIsStreaming(true) // 开始流式生成
 
+    // 开启流式生成并记录当前开启流式的会话id
+    setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: true, content: '' } }))
+
+    // 2. 流式调用 ai 大模型
     try {
       await callChatStreamAPI(
         mode,
         userMessage,
-        sessionId,
+        activeSessionId,
         (content) => {
           // 每次收到新内容就更新
-          setStreamingContent(content)
+          setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: true, content } }))
         },
         (error) => {
           console.error('流式调用错误:', error)
@@ -134,12 +144,11 @@ const ChatId = () => {
     } catch (error) {
       console.error('AI 调用失败:', error)
     } finally {
-      handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天为 不是新聊天
+      handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
       await getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
-      setIsStreaming(false) // 流式生成结束
-      setStreamingContent('') // 清空流式内容
-      scrollToBottomAndLock() // 回复结束后停留在最新回复位置
+      setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: false, content: '' } })) // 结束流式生成并清空当前流式内容。
+      // scrollToBottomAndLock() // 回复结束后停留在最新回复位置
     }
   }
 
@@ -193,6 +202,21 @@ const ChatId = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [currentSessionTitle])
 
+  // // 流式结束后再统一高亮代码，避免流式阶段高频闪烁与滚动抖动
+  // useLayoutEffect(() => {
+  //   if (currentStream.isStreaming) return
+
+  //   const container = chatContainerRef.current
+  //   if (!container) return
+
+  //   const codeBlocks = container.querySelectorAll<HTMLElement>('.markdown-body pre code')
+  //   codeBlocks.forEach((block) => {
+  //     if (!block.classList.contains('hljs')) {
+  //       hljs.highlightElement(block)
+  //     }
+  //   })
+  // }, [messages, currentStream.isStreaming, sessionId])
+
 
   return (
     <div className={styles.container}>
@@ -215,19 +239,20 @@ const ChatId = () => {
                       plugins={markdownPlugins}
                     />
                   </div>
-                )}
+                )
+              }
             </div>
           ))}
           {/* 正在流式生成的 AI 消息 */}
-          {isStreaming && (
+          {currentStream.isStreaming && (
             <div className={styles.aiReply}>
               <div className={styles.streamingContent}>
                 <div className={styles.markdownContent}>
-                  {streamingContent
+                  {currentStream.content
                     ? (
                       <Viewer
-                        value={normalizeMarkdownText(streamingContent)}
-                        plugins={markdownPlugins}
+                        value={normalizeMarkdownText(currentStream.content)}
+                        plugins={markdownPluginsNoHighlight}
                       />
                     )
                     : (
@@ -239,7 +264,7 @@ const ChatId = () => {
           )}
           <div ref={endRef} className={styles.scrollSentinel} aria-hidden="true" />
         </div>
-        {showJumpToBottom && (
+        {showJumpToBottom && currentStream.isStreaming && (
           <div className={styles.jumpToBottomBtn} onClick={scrollToBottomAndLock}>
             <DownCircleOutlined />
           </div>
@@ -247,16 +272,16 @@ const ChatId = () => {
       </div>
       <div className={styles.bottom}>
         {/* ai 聊天输入框 */}
-        <div className={styles.chatBox} onClick={() => inputRef.current?.focus()}>
+        <div className={styles.chatBox} onClick={() => textareaRef.current?.focus()}>
           {/* 输入框 */}
           <textarea
-            ref={inputRef}
+            ref={textareaRef}
             value={searchValue}
             onKeyDown={keydownQuestion}
             onChange={handleInputChange}
             className={styles.chatInput}
             placeholder="给 ai小助手 发送消息"
-            disabled={isStreaming} // 生成中时禁用输入
+            disabled={currentStream.isStreaming} // 生成中时禁用输入
           />
           {/* 按钮 */}
           <div className={styles.chatSubmit}>
@@ -264,7 +289,7 @@ const ChatId = () => {
               <BulbOutlined /> 深度思考
             </div>
 
-            <Dropdown menu={{ items }} trigger={['click']} placement="top">
+            <Dropdown menu={{ items }} trigger={['click']} placement="bottom">
               <div className={styles.llmMode}>
                 <Space>
                   {llmItem}
@@ -273,8 +298,8 @@ const ChatId = () => {
               </div>
             </Dropdown>
             <div onClick={clickQuestion}>
-              <div className={`${styles.submitImg} ${isInputEmpty || isStreaming ? styles.inputActive : ''} `}>
-                {isStreaming ? <LoadingOutlined /> : <ArrowUpOutlined />}
+              <div className={`${styles.submitImg} ${isInputEmpty || currentStream.isStreaming ? styles.inputActive : ''} `}>
+                {currentStream.isStreaming ? <LoadingOutlined /> : <ArrowUpOutlined />}
               </div>
             </div>
           </div>

@@ -8,7 +8,6 @@ import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, 
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useAppSelector } from '@/store/hooks';
-import { debounce } from 'lodash'
 
 const Community = () => {
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
@@ -140,6 +139,7 @@ const Community = () => {
 
   // 分页（也是推荐）
   const handlePageSize = async (page: number, pageSize: number, navType: string) => {
+    setLoading(true)
     if (navType === 'recommend') {
       const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
@@ -150,6 +150,7 @@ const Community = () => {
       const res = await getNewCommunityListAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     }
+    setLoading(false)
 
     // setSearchParams 里会自动修改浏览器地址的查询字符串（内部自动使用了 ）
     setSearchParams(pre => { // 把当前选中的页数给到 searchParams
@@ -209,7 +210,7 @@ const Community = () => {
               <button className={styles.searchButton} type="submit">
                 <SearchOutlined />
               </button>
-              <input onChange={handleSearchChange} onKeyDown={debounce(searchCommunity, 300)} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
+              <input onChange={handleSearchChange} onKeyDown={searchCommunity} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
               <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
               {searchValue !== '' &&
                 <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>

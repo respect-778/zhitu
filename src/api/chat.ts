@@ -99,46 +99,78 @@ export const callChatStreamAPI = async (
   const reader = response.body.getReader() // 获取流的读取器
   const decoder = new TextDecoder() // 创建文本解码器 -> 因为网络传输的是二进制，需要使用把二进制转为人类可读的字符串
   let fullContent = ''
+  let sseBuffer = '' // 处理 SSE 半包数据
 
   try {
+    const processSseEvent = (eventText: string): boolean => {
+      const dataLines = eventText
+        .split('\n')
+        .map(line => line.trimEnd())
+        .filter(line => line.startsWith('data: '))
+        .map(line => line.slice(6))
+
+      if (dataLines.length === 0) return false
+
+      const data = dataLines.join('\n').trim()
+      if (!data) return false
+
+      if (data === '[DONE]') {
+        return true
+      }
+
+      let parsed: { content?: string, error?: string }
+      try {
+        parsed = JSON.parse(data)
+      } catch {
+        // 非完整 JSON 或非业务数据，忽略
+        return false
+      }
+
+      if (parsed.content) {
+        fullContent += parsed.content
+        onMessage(fullContent) // 回调，传递当前完整内容
+      }
+
+      if (parsed.error) {
+        if (onError) {
+          onError(parsed.error)
+        }
+        throw new Error(parsed.error)
+      }
+
+      return false
+    }
+
     while (true) {
       // done: 流是否结束（boolean）
       // value: 这次读取到的二进制数据（Uint8Array）
       const { done, value } = await reader.read()
 
-      // 数据全部传完了，结束了，就退出循环
-      if (done) break
+      // 流结束时把解码器剩余内容冲刷出来
+      if (done) {
+        sseBuffer += decoder.decode()
+      } else {
+        // 把二进制转成字符串
+        // { stream: true } 表示可能还有后续数据，保持解码器状态
+        sseBuffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, '\n')
+      }
 
-      // 把二进制转成字符串
-      // { stream: true } 表示可能还有后续数据，保持解码器状态
-      const chunk = decoder.decode(value, { stream: true })
+      // SSE 事件以空行分隔；保留最后一段残片等待下一个 chunk 拼接
+      const events = sseBuffer.split('\n\n')
+      sseBuffer = done ? '' : (events.pop() ?? '')
 
-      // SSE 格式是多行文本，按 \n 分割
-      const lines = chunk.split('\n')
-
-      for (const line of lines) {
-        if (!line.trim() || !line.startsWith('data: ')) continue
-
-        const data = line.slice(6).trim()
-        if (data === '[DONE]') {
+      for (const eventText of events) {
+        if (processSseEvent(eventText)) {
           return fullContent
         }
+      }
 
-        try {
-          const parsed = JSON.parse(data)
-          if (parsed.content) {
-            fullContent += parsed.content
-            onMessage(fullContent)  // 回调，传递当前完整内容
-          }
-          if (parsed.error) {
-            if (onError) {
-              onError(parsed.error)
-            }
-            throw new Error(parsed.error)
-          }
-        } catch (e) {
-          // 忽略解析错误
+      if (done) {
+        // 最后一段没有以空行结束时，也尝试解析一次
+        if (sseBuffer.trim()) {
+          processSseEvent(sseBuffer)
         }
+        break
       }
     }
   } catch (error) {

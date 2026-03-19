@@ -1,7 +1,7 @@
 import type React from "react";
 import styles from "./index.module.less"
 import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, DownOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
@@ -9,6 +9,7 @@ import type { IChatSession } from "@/types/chat";
 import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
 import { Dropdown, message, Modal, Space } from "antd";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
@@ -18,8 +19,8 @@ const Chat: React.FC = () => {
   const { id } = useParams() // 获取动态路由 id
   const navigate = useNavigate() // 路由导航
   const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
-  const inputRef = useRef<HTMLTextAreaElement>(null) // 输入框 dom 实例
   const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
+  const { textareaRef } = useAutoResizeTextarea({ value: searchValueFa }) // textarea 自适应高度 hook
   const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
@@ -136,7 +137,6 @@ const Chat: React.FC = () => {
     // 输入框不为空时处理
     const userMessage = searchValueFa // user 的提问
     setIsInputEmpty(true) // 输入框为空
-    setIsNewChat(true) // 控制子组件调用父组件 -> 设定当前为 新聊天界面
 
     // 1. 创建聊天会话
     let sessionId = 0
@@ -148,6 +148,8 @@ const Chat: React.FC = () => {
       console.log(error)
       return // 如果聊天会话创建失败，就终止
     }
+
+    setIsNewChat(true) // 控制子组件调用父组件 -> 设定当前为 新聊天界面
 
     // 2. 跳转到会话页面
     navigate(`/chat/${sessionId}`)
@@ -222,14 +224,14 @@ const Chat: React.FC = () => {
             <div>今天有什么可以帮到你？</div>
           </div>
           {/* ai 聊天输入框 */}
-          <div className={styles.chatBox} onClick={() => inputRef.current?.focus()}>
+          <div className={styles.chatBox} onClick={() => textareaRef.current?.focus()}>
             {/* 输入框 */}
-            <textarea ref={inputRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} placeholder="给 ai小助手 发送消息" />
+            <textarea ref={textareaRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} placeholder="给 ai小助手 发送消息" />
             {/* 按钮 */}
             <div className={styles.chatSubmit}>
               <div onClick={handleThinking} className={`${styles.chatThinking} ${mode === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
               <Dropdown menu={{ items }} trigger={['click']} placement="top">
-                <div className={styles.llmMode}>
+                <div className={styles.llmMode} onClick={(e) => e.stopPropagation()}>
                   <Space>
                     {llmItem}
                     <DownOutlined />

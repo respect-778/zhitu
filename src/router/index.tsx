@@ -37,10 +37,6 @@ const router = createBrowserRouter([
         path: '/community',
         element: <Suspense fallback={<Loading />}><Community /></Suspense>
       },
-      // {
-      //   path: '/community/:id',
-      //   element: <Suspense fallback={<Loading />}><DetailContent /></Suspense>
-      // },
       {
         path: '/chat',
         element: <Suspense fallback={<Loading />}><Chat /></Suspense>,
@@ -55,11 +51,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/community/:id',
-    element: <DetailContent />
+    element: <Suspense fallback={<Loading />}><DetailContent /></Suspense>
   },
   {
     path: '/community/publish',
-    element: <PublishContent />
+    element: <Suspense fallback={<Loading />}><PublishContent /></Suspense>
   },
   {
     path: '/login',

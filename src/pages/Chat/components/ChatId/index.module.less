@@ -1,5 +1,6 @@
 .container {
   width: 85%;
+  height: calc(100vh - 85px);
   display: flex;
   flex-direction: column;
 }
@@ -9,7 +10,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 660px;
+  flex: 1;
+  min-height: 0;
 
   .title {
     color: var(--text-color);
@@ -27,7 +29,7 @@
 
   .chatConversation {
     width: 100%;
-    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto; // 允许滚动
@@ -50,14 +52,10 @@
     .aiReply {
       align-self: flex-start;
       max-width: 59.6%;
-      // background: #f2f3f4;
       color: #1d1d1f;
       padding: 10px 16px;
-      // border-radius: 16px;
       word-wrap: break-word;
       line-height: 1.5;
-      // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-      margin: 10px 0px;
       margin-left: 280px;
     }
 
@@ -153,6 +151,7 @@
 }
 
 .bottom {
+  flex-shrink: 0; // 底部不被压扁
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -161,10 +160,9 @@
   .chatBox {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     padding: 10px;
     width: 60%;
-    height: 14%;
+    height: auto;
     border: 0.5px solid rgba(197, 196, 196, 0.6);
     border-radius: 20px;
     box-shadow: var(--shadow-sm);
@@ -172,7 +170,7 @@
 
     .chatInput {
       width: 97%;
-      min-height: 15%;
+      height: auto;
       padding: 5px 10px;
       border: none;
       outline: none;

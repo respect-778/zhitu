@@ -20,6 +20,11 @@ export const markdownPlugins: BytemdPlugin[] = [
   highlight()
 ]
 
+// 流式阶段只做 Markdown 结构渲染，不做代码高亮，避免高频重排导致闪烁。
+export const markdownPluginsNoHighlight: BytemdPlugin[] = [
+  gfm({ locale: zhHansGfmLocale }),
+]
+
 // 某些流式响应仅包含转义的换行符，需转换为正确的Markdown渲染格式。
 export const normalizeMarkdownText = (value: string): string => {
   const normalized = value.replace(/\r\n/g, "\n")

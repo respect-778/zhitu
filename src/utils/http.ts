@@ -115,7 +115,7 @@ httpInstance.interceptors.response.use(
 
     const shouldShowMessage = !!status && (status !== 401 || !!originalRequest?.skipRefresh)
     if (shouldShowMessage) {
-      message.error(error.response?.data?.message || '请求失败')
+      console.log(error.response?.data?.message || '请求失败')
     }
 
     return Promise.reject(error)
