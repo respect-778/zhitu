@@ -1,9 +1,9 @@
 import type React from "react";
 import styles from "./index.module.less"
 import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, DownOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI } from "@/api/chat";
+import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI, renameChatSessionTitleAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
 import type { IChatSession } from "@/types/chat";
 import type { MenuProps } from "antd";
@@ -27,8 +27,11 @@ const Chat: React.FC = () => {
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
   const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
   const [isMulSessionId, setIsMulSessionId] = useState<number | null>(null) // 选中的多功能会话 id
+  const [renameTitleMap, setRenameTitleMap] = useState<Record<number, { isRename: boolean, title: string }>>({}) // 重命名会话标题
+  const renameInputRef = useRef<HTMLInputElement>(null)
   const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
   const [llmItem, setLLMItem] = useState('glm-4.6')
+  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
 
   // 大模型
   const items: MenuProps['items'] = [
@@ -45,7 +48,7 @@ const Chat: React.FC = () => {
   // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
     setHistoryActive(0)
-    setSearchValueFa('')
+    handleNewChatComplete()
     navigate('/chat')
   }
 
@@ -72,12 +75,12 @@ const Chat: React.FC = () => {
   }
 
   // 多功能弹窗按钮（数组 -> 函数（该函数直接返回数组！！！）新思路）
-  const multiDropdown = (sessionId: number): MenuProps['items'] => [
+  const multiDropdown = (selectId: number, session_title: string): MenuProps['items'] => [
     {
       key: '0',
-      onClick: (e) => {
+      onClick: async (e) => {
         e.domEvent.stopPropagation()
-        message.warning('功能还在开发中')
+        setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: true, title: session_title } }))
       },
       label: (
         <div style={{ padding: '3px 2px' }}>
@@ -104,7 +107,7 @@ const Chat: React.FC = () => {
       onClick: (e) => {
         e.domEvent.stopPropagation()
         setIsModalOpen(true)
-        setIsMulSessionId(sessionId)
+        setIsMulSessionId(selectId)
       },
       label: (
         <div>
@@ -114,6 +117,24 @@ const Chat: React.FC = () => {
       )
     },
   ]
+
+  // 重命名标题
+  const handleRenameTitle = async (e: React.KeyboardEvent<HTMLInputElement>, selectId: number) => {
+    if (e.key === 'Enter') {
+      try {
+        await renameChatSessionTitleAPI(selectId, renameTitleMap[selectId].title) // 调用接口重命名
+        setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: false, title: '' } })) // 重置
+        getHistoryChatSession() // 获取最新的历史记录框
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  // 当重命名标题失焦
+  const handleTitleBlur = async (selectId: number) => {
+    setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: false, title: '' } }))
+  }
 
   // 删除会话记录 （进入界面 -> 没有调用方法）
   const delChatSession = async () => {
@@ -149,6 +170,8 @@ const Chat: React.FC = () => {
       return // 如果聊天会话创建失败，就终止
     }
 
+    setHistoryActive(sessionId)
+
     setIsNewChat(true) // 控制子组件调用父组件 -> 设定当前为 新聊天界面
 
     // 2. 跳转到会话页面
@@ -173,6 +196,19 @@ const Chat: React.FC = () => {
       handleSubmit() // 提交
     }
   }
+
+  // 在组件挂载之后聚焦输入框
+  useEffect(() => {
+    if (textareaRef.current && userInfo.data.id) {
+      textareaRef.current.focus()
+    }
+  }, [id])
+
+  useEffect(() => {
+    if (renameInputRef.current) {
+      renameInputRef.current.focus()
+    }
+  }, [renameTitleMap])
 
   // 在 dom 渲染完成之后或动态路由 id 发生变化的时候，会调用方法
   useEffect(() => {
@@ -202,9 +238,15 @@ const Chat: React.FC = () => {
                   {historySession.map(item => {
                     if (isTimeInRange(item.updated_at!, day)) { // 给历史记录按照时间进行分类
                       return (
-                        <div key={item.id} onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
-                          <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
-                          <Dropdown menu={{ items: multiDropdown(item.id!) }} placement='bottom' trigger={['click']}><div onClick={(e) => e.stopPropagation()} className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
+                        <div key={item.id}>
+                          {renameTitleMap[item.id!]?.isRename ?
+                            <input ref={renameInputRef} value={renameTitleMap[item.id!].title} onChange={(e) => setRenameTitleMap(pre => ({ ...pre, [item.id!]: { isRename: true, title: e.target.value } }))} onKeyDown={(e) => handleRenameTitle(e, item.id!)} onBlur={() => handleTitleBlur(item.id!)} className={styles.renameSessionTitle} type="text" />
+                            :
+                            <div onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
+                              <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
+                              <Dropdown menu={{ items: multiDropdown(item.id!, item.session_title!) }} placement='bottom' trigger={['click']}><div onClick={(e) => e.stopPropagation()} className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
+                            </div>
+                          }
                         </div>
                       )
                     }
@@ -244,7 +286,7 @@ const Chat: React.FC = () => {
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession }} />
+        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession }} />
       }
 
       <Modal

@@ -36,13 +36,13 @@
   width: 13.8%;
   flex-shrink: 0;
   overflow: auto;
-  height: calc(100vh - 102px);
+  height: calc(100vh - 111px);
   background-color: var(--bg-secondary);
   padding: 10px;
 
   .newChat {
     position: fixed;
-    width: 12.5%;
+    width: 12%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -75,7 +75,7 @@
 
     .historyTitle {
       padding: 0 10px;
-      font-size: 13px;
+      font-size: 15px;
       color: #96999f;
       user-select: none;
     }
@@ -83,6 +83,18 @@
     .historyCard {
       display: flex;
       flex-direction: column;
+
+      .renameSessionTitle {
+        width: 90%;
+        border-radius: 10px;
+        padding: 10.5px 9.2px;
+        color: var(--text-color);
+        font-size: 15px;
+        overflow: hidden; // 超出部分隐藏
+        white-space: nowrap; // 不换行
+        border: 1px solid #3964fe;
+        outline: none;
+      }
 
       .historyItem {
         display: flex;

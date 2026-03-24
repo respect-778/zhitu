@@ -230,3 +230,15 @@ export const delChatSessionAPI = (session_id: number) => {
     method: 'delete',
   })
 }
+
+// 重命名聊天会话标题
+export const renameChatSessionTitleAPI = (session_id: number, title: string) => {
+  return httpInstance({
+    url: '/chat/renameTitle',
+    method: 'post',
+    data: {
+      session_id,
+      title
+    }
+  })
+}

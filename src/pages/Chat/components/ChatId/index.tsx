@@ -21,16 +21,17 @@ const ChatId = () => {
   const [searchValue, setSearchValue] = useState('') // 输入框内容
   const { textareaRef } = useAutoResizeTextarea({ value: searchValue })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
-  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
-  const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
-  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
+  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
     searchValueFa: string,
     isNewChat: boolean,
     handleNewChatComplete: () => void,
-    getHistoryChatSession: () => void
+    getHistoryChatSession: () => void,
+    streamBySession: Record<number, { isStreaming: boolean, content: string }>,
+    setStreamBySession: React.Dispatch<React.SetStateAction<Record<number, { isStreaming: boolean, content: string }>>>
   }>()
+  const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
   const [llmItem, setLLMItem] = useState('glm-4.6')
   const titleRef = useRef<HTMLDivElement>(null)
   const [isTitleOverflow, setIsTitleOverflow] = useState(false)
@@ -106,7 +107,6 @@ const ChatId = () => {
     }
 
     const activeSessionId = sessionId
-    // handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
 
     // 新问题提交时，优先锁定到底部，确保马上跟随 AI 回复区域
     scrollToBottomAndLock()
@@ -148,7 +148,6 @@ const ChatId = () => {
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
       await getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
       setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: false, content: '' } })) // 结束流式生成并清空当前流式内容。
-      // scrollToBottomAndLock() // 回复结束后停留在最新回复位置
     }
   }
 

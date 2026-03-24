@@ -13,7 +13,6 @@ import { logoutAPI } from '@/api/user'
 
 const Header: React.FC = () => {
   const { pathname } = useLocation() // 获取当前的地址
-  const activeTab = pathname
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   // 从 redux 中拿到 username 状态
@@ -80,18 +79,26 @@ const Header: React.FC = () => {
     }
   }
 
+  // 处理导航高亮：/chat 与 /chat/:id 都高亮 AI助手
+  const isNavItemActive = (key: string) => {
+    if (key === '/chat') {
+      return pathname === '/chat' || pathname.startsWith('/chat/')
+    }
+    return pathname === key
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.logo} onClick={() => navigate('/')}>
           <img className={styles.img} src="/imgs/logo.png" alt="Zhitu Logo" />
-          <span className={styles.text}>知途 Zhitu</span>
+          <span className={styles.text}>知途</span>
         </div>
         <ul className={styles.nav}>
           {navItems.map((item) => (
             <li
               key={item.key}
-              className={`${styles.navItem} ${activeTab === item.key ? styles.active : ''}`}
+              className={`${styles.navItem} ${isNavItemActive(item.key) ? styles.active : ''}`}
               onClick={() => handleTabChange(item.key)}
             >
               {item.icon}
