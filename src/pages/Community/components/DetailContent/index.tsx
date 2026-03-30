@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, ShareAltOutlined, UpCircleOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
@@ -9,10 +9,15 @@ import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
+import tocbot from 'tocbot'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取 url 参数
   const navigate = useNavigate()
+
+  const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
+  const tocbotRef = useRef<HTMLDivElement>(null) // 目录 ref
+
   const [detail, setDetail] = useState<IContent>({
     id: 0,
     avatar: '',
@@ -68,9 +73,71 @@ const DetailContent: React.FC = () => {
   }
 
 
+  // 获取到对应 id 的文章 
   useEffect(() => {
     getCommunityById()
   }, [])
+
+  // 进入详情页时先回到顶部，避免目录初始化时激活到中间位置
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [])
+
+  // 显示文章目录
+  useEffect(() => {
+    if (!articleRef.current || !tocbotRef.current) return
+    // 获取 markdownBody 元素
+    const markdownBody = articleRef.current.querySelector('.markdown-body') as HTMLElement | null
+    if (!markdownBody) return
+    const headingIdMap = new Map<string, number>()
+
+    // 基于标题文本生成稳定 id，避免 href 变成 "#" 导致历史记录多一条
+    const getHeadingId = (rawText: string, fallbackId?: string) => {
+      const baseId = (fallbackId || rawText || 'section')
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\u4e00-\u9fa5\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || 'section'
+
+      const count = headingIdMap.get(baseId) ?? 0
+      headingIdMap.set(baseId, count + 1)
+      return count === 0 ? baseId : `${baseId}-${count}`
+    }
+
+    // 对 目录 进行初始化
+    tocbot.init({
+      tocElement: tocbotRef.current,   // 你左侧目录容器
+      contentElement: markdownBody,    // ByteMD Viewer 渲染内容
+      headingSelector: 'h1, h2, h3',   // 选择要显示的标题等级
+      collapseDepth: 6,
+      scrollSmooth: true,
+      scrollSmoothOffset: -76,         // 控制正文滚动停靠位置
+      headingsOffset: 76,
+      disableTocScrollSync: false,
+      tocScrollOffset: 72,             // 给目录滚动预留顶部空间，避免首个目录项被“顶住”遮挡
+      onClick: (event) => {
+        // 阻止 a 标签默认行为，避免 URL 末尾出现 hash 并污染返回栈
+        event.preventDefault()
+      },
+      headingObjectCallback: (obj, headingNode) => {
+        const heading = obj as { id?: string, textContent?: string }
+        const id = getHeadingId(heading.textContent ?? headingNode.innerText ?? '', heading.id || headingNode.id)
+        headingNode.id = id
+        return { ...heading, id }
+      },
+    })
+
+    // 首次进入时，如果页面在顶部，确保目录滚动也在顶部
+    requestAnimationFrame(() => {
+      if (window.scrollY <= 1 && tocbotRef.current) {
+        tocbotRef.current.scrollTop = 0
+      }
+    })
+
+    return () => tocbot.destroy()
+  }, [detail.content])
 
   if (loading) {
     return (
@@ -110,12 +177,13 @@ const DetailContent: React.FC = () => {
           </header>
 
           {/* 文章正文 */}
-          <Viewer
-            value={detail.content}
-            plugins={markdownPlugins}
-          >
-          </Viewer>
-
+          <div className={styles.markdownBody} ref={articleRef}>
+            <Viewer
+              value={detail.content}
+              plugins={markdownPlugins}
+            >
+            </Viewer>
+          </div>
           {/* <section className={styles.content}>
             <p className={styles.text}>{detail.content}</p>
 
@@ -170,7 +238,12 @@ const DetailContent: React.FC = () => {
         </article>
       </main>
 
-      {/* 悬浮操作栏 */}
+      {/* 悬浮 目录 */}
+      <aside className={styles.tocbotContainer}>
+        <div className={styles.tocbotContent} ref={tocbotRef}></div>
+      </aside>
+
+      {/* 悬浮 操作栏 */}
       <aside className={styles.floatingBar}>
         <div
           className={`${styles.actionItem} ${detail.isLiked ? styles.active : ''}`}
@@ -196,7 +269,7 @@ const DetailContent: React.FC = () => {
         </div>
       </aside>
 
-      {/* 回到顶部按钮 */}
+      {/* 悬浮 回到顶部按钮 */}
       {scrollYPosition >= 900 ?
         <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.upCircle}>
           <UpCircleOutlined />

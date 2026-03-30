@@ -35,7 +35,7 @@ const handleAuthExpired = (): void => {
   setTimeout(() => {
     // 使用整页跳转，确保 Redux 内存态和本地持久态都被重置
     window.location.href = '/login'
-  }, 2000)
+  }, 1000)
 }
 
 // 刷新 token

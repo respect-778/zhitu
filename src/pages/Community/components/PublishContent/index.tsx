@@ -65,7 +65,7 @@ const zhHansLocale: Partial<BytemdLocale> = {
   hr: "分割线",
 }
 
-// 标题布局状态类型
+// 标题布局状态类型 -> 根据当前的布局模式动态处理标题栏
 type TitleLayoutState = {
   sidebarOpen: boolean // 侧边栏是否显示 （包括：目录模式、帮助模式）
   writeOnly: boolean // 编辑区显示、预览区隐藏 （仅编辑模式）

@@ -14,7 +14,7 @@ const DetailContent = React.lazy(() => import('@/pages/Community/components/Deta
 // 三级路由
 import ChatId from "@/pages/Chat/components/ChatId";
 import Loading from "@/components/Loading";
-
+import AuthRouter from "@/components/AuthRouter";
 
 
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
   // 一级路由
   {
     path: '/',
-    element: <Layout />,
+    element: <AuthRouter><Layout /></AuthRouter>,
     children: [
       // 二级路由
       {
