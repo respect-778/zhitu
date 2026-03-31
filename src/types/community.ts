@@ -11,7 +11,7 @@ export interface IHotkeyword {
   name: string
 }
 
-// 帖子类型
+// 文章类型
 export interface IContent {
   id?: number
   avatar: string

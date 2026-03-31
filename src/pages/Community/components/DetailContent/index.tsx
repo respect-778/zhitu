@@ -1,11 +1,11 @@
 ﻿import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, ShareAltOutlined, UpCircleOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
 import type { IContent } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
-import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI } from '@/api/community'
+import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI } from '@/api/community'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
@@ -33,7 +33,8 @@ const DetailContent: React.FC = () => {
     link: [],
     isLiked: false,
     isCollected: false
-  })
+  }) // 文章详情
+  const [hotArticle, setHotArticle] = useState<IContent[]>([]) // 热门文章
   const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true)
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
@@ -46,6 +47,12 @@ const DetailContent: React.FC = () => {
     setDetail(res.data)
 
     setLoading(false)
+  }
+
+  // 获取热门文章
+  const getHotCommunityList = async () => {
+    const res = await getHotCommunityListAPI({ pageNum: 1, pageSize: 10 })
+    setHotArticle(res.data.list)
   }
 
   // 点击喜欢时触发
@@ -76,6 +83,7 @@ const DetailContent: React.FC = () => {
   // 获取到对应 id 的文章 
   useEffect(() => {
     getCommunityById()
+    getHotCommunityList()
   }, [])
 
   // 进入详情页时先回到顶部，避免目录初始化时激活到中间位置
@@ -156,7 +164,7 @@ const DetailContent: React.FC = () => {
 
       {/* 顶部导航栏 */}
       <header className={styles.header}>
-        <div className={styles.headerLeft} onClick={() => navigate(-1)}>
+        <div className={styles.headerLeft} onClick={() => navigate('/community')}>
           <ArrowLeftOutlined />
           <span>返回社区</span>
         </div>
@@ -184,6 +192,7 @@ const DetailContent: React.FC = () => {
             >
             </Viewer>
           </div>
+
           {/* <section className={styles.content}>
             <p className={styles.text}>{detail.content}</p>
 
@@ -243,6 +252,27 @@ const DetailContent: React.FC = () => {
         <div className={styles.tocbotContent} ref={tocbotRef}></div>
       </aside>
 
+      {/* 悬浮 ai助手 */}
+      <aside>
+
+      </aside>
+
+      {/* 悬浮 热门文章 */}
+      <aside className={styles.hotArticleContainer}>
+        <div className={styles.hotArticleContent}>
+          {hotArticle?.map(item => {
+            return (
+              <div className={styles.hotArticleFrame} key={item.id}>
+                <div className={styles.hotArticleTitle} onClick={() => window.open(`/community/${item.id}`)}>
+                  {item.title} <span style={{ marginLeft: '15px', color: '#a5a5a5' }}><EyeFilled /></span>
+                </div>
+              </div>
+            )
+          }
+          )}
+        </div>
+      </aside>
+
       {/* 悬浮 操作栏 */}
       <aside className={styles.floatingBar}>
         <div
@@ -264,8 +294,8 @@ const DetailContent: React.FC = () => {
           <span>{detail.comments}</span>
         </div>
         <div className={styles.dividerSmall} />
-        <div className={styles.actionItem} onClick={() => message.success('文章已复制到剪贴板')}>
-          <ShareAltOutlined />
+        <div className={styles.actionItem} onClick={() => message.success('正在下载 PDF')}>
+          <FilePdfOutlined />
         </div>
       </aside>
 
