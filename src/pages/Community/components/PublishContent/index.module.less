@@ -7,23 +7,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 20px;
 
   .gobackBtn {
-    font-size: 17px;
-    padding: 10px 20px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    transition: color 0.3s ease 0s;
-
-    &:hover {
-      color: var(--primary-color);
-    }
   }
 
   .publishBtns {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
     gap: 20px;
 
     .saveDraftBtn {
@@ -134,8 +129,8 @@
 }
 
 .center :global(.bytemd) {
-  width: 100vw;
-  height: calc(100vh - 51px);
+  width: calc(100vw);
+  height: calc(100vh - 60px);
 }
 
 .center :global(.bytemd-editor) {

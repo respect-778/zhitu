@@ -91,8 +91,7 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.logo} onClick={() => navigate('/')}>
-          <img className={styles.img} src="/imgs/logo.png" alt="Zhitu Logo" />
-          <span className={styles.text}>知途</span>
+          <img className={styles.img} src="/imgs/logo.png" alt="Logo" draggable="false" />
         </div>
         <ul className={styles.nav}>
           {navItems.map((item) => (

@@ -50,7 +50,7 @@ export const getCommunityByIdAPI = (id: number) => {
   })
 }
 
-// 上传图片接口，后端返回正确的图片格式
+// 上传图片接口，后端返回正确的图片格式（以后端 url 拼接而成的图片）
 export const uploadImageAPI = (formData: FormData) => {
   return httpInstance<UploadImageResponse>({
     url: "/community/image",
@@ -88,6 +88,17 @@ export const collectedCommunityAPI = (id: number, isLiked: boolean) => {
     params: {
       id,
       isLiked
+    }
+  })
+}
+
+// 浏览量接口
+export const pageviewsCommunityAPI = (articleId: number) => {
+  return httpInstance({
+    url: "/community/pageviews",
+    method: 'get',
+    params: {
+      articleId
     }
   })
 }

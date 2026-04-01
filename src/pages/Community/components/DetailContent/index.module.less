@@ -9,11 +9,10 @@
 }
 
 .header {
-  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 20px;
   position: sticky;
   top: 0;
   background-color: var(--glass-bg);
@@ -23,18 +22,26 @@
   .headerLeft {
     display: flex;
     align-items: center;
-    gap: 8px;
     cursor: pointer;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: color 0.2s ease;
+  }
+
+  .headerRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 25px;
+    padding: 5px 12px;
+    font-weight: 400;
+    background-color: #66a5fc;
+    border-radius: 20px;
+    font-size: 16px;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease 0s;
 
     &:hover {
-      color: var(--primary-color);
-    }
-
-    span {
-      font-size: 14px;
+      background-color: var(--primary-color);
     }
   }
 }
@@ -223,7 +230,7 @@
 .tocbotContainer {
   position: fixed;
   left: calc(50% - 770px);
-  top: 96px;
+  top: 80px;
   width: 260px;
   max-height: calc(100vh - 130px);
   padding: 10px;
@@ -322,7 +329,7 @@
 .hotArticleContainer {
   position: fixed;
   right: calc(50% - 780px);
-  top: 96px;
+  top: 80px;
   width: 300px;
   max-height: calc(100vh - 580px);
   padding: 10px;
@@ -365,7 +372,7 @@
       .hotArticleTitle {
         font-weight: 330;
         font-size: 15px;
-        margin-top: 12px;
+        margin-bottom: 12px;
         cursor: pointer;
         color: #6c6c6c;
 

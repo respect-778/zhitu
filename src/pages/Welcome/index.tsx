@@ -171,7 +171,7 @@ const Welcome: React.FC = () => {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>知途 Zhitu</h1>
+          <h1 className={styles.heroTitle}>Knowvia</h1>
           <p className={styles.heroSubtitle}>
             打破信息壁垒，连接知识孤岛。<br />
             专为大学生打造的信息差消除平台。

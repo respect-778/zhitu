@@ -1,18 +1,18 @@
 ﻿import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { ArrowLeftOutlined, HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, PlusOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
 import type { IContent } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
-import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI } from '@/api/community'
+import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI, pageviewsCommunityAPI } from '@/api/community'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
 import tocbot from 'tocbot'
 
 const DetailContent: React.FC = () => {
-  const { id } = useParams<{ id: string }>() // 获取 url 参数
+  const { id } = useParams<{ id: string }>() // 获取当前 url 文章 id
   const navigate = useNavigate()
 
   const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
@@ -32,11 +32,12 @@ const DetailContent: React.FC = () => {
     video: [],
     link: [],
     isLiked: false,
-    isCollected: false
+    isCollected: false,
+    Pageviews: 0
   }) // 文章详情
   const [hotArticle, setHotArticle] = useState<IContent[]>([]) // 热门文章
   const [isComment, setIsComment] = useState(true) // 是否显示发表评论
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true) // 加载
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 
   // 根据 id 获取对应帖子详情
@@ -53,6 +54,17 @@ const DetailContent: React.FC = () => {
   const getHotCommunityList = async () => {
     const res = await getHotCommunityListAPI({ pageNum: 1, pageSize: 10 })
     setHotArticle(res.data.list)
+  }
+
+  // 浏览量
+  const pageviewsCommunity = async () => {
+    try {
+      if (id) {
+        await pageviewsCommunityAPI(parseInt(id))
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   // 点击喜欢时触发
@@ -80,11 +92,20 @@ const DetailContent: React.FC = () => {
   }
 
 
-  // 获取到对应 id 的文章 
   useEffect(() => {
-    getCommunityById()
-    getHotCommunityList()
+    getCommunityById()      // 获取当前文章内容
+    getHotCommunityList()   // 获取热门文章
   }, [])
+
+  // 浏览量
+  useEffect(() => {
+    let timer = null
+    timer = setTimeout(() => {
+      pageviewsCommunity() // 五秒调用一次浏览量
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [id])
 
   // 进入详情页时先回到顶部，避免目录初始化时激活到中间位置
   useEffect(() => {
@@ -164,9 +185,12 @@ const DetailContent: React.FC = () => {
 
       {/* 顶部导航栏 */}
       <header className={styles.header}>
-        <div className={styles.headerLeft} onClick={() => navigate('/community')}>
-          <ArrowLeftOutlined />
-          <span>返回社区</span>
+        <div className={styles.headerLeft} onClick={() => navigate('/')}>
+          <img style={{ height: '60px' }} src="/imgs/logo.png" alt="logo" draggable="false" />
+        </div>
+        <div className={styles.headerRight} onClick={() => window.open('/community/publish')} >
+          <PlusOutlined />
+          <span>创作</span>
         </div>
       </header>
 
@@ -264,7 +288,7 @@ const DetailContent: React.FC = () => {
             return (
               <div className={styles.hotArticleFrame} key={item.id}>
                 <div className={styles.hotArticleTitle} onClick={() => window.open(`/community/${item.id}`)}>
-                  {item.title} <span style={{ marginLeft: '15px', color: '#a5a5a5' }}><EyeFilled /></span>
+                  {item.title} <span style={{ marginLeft: '15px', marginRight: '5px', color: '#a5a5a5' }}><EyeFilled /></span><span>{item.Pageviews}</span>
                 </div>
               </div>
             )

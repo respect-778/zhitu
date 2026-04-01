@@ -161,9 +161,8 @@ const Community = () => {
   }
 
   // 进入详情页
-  const navigate = useNavigate()
   const handleDetail = (id: number) => {
-    navigate(`/community/${id}`)
+    window.open(`/community/${id}`)
   }
 
   // 点击喜欢时触发（做了乐观更新 -> 用户在网络不加的情况下，点击喜欢按钮也会显示，不会出现点击没反应）

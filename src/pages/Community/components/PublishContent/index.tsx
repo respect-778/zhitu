@@ -187,7 +187,7 @@ const PublishContent = () => {
   // 点击返回按钮
   const goBack = () => {
     setIsBackModalOpen(true)
-    navigate("/community")
+    navigate("/")
   }
 
   // 在笔记中输入标题时触发
@@ -241,6 +241,7 @@ const PublishContent = () => {
       photo: imgs.current,
       isLiked: false,
       isCollected: false,
+      Pageviews: 0
     }
 
     await addCommunityAPI(data)
@@ -364,7 +365,7 @@ const PublishContent = () => {
     <div className={styles.publishContainer}>
       <div className={styles.header}>
         <div className={styles.gobackBtn} onClick={goBack}>
-          返回
+          <img style={{ height: '60px' }} src="/imgs/logo.png" alt="log" draggable="false" />
         </div>
         <div className={styles.publishBtns}>
           <div onClick={() => handleSaveDraft(titleValue, contentValue)} className={styles.saveDraftBtn}>
