@@ -120,7 +120,7 @@ const PublishContent = () => {
   const savedTitleValue = getStore("savedTitleValue") // 保存的文章标题
   const savedContentValue = getStore("savedContentValue") // 保存的文章内容
 
-  const imgs = useRef<string[]>([])
+  const imgs = useRef<string[]>([]) // 缓存图片数组 -> 减少组件的重新渲染
   const editorHostRef = useRef<HTMLDivElement>(null) // 外层容器，用于拿到 <Editor /> 内部生成的 ".bytemd" 根节点。
   const [titleValue, setTitleValue] = useState("") // 文章标题
   const [contentValue, setContentValue] = useState("") // 文章内容

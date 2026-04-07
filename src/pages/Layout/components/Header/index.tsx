@@ -1,5 +1,5 @@
 ﻿import type React from 'react'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
 import { HomeOutlined, CompassOutlined, TeamOutlined, CommentOutlined, GithubOutlined } from '@ant-design/icons'
@@ -64,11 +64,6 @@ const Header: React.FC = () => {
       dispatch(getUserInfo())
     }
   }, [dispatch, token])
-
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0) // 每次切换路由时，滚轮滑到顶部
-  }, [pathname])
-
 
   // tab 切换
   const handleTabChange = (key: string) => {

@@ -1,8 +1,15 @@
-.content {
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   background: var(--home-bg-color);
-  overflow: auto;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
 
   .wrapper {
-    min-height: calc(100vh - 235px);
+    min-height: 100%;
   }
 }

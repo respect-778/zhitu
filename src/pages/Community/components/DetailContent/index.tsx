@@ -276,9 +276,24 @@ const DetailContent: React.FC = () => {
         <div className={styles.tocbotContent} ref={tocbotRef}></div>
       </aside>
 
-      {/* 悬浮 ai助手 */}
-      <aside>
-
+      {/* 悬浮 ai agent 助手 */}
+      <aside className={styles.aiHelperContainer}>
+        <img style={{ height: '30px' }} src="/imgs/vai.png" alt="Via 知道" draggable="false" />
+        <div className={styles.aiHelperContent}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ fontSize: '20px', fontWeight: '600' }}>核心速览</div>
+            <span style={{ fontSize: '13px', color: '#A1A1A1' }}>文章太长没时间？AI 3秒提炼核心干货，省时80%</span>
+          </div>
+          <div></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '35px' }}>
+            <div className={styles.labelContainer}>
+              <span className={styles.label}>提炼文本</span>
+              <span className={styles.label}>高效总结</span>
+              <span className={styles.label}>30秒速读</span>
+            </div>
+            <div className={styles.labelBtn}>一键开启AI阅读</div>
+          </div>
+        </div>
       </aside>
 
       {/* 悬浮 热门文章 */}

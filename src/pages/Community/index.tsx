@@ -6,7 +6,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { useAppSelector } from '@/store/hooks';
 
 const Community = () => {

@@ -20,3 +20,9 @@ export interface IChatMessage {
   token_usage?: number // token消耗
   created_at?: string // 创建时间
 }
+
+// AI 提供商类型
+export interface IProvider {
+  name: string,
+  img: string
+}

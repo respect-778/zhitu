@@ -87,7 +87,7 @@
       .renameSessionTitle {
         width: 90%;
         border-radius: 10px;
-        padding: 10.5px 9.2px;
+        padding: 8.5px 9.5px;
         color: var(--text-color);
         font-size: 15px;
         overflow: hidden; // 超出部分隐藏
@@ -222,9 +222,9 @@
         color: var(--text-color);
         cursor: pointer;
 
-        &:hover {
-          background-color: #f3f1f1;
-        }
+        // &:hover {
+        //   background-color: #f3f1f1;
+        // }
       }
 
       .submitImg {
@@ -249,5 +249,23 @@
         }
       }
     }
+  }
+}
+
+// 悬浮
+.apikeyConfig {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: var(--primary-color);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease 0s;
+
+  &:hover {
+    background: #1677ffca;
   }
 }

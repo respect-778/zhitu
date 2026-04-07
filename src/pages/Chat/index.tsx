@@ -1,15 +1,17 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, DownOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI, renameChatSessionTitleAPI } from "@/api/chat";
+import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
-import type { IChatSession } from "@/types/chat";
+import type { IChatSession, IProvider } from "@/types/chat";
 import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
-import { Dropdown, message, Modal, Space } from "antd";
+import { Button, Dropdown, message, Modal, Space } from "antd";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import Config from "./components/Config";
+import { getStore, setStore } from "@/utils/store";
 
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
@@ -30,24 +32,16 @@ const Chat: React.FC = () => {
   const [renameTitleMap, setRenameTitleMap] = useState<Record<number, { isRename: boolean, title: string }>>({}) // 重命名会话标题
   const renameInputRef = useRef<HTMLInputElement>(null)
   const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
-  const [llmItem, setLLMItem] = useState('glm-4.6')
   const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
+  const [isOpenConfig, setIsOpenConfig] = useState(false) // 是否打开 apikey 配置
+  const [selectedAI, setSelectedAI] = useState<IProvider>({ name: '', img: '' }) // 选择的 ai 厂商
+  const [apikey, setApikey] = useState('') // apikey
 
-  // 大模型
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <div onClick={() => setLLMItem('glm-4.6')}>glm-4.6</div>
-    },
-    {
-      key: '2',
-      label: <div onClick={() => setLLMItem('deepseek-r1')}>deepseek-r1</div>
-    },
-  ]
 
   // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
-    setHistoryActive(0)
+    setHistoryActive(0) // 重置左侧历史栏高亮
+    setIsInputEmpty(true) // 输入框为空
     handleNewChatComplete()
     navigate('/chat')
   }
@@ -56,6 +50,57 @@ const Chat: React.FC = () => {
   const handleThinking = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
     setMode(mode === 0 ? 1 : 0)
+  }
+
+
+  // 模型提供商
+  const aiProviders: IProvider[] = [
+    {
+      name: 'Anthropic',
+      img: '/imgs/anthropic.png'
+    },
+    {
+      name: 'OpenAI',
+      img: '/imgs/openai.png'
+    },
+    {
+      name: 'Google',
+      img: '/imgs/gemini-color.png'
+    },
+    {
+      name: 'Moonshot',
+      img: '/imgs/moonshot.png'
+    },
+    {
+      name: 'Deepseek',
+      img: '/imgs/deepseek-color.png'
+    },
+    {
+      name: 'Qwen',
+      img: '/imgs/qwen-color.png'
+    },
+    {
+      name: 'GLM',
+      img: '/imgs/zhipu-color.png'
+    }
+  ]
+
+  // 配置APIKEY
+  const handleConfig = () => {
+    setIsOpenConfig(true)
+  }
+
+  // 上传 apikey 到服务器
+  const hanldeSelectedAPIKEY = async () => {
+    try {
+      const res = await uploadAiModelAPI(selectedAI.name, apikey)
+      setStore('aiName', res.data.model_name)
+      message.success("模型配置成功")
+      setIsOpenConfig(false)
+    } catch (error) {
+      message.error("apikey 错误")
+    }
+
   }
 
   // 获取当前输入框最新值 并 监听输入框是否为空 （进入界面 -> 没有调用方法）
@@ -272,14 +317,12 @@ const Chat: React.FC = () => {
             {/* 按钮 */}
             <div className={styles.chatSubmit}>
               <div onClick={handleThinking} className={`${styles.chatThinking} ${mode === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
-              <Dropdown menu={{ items }} trigger={['click']} placement="top">
-                <div className={styles.llmMode} onClick={(e) => e.stopPropagation()}>
-                  <Space>
-                    {llmItem}
-                    <DownOutlined />
-                  </Space>
-                </div>
-              </Dropdown>
+              <div className={styles.llmMode} onClick={(e) => e.stopPropagation()}>
+                <Space>
+                  {getStore('aiName') || '未配置'}
+                </Space>
+              </div>
+              {/* </Dropdown> */}
               <div onClick={clickQuestion}><div className={`${styles.submitImg} ${isInputEmpty ? styles.inputActive : ''} `}><ArrowUpOutlined /></div></div>
             </div>
           </div>
@@ -302,6 +345,28 @@ const Chat: React.FC = () => {
       >
         <p>删除后，该对话将不可恢复，由该对话生成的分享链接也将失效。确认删除吗？</p>
       </Modal>
+
+      {/* 悬浮：APIKEY 配置 */}
+      <aside>
+        <div className={styles.apikeyConfig} onClick={handleConfig}>APIKEY 配置</div>
+      </aside>
+
+      <Modal
+        title="添加 AI 提供商"
+        open={isOpenConfig}
+        onCancel={() => (setIsOpenConfig(false), setSelectedAI({ name: '', img: '' }))}
+        footer={
+          selectedAI.name !== '' ?
+            [<Button key="add" type="primary" onClick={hanldeSelectedAPIKEY}>添加提供商</Button>]
+            :
+            null
+        }
+        centered={true}
+      >
+        <Config aiProviders={aiProviders} selectedAI={selectedAI} setSelectedAI={setSelectedAI} setApikey={setApikey} />
+      </Modal>
+
+
     </div >
   )
 }

@@ -64,6 +64,7 @@
 }
 
 .article {
+  background-color: var(--bg-color);
   animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 
   .articleHeader {
@@ -247,7 +248,7 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: #3d3d3d;
     letter-spacing: 0.04em;
     margin: 2px 4px 8px;
   }
@@ -326,10 +327,61 @@
   }
 }
 
-.hotArticleContainer {
+.aiHelperContainer {
   position: fixed;
   right: calc(50% - 780px);
   top: 80px;
+  width: 300px;
+  max-height: calc(100vh - 580px);
+  padding: 10px;
+  border: 1px solid var(--glass-border);
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+  z-index: 900;
+
+  .aiHelperContent {
+    margin-top: 10px;
+    height: 280px;
+    padding: 0 4px 4px 2px;
+
+    .labelContainer {
+      display: flex;
+      gap: 10px;
+
+      .label {
+        font-size: 14px;
+        color: #767575;
+        padding: 4px 5px;
+        border-radius: 5px;
+        background: #F2F2F2;
+      }
+    }
+  }
+
+  .labelBtn {
+    width: 100%;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 0px;
+    border-radius: 8px;
+    text-align: center;
+    background: #3e37c6;
+    box-shadow: 0 4px 6px 0 #bedbff;
+    transition: background 0.3s ease 0s;
+    cursor: pointer;
+
+    &:hover {
+      background: #352FB0;
+    }
+  }
+}
+
+.hotArticleContainer {
+  position: fixed;
+  right: calc(50% - 780px);
+  bottom: 130px;
   width: 300px;
   max-height: calc(100vh - 580px);
   padding: 10px;
@@ -344,7 +396,7 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: #3d3d3d;
     letter-spacing: 0.04em;
     margin: 2px 4px 8px;
   }
@@ -370,11 +422,13 @@
       width: 100%;
 
       .hotArticleTitle {
+        display: block;
         font-weight: 330;
         font-size: 15px;
         margin-bottom: 12px;
         cursor: pointer;
-        color: #6c6c6c;
+        word-wrap: break-word;
+        color: #555666;
 
         &:hover {
           color: var(--primary-color);
@@ -438,7 +492,7 @@
 .upCircle {
   position: fixed;
   right: 100px;
-  bottom: 120px;
+  bottom: 50px;
   z-index: 999;
   cursor: pointer;
   font-size: 40px;

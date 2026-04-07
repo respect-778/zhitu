@@ -1,16 +1,16 @@
-import { ArrowUpOutlined, BulbOutlined, DownOutlined, LoadingOutlined, DownCircleOutlined } from "@ant-design/icons"
+import { ArrowUpOutlined, BulbOutlined, LoadingOutlined, DownCircleOutlined } from "@ant-design/icons"
 import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
 import type { IChatMessage, IChatSession } from "@/types/chat"
 import { useNavigate, useOutletContext, useParams } from "react-router"
-import { Dropdown, Space } from "antd"
-import type { MenuProps } from "antd/lib"
+import { Space } from "antd"
 import { Viewer } from "@bytemd/react"
 // import hljs from "highlight.js"
 import { markdownPlugins, markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markdown"
 import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea"
+import { getStore } from "@/utils/store"
 
 
 const ChatId = () => {
@@ -32,22 +32,11 @@ const ChatId = () => {
     setStreamBySession: React.Dispatch<React.SetStateAction<Record<number, { isStreaming: boolean, content: string }>>>
   }>()
   const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
-  const [llmItem, setLLMItem] = useState('glm-4.6')
+  // const [llmItem, setLLMItem] = useState('glm-4.6')
   const titleRef = useRef<HTMLDivElement>(null)
   const [isTitleOverflow, setIsTitleOverflow] = useState(false)
   const currentSessionTitle = historySession.find(item => item.id === sessionId)?.session_title ?? ''
 
-
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <div onClick={() => setLLMItem('glm-4.6')}>glm-4.6</div>
-    },
-    {
-      key: '2',
-      label: <div onClick={() => setLLMItem('deepseek-r1')}>deepseek-r1</div>
-    },
-  ]
 
   // ai回复时，自动跟随 ai 的 hook
   const {
@@ -142,6 +131,7 @@ const ChatId = () => {
         }
       )
     } catch (error) {
+      await addChatMessageAPI({ session_id: activeSessionId, role: 'ai', content: `AI调用失败:${error}` })
       console.error('AI 调用失败:', error)
     } finally {
       handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
@@ -288,14 +278,11 @@ const ChatId = () => {
               <BulbOutlined /> 深度思考
             </div>
 
-            <Dropdown menu={{ items }} trigger={['click']} placement="bottom">
-              <div className={styles.llmMode}>
-                <Space>
-                  {llmItem}
-                  <DownOutlined />
-                </Space>
-              </div>
-            </Dropdown>
+            <div className={styles.llmMode}>
+              <Space>
+                {getStore('aiName') || '未配置'}
+              </Space>
+            </div>
             <div onClick={clickQuestion}>
               <div className={`${styles.submitImg} ${isInputEmpty || currentStream.isStreaming ? styles.inputActive : ''} `}>
                 {currentStream.isStreaming ? <LoadingOutlined /> : <ArrowUpOutlined />}

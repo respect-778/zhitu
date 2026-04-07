@@ -242,3 +242,15 @@ export const renameChatSessionTitleAPI = (session_id: number, title: string) => 
     }
   })
 }
+
+// 上传 ai name 和 apikey
+export const uploadAiModelAPI = (name: string, apikey: string) => {
+  return httpInstance({
+    url: '/chat/uploadAiModel',
+    method: 'post',
+    data: {
+      name,
+      apikey
+    }
+  })
+}
