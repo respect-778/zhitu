@@ -35,7 +35,10 @@ const Chat: React.FC = () => {
   const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
   const [isOpenConfig, setIsOpenConfig] = useState(false) // 是否打开 apikey 配置
   const [selectedAI, setSelectedAI] = useState<IProvider>({ name: '', img: '' }) // 选择的 ai 厂商
-  const [apikey, setApikey] = useState('') // apikey
+  const [configuredAI, setConfiguredAI] = useState('') // 当前配置好的 ai 厂商
+  const [apiKey, setApiKey] = useState('') // apikey
+  const [configLoading, setConfigLoading] = useState(false) // ai 正在配置中
+  const [isGetNewConfiguredAI, setIsGetNewConfiguredAI] = useState(false) // 告知子组件获取最新的 ai 配置
 
 
   // 开启新对话 （进入界面 -> 没有调用方法）
@@ -85,22 +88,38 @@ const Chat: React.FC = () => {
     }
   ]
 
-  // 配置APIKEY
+  // 关闭配置弹框
+  const handleConfigCancel = () => {
+    setIsOpenConfig(false)
+    setSelectedAI({ name: '', img: '' })
+    setApiKey('')
+  }
+
+  // 配置 APIKEY
   const handleConfig = () => {
     setIsOpenConfig(true)
+  }
+
+  // 让子组件更新配置的 ai
+  const updateConfiguredAI = () => {
+    setIsGetNewConfiguredAI(!isGetNewConfiguredAI)
   }
 
   // 上传 apikey 到服务器
   const hanldeSelectedAPIKEY = async () => {
     try {
-      const res = await uploadAiModelAPI(selectedAI.name, apikey)
-      setStore('aiName', res.data.model_name)
+      setConfigLoading(true)
+      const res = await uploadAiModelAPI(selectedAI.name, apiKey)
+      setStore('aiName', res.data.model_version)
+      setConfigLoading(false)
       message.success("模型配置成功")
-      setIsOpenConfig(false)
+      handleConfigCancel()
+      updateConfiguredAI()
     } catch (error) {
+      setConfigLoading(false)
+      setApiKey('')
       message.error("apikey 错误")
     }
-
   }
 
   // 获取当前输入框最新值 并 监听输入框是否为空 （进入界面 -> 没有调用方法）
@@ -348,24 +367,23 @@ const Chat: React.FC = () => {
 
       {/* 悬浮：APIKEY 配置 */}
       <aside>
-        <div className={styles.apikeyConfig} onClick={handleConfig}>APIKEY 配置</div>
+        <div className={styles.apikeyConfig} onClick={handleConfig}>配置 APIKEY</div>
       </aside>
 
       <Modal
         title="添加 AI 提供商"
         open={isOpenConfig}
-        onCancel={() => (setIsOpenConfig(false), setSelectedAI({ name: '', img: '' }))}
+        onCancel={handleConfigCancel}
         footer={
           selectedAI.name !== '' ?
-            [<Button key="add" type="primary" onClick={hanldeSelectedAPIKEY}>添加提供商</Button>]
+            [<Button key="add" type="primary" loading={configLoading} onClick={hanldeSelectedAPIKEY}>添加提供商</Button>]
             :
             null
         }
         centered={true}
       >
-        <Config aiProviders={aiProviders} selectedAI={selectedAI} setSelectedAI={setSelectedAI} setApikey={setApikey} />
+        <Config aiProviders={aiProviders} selectedAI={selectedAI} setSelectedAI={setSelectedAI} apiKey={apiKey} setApiKey={setApiKey} configuredAI={configuredAI} setConfiguredAI={setConfiguredAI} isGetNewConfiguredAI={isGetNewConfiguredAI} />
       </Modal>
-
 
     </div >
   )

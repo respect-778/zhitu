@@ -2,21 +2,37 @@ import type { IProvider } from '@/types/chat'
 import styles from './index.module.less'
 import { Input } from 'antd'
 import { LinkOutlined } from '@ant-design/icons'
+import { useEffect } from 'react'
+import { getAiModelAPI } from '@/api/chat'
 
 interface IProps {
   aiProviders: IProvider[] // ai 厂商
   selectedAI: IProvider // 选中的 ai
-  setSelectedAI: React.Dispatch<React.SetStateAction<IProvider>> // 修改选中的 ai
-  setApikey: React.Dispatch<React.SetStateAction<string>> // 修改 apikey
+  setSelectedAI: React.Dispatch<React.SetStateAction<IProvider>> // 更新选中的 ai
+  apiKey: string // 输入框中的 apikey
+  setApiKey: React.Dispatch<React.SetStateAction<string>> // 更新 apikey
+  configuredAI: string // 当前配置好的 ai
+  setConfiguredAI: React.Dispatch<React.SetStateAction<string>> // 更新当前配置好的 ai
+  isGetNewConfiguredAI: boolean // 父组件控制子组件获取最新的 ai 配置
 }
 
-const Config = ({ aiProviders, selectedAI, setSelectedAI, setApikey }: IProps) => {
-
+const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, configuredAI, setConfiguredAI, isGetNewConfiguredAI }: IProps) => {
 
   // 处理选中的 ai 厂商
   const handleSelected = (name: string, img: string) => {
     setSelectedAI({ name, img })
   }
+
+  // 获取当前配置的 ai
+  const getAiModel = async () => {
+    const res = await getAiModelAPI()
+    setConfiguredAI(res.data.ai_name)
+    console.log(configuredAI)
+  }
+
+  useEffect(() => {
+    getAiModel() // 获取用户当前已经配置好的模型
+  }, [isGetNewConfiguredAI])
 
 
   return (
@@ -26,7 +42,7 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, setApikey }: IProps) =
         <div className={styles.aiProvider}>
           {aiProviders.map(provider => {
             return (
-              <div className={styles.content} onClick={() => handleSelected(provider.name, provider.img)} key={provider.name}>
+              <div className={`${styles.content} ${provider.name === configuredAI ? styles.active : ''}`} onClick={() => handleSelected(provider.name, provider.img)} key={provider.name}>
                 <div className={styles.imgContainer}><img className={styles.img} src={`${provider.img}`} alt="ai" /></div>
                 <div className={styles.name}>{provider.name}</div>
               </div>
@@ -35,7 +51,7 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, setApikey }: IProps) =
         </div>
         :
         <div className={styles.aiConfig}>
-          <div className={styles.aiDetail}>
+          <div className={`${styles.aiDetail} ${selectedAI.name === configuredAI ? styles.active : ''}`}>
             <div style={{ padding: '10px', background: '#dddddd69', borderRadius: '10px', lineHeight: '10px' }}><img style={{ height: '25px' }} src={`${selectedAI.img}`} alt="ai" /></div>
             <div>
               <div style={{ fontSize: '16px', fontWeight: '700' }}>{selectedAI.name}</div>
@@ -48,7 +64,7 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, setApikey }: IProps) =
           </div>
           <div className={styles.aiAPIKEY}>
             <div style={{ fontSize: '15px', fontWeight: '700' }}>API 密钥</div>
-            <Input.Password onChange={(e) => setApikey(e.target.value)} placeholder='sk-ant-api01-...' style={{ padding: '10px' }} />
+            <Input.Password value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder='sk-ant-api01-...' style={{ padding: '10px' }} />
             <div style={{ fontSize: '12px', fontWeight: '350' }}>您的 API 密钥存储在本地机器上</div>
           </div>
         </div>

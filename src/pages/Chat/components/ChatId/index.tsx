@@ -103,7 +103,7 @@ const ChatId = () => {
     // 1. 创建 user 聊天记录
     try {
       await addChatMessageAPI({ session_id: activeSessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
-      await getCurrentChatMessage() // 获取最新消息列表
+      getCurrentChatMessage() // 获取最新消息列表
       scrollToBottomAndLock()
     } catch (error) {
       console.log(error)
@@ -136,7 +136,7 @@ const ChatId = () => {
     } finally {
       handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
-      await getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
+      getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
       setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: false, content: '' } })) // 结束流式生成并清空当前流式内容。
     }
   }

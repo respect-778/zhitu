@@ -254,3 +254,11 @@ export const uploadAiModelAPI = (name: string, apikey: string) => {
     }
   })
 }
+
+// 获取当前用户正在使用的 ai 厂商
+export const getAiModelAPI = () => {
+  return httpInstance({
+    url: '/chat/getAiModel',
+    method: 'get'
+  })
+}
