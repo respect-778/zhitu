@@ -92,6 +92,18 @@ export const collectedCommunityAPI = (id: number, isLiked: boolean) => {
   })
 }
 
+// 关注接口
+export const followCommunityAPI = (authorId: number, action: 'follow' | 'unfollow') => {
+  return httpInstance({
+    url: '/community/follow',
+    method: 'post',
+    data: {
+      authorId,
+      action
+    }
+  })
+}
+
 // 浏览量接口
 export const pageviewsCommunityAPI = (articleId: number) => {
   return httpInstance({

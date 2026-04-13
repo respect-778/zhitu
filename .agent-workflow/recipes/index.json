@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-04-10T02:34:40.570Z",
+  "recipes": [
+    {
+      "id": "audit",
+      "name": "Audit",
+      "fileName": "audit.md",
+      "summary": "Find bugs, fake implementations, contract mismatches, and missing verification.",
+      "recommendedFor": [
+        "code audit",
+        "truthfulness audit",
+        "launch review"
+      ]
+    },
+    {
+      "id": "feature",
+      "name": "Feature",
+      "fileName": "feature.md",
+      "summary": "Deliver scoped user value without breaking contracts.",
+      "recommendedFor": [
+        "feature delivery",
+        "scoped implementation",
+        "incremental release"
+      ]
+    },
+    {
+      "id": "review",
+      "name": "Review",
+      "fileName": "review.md",
+      "summary": "Review changes for correctness, regressions, and missing tests.",
+      "recommendedFor": [
+        "PR review",
+        "post-implementation check",
+        "handoff review"
+      ]
+    }
+  ]
+}

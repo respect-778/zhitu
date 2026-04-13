@@ -2,8 +2,6 @@ import type { IProvider } from '@/types/chat'
 import styles from './index.module.less'
 import { Input } from 'antd'
 import { LinkOutlined } from '@ant-design/icons'
-import { useEffect } from 'react'
-import { getAiModelAPI } from '@/api/chat'
 
 interface IProps {
   aiProviders: IProvider[] // ai 厂商
@@ -12,27 +10,14 @@ interface IProps {
   apiKey: string // 输入框中的 apikey
   setApiKey: React.Dispatch<React.SetStateAction<string>> // 更新 apikey
   configuredAI: string // 当前配置好的 ai
-  setConfiguredAI: React.Dispatch<React.SetStateAction<string>> // 更新当前配置好的 ai
-  isGetNewConfiguredAI: boolean // 父组件控制子组件获取最新的 ai 配置
 }
 
-const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, configuredAI, setConfiguredAI, isGetNewConfiguredAI }: IProps) => {
+const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, configuredAI }: IProps) => {
 
   // 处理选中的 ai 厂商
   const handleSelected = (name: string, img: string) => {
     setSelectedAI({ name, img })
   }
-
-  // 获取当前配置的 ai
-  const getAiModel = async () => {
-    const res = await getAiModelAPI()
-    setConfiguredAI(res.data.ai_name)
-    console.log(configuredAI)
-  }
-
-  useEffect(() => {
-    getAiModel() // 获取用户当前已经配置好的模型
-  }, [isGetNewConfiguredAI])
 
 
   return (

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "claude-code",
+  "name": "Claude Code",
+  "promptFile": "prompt.claude.md",
+  "runRequestFile": "run-request.claude-code.json",
+  "launchPackFile": "launch.claude-code.md",
+  "runnerCommand": [
+    "claude"
+  ],
+  "argvTemplate": [],
+  "commandMode": "manual",
+  "cwdMode": "workspaceRoot",
+  "stdioMode": "inherit",
+  "successExitCodes": [
+    0
+  ],
+  "envAllowlist": [],
+  "capabilities": {
+    "interactive": true,
+    "multiAgent": true,
+    "resumable": true
+  },
+  "notes": [
+    "Confirm the local Claude Code invocation for this machine before automating process launch."
+  ]
+}

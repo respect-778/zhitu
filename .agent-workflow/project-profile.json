@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-04-10T02:34:42.334Z",
+  "repositoryName": "zhitu",
+  "topLevelDirectories": [
+    "docs",
+    "public",
+    "src"
+  ],
+  "docs": [
+    "README.md",
+    "docs/useBeforeUnload-useBlocker-guide.md"
+  ],
+  "packageManagers": [
+    "package-lock.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "recommendations": [
+    "Add an agent-facing root document such as AGENTS.md or CLAUDE.md."
+  ]
+}

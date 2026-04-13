@@ -149,7 +149,10 @@ const ChatId = () => {
 
   // 回车 -> 提交问题
   const keydownQuestion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter') { // 回车按键
+    if (e.nativeEvent.isComposing) return // 防 中文输入法回车误发送
+
+    if (e.key === 'Enter' && !e.shiftKey) { // Enter 且没按 Shift：阻止默认换行，执行发送
+      e.preventDefault()
       handleSubmit() // 提交
     }
   }

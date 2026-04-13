@@ -1,17 +1,16 @@
-// 左侧侧边栏
+import type { ReactNode } from 'react'
+
 export interface INavItems {
   id: string
   label: string
-  icon?: React.ReactNode
+  icon?: ReactNode
 }
 
-// 左侧热门关键词
 export interface IHotkeyword {
-  id: number,
+  id: number
   name: string
 }
 
-// 文章类型
 export interface IContent {
   id?: number
   avatar: string
@@ -19,24 +18,29 @@ export interface IContent {
   time: string
   title: string
   content: string
+  art_count?: number
   likes: number
   comments: number
   collection: number
   photo?: string[]
   video?: string[]
   link?: string[]
-  isLiked: boolean        // 是否点赞了
-  isCollected: boolean,   // 是否收藏了
-  Pageviews: number       // 浏览量
+  isLiked: boolean
+  isCollected: boolean
+  Pageviews: number
 }
 
-// 搜索参数
+export interface IContentDetail extends IContent {
+  authorId: number
+  fans_count: number
+  isFollowed: boolean
+}
+
 export interface IContentSearchParams {
   name?: string
   content?: string
 }
 
-// 分页参数
 export interface IContentPageParams {
   list: []
   pageNum: number

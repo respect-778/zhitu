@@ -1,15 +1,17 @@
 ﻿import React, { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, PlusOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
-import type { IContent } from '@/types/community'
+import type { IContent, IContentDetail } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
-import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI, pageviewsCommunityAPI } from '@/api/community'
+import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI, pageviewsCommunityAPI, followCommunityAPI } from '@/api/community'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
 import tocbot from 'tocbot'
+import { useAppSelector } from '@/store/hooks'
 
 const DetailContent: React.FC = () => {
   const { id } = useParams<{ id: string }>() // 获取当前 url 文章 id
@@ -18,13 +20,14 @@ const DetailContent: React.FC = () => {
   const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
   const tocbotRef = useRef<HTMLDivElement>(null) // 目录 ref
 
-  const [detail, setDetail] = useState<IContent>({
+  const [detail, setDetail] = useState<IContentDetail>({
     id: 0,
     avatar: '',
     name: '',
     time: '',
     title: '',
     content: '',
+    art_count: 0,
     likes: 0,
     comments: 0,
     collection: 0,
@@ -33,11 +36,17 @@ const DetailContent: React.FC = () => {
     link: [],
     isLiked: false,
     isCollected: false,
-    Pageviews: 0
+    Pageviews: 0,
+    authorId: 0,
+    fans_count: 0,
+    isFollowed: false
   }) // 文章详情
   const [hotArticle, setHotArticle] = useState<IContent[]>([]) // 热门文章
   const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true) // 加载
+
+  const username = useAppSelector(state => state.user.username) // 当前登录的用户
+
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 
   // 根据 id 获取对应帖子详情
@@ -86,6 +95,18 @@ const DetailContent: React.FC = () => {
     await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
   }
 
+  // 关注
+  const hanldeFollow = async (authorId: number, action: 'follow' | 'unfollow') => {
+    try {
+      const res = await followCommunityAPI(authorId, action)
+      const nextFollowed = res.data.isFollowed
+      const nextFansCount = res.data.fans_count
+      setDetail(pre => ({ ...pre, isFollowed: nextFollowed, fans_count: nextFansCount }))
+    } catch (error) {
+      message.error("关注失败")
+    }
+  }
+
   // 处理评论
   const handleComment = () => {
 
@@ -97,6 +118,7 @@ const DetailContent: React.FC = () => {
     getHotCommunityList()   // 获取热门文章
   }, [])
 
+
   // 浏览量
   useEffect(() => {
     let timer = null
@@ -107,8 +129,8 @@ const DetailContent: React.FC = () => {
     return () => clearTimeout(timer)
   }, [id])
 
-  // 进入详情页时先回到顶部，避免目录初始化时激活到中间位置
-  useEffect(() => {
+  // 在首帧绘制前完成滚动归位，避免出现首屏位移
+  useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [])
 
@@ -147,7 +169,6 @@ const DetailContent: React.FC = () => {
       disableTocScrollSync: false,
       tocScrollOffset: 72,             // 给目录滚动预留顶部空间，避免首个目录项被“顶住”遮挡
       onClick: (event) => {
-        // 阻止 a 标签默认行为，避免 URL 末尾出现 hash 并污染返回栈
         event.preventDefault()
       },
       headingObjectCallback: (obj, headingNode) => {
@@ -217,33 +238,6 @@ const DetailContent: React.FC = () => {
             </Viewer>
           </div>
 
-          {/* <section className={styles.content}>
-            <p className={styles.text}>{detail.content}</p>
-
-            {detail.photo && detail.photo.length > 0 && (
-              <div className={styles.photoGrid}>
-                {detail.photo.map((url, index) => (
-                  <div key={index}>
-                    <img src={url} alt={`Photo ${index + 1}`} className={styles.photo} />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {detail.video && detail.video.length > 0 && (
-              <div className={styles.mediaPlaceholder}>
-                <span>视频预览 (开发中)</span>
-              </div>
-            )}
-
-            {detail.link && detail.link.length > 0 && (
-              <div className={styles.linkCard}>
-                <ShareAltOutlined />
-                <span>{detail.link[0]}</span>
-              </div>
-            )}
-          </section> */}
-
           {/* 分隔线 */}
           <div className={styles.divider} />
 
@@ -270,6 +264,52 @@ const DetailContent: React.FC = () => {
           </section>
         </article>
       </main>
+
+      {/* 悬浮 作者信息 */}
+      <aside className={styles.avatarContainer}>
+        <div className={styles.avatarContent}>
+          <div className={styles.avatarTop}>
+            <img className={styles.img} src="/imgs/admin.png" alt="作者" draggable="false" />
+            <div className={styles.detail}>
+              <div style={{ fontSize: '18px', fontWeight: '550' }}>{detail.name}</div>
+              <div className={styles.signatureCon}>
+                <div className={styles.signature}>签名:</div>
+                <div style={{ fontSize: '13px', color: '#555666' }}>吾日三省吾身，吾没有错</div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.avatarCenter}>
+            <div className={styles.centerContent}>
+              <div className={styles.centerCount}>{detail.art_count}</div>
+              <div className={styles.centerKey}>原创</div>
+            </div>
+            <div className={styles.centerContent}>
+              <div className={styles.centerCount}>{detail.likes}</div>
+              <div className={styles.centerKey}>点赞</div>
+            </div>
+            <div className={styles.centerContent}>
+              <div className={styles.centerCount}>{detail.collection}</div>
+              <div className={styles.centerKey}>收藏</div>
+            </div>
+            <div className={styles.centerContent}>
+              <div className={styles.centerCount}>{detail.fans_count}</div>
+              <div className={styles.centerKey}>粉丝</div>
+            </div>
+          </div>
+          <div className={styles.avatarBottom}>
+            {
+              detail.name === username ?
+                <div className={styles.followedBtn}>作者</div>
+                :
+                detail.isFollowed ?
+                  <div className={styles.followedBtn} onClick={() => hanldeFollow(detail.authorId!, 'unfollow')}>已关注</div>
+                  :
+                  <div className={styles.followBtn} onClick={() => hanldeFollow(detail.authorId!, 'follow')}>关注</div>
+            }
+            <div className={styles.messageBtn}>私信</div>
+          </div>
+        </div>
+      </aside>
 
       {/* 悬浮 目录 */}
       <aside className={styles.tocbotContainer}>

@@ -3,7 +3,7 @@ import styles from "./index.module.less"
 import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
-import { addChatSessionAPI, delChatSessionAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
+import { addChatSessionAPI, delChatSessionAPI, getAiModelAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
 import type { IChatSession, IProvider } from "@/types/chat";
 import type { MenuProps } from "antd";
@@ -38,7 +38,6 @@ const Chat: React.FC = () => {
   const [configuredAI, setConfiguredAI] = useState('') // 当前配置好的 ai 厂商
   const [apiKey, setApiKey] = useState('') // apikey
   const [configLoading, setConfigLoading] = useState(false) // ai 正在配置中
-  const [isGetNewConfiguredAI, setIsGetNewConfiguredAI] = useState(false) // 告知子组件获取最新的 ai 配置
 
 
   // 开启新对话 （进入界面 -> 没有调用方法）
@@ -95,14 +94,16 @@ const Chat: React.FC = () => {
     setApiKey('')
   }
 
+  // 获取当前配置的 ai
+  const getAiModel = async () => {
+    const res = await getAiModelAPI()
+    setStore('aiName', res.data.model_version)
+    setConfiguredAI(res.data.ai_name)
+  }
+
   // 配置 APIKEY
   const handleConfig = () => {
     setIsOpenConfig(true)
-  }
-
-  // 让子组件更新配置的 ai
-  const updateConfiguredAI = () => {
-    setIsGetNewConfiguredAI(!isGetNewConfiguredAI)
   }
 
   // 上传 apikey 到服务器
@@ -114,7 +115,7 @@ const Chat: React.FC = () => {
       setConfigLoading(false)
       message.success("模型配置成功")
       handleConfigCancel()
-      updateConfiguredAI()
+      getAiModel()
     } catch (error) {
       setConfigLoading(false)
       setApiKey('')
@@ -256,10 +257,19 @@ const Chat: React.FC = () => {
 
   // 回车 -> 提交问题 （进入界面 -> 没有调用方法）
   const keydownQuestion = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter') { // 回车按键
+    if (e.nativeEvent.isComposing) return
+
+    if (e.key === 'Enter' && !e.shiftKey) { // 回车 且没按 shift，阻止默认换行，执行发送
+      e.preventDefault()
       handleSubmit() // 提交
     }
   }
+
+
+  // 在组件挂载的时候获取一次当前用户配置的 ai 信息
+  useEffect(() => {
+    getAiModel()
+  }, [])
 
   // 在组件挂载之后聚焦输入框
   useEffect(() => {
@@ -382,7 +392,7 @@ const Chat: React.FC = () => {
         }
         centered={true}
       >
-        <Config aiProviders={aiProviders} selectedAI={selectedAI} setSelectedAI={setSelectedAI} apiKey={apiKey} setApiKey={setApiKey} configuredAI={configuredAI} setConfiguredAI={setConfiguredAI} isGetNewConfiguredAI={isGetNewConfiguredAI} />
+        <Config aiProviders={aiProviders} selectedAI={selectedAI} setSelectedAI={setSelectedAI} apiKey={apiKey} setApiKey={setApiKey} configuredAI={configuredAI} />
       </Modal>
 
     </div >

@@ -1,13 +1,12 @@
 import styles from './index.module.less'
 import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
-import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, EditOutlined, CloseCircleFilled } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, CloseCircleFilled } from '@ant-design/icons'
 import { Pagination, ConfigProvider, Skeleton, message } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
 import React, { useEffect, useState } from 'react'
 import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useSearchParams } from 'react-router';
-import { useAppSelector } from '@/store/hooks';
 
 const Community = () => {
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
@@ -22,8 +21,6 @@ const Community = () => {
   }) // 分页
   const [loading, setLoading] = useState(false) // 帖子加载效果
   const [isEmpty, setIsEmpty] = useState(false) // 这个 state 不是证明搜索框是否空，而是搜索的内容是否存在
-
-  const userInfo = useAppSelector(state => state.user.userInfo)
 
   // 左侧侧边栏
   const navItems: INavItems[] = [
@@ -59,10 +56,6 @@ const Community = () => {
   ]
 
   // 进入 编辑界面
-  const handleOpen = () => {
-    window.open('/community/publish')
-  }
-
   // 左侧 nav
   const handleNavBar = async (navType: string) => {
     setActiveTab(navType)
@@ -244,13 +237,13 @@ const Community = () => {
             </div>
           </div>
           {/* 每日一句 (NEW) */}
-          <div className={styles.dailyCard}>
+          {/* <div className={styles.dailyCard}>
             <div className={styles.dailyTitle}> <ReadOutlined />每日一句</div>
             <div className={styles.dailyContent}>
               "Talk is cheap. Show me the code."
             </div>
             <div className={styles.dailyAuthor}>—— Linus Torvalds</div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -323,7 +316,7 @@ const Community = () => {
       {/* 右侧区域 */}
       <div className={styles.right}>
         {/* 用户个人资料 */}
-        <div className={`${styles.rightCard} ${styles.profileCard}`}>
+        {/* <div className={`${styles.rightCard} ${styles.profileCard}`}>
           <div className={styles.profileAvatar}><img style={{ width: '100%' }} src="/imgs/admin.png" alt="" /></div>
           <div className={styles.profileName}>{userInfo.data.username}</div>
           <div className={styles.profileBio}>知识改变世界</div>
@@ -343,11 +336,10 @@ const Community = () => {
             </div>
           </div>
 
-          {/* Post Button (Moved) */}
           <button onClick={handleOpen} className={styles.postBtn}>
             <EditOutlined /> 发布文章
           </button>
-        </div>
+        </div> */}
 
         {/* 系统公告 */}
         <div className={`${styles.rightCard} ${styles.noticeCard}`}>
@@ -378,6 +370,15 @@ const Community = () => {
               <div className={styles.trendHot}>{item.hot}</div>
             </div>
           ))}
+        </div>
+
+        {/* 每日一句 (NEW) */}
+        <div className={styles.dailyCard}>
+          <div className={styles.dailyTitle}> <ReadOutlined />每日一句</div>
+          <div className={styles.dailyContent}>
+            "Talk is cheap. Show me the code."
+          </div>
+          <div className={styles.dailyAuthor}>—— Linus Torvalds</div>
         </div>
       </div>
     </div>

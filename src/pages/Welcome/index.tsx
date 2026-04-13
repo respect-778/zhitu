@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useRef, useEffect, useState, useMemo } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import {
@@ -58,53 +58,6 @@ const Stars = (props: StarsProps) => {
           depthWrite={false}
         />
       </Points>
-    </group>
-  )
-}
-
-// --- Meteor Component ---
-const Meteor = () => {
-  const mesh = useRef<THREE.Mesh>(null!)
-  // Random starting position
-  const [position] = useState(() => {
-    const x = (Math.random() - 0.5) * 10
-    const y = Math.random() * 5 + 2 // Start above
-    const z = (Math.random() - 0.5) * 5
-    return new THREE.Vector3(x, y, z)
-  })
-
-  // Random speed and size
-  const speed = useMemo(() => 0.05 + Math.random() * 0.1, [])
-  const length = useMemo(() => 0.5 + Math.random() * 0.5, [])
-
-  useFrame(() => {
-    if (mesh.current) {
-      mesh.current.position.x -= speed
-      mesh.current.position.y -= speed
-
-      // Reset if out of view
-      if (mesh.current.position.y < -3) {
-        mesh.current.position.y = Math.random() * 5 + 3
-        mesh.current.position.x = (Math.random() - 0.5) * 10 + 2
-      }
-    }
-  })
-
-  return (
-    <mesh ref={mesh} position={position} rotation={[0, 0, Math.PI / 4]}>
-      <cylinderGeometry args={[0.005, 0.005, length, 8]} />
-      <meshBasicMaterial color="white" transparent opacity={0.6} />
-    </mesh>
-  )
-}
-
-const Meteors = () => {
-  return (
-    <group>
-      {/* Create 15 meteors */}
-      {Array.from({ length: 15 }).map((_, i) => (
-        <Meteor key={i} />
-      ))}
     </group>
   )
 }

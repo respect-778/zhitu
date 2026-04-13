@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "codex",
+  "name": "Codex",
+  "promptFile": "prompt.codex.md",
+  "runRequestFile": "run-request.codex.json",
+  "launchPackFile": "launch.codex.md",
+  "runnerCommand": [
+    "codex"
+  ],
+  "argvTemplate": [
+    "exec",
+    "--sandbox",
+    "workspace-write",
+    "-"
+  ],
+  "commandMode": "manual",
+  "cwdMode": "workspaceRoot",
+  "stdioMode": "pipe",
+  "stdinMode": "promptFile",
+  "successExitCodes": [
+    0
+  ],
+  "envAllowlist": [],
+  "capabilities": {
+    "interactive": true,
+    "multiAgent": true,
+    "resumable": true
+  },
+  "notes": [
+    "The built-in Codex profile now includes a recommended non-interactive `codex exec --sandbox workspace-write -` template, but commandMode stays manual until you opt in.",
+    "On the locally observed Codex CLI surface from 2026-04-08, `codex exec` accepted `--sandbox` but rejected `--ask-for-approval`, so keep the template aligned with your installed CLI version.",
+    "If Windows direct spawning of `codex` is unavailable on your machine, switch runnerCommand to a working local wrapper such as `cmd.exe` plus a matching argvTemplate."
+  ]
+}

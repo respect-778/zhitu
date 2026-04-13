@@ -17,7 +17,7 @@ const Path: React.FC = () => {
   const [list, setList] = useState<number[]>([])
 
   const getList = () => {
-    setList(new Array(20000).fill(0).map((item, index) => index))
+    setList(new Array(20000).fill(0).map((_, index) => index))
   }
 
 

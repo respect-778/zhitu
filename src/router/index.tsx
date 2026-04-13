@@ -17,7 +17,7 @@ import Loading from "@/components/Loading";
 import AuthRouter from "@/components/AuthRouter";
 
 
-
+// 创建浏览器路由
 const router = createBrowserRouter([
   // 一级路由
   {

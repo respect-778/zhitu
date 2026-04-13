@@ -9,6 +9,7 @@ import styles from './index.module.less'
 import { clearUserInfo, getUserInfo } from '@/store/modules/userStore'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { logoutAPI } from '@/api/user'
+import { delStore } from '@/utils/store'
 
 
 const Header: React.FC = () => {
@@ -35,6 +36,9 @@ const Header: React.FC = () => {
       console.log('退出失败', error)
     } finally {
       dispatch(clearUserInfo())
+      delStore('aiName') // 清理当前用户配置的 ai
+      delStore('userId') // 清除当前用户id
+      delStore('data-theme') // 清除当前主题颜色
       message.success('退出登录成功')
       navigate('/login')
     }
