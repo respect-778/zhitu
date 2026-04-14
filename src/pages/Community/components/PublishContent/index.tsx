@@ -11,9 +11,10 @@ import { addCommunityAPI, uploadImageAPI } from "@/api/community"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { confirmSave, cancelSave, setSavedContentValue, setSavedTitleValue, delSavedTitleValue, delSavedContentValue } from "@/store/modules/communityStore"
 import { getStore } from "@/utils/store"
-import { message, Modal } from "antd"
+import { message, Modal, Popover, Image } from "antd"
 import type { IContent } from "@/types/community"
 import { formatDateTime } from "@/utils/formatDateTime"
+import { useSingleImageUpload } from "@/hooks/useSingleImageUpload"
 
 const zhHansLocale: Partial<BytemdLocale> = {
   write: "编辑",
@@ -122,11 +123,14 @@ const PublishContent = () => {
 
   const imgs = useRef<string[]>([]) // 缓存图片数组 -> 减少组件的重新渲染
   const editorHostRef = useRef<HTMLDivElement>(null) // 外层容器，用于拿到 <Editor /> 内部生成的 ".bytemd" 根节点。
+
   const [titleValue, setTitleValue] = useState("") // 文章标题
   const [contentValue, setContentValue] = useState("") // 文章内容
   const [isBackModalOpen, setIsBackModalOpen] = useState(false) // 是否打开"返回"弹框
   const [isContinueEdit, setIsContinueEdit] = useState(false) // 是否继续编辑
   const [titleLayout, setTitleLayout] = useState<TitleLayoutState>(initialTitleLayoutState) // 仅用于标题位置与显隐控制的布局状态。
+
+  const { imgUrl, setImgUrl, handleSingleImg } = useSingleImageUpload()
 
   // 当有标题或内容时，要关闭/刷新/地址栏跳转，进行浏览器（BOM）拦截
   const isDirty = titleValue.trim().length > 0 || contentValue.trim().length > 0 // 当前标题或内容是否不为空
@@ -191,18 +195,31 @@ const PublishContent = () => {
   }
 
   // 在笔记中输入标题时触发
-  const changeTitleValue = (v: string) => {
+  const changeTitleValue = (value: string) => {
     // 标题长度大于 100，就禁用
-    if (v.length > 100) {
+    if (value.length > 100) {
       return
     }
-    setTitleValue(v)
+    setTitleValue(value)
   }
 
   // 在笔记中输入内容时触发
   const changeConentValue = (v: string) => {
     setContentValue(v)
   }
+
+  // 封面预览
+  const coverPreview = (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
+      <Image
+        src={imgUrl}
+        alt="封面"
+        width={200}
+        fallback="data:image/png;base64,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"
+      />
+      <div onClick={() => setImgUrl('')} style={{ padding: '8px 16px', background: '#1677ff', color: '#fff', borderRadius: '8px', cursor: 'pointer' }}>重置</div>
+    </div>
+  )
 
   // 保存文章
   const handleSaveDraft = (title: string, content: string) => {
@@ -235,6 +252,7 @@ const PublishContent = () => {
       time: formatDateTime(JSON.stringify(new Date())),
       title: titleValue,
       content: contentValue,
+      cover: imgUrl || '',
       likes: 0,
       comments: 0,
       collection: 0,
@@ -243,6 +261,7 @@ const PublishContent = () => {
       isCollected: false,
       Pageviews: 0
     }
+    console.log(data)
 
     await addCommunityAPI(data)
 
@@ -368,6 +387,18 @@ const PublishContent = () => {
           <img style={{ height: '60px' }} src="/imgs/logo.png" alt="log" draggable="false" />
         </div>
         <div className={styles.publishBtns}>
+          <Popover
+            title="封面预览"
+            content={coverPreview}
+          >
+            <div className={styles.imgBtn}>
+              封面预览
+            </div>
+          </Popover >
+          <div>
+            <label className={styles.imgBtn} htmlFor="file-upload" style={{ cursor: 'pointer' }}>选择封面</label>
+            <input onChange={handleSingleImg} type="file" id="file-upload" accept="image/*" style={{ display: 'none' }} />
+          </div>
           <div onClick={() => handleSaveDraft(titleValue, contentValue)} className={styles.saveDraftBtn}>
             保存草稿
           </div>

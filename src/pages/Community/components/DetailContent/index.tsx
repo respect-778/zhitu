@@ -107,6 +107,11 @@ const DetailContent: React.FC = () => {
     }
   }
 
+  // 开启 ai 阅读
+  const handleAiRead = async () => {
+    window.open(`/community/${id}/summary`)
+  }
+
   // 处理评论
   const handleComment = () => {
 
@@ -324,14 +329,13 @@ const DetailContent: React.FC = () => {
             <div style={{ fontSize: '20px', fontWeight: '600' }}>核心速览</div>
             <span style={{ fontSize: '13px', color: '#A1A1A1' }}>文章太长没时间？AI 3秒提炼核心干货，省时80%</span>
           </div>
-          <div></div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '35px' }}>
             <div className={styles.labelContainer}>
               <span className={styles.label}>提炼文本</span>
               <span className={styles.label}>高效总结</span>
               <span className={styles.label}>30秒速读</span>
             </div>
-            <div className={styles.labelBtn}>一键开启AI阅读</div>
+            <div className={styles.labelBtn} onClick={handleAiRead}>一键开启AI阅读</div>
           </div>
         </div>
       </aside>

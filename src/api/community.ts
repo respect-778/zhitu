@@ -114,3 +114,11 @@ export const pageviewsCommunityAPI = (articleId: number) => {
     }
   })
 }
+
+// ai 快速阅读总结文章接口
+export const articleQuickReadAPI = (articleId: number) => {
+  return httpInstance({
+    url: `/community/${articleId}/summary/stream`,
+    method: 'post',
+  })
+}

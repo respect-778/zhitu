@@ -15,6 +15,7 @@ const DetailContent = React.lazy(() => import('@/pages/Community/components/Deta
 import ChatId from "@/pages/Chat/components/ChatId";
 import Loading from "@/components/Loading";
 import AuthRouter from "@/components/AuthRouter";
+import SummaryAI from "@/pages/Community/components/SummaryAI";
 
 
 // 创建浏览器路由
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path: '/community/:id',
     element: <Suspense fallback={<Loading />}><DetailContent /></Suspense>
+  },
+  {
+    path: '/community/:id/summary',
+    element: <Suspense fallback={<Loading />}><SummaryAI /></Suspense>
   },
   {
     path: '/community/publish',

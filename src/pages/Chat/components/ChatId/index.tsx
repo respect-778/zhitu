@@ -6,8 +6,7 @@ import type { IChatMessage, IChatSession } from "@/types/chat"
 import { useNavigate, useOutletContext, useParams } from "react-router"
 import { Space } from "antd"
 import { Viewer } from "@bytemd/react"
-// import hljs from "highlight.js"
-import { markdownPlugins, markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markdown"
+import { markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markdown"
 import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea"
 import { getStore } from "@/utils/store"
@@ -32,7 +31,6 @@ const ChatId = () => {
     setStreamBySession: React.Dispatch<React.SetStateAction<Record<number, { isStreaming: boolean, content: string }>>>
   }>()
   const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
-  // const [llmItem, setLLMItem] = useState('glm-4.6')
   const titleRef = useRef<HTMLDivElement>(null)
   const [isTitleOverflow, setIsTitleOverflow] = useState(false)
   const currentSessionTitle = historySession.find(item => item.id === sessionId)?.session_title ?? ''
@@ -228,7 +226,7 @@ const ChatId = () => {
                   <div className={styles.markdownContent}>
                     <Viewer
                       value={normalizeMarkdownText(message.content)}
-                      plugins={markdownPlugins}
+                      plugins={markdownPluginsNoHighlight}
                     />
                   </div>
                 )

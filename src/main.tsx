@@ -7,6 +7,7 @@ import router from "./router"
 import { Provider } from "react-redux"
 import store from "./store"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 // 创建一个查询客户端 用于查询缓存数据
 const queryClient = new QueryClient()
@@ -16,5 +17,6 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <RouterProvider router={router}></RouterProvider>
     </Provider>
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 )

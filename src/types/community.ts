@@ -18,6 +18,7 @@ export interface IContent {
   time: string
   title: string
   content: string
+  cover?: string // 封面
   art_count?: number
   likes: number
   comments: number

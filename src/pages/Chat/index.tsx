@@ -87,6 +87,9 @@ const Chat: React.FC = () => {
     }
   ]
 
+  const currentAi = aiProviders.find(model => model.name === configuredAI)
+  const currentAiImg = currentAi?.img ?? '' // 当前模型的图片
+
   // 关闭配置弹框
   const handleConfigCancel = () => {
     setIsOpenConfig(false)
@@ -335,8 +338,8 @@ const Chat: React.FC = () => {
       {id === undefined ?
         <div className={styles.right}>
           {/* ai 先导语 */}
-          <div className={styles.introductory} style={{ display: 'flex', gap: '10px' }}>
-            <div><OpenAIOutlined /></div>
+          <div className={styles.introductory} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {currentAiImg ? <img style={{ height: '25px', }} src={currentAiImg} alt="ai" /> : ''}
             <div>今天有什么可以帮到你？</div>
           </div>
           {/* ai 聊天输入框 */}
