@@ -148,7 +148,7 @@ const PublishContent = () => {
 
   // 处理站内跳转/浏览器后退（SPA）
   const blocker = useBlocker(
-    // 这里是在对 
+    // 这里是获取当前路径和要跳转的路径，后续进行比对
     ({ currentLocation, nextLocation }) =>
       !allowLeaveRef.current &&
       isDirty &&

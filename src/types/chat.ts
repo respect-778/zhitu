@@ -3,6 +3,8 @@ export interface IChatSession {
   id?: number // 会话 id
   user_id: number // 用户 id
   session_title: string // 会话标题
+  scene_type: string // 场景类型
+  source_id: number // 来源 id
   is_deleted?: number // 是否删除
   created_at?: string // 创建时间
   updated_at?: string // 更新时间

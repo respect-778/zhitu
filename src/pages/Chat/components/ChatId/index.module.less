@@ -1,8 +1,10 @@
 .container {
-  width: 85%;
+  width: 84%;
   height: calc(100vh - 95px);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .top {
@@ -110,30 +112,6 @@
       pointer-events: none;
     }
   }
-
-  .jumpToBottomBtn {
-    position: absolute;
-    right: 280px;
-    bottom: 20px;
-    z-index: 10;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    padding: 0;
-    font-size: 35px;
-    line-height: 1;
-    color: #989AA9;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      color: #6c6c6c;
-      transform: translateY(-1px);
-    }
-  }
 }
 
 // 光标闪烁动画
@@ -157,7 +135,7 @@
   justify-content: flex-end;
   align-items: center;
 
-  .chatBox {
+  .chatBoxId {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -220,14 +198,15 @@
 
       .llmMode {
         font-size: 14px;
-        padding: 6px 10px;
-        border-radius: 30px;
+        padding: 5px 10px;
+        border-radius: 5px;
         color: var(--text-color);
         cursor: pointer;
+        transition: background 0.2s ease 0s;
 
-        // &:hover {
-        //   background-color: #f3f1f1;
-        // }
+        &:hover {
+          background-color: #f5f5f7;
+        }
       }
 
       .submitImg {

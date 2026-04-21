@@ -1,6 +1,6 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, OpenAIOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import { addChatSessionAPI, delChatSessionAPI, getAiModelAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
@@ -22,7 +22,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate() // 路由导航
   const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
-  const { textareaRef } = useAutoResizeTextarea({ value: searchValueFa }) // textarea 自适应高度 hook
+  const { textareaRef, resize } = useAutoResizeTextarea({ value: searchValueFa, minHeight: 44, maxHeight: 280 }) // textarea 自适应高度 hook
   const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
@@ -53,7 +53,6 @@ const Chat: React.FC = () => {
     e.stopPropagation()
     setMode(mode === 0 ? 1 : 0)
   }
-
 
   // 模型提供商
   const aiProviders: IProvider[] = [
@@ -215,7 +214,7 @@ const Chat: React.FC = () => {
 
   //  获取历史对话框中对应 用户 id 的聊天记录 （进入界面 -> 在 dom 渲染完成之后，就会调用一次）
   const getHistoryChatSession = async () => {
-    const res = await getHistorySessionAPI(parseInt(userInfo.data.id)) // 获取登录用户自己的历史记录
+    const res = await getHistorySessionAPI() // 获取登录用户自己的历史记录
     setHistorySession(res.data)
   }
 
@@ -269,6 +268,17 @@ const Chat: React.FC = () => {
   }
 
 
+  // 在组件挂载之前，调用 useAutoResizeTextarea hook 中的方法，避免输入框高度变化
+  useEffect(() => {
+    if (id !== undefined) return
+
+    const raf = requestAnimationFrame(() => { // 这里是在组件渲染之后的下一帧之前执行，符合值是本次任务的 id
+      resize()
+    })
+
+    return () => cancelAnimationFrame(raf) // 取消还没执行的那一帧任务
+  }, [id, resize])
+
   // 在组件挂载的时候获取一次当前用户配置的 ai 信息
   useEffect(() => {
     getAiModel()
@@ -276,6 +286,8 @@ const Chat: React.FC = () => {
 
   // 在组件挂载之后聚焦输入框
   useEffect(() => {
+    if (id !== undefined) return
+
     if (textareaRef.current && userInfo.data.id) {
       textareaRef.current.focus()
     }
@@ -301,9 +313,11 @@ const Chat: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.left}>
         {/* 开启新对话 */}
-        <div onClick={handleNewChat} className={styles.newChat}>
-          <div><PlusCircleOutlined /></div>
-          <div>开启新对话</div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div onClick={handleNewChat} className={styles.newChat}>
+            <div><PlusCircleOutlined /></div>
+            <div>开启新对话</div>
+          </div>
         </div>
         {/* 历史记录 */}
         <div className={styles.historyChat}>

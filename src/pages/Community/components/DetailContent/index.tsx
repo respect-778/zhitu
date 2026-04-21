@@ -14,12 +14,18 @@ import tocbot from 'tocbot'
 import { useAppSelector } from '@/store/hooks'
 
 const DetailContent: React.FC = () => {
+  // react-router
   const { id } = useParams<{ id: string }>() // 获取当前 url 文章 id
   const navigate = useNavigate()
 
+  // 状态库
+  const username = useAppSelector(state => state.user.username) // 当前登录的用户
+
+  // useRef
   const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
   const tocbotRef = useRef<HTMLDivElement>(null) // 目录 ref
 
+  // useState
   const [detail, setDetail] = useState<IContentDetail>({
     id: 0,
     avatar: '',
@@ -45,7 +51,6 @@ const DetailContent: React.FC = () => {
   const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true) // 加载
 
-  const username = useAppSelector(state => state.user.username) // 当前登录的用户
 
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 

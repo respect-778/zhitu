@@ -1,3 +1,5 @@
+// hooks/useSingleImageUpload
+// 上传单个图片
 import { uploadImageAPI } from "@/api/community";
 import { message } from "antd";
 import { useState, type ChangeEvent } from "react"

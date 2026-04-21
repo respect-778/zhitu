@@ -1,18 +1,17 @@
-// src/hooks/useAutoResizeTextarea.ts
+// hooks/useAutoResizeTextarea.ts
 // textarea 自适应高度 hook
-
 import { useCallback, useLayoutEffect, useRef } from 'react'
 
 type Options = {
   value: string
-  minHeight?: number // px
-  maxHeight?: number // px
+  minHeight: number // px
+  maxHeight: number // px
 }
 
 export function useAutoResizeTextarea({
   value,
-  minHeight = 44,
-  maxHeight = 280,
+  minHeight,
+  maxHeight,
 }: Options) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 

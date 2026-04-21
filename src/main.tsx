@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import './index.less'
+import './taillwind.css'
 import './styles/theme.less'
 import "github-markdown-css/github-markdown.css" // bytemd 全局样式
 import { RouterProvider } from "react-router"
@@ -17,6 +18,6 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <RouterProvider router={router}></RouterProvider>
     </Provider>
-    <ReactQueryDevtools initialIsOpen={false} />
+    {/* <ReactQueryDevtools initialIsOpen={false} /> */}
   </QueryClientProvider>
 )

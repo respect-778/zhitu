@@ -43,7 +43,8 @@ export const callChatStreamAPI = async (
   session_id: number | null,
   onMessage: (content: string) => void,
   onError?: (error: string) => void,
-  _retried: boolean = false // 默认第一次是 false
+  _retried: boolean = false, // 默认第一次是 false
+  signal?: AbortSignal // 用于取消请求
 ): Promise<string> => {
   const response = await fetch('/api/chat/call', { // 这里走的 fetch 所以没有基地址，这里需要加上 /api
     method: 'POST',
@@ -52,6 +53,7 @@ export const callChatStreamAPI = async (
       'Authorization': `Bearer ${getStore('token')}` // 添加 access token
     },
     body: JSON.stringify({ mode, userMessage, session_id }),
+    signal: signal // 用于取消请求
   })
 
   // 对 access token 授权失效情况的处理
@@ -194,13 +196,24 @@ export const getChatMessageAPI = (session_id: number) => {
   })
 }
 
-// 根据 user_id 获取用户对应的历史会话记录
-export const getHistorySessionAPI = (user_id: number) => {
+// 根据 文章id 查找对应的聊天记录
+export const getSummaryMessageAPI = (article_id: number) => {
+  return httpInstance({
+    url: '/chat/getSummaryMessage',
+    method: 'get',
+    params: {
+      article_id
+    }
+  })
+}
+
+// 根据场景类型获取历史会话记录
+export const getHistorySessionAPI = (scene_type?: string) => {
   return httpInstance({
     url: '/chat/history',
     method: 'get',
     params: {
-      user_id
+      scene_type
     }
   })
 }
@@ -215,7 +228,7 @@ export const addChatMessageAPI = (data: { session_id: number, role: string, cont
 }
 
 // 创建聊天会话
-export const addChatSessionAPI = (data: { user_id: number, session_title: string }) => {
+export const addChatSessionAPI = (data: { user_id: number, session_title: string, scene_type?: string, source_id?: number }) => {
   return httpInstance({
     url: '/chat/addSession',
     method: 'post',

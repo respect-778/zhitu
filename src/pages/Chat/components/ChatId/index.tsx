@@ -1,4 +1,4 @@
-import { ArrowUpOutlined, BulbOutlined, LoadingOutlined, DownCircleOutlined } from "@ant-design/icons"
+import { ArrowUpOutlined, BulbOutlined, LoadingOutlined } from "@ant-design/icons"
 import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
@@ -10,6 +10,7 @@ import { markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markd
 import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea"
 import { getStore } from "@/utils/store"
+import ScrollDownButton from "@/components/ScrollDownButton"
 
 
 const ChatId = () => {
@@ -18,10 +19,10 @@ const ChatId = () => {
   const navigate = useNavigate()
   const [mode, setmode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const [searchValue, setSearchValue] = useState('') // 输入框内容
-  const { textareaRef } = useAutoResizeTextarea({ value: searchValue })
+  const { textareaRef } = useAutoResizeTextarea({ value: searchValue, minHeight: 44, maxHeight: 280 })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
-  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 获取到 父组件 中的历史记录数据
+  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 从父组件中拿状态和方法 
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
     searchValueFa: string,
     isNewChat: boolean,
@@ -108,8 +109,6 @@ const ChatId = () => {
     }
 
     setSearchValue('') // 提交后，清空输入框
-    setIsInputEmpty(true) // 输入框为空
-
 
     // 开启流式生成并记录当前开启流式的会话id
     setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: true, content: '' } }))
@@ -255,14 +254,14 @@ const ChatId = () => {
           <div ref={endRef} className={styles.scrollSentinel} aria-hidden="true" />
         </div>
         {showJumpToBottom && currentStream.isStreaming && (
-          <div className={styles.jumpToBottomBtn} onClick={scrollToBottomAndLock}>
-            <DownCircleOutlined />
+          <div onClick={scrollToBottomAndLock} style={{ position: 'fixed', bottom: '162px' }}>
+            <ScrollDownButton />
           </div>
         )}
       </div>
       <div className={styles.bottom}>
         {/* ai 聊天输入框 */}
-        <div className={styles.chatBox} onClick={() => textareaRef.current?.focus()}>
+        <div className={styles.chatBoxId} onClick={() => textareaRef.current?.focus()}>
           {/* 输入框 */}
           <textarea
             ref={textareaRef}

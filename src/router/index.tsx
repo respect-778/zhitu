@@ -56,11 +56,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/community/:id/summary',
-    element: <Suspense fallback={<Loading />}><SummaryAI /></Suspense>
+    element: <AuthRouter><Suspense fallback={<Loading />}><SummaryAI /></Suspense></AuthRouter>
   },
   {
     path: '/community/publish',
-    element: <Suspense fallback={<Loading />}><PublishContent /></Suspense>
+    element: <AuthRouter><Suspense fallback={<Loading />}><PublishContent /></Suspense></AuthRouter>
   },
   {
     path: '/login',
