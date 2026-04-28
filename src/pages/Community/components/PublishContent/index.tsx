@@ -7,14 +7,15 @@ import type { BytemdLocale } from "bytemd"
 import type { Image as MdastImage } from "mdast"
 import styles from "./index.module.less"
 import { useBeforeUnload, useBlocker, useNavigate } from "react-router"
-import { addCommunityAPI, uploadImageAPI } from "@/api/community"
+import { addCommunityAPI, articleAbstractAPI, uploadImageAPI } from "@/api/community"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { confirmSave, cancelSave, setSavedContentValue, setSavedTitleValue, delSavedTitleValue, delSavedContentValue } from "@/store/modules/communityStore"
 import { getStore } from "@/utils/store"
-import { message, Modal, Popover, Image } from "antd"
+import { message, Modal, Popover, Image, Button } from "antd"
 import type { IContent } from "@/types/community"
 import { formatDateTime } from "@/utils/formatDateTime"
 import { useSingleImageUpload } from "@/hooks/useSingleImageUpload"
+import { SignatureOutlined } from "@ant-design/icons"
 
 const zhHansLocale: Partial<BytemdLocale> = {
   write: "编辑",
@@ -129,6 +130,8 @@ const PublishContent = () => {
   const [isBackModalOpen, setIsBackModalOpen] = useState(false) // 是否打开"返回"弹框
   const [isContinueEdit, setIsContinueEdit] = useState(false) // 是否继续编辑
   const [titleLayout, setTitleLayout] = useState<TitleLayoutState>(initialTitleLayoutState) // 仅用于标题位置与显隐控制的布局状态。
+  const [abstractValue, setAbstractValue] = useState("") // 摘要
+  const [isAbstractLoading, setIsAbstractLoading] = useState(false) // 摘要加载中
 
   const { imgUrl, setImgUrl, handleSingleImg } = useSingleImageUpload()
 
@@ -208,6 +211,41 @@ const PublishContent = () => {
     setContentValue(v)
   }
 
+  // 文章摘要输入框
+  const handleChangeAbstract = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value.length > 256) {
+      return
+    }
+
+    setAbstractValue(e.target.value)
+  }
+
+  // 文章摘要
+  const hanldeAbstract = async () => {
+    try {
+      setIsAbstractLoading(true)
+      const res = await articleAbstractAPI(titleValue, contentValue)
+      setAbstractValue(res.data.abstract)
+      setIsAbstractLoading(false)
+      message.success("AI提取摘要成功")
+    } catch (error) {
+      message.error("AI提取摘要失败")
+      console.log(error)
+      setIsAbstractLoading(false)
+    }
+  }
+
+  // 文章摘要
+  const abstractPreview = (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+      <textarea onChange={handleChangeAbstract} value={abstractValue} style={{ width: '250px', height: '80px', border: '1px solid #b4b3b3', borderRadius: '5px', outline: 'none' }} placeholder="摘要：会在内容广场中展示，帮助读者快速了解内容"></textarea>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Button loading={isAbstractLoading} onClick={hanldeAbstract} style={{ borderRadius: '5px', padding: '5px 10px', fontSize: '13px', cursor: 'pointer' }}><SignatureOutlined /> AI提取摘要</Button>
+        <div>{abstractValue.length} / 256</div>
+      </div>
+    </div>
+  )
+
   // 封面预览
   const coverPreview = (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
@@ -242,7 +280,12 @@ const PublishContent = () => {
     }
 
     if (titleValue.length < 5 || titleValue.length > 100) {
-      message.error("标题长度应在5 ~ 100个字之间")
+      message.warning("标题长度应在5 ~ 100个字之间")
+      return
+    }
+
+    if (abstractValue === '') {
+      message.warning("请输入摘要")
       return
     }
 
@@ -253,6 +296,7 @@ const PublishContent = () => {
       title: titleValue,
       content: contentValue,
       cover: imgUrl || '',
+      abstract: abstractValue,
       likes: 0,
       comments: 0,
       collection: 0,
@@ -387,6 +431,14 @@ const PublishContent = () => {
           <img style={{ height: '60px' }} src="/imgs/logo.png" alt="log" draggable="false" />
         </div>
         <div className={styles.publishBtns}>
+          <Popover
+            trigger="click"
+            content={abstractPreview}
+          >
+            <div className={styles.abstractBtn}>
+              文章摘要
+            </div>
+          </Popover>
           <Popover
             title="封面预览"
             content={coverPreview}

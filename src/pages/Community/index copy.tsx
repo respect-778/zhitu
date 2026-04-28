@@ -1,10 +1,10 @@
 import styles from './index.module.less'
 import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
-import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, ReadOutlined, CloseCircleFilled, RightOutlined } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, FireOutlined, ReadOutlined, CloseCircleFilled } from '@ant-design/icons'
 import { Pagination, ConfigProvider, Skeleton, message } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN';
-import React, { useCallback, useEffect, useState } from 'react'
-import { collectedCommunityAPI, getEarlyReportAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
+import React, { useEffect, useState } from 'react'
+import { collectedCommunityAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { useSearchParams } from 'react-router';
 
@@ -14,7 +14,6 @@ const Community = () => {
 
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
-  const [earlyReport, setEarlyReport] = useState<IContent | null>(null)
   const [activeTab, setActiveTab] = useState<string>(initialTab || 'new') // tab
   const [pageParams, setPageParams] = useState(() => { // 当前页、页数、总数
     const search = searchParams.get('page') // 获取 page 参数
@@ -24,27 +23,37 @@ const Community = () => {
   const [loading, setLoading] = useState(false) // 帖子加载效果
   const [isEmpty, setIsEmpty] = useState(false) // 这个 state 不是证明搜索框是否空，而是搜索的内容是否存在
 
-
-  // 公共精选
+  // 左侧侧边栏
   const navItems: INavItems[] = [
-    { id: 'new', label: '最新内容', icon: '' },
-    { id: 'recommend', label: '为你推荐', icon: '' },
-    { id: 'hot', label: '精选周刊', icon: '' },
-    { id: 'relax', label: '放松愉悦', icon: '' },
+    { id: 'new', label: '最新' },
+    { id: 'recommend', label: '推荐' },
+    { id: 'hot', label: '热门' },
+    { id: 'relax', label: '放松' },
+    { id: 'following', label: '关注' },
+    { id: 'oneself', label: '我' }
   ]
 
-  // 我的记录
-  const personalKeywords: IHotkeyword[] = [
-    { id: 1, name: '阅读历史' },
-    { id: 2, name: '我的收藏' },
-    { id: 3, name: '我的关注' },
-    { id: 4, name: '个人信息' },
+  // 左侧热门关键词
+  const hotKeywords: IHotkeyword[] = [
+    { id: 1, name: 'AI' },
+    { id: 2, name: 'Agent' },
+    { id: 3, name: '前端工程化' },
+    { id: 4, name: 'AIGC' },
+    { id: 5, name: 'langchain' },
+    { id: 6, name: 'nextjs' }
   ]
 
   // 右侧公告栏
   const notices = [
     { id: 1, title: '知途社区 1.2 版本更新公告', time: '2小时前' },
     { id: 2, title: '关于规范社区发帖的通知', time: '1天前' },
+  ]
+
+  // 右侧热榜
+  const trendings = [
+    { id: 1, name: 'DeepSeek R1 发布', hot: '1.2w' },
+    { id: 2, name: 'React 19 新特性', hot: '8.5k' },
+    { id: 3, name: 'Web3 开发入门', hot: '5.2k' },
   ]
 
   // 进入 编辑界面
@@ -84,16 +93,6 @@ const Community = () => {
       tabPage(res.data, 1, pageParams.pageSize)
     }
   }
-
-  // 每日早报
-  const getEarlyReport = useCallback(async () => {
-    try {
-      const res = await getEarlyReportAPI()
-      setEarlyReport(res.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
 
   // 搜索（是通过 推荐 的内容去搜索的，本质上 使用哪个接口都没有关系）
   const searchCommunity = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -153,9 +152,6 @@ const Community = () => {
       pre.set('tab', navType)
       return pre
     }, { replace: true })
-
-    // 回到顶部
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // 发布按钮
@@ -198,7 +194,6 @@ const Community = () => {
 
   useEffect(() => {
     handlePageSize(pageParams.pageNum, pageParams.pageSize, activeTab)
-    getEarlyReport() // 获取早报
   }, [])
 
   return (
@@ -206,9 +201,22 @@ const Community = () => {
       {/* 左侧区域 */}
       <div className={styles.left}>
         <div className={styles.leftSidebar}>
-          {/* 公共精选 */}
+          {/* 推荐、热门、最新、放松、关注、账户 */}
           <div className={styles.navCard}>
-            <div className={styles.title}>公共精选</div>
+            {/* 搜索框 */}
+            <div className={styles.formControl}>
+              <button className={styles.searchButton} type="submit">
+                <SearchOutlined />
+              </button>
+              <input onChange={handleSearchChange} onKeyDown={searchCommunity} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索帖子" type="text" />
+              <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
+              {searchValue !== '' &&
+                <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>
+                  <CloseCircleFilled />
+                </button>
+              }
+            </div>
+            {/* 侧边栏 */}
             <div className={styles.navBar}>
               {navItems.map(item => {
                 return (
@@ -223,14 +231,13 @@ const Community = () => {
               })}
             </div>
           </div>
-          <div style={{ borderTop: '0.1px solid #b4b4bd80' }}></div>
-          {/* 我的记录 */}
+          {/* 热门关键词 */}
           <div className={styles.navCard}>
-            <div className={styles.title}>我的记录</div>
-            <div className={styles.navBar}>
-              {personalKeywords.map(keyword => {
+            <div className={styles.title}>热门关键词</div>
+            <div className={styles.navKeyword}>
+              {hotKeywords.map(keyword => {
                 return (
-                  <div className={`${styles.navItem} ${parseInt(activeTab) === keyword.id ? styles.active : ""}`} key={keyword.id}>{keyword.name}</div>
+                  <div className={styles.navKey} key={keyword.id}>{keyword.name}</div>
                 )
               })}
             </div>
@@ -244,12 +251,6 @@ const Community = () => {
 
       {/* 中间区域 */}
       <div className={styles.middle}>
-        <div className={styles.middleHeader}>
-          <div style={{ fontSize: '19px', fontWeight: '500', color: '#38293B' }}>精选内容</div>
-          <div style={{ fontSize: '13px', color: '#8e9aa7' }}>/</div>
-          <div style={{ fontSize: '13px', color: '#8e9aa7' }}>从公共质量池中挑出的高质量内容</div>
-        </div>
-        <div style={{ borderBottom: '1px solid #b4b4bd80' }}></div>
         {content.length !== 0 &&
           <div className={styles.feed}>
             {
@@ -260,19 +261,23 @@ const Community = () => {
                       <div className={styles.content}>
                         <div onClick={() => handleDetail(item.id!)}>
                           <div className={styles.cardTop}>
-                            {item.cover ?
-                              <div><img src={item.cover} alt="封面" className={styles.cardCover} /></div>
-                              :
-                              <div><img src="/imgs/admin.png" alt="头像" className={styles.cardAvatar} /></div>
-                            }
-                            <div className={styles.cardContent}>
-                              <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
-                              <div className={styles.userInfo}>
-                                <div className={styles.cardName}>{item.name}</div>
-                                <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
-                              </div>
-                              <div className={styles.contentContainer}><div className={styles.contentSty}>{item.abstract}</div></div>
+                            <div><img src="/imgs/admin.png" alt="" className={styles.cardAvatar} /></div>
+                            <div className={styles.userInfo}>
+                              <div className={styles.cardName}>{item.name}</div>
+                              <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
                             </div>
+                          </div>
+                          <div className={styles.cardMiddle}>
+                            <div className={styles.tc}>
+                              <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
+                              <div className={styles.contentContainer}><div className={styles.contentSty}>{item.content}</div></div>
+                            </div>
+                            {item.photo ?
+                              <div className={styles.photoContainer}>
+                                <img src={item.photo[0]} alt="" className={styles.photo} />
+                              </div> : ''}
+                            {item.video ? <div>{item.video || ''}</div> : ''}
+                            {item.link ? <div>{item.link || ''}</div> : ''}
                           </div>
                         </div>
                         <div className={styles.cardBottom}>
@@ -312,36 +317,10 @@ const Community = () => {
 
       {/* 右侧区域 */}
       <div className={styles.right}>
-
-        {/* 搜索框 */}
-        <div className={styles.formControl}>
-          <button className={styles.searchButton} type="submit">
-            <SearchOutlined />
-          </button>
-          <input onChange={handleSearchChange} onKeyDown={searchCommunity} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索文章" type="text" />
-          <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
-          {searchValue !== '' &&
-            <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>
-              <CloseCircleFilled />
-            </button>
-          }
-        </div>
-
-        {/* 今日早报 */}
-        <div className={`${styles.rightCard} ${styles.trendingCard}`}>
-          <div className={styles.cardHeader}>
-            <div><ReadOutlined style={{ color: '#FFBF59' }} /> 今日早报</div>
-            <div style={{ fontSize: '12px', cursor: 'pointer' }} onClick={() => window.open(`/community/${earlyReport?.id}`)}>查看全部 <RightOutlined /></div>
-          </div>
-          <div className={styles.earlyReport}>
-            {earlyReport?.abstract}
-          </div>
-        </div>
-
         {/* 系统公告 */}
         <div className={`${styles.rightCard} ${styles.noticeCard}`}>
           <div className={styles.cardHeader}>
-            <div><BellOutlined style={{ color: '#FFBF59' }} /> 公告栏</div>
+            <BellOutlined style={{ color: '#FF6464' }} /> 公告栏
           </div>
           {notices.map(notice => (
             <div key={notice.id} className={styles.noticeItem}>
@@ -353,16 +332,30 @@ const Community = () => {
           ))}
         </div>
 
-
+        {/* 热榜 */}
+        <div className={`${styles.rightCard} ${styles.trendingCard}`}>
+          <div className={styles.cardHeader}>
+            <FireOutlined style={{ color: '#FFBF59' }} /> 全站热榜
+          </div>
+          {trendings.map((item, index) => (
+            <div key={item.id} className={styles.trendItem}>
+              <div className={styles.trendLeft}>
+                <span className={`${styles.trendRank} ${index === 0 ? styles.top1 : index === 1 ? styles.top2 : index === 2 ? styles.top3 : ''}`}>{index + 1}</span>
+                <span className={styles.trendName}>{item.name}</span>
+              </div>
+              <div className={styles.trendHot}>{item.hot}</div>
+            </div>
+          ))}
+        </div>
 
         {/* 每日一句 (NEW) */}
-        {/* <div className={styles.dailyCard}>
+        <div className={styles.dailyCard}>
           <div className={styles.dailyTitle}> <ReadOutlined />每日一句</div>
           <div className={styles.dailyContent}>
             "Talk is cheap. Show me the code."
           </div>
           <div className={styles.dailyAuthor}>—— Linus Torvalds</div>
-        </div> */}
+        </div>
       </div>
     </div>
   )

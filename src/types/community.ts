@@ -19,6 +19,7 @@ export interface IContent {
   title: string
   content: string
   cover?: string // 封面
+  abstract: string // 摘要
   art_count?: number
   likes: number
   comments: number

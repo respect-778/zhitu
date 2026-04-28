@@ -2,7 +2,7 @@ import type React from "react"
 import { useState } from "react"
 import { List } from "react-window"
 import { type RowComponentProps } from "react-window";
-// import styles from './index.module.less'
+import styles from './index.module.less'
 
 
 const Row = ({ list, index, style }: RowComponentProps<{ list: number[] }>) => {
@@ -22,7 +22,7 @@ const Path: React.FC = () => {
 
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Path</h1>
       <button onClick={getList}>add list</button>
       <List

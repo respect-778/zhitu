@@ -1,6 +1,7 @@
 ﻿.publishContainer {
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-color);
 }
 
 .header {
@@ -20,6 +21,21 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+
+    .abstractBtn {
+      padding: 8px 16px;
+      border: 1px solid #00000030;
+      border-radius: 8px;
+      box-sizing: border-box;
+      color: #fff;
+      background: #66a5fc;
+      cursor: pointer;
+      transition: background 0.3s ease 0s;
+
+      &:hover {
+        background: var(--primary-color);
+      }
+    }
 
     .imgBtn {
       padding: 8px 16px;

@@ -33,6 +33,7 @@ const DetailContent: React.FC = () => {
     time: '',
     title: '',
     content: '',
+    abstract: '',
     art_count: 0,
     likes: 0,
     comments: 0,

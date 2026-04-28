@@ -110,6 +110,11 @@ const Chat: React.FC = () => {
 
   // 上传 apikey 到服务器
   const hanldeSelectedAPIKEY = async () => {
+    if (!apiKey) {
+      message.error("请输入API密钥")
+      return
+    }
+
     try {
       setConfigLoading(true)
       const res = await uploadAiModelAPI(selectedAI.name, apiKey)
@@ -121,7 +126,7 @@ const Chat: React.FC = () => {
     } catch (error) {
       setConfigLoading(false)
       setApiKey('')
-      message.error("apikey 错误")
+      message.error("API密钥错误")
     }
   }
 

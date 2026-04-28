@@ -4,7 +4,8 @@ import {
   LoadingOutlined,
   MessageOutlined,
   PlusOutlined,
-  RightOutlined
+  RightOutlined,
+  UpOutlined
 } from '@ant-design/icons'
 import { Viewer } from '@bytemd/react'
 import { Drawer } from 'antd'
@@ -57,6 +58,7 @@ const SummaryAI = () => {
     Record<number, { isStreaming: boolean; content: string }>
   >({})
   const [isFirstSummary, setIsFirstSummary] = useState(false) // 是否是首次总结
+  const [isOpenAbstract, setIsOpenAbstract] = useState(false) // 是否展开总结摘要
 
   const { textareaRef } = useAutoResizeTextarea({ // textarea 自适应高度
     value: inputValue,
@@ -64,8 +66,8 @@ const SummaryAI = () => {
     maxHeight: 80
   })
 
-  // const conversationRef = useRef<HTMLDivElement>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const abstractRef = useRef<HTMLDivElement | null>(null)
 
   // 当前会话对应的流式回复状态
   const currentStream = useMemo(() => {
@@ -296,6 +298,12 @@ const SummaryAI = () => {
     }
   }
 
+  // 显示摘要按钮
+  const handleOpenAbstract = () => {
+
+    setIsOpenAbstract(pre => !pre)
+  }
+
 
   // 获取当前文章详情
   useEffect(() => {
@@ -380,11 +388,20 @@ const SummaryAI = () => {
           </div>
 
           <div className={styles.summaryEntry}>
-            <div className={styles.summaryEntryLeft}>
-              <div className={styles.summaryIcon}>V</div>
-              <span>文章摘要</span>
+            <div className={styles.summaryEntryHeader}>
+              <div className={styles.summaryEntryLeft}>
+                <div className={styles.summaryIcon}>VIA</div>
+                <span>文章摘要</span>
+              </div>
+              {isOpenAbstract ?
+                <UpOutlined className={styles.summaryArrow} onClick={handleOpenAbstract} />
+                :
+                <DownOutlined className={styles.summaryArrow} onClick={handleOpenAbstract} />
+              }
             </div>
-            <DownOutlined className={styles.summaryArrow} />
+            <div ref={abstractRef} className={`${styles.summaryEntryContent} ${isOpenAbstract ? styles.open : ''}`}>
+              <div>{detail?.abstract || ''}</div>
+            </div>
           </div>
 
           <div className={styles.articleContainer}>

@@ -42,7 +42,7 @@ export const searchCommunityAPI = (params: { keyword?: string; pageNum: number; 
   })
 }
 
-// 根据 id 获取帖子数据
+// 根据 id 获取文章数据
 export const getCommunityByIdAPI = (id: number) => {
   return httpInstance({
     url: `/community/${id}`,
@@ -120,5 +120,25 @@ export const articleQuickReadAPI = (articleId: number) => {
   return httpInstance({
     url: `/community/${articleId}/summary/stream`,
     method: 'post',
+  })
+}
+
+// ai 生成文章摘要接口
+export const articleAbstractAPI = (title: string, content: string) => {
+  return httpInstance({
+    url: '/community/abstract',
+    method: 'post',
+    data: {
+      title,
+      content
+    }
+  })
+}
+
+// 获取早报的接口
+export const getEarlyReportAPI = () => {
+  return httpInstance({
+    url: '/community/earlyReport',
+    method: 'get'
   })
 }

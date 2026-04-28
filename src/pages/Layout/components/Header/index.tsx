@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
-import { HomeOutlined, CompassOutlined, TeamOutlined, CommentOutlined, GithubOutlined } from '@ant-design/icons'
+import { HomeOutlined, CompassOutlined, CommentOutlined, GithubOutlined, AppstoreOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 import styles from './index.module.less'
@@ -23,7 +23,7 @@ const Header: React.FC = () => {
   const navItems = [
     { key: '/', label: '首页', icon: <HomeOutlined /> },
     { key: '/path', label: '学习路线', icon: <CompassOutlined /> },
-    { key: '/community', label: '道友圈', icon: <TeamOutlined /> },
+    { key: '/community', label: '内容广场', icon: <AppstoreOutlined /> },
     { key: '/chat', label: 'AI助手', icon: <CommentOutlined /> },
     { key: 'https://github.com/respect-778/zhitu', label: 'Github', icon: <GithubOutlined /> }
   ]

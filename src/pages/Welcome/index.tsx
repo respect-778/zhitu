@@ -131,7 +131,7 @@ const Welcome: React.FC = () => {
           <ScrollReveal>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>技术栈</h2>
-              <p className={styles.sectionDesc}>知途背后的技术力量</p>
+              <p className={styles.sectionDesc}>背后的技术力量</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={100}>

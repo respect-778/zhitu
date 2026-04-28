@@ -1,6 +1,6 @@
 import type { IProvider } from '@/types/chat'
 import styles from './index.module.less'
-import { Input } from 'antd'
+import { Form, Input } from 'antd'
 import { LinkOutlined } from '@ant-design/icons'
 
 interface IProps {
@@ -49,7 +49,11 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, con
           </div>
           <div className={styles.aiAPIKEY}>
             <div style={{ fontSize: '15px', fontWeight: '700' }}>API 密钥</div>
-            <Input.Password value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder='sk-ant-api01-...' style={{ padding: '10px' }} />
+            <Form>
+              <Form.Item name="apiKey" rules={[{ required: true, message: '请输入API密钥' }]}>
+                <Input.Password value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder='sk-ant-api01-...' style={{ padding: '10px' }} />
+              </Form.Item>
+            </Form>
             <div style={{ fontSize: '12px', fontWeight: '350' }}>您的 API 密钥存储在本地机器上</div>
           </div>
         </div>
