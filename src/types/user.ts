@@ -1,5 +1,11 @@
 export interface IUser {
+  email: string
+  password: string
+}
+
+export interface IRegister {
   username: string
+  email: string
   password: string
 }
 
@@ -20,9 +26,8 @@ export interface IUserInfo {
   data: {
     id: string
     username: string
-    photo: string
-    video?: string
-    link?: string
+    avatar: string
+    email: string
     mobile: string
     gender: number
     birthday: string
@@ -35,24 +40,4 @@ export interface IUserInfo {
     favorites_count: number // 收藏数量
   }
   token?: string // 双 token 模式一般不依赖 /user/info 返回 token
-}
-
-// 用户详细资料
-export interface IUserDetail {
-  data: {
-    id: string
-    username: string
-    photo?: string
-    video?: string
-    link?: string
-    mobile: string
-    gender: number
-    birthday: string
-    degree: string
-    art_count: number // 用户发布文章数
-    follow_count: number // 用户关注的数目
-    fans_count: number // 用户粉丝的数量
-    like_count: number // 用户被点赞数量
-  },
-  message: string
 }

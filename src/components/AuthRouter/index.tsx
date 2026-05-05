@@ -7,7 +7,13 @@ import { Navigate } from "react-router"
 * @param children - 需要条件渲染的React子组件
 */
 const AuthRouter = ({ children }: any) => {
-  if (getStore('token')) {
+  // 当前 url
+  const location = window.location.pathname
+
+  // 白名单
+  const whiteList = ['/', '/community', '/login', '/register', '/oauth/callback']
+
+  if (getStore('token') || whiteList.includes(location)) {
     return children
   } else {
     return <Navigate to="/login" replace={true}></Navigate>

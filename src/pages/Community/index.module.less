@@ -45,6 +45,10 @@
     padding: 20px 0px;
   }
 
+  .line {
+    border-top: 0.1px solid var(--border-color)
+  }
+
   .navCard {
     display: flex;
     flex-direction: column;
@@ -156,162 +160,165 @@
 .middle {
   flex: 0 1 var(--community-middle-width);
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
   padding: 20px 0;
 
-  .middleHeader {
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-  }
+  //   .middleHeader {
+  //     display: flex;
+  //     align-items: flex-end;
+  //     gap: 10px;
+  //   }
 
-  // 帖子卡片
-  .feed {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  //   .subTitle {
+  //     font-size: 19px;
+  //     font-weight: 500;
+  //     color: var(--subTitle-color);
+  //   }
 
-  .cardSty {
-    background: var(--glass-bg);
-    border: 1px solid #e2e8f0;
-    border-radius: 15px;
-    padding: 24px;
-    transition: border 0.2s ease-in-out 0s;
-    transition: box-shadow 0.2s ease-in-out 0s;
+  //   // 帖子卡片
+  //   .feed {
+  //     display: flex;
+  //     flex-direction: column;
+  //     gap: 20px;
+  //   }
 
-    &:hover {
-      border: 1px solid #b8bdc3;
-      box-shadow: 1px 3px 5px rgba(205, 204, 204, 0.448);
-    }
+  //   .cardSty {
+  //     background: var(--glass-bg);
+  //     border: 1px solid #e2e8f0;
+  //     border-radius: 15px;
+  //     padding: 24px;
+  //     transition: border 0.2s ease-in-out 0s;
+  //     transition: box-shadow 0.2s ease-in-out 0s;
 
-    [data-theme='dark'] & {
-      border: 1px solid #2e3c50;
-      box-shadow: none;
-    }
-  }
+  //     &:hover {
+  //       border: 1px solid #b8bdc3;
+  //       box-shadow: 1px 3px 5px rgba(205, 204, 204, 0.448);
+  //     }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    color: var(--text-color);
-    cursor: pointer;
+  //     [data-theme='dark'] & {
+  //       border: 1px solid #2e3c50;
+  //       box-shadow: none;
+  //     }
+  //   }
 
-    // 卡片头部（头像、名字、时间）
-    .cardTop {
-      display: flex;
-      justify-items: flex-start;
-      gap: 15px;
+  //   .content {
+  //     display: flex;
+  //     flex-direction: column;
+  //     gap: 15px;
+  //     color: var(--text-color);
+  //     cursor: pointer;
 
-      .cardCover {
-        width: 150px;
-        height: 150px;
-        border-radius: 8px;
-        object-fit: cover;
-      }
+  //     // 卡片头部（头像、名字、时间）
+  //     .cardTop {
+  //       display: flex;
+  //       justify-items: flex-start;
+  //       gap: 15px;
 
-      .cardAvatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-      }
+  //       .cardCover {
+  //         width: 150px;
+  //         height: 150px;
+  //         border-radius: 8px;
+  //         object-fit: cover;
+  //       }
 
-      .cardContent {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+  //       .cardAvatar {
+  //         width: 44px;
+  //         height: 44px;
+  //         border-radius: 50%;
+  //       }
 
-        .titleContainer {
-          font-weight: 540;
-          font-size: 18px;
-          color: var(--community-title-color);
+  //       .cardContent {
+  //         display: flex;
+  //         flex-direction: column;
+  //         gap: 8px;
 
-          .cardTitle {
-            /* 超过一行显示省略号 */
-            -webkit-line-clamp: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            line-height: 1.4;
-            max-height: calc(2 * 1.4em);
-          }
-        }
+  //         .titleContainer {
+  //           font-weight: 540;
+  //           font-size: 18px;
+  //           color: var(--community-title-color);
 
-        .userInfo {
-          display: flex;
-          align-items: center;
-          gap: 15px;
+  //           .cardTitle {
+  //             /* 超过一行显示省略号 */
+  //             -webkit-line-clamp: 1;
+  //             overflow: hidden;
+  //             text-overflow: ellipsis;
+  //             display: -webkit-box;
+  //             -webkit-box-orient: vertical;
+  //             line-height: 1.4;
+  //             max-height: calc(2 * 1.4em);
+  //           }
+  //         }
 
-          .cardName {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2px;
-          }
+  //         .userInfo {
+  //           display: flex;
+  //           align-items: center;
+  //           gap: 15px;
 
-          .cardTime {
-            font-size: 0.8rem;
-            color: #838a9d;
-          }
-        }
+  //           .cardName {
+  //             font-size: 1rem;
+  //             color: var(--text-secondary);
+  //             margin-bottom: 2px;
+  //           }
 
-        .contentContainer {
-          width: 100%;
-          color: var(--community-content-color);
+  //           .cardTime {
+  //             font-size: 0.8rem;
+  //             color: #838a9d;
+  //           }
+  //         }
 
-          .contentSty {
-            /* 单行时超出850px换行 */
-            width: fit-content;
-            max-width: calc(100% - 24px);
-            word-break: break-word;
-            overflow-wrap: break-word;
+  //         .contentContainer {
+  //           width: 100%;
+  //           color: var(--community-content-color);
 
-            /* 超过两行显示省略号 */
-            -webkit-line-clamp: 3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            line-height: 1.4;
-            max-height: calc(3 * 1.4em);
-          }
-        }
-      }
-    }
+  //           .contentSty {
+  //             /* 单行时超出850px换行 */
+  //             width: fit-content;
+  //             max-width: calc(100% - 24px);
+  //             word-break: break-word;
+  //             overflow-wrap: break-word;
 
-    // 卡片底部（喜欢、评论、收藏）
-    .cardBottom {
-      display: flex;
-      gap: 10px;
-      border-top: 1px solid var(--border-color);
+  //             /* 超过两行显示省略号 */
+  //             -webkit-line-clamp: 3;
+  //             overflow: hidden;
+  //             text-overflow: ellipsis;
+  //             display: -webkit-box;
+  //             -webkit-box-orient: vertical;
+  //             line-height: 1.4;
+  //             max-height: calc(3 * 1.4em);
+  //           }
+  //         }
+  //       }
+  //     }
 
-      .actionItem {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        color: var(--text-secondary);
-        transition: all 0.2s ease;
-        font-size: 14px;
-        padding: 4px 8px;
+  //     // 卡片底部（喜欢、评论、收藏）
+  //     .cardBottom {
+  //       display: flex;
+  //       gap: 10px;
+  //       border-top: 1px solid var(--border-color);
 
-        &:hover {
-          color: var(--primary-color);
-        }
+  //       .actionItem {
+  //         display: flex;
+  //         align-items: center;
+  //         gap: 6px;
+  //         cursor: pointer;
+  //         color: var(--text-secondary);
+  //         transition: all 0.2s ease;
+  //         font-size: 14px;
+  //         padding: 4px 8px;
 
-        &.active {
-          color: #ff4d4f;
+  //         &:hover {
+  //           color: var(--primary-color);
+  //         }
 
-          &.active:nth-child(2) {
-            color: #ffc53d;
-          }
-        }
-      }
-    }
-  }
+  //         &.active {
+  //           color: #ff4d4f;
+
+  //           &.active:nth-child(2) {
+  //             color: #ffc53d;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
 }
 
 .right {

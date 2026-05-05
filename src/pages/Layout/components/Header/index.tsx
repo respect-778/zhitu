@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Dropdown, message, Space } from 'antd'
-import { HomeOutlined, CompassOutlined, CommentOutlined, GithubOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { HomeOutlined, CompassOutlined, CommentOutlined, GithubOutlined, AppstoreOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 import styles from './index.module.less'
@@ -19,6 +19,7 @@ const Header: React.FC = () => {
   // 从 redux 中拿到 username 状态
   const username = useAppSelector(state => state.user.username)
   const token = useAppSelector(state => state.user.token)
+  const userInfo = useAppSelector(state => state.user.userInfo)
 
   const navItems = [
     { key: '/', label: '首页', icon: <HomeOutlined /> },
@@ -33,13 +34,13 @@ const Header: React.FC = () => {
     try {
       await logoutAPI()
     } catch (error) {
-      console.log('退出失败', error)
+      console.log('注销失败', error)
     } finally {
       dispatch(clearUserInfo())
       delStore('aiName') // 清理当前用户配置的 ai
       delStore('userId') // 清除当前用户id
       delStore('data-theme') // 清除当前主题颜色
-      message.success('退出登录成功')
+      message.success('已注销')
       navigate('/login')
     }
 
@@ -49,14 +50,25 @@ const Header: React.FC = () => {
     {
       key: '1',
       label: (
-        <div>{username}</div>
+        <div>
+          <div style={{ fontSize: '14px', fontWeight: '600' }}>{username}</div>
+          <div style={{ fontSize: '12px', color: '#747479' }}>{userInfo.data.email}</div>
+        </div>
       ),
     },
     {
       key: '2',
       label: (
+        <div onClick={() => navigate('/setting')}>
+          <SettingOutlined /> 设置
+        </div>
+      )
+    },
+    {
+      key: '3',
+      label: (
         <div onClick={handleLogout}>
-          退出登录
+          <LogoutOutlined /> 注销
         </div>
       ),
     }
@@ -111,7 +123,7 @@ const Header: React.FC = () => {
           <Dropdown menu={{ items }} trigger={['click']} placement={'bottom'}>
             <Space>
               <div className={styles.dropdown}>
-                <img className={styles.dropdownImg} draggable="false" src="/imgs/admin.png" alt="" />
+                <img className={styles.dropdownImg} src={userInfo.data.avatar || './imgs/admin.png'} draggable="false" referrerPolicy="no-referrer" alt="头像" />
               </div>
             </Space>
           </Dropdown>

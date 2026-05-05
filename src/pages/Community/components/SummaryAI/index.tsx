@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons'
 import { Viewer } from '@bytemd/react'
 import { Drawer } from 'antd'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import {
   addChatMessageAPI,
@@ -59,6 +59,7 @@ const SummaryAI = () => {
   >({})
   const [isFirstSummary, setIsFirstSummary] = useState(false) // 是否是首次总结
   const [isOpenAbstract, setIsOpenAbstract] = useState(false) // 是否展开总结摘要
+  const [leftWidth, setLeftWidth] = useState(450) // 左侧宽度
 
   const { textareaRef } = useAutoResizeTextarea({ // textarea 自适应高度
     value: inputValue,
@@ -66,8 +67,10 @@ const SummaryAI = () => {
     maxHeight: 80
   })
 
-  const abortControllerRef = useRef<AbortController | null>(null)
-  const abstractRef = useRef<HTMLDivElement | null>(null)
+  const abortControllerRef = useRef<AbortController | null>(null) // 取消请求
+  const isDraggingRef = useRef(false) // 是否正在拖拽
+  const startXRef = useRef(0) // 鼠标相对浏览器左边的距离
+  const startWidthRef = useRef(0) // 左侧面板自身的宽度
 
   // 当前会话对应的流式回复状态
   const currentStream = useMemo(() => {
@@ -300,10 +303,42 @@ const SummaryAI = () => {
 
   // 显示摘要按钮
   const handleOpenAbstract = () => {
-
     setIsOpenAbstract(pre => !pre)
   }
 
+  // 鼠标滑动
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDraggingRef.current) return
+    const deltaX = e.clientX - startXRef.current // 计算出鼠标移动的距离
+    let nextWidth = startWidthRef.current + deltaX // 把左侧宽度当前的距离加上计算出的鼠标移动距离，就是下一个的左侧宽度
+
+    const minWidth = 320 // 最小宽度
+    const maxWidth = 980 // 最大宽度
+
+    if (nextWidth < minWidth) nextWidth = minWidth
+    if (nextWidth > maxWidth) nextWidth = maxWidth
+
+    setLeftWidth(nextWidth)
+  }
+
+  // 鼠标松开
+  const handleMouseUp = () => {
+    isDraggingRef.current = false // 设置为不再拖动
+
+    window.removeEventListener('mousemove', handleMouseMove)
+    window.removeEventListener('mouseup', handleMouseUp)
+  }
+
+  // 鼠标按下
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    isDraggingRef.current = true // 设置为正在拖动
+
+    startXRef.current = e.clientX // 获取鼠标按下时的位置
+    startWidthRef.current = leftWidth // 获取左侧宽度
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+  }
 
   // 获取当前文章详情
   useEffect(() => {
@@ -377,7 +412,7 @@ const SummaryAI = () => {
         </div>
       </header>
 
-      <div className={styles.body}>
+      <div className={styles.body} style={{ ['--left-width' as any]: `${leftWidth}px` }}>
         <aside className={styles.sidebar}>
           <div className={styles.sidebarTitle}>
             <div className={styles.sidebarTitleText}>{detail?.title || ''}</div>
@@ -399,7 +434,7 @@ const SummaryAI = () => {
                 <DownOutlined className={styles.summaryArrow} onClick={handleOpenAbstract} />
               }
             </div>
-            <div ref={abstractRef} className={`${styles.summaryEntryContent} ${isOpenAbstract ? styles.open : ''}`}>
+            <div className={`${styles.summaryEntryContent} ${isOpenAbstract ? styles.open : ''}`}>
               <div>{detail?.abstract || ''}</div>
             </div>
           </div>
@@ -410,6 +445,8 @@ const SummaryAI = () => {
             </div>
           </div>
         </aside>
+
+        <div className={styles.moveBtn} onMouseDown={handleMouseDown}></div>
 
         <main className={styles.main}>
           <div className={styles.mainTop}>
@@ -533,7 +570,7 @@ const SummaryAI = () => {
             <div className={styles.composerFooter}>
               <div className={styles.modelTag}>
                 <img style={{ height: '20px' }} src="/imgs/deepseek-color.png" alt="ai" />
-                <span>DeepSeek-V3</span>
+                <span>DeepSeek-v4</span>
               </div>
               <button
                 type="button"

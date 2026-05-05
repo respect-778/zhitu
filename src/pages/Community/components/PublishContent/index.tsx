@@ -289,6 +289,11 @@ const PublishContent = () => {
       return
     }
 
+    if (imgs.current.length > 10) {
+      message.warning("文章图片最多上传 10 张")
+      return
+    }
+
     const data: IContent = {
       avatar: userInfo.data.photo,
       name: userInfo.data.username,
@@ -307,15 +312,20 @@ const PublishContent = () => {
     }
     console.log(data)
 
-    await addCommunityAPI(data)
+    try {
+      await addCommunityAPI(data)
 
-    message.success("文章发布成功")
-    dispatch(cancelSave())
-    // 清空保存的文章标题和内容
-    dispatch(delSavedTitleValue())
-    dispatch(delSavedContentValue())
-    allowLeaveRef.current = true // 不被拦截
-    navigate("/community")
+      message.success("文章发布成功")
+      dispatch(cancelSave())
+      // 清空保存的文章标题和内容
+      dispatch(delSavedTitleValue())
+      dispatch(delSavedContentValue())
+      allowLeaveRef.current = true // 不被拦截
+      navigate("/community")
+    } catch (error) {
+      console.log(error)
+      message.error("文章发布失败")
+    }
   }
 
   // 上传图片

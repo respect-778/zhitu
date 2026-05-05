@@ -47,8 +47,7 @@
   padding: 16px 16px 0px 16px;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 450px minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: var(--left-width) 15px minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -202,6 +201,9 @@
   padding-right: 6px;
 }
 
+.moveBtn {
+  cursor: col-resize;
+}
 
 .main {
   position: relative;

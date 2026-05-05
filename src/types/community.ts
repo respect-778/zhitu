@@ -7,7 +7,7 @@ export interface INavItems {
 }
 
 export interface IHotkeyword {
-  id: number
+  id: string
   name: string
 }
 

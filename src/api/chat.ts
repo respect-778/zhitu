@@ -1,6 +1,7 @@
 ﻿import httpInstance from "@/utils/http"
-import { delStore, getStore, setStore } from "@/utils/store"
+import { delStore, getStore } from "@/utils/store"
 import { message } from "antd"
+import { refreshAccessTokenByFetch } from "./token"
 
 // // 调用 AI 大模型（非流式，兼容旧接口）
 // export const callChatAPI = (mode: number, userMessage: string) => {
@@ -14,27 +15,6 @@ import { message } from "antd"
 //   })
 // }
 
-// 刷新 access token（refresh token 在 HttpOnly Cookie 里，所以要带 credentials）
-const refreshAccessTokenByFetch = async (): Promise<string> => {
-  const res = await fetch('/api/user/refresh', {
-    method: 'POST',
-    credentials: 'include'
-  })
-
-  if (!res.ok) {
-    throw new Error('刷新 token 失败')
-  }
-
-  const data = await res.json()
-  const newToken = data?.token
-
-  if (!newToken) {
-    throw new Error('刷新 token 失败')
-  }
-
-  setStore('token', newToken)
-  return newToken
-}
 
 // 流式调用 AI 大模型（SSE）
 export const callChatStreamAPI = async (

@@ -1,10 +1,22 @@
 ﻿import httpInstance from "@/utils/http";
-import type { IUser, ILoginResponse, IUserInfo, ILogoutResponse } from "@/types/user";
+import type { IUser, IRegister, ILoginResponse, IUserInfo, ILogoutResponse } from "@/types/user";
 
 // 登录接口
 export const loginAPI = (params: IUser): Promise<ILoginResponse> => {
   return httpInstance({
     url: "/user/login",
+    method: "post",
+    data: params,
+    withCredentials: true,
+    skipAuth: true,
+    skipRefresh: true
+  });
+};
+
+// 注册接口
+export const registerAPI = (params: IRegister): Promise<ILoginResponse> => {
+  return httpInstance({
+    url: "/user/register",
     method: "post",
     data: params,
     withCredentials: true,

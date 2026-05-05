@@ -1,12 +1,11 @@
 import styles from './index.module.less'
 import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
-import { HeartOutlined, HeartFilled, CommentOutlined, StarFilled, StarOutlined, SearchOutlined, BellOutlined, ReadOutlined, CloseCircleFilled, RightOutlined } from '@ant-design/icons'
-import { Pagination, ConfigProvider, Skeleton, message } from 'antd'
-import zhCN from 'antd/lib/locale/zh_CN';
+import { SearchOutlined, BellOutlined, ReadOutlined, CloseCircleFilled, RightOutlined } from '@ant-design/icons'
+import { message } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { collectedCommunityAPI, getEarlyReportAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
-import { formatDateTime } from '@/utils/formatDateTime';
 import { useSearchParams } from 'react-router';
+import ArticleList from '@/components/ArticleList';
 
 const Community = () => {
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
@@ -16,6 +15,7 @@ const Community = () => {
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
   const [earlyReport, setEarlyReport] = useState<IContent | null>(null)
   const [activeTab, setActiveTab] = useState<string>(initialTab || 'new') // tab
+  const [activeMenu, setActiveMenu] = useState<string>(`menu-${initialTab || 'new'}`) // 当前选中的菜单
   const [pageParams, setPageParams] = useState(() => { // 当前页、页数、总数
     const search = searchParams.get('page') // 获取 page 参数
     const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
@@ -35,10 +35,10 @@ const Community = () => {
 
   // 我的记录
   const personalKeywords: IHotkeyword[] = [
-    { id: 1, name: '阅读历史' },
-    { id: 2, name: '我的收藏' },
-    { id: 3, name: '我的关注' },
-    { id: 4, name: '个人信息' },
+    { id: 'history', name: '阅读历史' },
+    { id: 'collect', name: '我的收藏' },
+    { id: 'follow', name: '我的关注' },
+    { id: 'profile', name: '个人信息' },
   ]
 
   // 右侧公告栏
@@ -47,9 +47,9 @@ const Community = () => {
     { id: 2, title: '关于规范社区发帖的通知', time: '1天前' },
   ]
 
-  // 进入 编辑界面
-  // 左侧 nav
+  // 左侧 公共精选 NavBar
   const handleNavBar = async (navType: string) => {
+    setActiveMenu(`menu-${navType}`)
     setActiveTab(navType)
     if (navType === 'recommend') {
       setSearchValue('')
@@ -61,6 +61,12 @@ const Community = () => {
       setSearchValue('')
       handlePageSize(1, pageParams.pageSize, navType)
     }
+  }
+
+  // 左侧 我的记录 NavBar
+  const handlePersonalNavBar = (keyword: string) => {
+    setActiveMenu(`menu-${keyword}`)
+    setActiveTab(keyword)
   }
 
   // 获取输入框中的内容
@@ -215,7 +221,7 @@ const Community = () => {
                   <div
                     key={item.id}
                     onClick={() => handleNavBar(item.id)}
-                    className={`${styles.navItem} ${activeTab === item.id ? styles.active : ""}`}
+                    className={`${styles.navItem} ${activeMenu === `menu-${item.id}` ? styles.active : ""}`}
                   >
                     {item.label}
                   </div>
@@ -223,14 +229,19 @@ const Community = () => {
               })}
             </div>
           </div>
-          <div style={{ borderTop: '0.1px solid #b4b4bd80' }}></div>
+          <div className={styles.line}></div>
           {/* 我的记录 */}
           <div className={styles.navCard}>
             <div className={styles.title}>我的记录</div>
             <div className={styles.navBar}>
               {personalKeywords.map(keyword => {
                 return (
-                  <div className={`${styles.navItem} ${parseInt(activeTab) === keyword.id ? styles.active : ""}`} key={keyword.id}>{keyword.name}</div>
+                  <div
+                    key={keyword.id}
+                    onClick={() => handlePersonalNavBar(keyword.id)}
+                    className={`${styles.navItem} ${activeMenu === `menu-${keyword.id}` ? styles.active : ""}`}
+                  >
+                    {keyword.name}</div>
                 )
               })}
             </div>
@@ -244,8 +255,8 @@ const Community = () => {
 
       {/* 中间区域 */}
       <div className={styles.middle}>
-        <div className={styles.middleHeader}>
-          <div style={{ fontSize: '19px', fontWeight: '500', color: '#38293B' }}>精选内容</div>
+        {/* <div className={styles.middleHeader}>
+          <div className={styles.subTitle}>精选内容</div>
           <div style={{ fontSize: '13px', color: '#8e9aa7' }}>/</div>
           <div style={{ fontSize: '13px', color: '#8e9aa7' }}>从公共质量池中挑出的高质量内容</div>
         </div>
@@ -307,7 +318,8 @@ const Community = () => {
             <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
             <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到相关的内容</div>
           </div> : ''
-        }
+        } */}
+        <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />
       </div>
 
       {/* 右侧区域 */}

@@ -3,6 +3,7 @@ import type { IUser, IUserInfo } from "@/types/user";
 import { delStore, getStore, setStore } from "@/utils/store";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { AppDispatch } from "..";
+import { refreshAccessTokenByFetch } from "@/api/token";
 
 interface UserState {
   userId: string;
@@ -15,7 +16,7 @@ const initialState: UserState = {
   userId: getStore('userId') || '',
   username: getStore('username') || '',
   token: getStore('token') || '',
-  userInfo: { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
+  userInfo: { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
 }
 
 const userStore = createSlice({
@@ -40,7 +41,7 @@ const userStore = createSlice({
     clearUserInfo(state) {
       state.token = ''
       state.username = ''
-      state.userInfo = { message: '', data: { id: '', username: '', photo: '', video: '', link: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
+      state.userInfo = { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
       delStore('token')
       delStore('username')
       delStore('userInfo')
@@ -53,6 +54,15 @@ const fetchLogin = (formData: IUser) => {
   return async (dispatch: AppDispatch) => {
     const res = await loginAPI(formData)
     dispatch(setToken(res.token)) // 在登录这里存 access token
+  }
+}
+
+// OAuth 获取用户信息
+const fetchOAuthSession = () => {
+  return async (dispatch: AppDispatch) => {
+    const token = await refreshAccessTokenByFetch()
+    dispatch(setToken(token)) // 在登录这里存 access token
+    await dispatch(getUserInfo())
   }
 }
 
@@ -70,5 +80,5 @@ const { setUserId, setToken, setUserName, setUserInfo, clearUserInfo } = userSto
 
 const reducer = userStore.reducer
 
-export { setUserId, setToken, setUserName, setUserInfo, clearUserInfo, fetchLogin, getUserInfo }
+export { setUserId, setToken, setUserName, setUserInfo, clearUserInfo, fetchLogin, fetchOAuthSession, getUserInfo }
 export default reducer

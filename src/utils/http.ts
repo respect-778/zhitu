@@ -1,6 +1,7 @@
 ﻿import { message } from 'antd'
 import axios from 'axios'
-import { delStore, getStore, setStore } from './store'
+import { delStore, getStore } from './store'
+import { refreshAccessTokenByFetch } from '@/api/token'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
@@ -38,19 +39,10 @@ const handleAuthExpired = (): void => {
   }, 1000)
 }
 
-// 刷新 token
-const refreshAccessToken = async (): Promise<string> => {
-  const response = await axios.post(`${BASE_URL}/user/refresh`, {}, { withCredentials: true })
-  const newToken = response.data.token
-  setStore('token', newToken)
-
-  return newToken
-}
-
 // 对全局共享的 promise 进行处理 -> 当前是否已经刷新过了，为 null 就是没有被刷新，如果有值，那么就是刷新过了，不能重复刷新
 const getRefreshPromise = (): Promise<string> => {
   if (refreshPromise === null) {
-    refreshPromise = refreshAccessToken().finally(() => { // 刷新结束后清空引用
+    refreshPromise = refreshAccessTokenByFetch().finally(() => { // 刷新结束后清空引用
       refreshPromise = null
     })
   }
