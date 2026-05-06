@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 import React, { Suspense } from "react";
 // 一级路由
 import Login from "@/pages/Login";
-import OAuthCallback from "@/pages/OAuthCallback";
+import OAuthCallback from "@/pages/Login/components/OAuthCallback";
 import NotFound from "@/pages/NotFound";
 import Layout from "@/pages/Layout";
 
@@ -14,8 +14,8 @@ const PublishContent = React.lazy(() => import('@/pages/Community/components/Pub
 const Chat = React.lazy(() => import('@/pages/Chat'))
 const DetailContent = React.lazy(() => import('@/pages/Community/components/DetailContent'))
 import SummaryAI from "@/pages/Community/components/SummaryAI";
-import LoginForm from "@/pages/Login/components/LoginForm";
-import Register from "@/pages/Register";
+import LoginForm from "@/pages/Login/components/LoginForm/LoginForm";
+import Register from "@/pages/Login/components/Register";
 
 // 三级路由
 import ChatId from "@/pages/Chat/components/ChatId";

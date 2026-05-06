@@ -141,7 +141,7 @@
     color: white;
     border: none;
     padding: 10px;
-    border-radius: 12px;
+    border-radius: 5px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -149,10 +149,10 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: transform 0.3s;
+    transition: background 0.2s ease 0s;
 
-    &:active {
-      transform: scale(0.98);
+    &:hover {
+      background: var(--primary-color-hover);
     }
   }
 }

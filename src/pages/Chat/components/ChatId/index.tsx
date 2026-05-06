@@ -134,6 +134,7 @@ const ChatId = () => {
       handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
       getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
+      setIsInputEmpty(true)
       setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: false, content: '' } })) // 结束流式生成并清空当前流式内容。
     }
   }

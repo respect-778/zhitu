@@ -6,7 +6,7 @@ import { registerAPI } from '@/api/user';
 import { setToken } from '@/store/modules/userStore';
 import { getUserInfo } from '@/store/modules/userStore';
 import { useAppDispatch } from '@/store/hooks';
-import loginStyles from '../Login/index.module.less';
+import loginStyles from '../../index.module.less';
 import styles from './index.module.less';
 
 const Register: React.FC = () => {

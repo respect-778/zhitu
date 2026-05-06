@@ -1,5 +1,5 @@
 import Loading from "@/components/Loading"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { useAppDispatch } from "@/store/hooks"
 import { fetchOAuthSession } from "@/store/modules/userStore"
 import { message } from "antd"
 import { useEffect } from "react"
@@ -9,13 +9,12 @@ const OAuthCallback = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const userInfo = useAppSelector(state => state.user.userInfo)
 
   useEffect(() => {
     dispatch(fetchOAuthSession())
       .then(() => {
         navigate('/', { replace: true })
-        message.success(`欢迎回来 ${userInfo.data.username}`)
+        message.success('登录成功')
       })
       .catch(() => {
         message.error('登录失败，请重试')

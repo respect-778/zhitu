@@ -33,6 +33,15 @@ export const getUserInfoAPI = (): Promise<IUserInfo> => {
   });
 };
 
+// 更新用户信息接口
+export const updateUserInfoAPI = (data: { username: string, avatar?: string, mobile: string, gender: number, birthday: string, degree: string }): Promise<IUserInfo> => {
+  return httpInstance({
+    url: "/user/info",
+    method: "put",
+    data
+  });
+}
+
 // 退出登录接口（后端会清理 refresh cookie）
 export const logoutAPI = (): Promise<ILogoutResponse> => {
   return httpInstance({

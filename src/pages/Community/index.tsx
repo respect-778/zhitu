@@ -6,10 +6,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { collectedCommunityAPI, getEarlyReportAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { useSearchParams } from 'react-router';
 import ArticleList from '@/components/ArticleList';
+import { useAppSelector } from '@/store/hooks'
 
 const Community = () => {
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
   const initialTab = searchParams.get('tab') // 获取当前 url 查询参数
+
+  const userInfo = useAppSelector(state => state.user.userInfo)
 
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
@@ -255,71 +258,7 @@ const Community = () => {
 
       {/* 中间区域 */}
       <div className={styles.middle}>
-        {/* <div className={styles.middleHeader}>
-          <div className={styles.subTitle}>精选内容</div>
-          <div style={{ fontSize: '13px', color: '#8e9aa7' }}>/</div>
-          <div style={{ fontSize: '13px', color: '#8e9aa7' }}>从公共质量池中挑出的高质量内容</div>
-        </div>
-        <div style={{ borderBottom: '1px solid #b4b4bd80' }}></div>
-        {content.length !== 0 &&
-          <div className={styles.feed}>
-            {
-              content.map(item => {
-                return (
-                  <Skeleton key={item.id} loading={loading} active avatar>
-                    <div className={styles.cardSty}>
-                      <div className={styles.content}>
-                        <div onClick={() => handleDetail(item.id!)}>
-                          <div className={styles.cardTop}>
-                            {item.cover ?
-                              <div><img src={item.cover} alt="封面" className={styles.cardCover} /></div>
-                              :
-                              <div><img src="/imgs/admin.png" alt="头像" className={styles.cardAvatar} /></div>
-                            }
-                            <div className={styles.cardContent}>
-                              <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>
-                              <div className={styles.userInfo}>
-                                <div className={styles.cardName}>{item.name}</div>
-                                <div className={styles.cardTime}>{formatDateTime(item.time)}</div>
-                              </div>
-                              <div className={styles.contentContainer}><div className={styles.contentSty}>{item.abstract}</div></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.cardBottom}>
-                          <div className={`${styles.actionItem} ${item.isLiked ? styles.active : ''}`} onClick={() => handleLike(item.id!, item.isLiked)}>
-                            {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
-                            <span>{item.likes}</span>
-                          </div>
-                          <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
-                            {item.isCollected ? <StarFilled /> : <StarOutlined />}
-                            <span>{item.collection}</span>
-                          </div>
-                          <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </Skeleton>
-                )
-              })
-            }
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <div className={styles.pagination}>
-                <ConfigProvider locale={zhCN}>
-                  <Pagination onChange={(page, pageSize) => handlePageSize(page, pageSize, activeTab)} current={pageParams.pageNum} pageSize={pageParams.pageSize} total={pageParams.total} />
-                </ConfigProvider>
-              </div>
-            </div>
-          </div>
-        }
-
-        {isEmpty ?
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', width: '100%', height: '800px' }}>
-            <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
-            <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到相关的内容</div>
-          </div> : ''
-        } */}
-        <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />
+        <ArticleList content={content} userInfo={userInfo} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />
       </div>
 
       {/* 右侧区域 */}

@@ -1,6 +1,6 @@
 import type React from "react";
 import styles from "./index.module.less"
-import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, BulbOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, KeyOutlined, PlusCircleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import { addChatSessionAPI, delChatSessionAPI, getAiModelAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
@@ -399,7 +399,7 @@ const Chat: React.FC = () => {
 
       {/* 悬浮：APIKEY 配置 */}
       <aside>
-        <div className={styles.apikeyConfig} onClick={handleConfig}>配置 APIKEY</div>
+        <div className={styles.apikeyConfig} onClick={handleConfig}><KeyOutlined /> 创建 API Key</div>
       </aside>
 
       <Modal

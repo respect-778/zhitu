@@ -295,7 +295,7 @@ const PublishContent = () => {
     }
 
     const data: IContent = {
-      avatar: userInfo.data.photo,
+      avatar: userInfo.data.avatar,
       name: userInfo.data.username,
       time: formatDateTime(JSON.stringify(new Date())),
       title: titleValue,

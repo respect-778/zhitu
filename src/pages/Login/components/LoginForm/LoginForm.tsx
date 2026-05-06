@@ -4,7 +4,7 @@ import { GithubOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { fetchLogin } from '@/store/modules/userStore';
 import { useAppDispatch } from '@/store/hooks';
-import styles from '../index.module.less';
+import styles from '../../index.module.less';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
