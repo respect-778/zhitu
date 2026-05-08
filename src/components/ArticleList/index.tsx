@@ -3,11 +3,9 @@ import styles from './index.module.less';
 import { CommentOutlined, HeartFilled, HeartOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { formatDateTime } from '@/utils/formatDateTime';
 import zhCN from 'antd/lib/locale/zh_CN';
-import type { IUserInfo } from '@/types/user';
 
 interface ArticleListProps {
   content: any[];
-  userInfo: IUserInfo;
   loading: boolean;
   activeTab: string;
   pageParams: {
@@ -23,7 +21,7 @@ interface ArticleListProps {
 }
 
 
-const ArticleList = ({ content, userInfo, loading, activeTab, pageParams, isEmpty, handleDetail, handleLike, handleCollection, handlePageSize }: ArticleListProps) => {
+const ArticleList = ({ content, loading, activeTab, pageParams, isEmpty, handleDetail, handleLike, handleCollection, handlePageSize }: ArticleListProps) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div className={styles.middleHeader}>
@@ -45,7 +43,7 @@ const ArticleList = ({ content, userInfo, loading, activeTab, pageParams, isEmpt
                           {item.cover ?
                             <div><img src={item.cover} alt="封面" className={styles.cardCover} /></div>
                             :
-                            <div><img src={userInfo.data.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} /></div>
+                            <div><img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} /></div>
                           }
                           <div className={styles.cardContent}>
                             <div className={styles.titleContainer}><div className={styles.cardTitle}>{item.title}</div></div>

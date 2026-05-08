@@ -20,7 +20,7 @@ const Chat: React.FC = () => {
   const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内']
   const { id } = useParams() // 获取动态路由 id
   const navigate = useNavigate() // 路由导航
-  const [mode, setMode] = useState(0) // 是否选中思考模型，默认 0 为不选择
+  const [modeFa, setModeFa] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
   const { textareaRef, resize } = useAutoResizeTextarea({ value: searchValueFa, minHeight: 44, maxHeight: 280 }) // textarea 自适应高度 hook
   const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
@@ -32,7 +32,7 @@ const Chat: React.FC = () => {
   const [renameTitleMap, setRenameTitleMap] = useState<Record<number, { isRename: boolean, title: string }>>({}) // 重命名会话标题
   const renameInputRef = useRef<HTMLInputElement>(null)
   const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
-  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
+  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string, isSearching: boolean, searchQuery: string, sources: Array<{ title: string, url: string }> }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
   const [isOpenConfig, setIsOpenConfig] = useState(false) // 是否打开 apikey 配置
   const [selectedAI, setSelectedAI] = useState<IProvider>({ name: '', img: '' }) // 选择的 ai 厂商
   const [configuredAI, setConfiguredAI] = useState('') // 当前配置好的 ai 厂商
@@ -51,7 +51,7 @@ const Chat: React.FC = () => {
   // 深度思考模式 （进入界面 -> 没有调用方法）
   const handleThinking = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
-    setMode(mode === 0 ? 1 : 0)
+    setModeFa(modeFa === 0 ? 1 : 0)
   }
 
   // 模型提供商
@@ -367,7 +367,7 @@ const Chat: React.FC = () => {
             <textarea ref={textareaRef} value={searchValueFa} onKeyDown={keydownQuestion} onChange={handleInputChange} className={styles.chatInput} placeholder="给 ai小助手 发送消息" />
             {/* 按钮 */}
             <div className={styles.chatSubmit}>
-              <div onClick={handleThinking} className={`${styles.chatThinking} ${mode === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
+              <div onClick={handleThinking} className={`${styles.chatThinking} ${modeFa === 1 ? styles.active : ''}`}><BulbOutlined /> 深度思考</div>
               <div className={styles.llmMode} onClick={(e) => e.stopPropagation()}>
                 <Space>
                   {getStore('aiName') || '未配置'}
@@ -380,7 +380,7 @@ const Chat: React.FC = () => {
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession }} />
+        <Outlet context={{ historySession, searchValueFa, modeFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession }} />
       }
 
       <Modal

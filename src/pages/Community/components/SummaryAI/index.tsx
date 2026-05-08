@@ -35,7 +35,7 @@ import styles from './index.module.less'
 import ScrollDownButton from '@/components/ScrollDownButton'
 
 const SUMMARY_OPENING_PROMPT =
-  '请帮我快速总结这篇文章的核心干货，按“一句话总结、关键观点、适合谁读、是否值得细读”输出。'
+  '请帮我快速总结这篇文章的核心干货。'
 
 const SummaryAI = () => {
   // 路由参数与当前文章 id

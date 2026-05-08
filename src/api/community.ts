@@ -142,3 +142,49 @@ export const getEarlyReportAPI = () => {
     method: 'get'
   })
 }
+
+// 文件夹相关 
+
+export const createFolderAPI = (data: { name: string; color: string; type: 'collection' | 'history' }) => {
+  return httpInstance({ url: '/community/folder', method: 'post', data })
+}
+
+export const getFoldersAPI = (type: 'collection' | 'history') => {
+  return httpInstance({ url: '/community/folders', method: 'get', params: { type } })
+}
+
+export const deleteFolderAPI = (id: number) => {
+  return httpInstance({ url: `/community/folder/${id}`, method: 'delete' })
+}
+
+export const renameFolderAPI = (id: number, name: string) => {
+  return httpInstance({ url: `/community/folder/${id}`, method: 'put', data: { name } })
+}
+
+// 阅读历史相关
+
+export const getReadingHistoryAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: string; date?: string }) => {
+  return httpInstance({ url: '/community/history', method: 'get', params })
+}
+
+export const deleteHistoryAPI = (id: number) => {
+  return httpInstance({ url: `/community/history/${id}`, method: 'delete' })
+}
+
+export const moveHistoryToFolderAPI = (id: number, folder_id: number | null) => {
+  return httpInstance({ url: `/community/history/${id}/folder`, method: 'put', data: { folder_id } })
+}
+
+// 收藏列表相关
+
+export const getCollectionListAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: string; date?: string }) => {
+  return httpInstance({ url: '/community/favorites', method: 'get', params })
+}
+
+export const deleteCollectionAPI = (id: number) => {
+  return httpInstance({ url: `/community/favorites/${id}`, method: 'delete' })
+}
+
+export const moveCollectionToFolderAPI = (id: number, folder_id: number | null) => {
+  return httpInstance({ url: `/community/favorites/${id}/folder`, method: 'put', data: { folder_id } })
+}

@@ -93,8 +93,113 @@
       }
     }
 
+    .searchStatusBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #fff;
+      font-size: 14px;
+      color: #666;
+      overflow: hidden;
+      animation: searchBarIn 0.35s ease-out;
+
+      .searchStatusLeft {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        flex: 1;
+        overflow: hidden;
+
+        .searchIcon {
+          font-size: 15px;
+          color: #999;
+          flex-shrink: 0;
+          animation: searchIconSpin 0.5s ease-out;
+        }
+
+        .searchLabel {
+          color: #333;
+          font-weight: 500;
+          flex-shrink: 0;
+        }
+
+        .searchDivider {
+          width: 1px;
+          height: 14px;
+          background: #d9d9d9;
+          flex-shrink: 0;
+        }
+
+        .searchQuery {
+          color: #999;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      .searchStatusRight {
+        flex-shrink: 0;
+        margin-left: 12px;
+        color: #999;
+        font-size: 13px;
+        white-space: nowrap;
+        animation: searchBarIn 0.4s ease-out;
+      }
+    }
+
     .streamingContent {
       display: block;
+
+      // 流式光标的通用样式
+      .streamingCursorMixin() {
+        content: '▋';
+        display: inline;
+        color: #5381f3;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1;
+        margin-left: 2px;
+        animation: blink 1s infinite;
+        pointer-events: none;
+      }
+
+      // 段落、标题等行内容器 —— 光标跟在文字末尾
+      :global(.markdown-body > p:last-child)::after,
+      :global(.markdown-body > h1:last-child)::after,
+      :global(.markdown-body > h2:last-child)::after,
+      :global(.markdown-body > h3:last-child)::after,
+      :global(.markdown-body > h4:last-child)::after,
+      :global(.markdown-body > h5:last-child)::after,
+      :global(.markdown-body > h6:last-child)::after {
+        .streamingCursorMixin();
+      }
+
+      // 列表 —— 光标跟在最后一个 li 的文字末尾
+      :global(.markdown-body > ul:last-child > li:last-child)::after,
+      :global(.markdown-body > ol:last-child > li:last-child)::after {
+        .streamingCursorMixin();
+      }
+
+      // 代码块 —— 光标跟在 code 内容末尾
+      :global(.markdown-body > pre:last-child code)::after {
+        .streamingCursorMixin();
+      }
+
+      // 引用块 —— 光标跟在引用内最后一段末尾
+      :global(.markdown-body > blockquote:last-child > :last-child)::after {
+        .streamingCursorMixin();
+      }
+
+      // 表格 —— 光标跟在最后一个单元格末尾
+      :global(.markdown-body > table:last-child tr:last-child td:last-child)::after {
+        .streamingCursorMixin();
+      }
     }
 
     .scrollSentinel {
@@ -103,10 +208,16 @@
       pointer-events: none;
     }
 
+    .cursorBlock {
+      padding: 4px 0;
+      min-height: 24px;
+    }
+
     .cursorInline {
       display: inline-block;
       margin-left: 2px;
       color: #5381f3;
+      font-size: 18px;
       line-height: 1;
       font-weight: 600;
       animation: blink 1s infinite;
@@ -126,6 +237,32 @@
   51%,
   100% {
     opacity: 0;
+  }
+}
+
+// 搜索栏出现动画
+@keyframes searchBarIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 搜索图标旋转动画
+@keyframes searchIconSpin {
+  0% {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
 }
 

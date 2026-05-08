@@ -78,7 +78,7 @@ const InfoRow = ({ icon, label, value }: { icon: React.ReactNode; label: string;
   </div>
 )
 
-const Setting = () => {
+const Setting = ({ className }: { className?: string }) => {
   const userInfo = useAppSelector(state => state.user.userInfo)
   const dispatch = useAppDispatch()
 
@@ -191,7 +191,7 @@ const Setting = () => {
 
 
   return (
-    <div className={styles.settingContainer}>
+    <div className={`${styles.settingContainer} ${className || ''}`}>
       <div className={styles.page}>
         <div className={styles.left}>
           <div className={styles.title} style={{ fontSize: '16px' }}>

@@ -22,6 +22,8 @@ export const callChatStreamAPI = async (
   userMessage: string,
   session_id: number | null,
   onMessage: (content: string) => void,
+  onSearching?: (query: string) => void, // 搜索状态
+  onSources?: (sources: Array<{ title: string, url: string }>) => void, // 搜索来源
   onError?: (error: string) => void,
   _retried: boolean = false, // 默认第一次是 false
   signal?: AbortSignal // 用于取消请求
@@ -40,7 +42,7 @@ export const callChatStreamAPI = async (
   if (response.status === 401 && !_retried) { // 状态为 401 并且是第一次调用
     try {
       await refreshAccessTokenByFetch() // 设置最新 token
-      return callChatStreamAPI(mode, userMessage, session_id, onMessage, onError, true) // 重新调用原请求
+      return callChatStreamAPI(mode, userMessage, session_id, onMessage, onSearching, onSources, onError, true) // 重新调用原请求
     } catch (error) {
       // 双 token 都失效时，清理并回登录页
       delStore('token')
@@ -84,6 +86,7 @@ export const callChatStreamAPI = async (
   let sseBuffer = '' // 处理 SSE 半包数据
 
   try {
+    // 拆解后端返回的内容，解析为指定的内容
     const processSseEvent = (eventText: string): boolean => {
       const dataLines = eventText
         .split('\n')
@@ -100,11 +103,29 @@ export const callChatStreamAPI = async (
         return true
       }
 
-      let parsed: { content?: string, error?: string }
+      let parsed: { content?: string; error?: string; status?: string; query?: string; sources?: { title: string; url: string }[] }
       try {
         parsed = JSON.parse(data)
       } catch {
         // 非完整 JSON 或非业务数据，忽略
+        return false
+      }
+
+      // 搜索状态
+      if (parsed.status === 'searching' && onSearching) {
+        onSearching(parsed.query || '')
+        return false
+      }
+
+      // 读取网页状态
+      if (parsed.status === 'reading' && onSearching) {
+        onSearching('正在读取网页...')
+        return false
+      }
+
+      // 搜索来源
+      if (parsed.sources && onSources) {
+        onSources(parsed.sources)
         return false
       }
 

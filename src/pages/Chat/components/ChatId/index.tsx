@@ -1,4 +1,4 @@
-import { ArrowUpOutlined, BulbOutlined, LoadingOutlined } from "@ant-design/icons"
+import { ArrowUpOutlined, BulbOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons"
 import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
@@ -22,20 +22,20 @@ const ChatId = () => {
   const { textareaRef } = useAutoResizeTextarea({ value: searchValue, minHeight: 44, maxHeight: 280 })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
-  const { historySession, searchValueFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 从父组件中拿状态和方法 
+  const { historySession, searchValueFa, modeFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 从父组件中拿状态和方法 
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
     searchValueFa: string,
+    modeFa: number,
     isNewChat: boolean,
     handleNewChatComplete: () => void,
     getHistoryChatSession: () => void,
-    streamBySession: Record<number, { isStreaming: boolean, content: string }>,
+    streamBySession: Record<number, { isStreaming: boolean, content: string, isSearching: boolean, searchQuery: string, sources: Array<{ title: string, url: string }> }>,
     setStreamBySession: React.Dispatch<React.SetStateAction<Record<number, { isStreaming: boolean, content: string }>>>
   }>()
   const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
   const titleRef = useRef<HTMLDivElement>(null)
   const [isTitleOverflow, setIsTitleOverflow] = useState(false)
   const currentSessionTitle = historySession.find(item => item.id === sessionId)?.session_title ?? ''
-
 
   // ai回复时，自动跟随 ai 的 hook
   const {
@@ -88,10 +88,13 @@ const ChatId = () => {
     }
 
     let userMessage = ''
+    let currentMode = 0
     if (isNewChat) {
       userMessage = searchValueFa
+      currentMode = modeFa
     } else {
       userMessage = searchValue
+      currentMode = mode
     }
 
     const activeSessionId = sessionId
@@ -116,12 +119,24 @@ const ChatId = () => {
     // 2. 流式调用 ai 大模型
     try {
       await callChatStreamAPI(
-        mode,
+        currentMode,
         userMessage,
         activeSessionId,
         (content) => {
-          // 每次收到新内容就更新
-          setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: true, content } }))
+          // 每次收到新内容就更新（保留搜索状态）
+          setStreamBySession(pre => ({ ...pre, [activeSessionId]: { ...pre[activeSessionId], isStreaming: true, content } }))
+        },
+        (query) => {
+          setStreamBySession(pre => ({
+            ...pre,
+            [activeSessionId]: { ...pre[activeSessionId], isSearching: true, searchQuery: query }
+          }))
+        },
+        (sources) => {
+          setStreamBySession(pre => ({
+            ...pre,
+            [activeSessionId]: { ...pre[activeSessionId], sources }
+          }))
         },
         (error) => {
           console.error('流式调用错误:', error)
@@ -135,7 +150,7 @@ const ChatId = () => {
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
       getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
       setIsInputEmpty(true)
-      setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: false, content: '' } })) // 结束流式生成并清空当前流式内容。
+      setStreamBySession(pre => ({ ...pre, [activeSessionId]: { ...pre[activeSessionId], isStreaming: false, content: '' } })) // 结束流式生成并清空内容（保留搜索状态）
     }
   }
 
@@ -215,11 +230,25 @@ const ChatId = () => {
         <div ref={titleRef} className={`${styles.title} ${isTitleOverflow ? styles.titleOverflow : ''}`}>{currentSessionTitle}</div>
         <div className={styles.chatConversation} ref={chatContainerRef} onScroll={onUserScroll}>
           {/* 历史消息 */}
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
               key={message.id}
               className={message.role === 'user' ? styles.userQuestion : styles.aiReply}
             >
+              {/* 流式结束后，在最后一条 AI 消息上保留搜索状态栏 */}
+              {message.role === 'ai' && index === messages.length - 1 && !currentStream.isStreaming && currentStream.sources && currentStream.sources.length > 0 && (
+                <div className={styles.searchStatusBar}>
+                  <div className={styles.searchStatusLeft}>
+                    <SearchOutlined className={styles.searchIcon} />
+                    <span className={styles.searchLabel}>搜索网页</span>
+                    <span className={styles.searchDivider} />
+                    <span className={styles.searchQuery}>{currentStream.sources.map(s => s.title).join(' ')}</span>
+                  </div>
+                  <div className={styles.searchStatusRight}>
+                    {currentStream.sources.length} 个结果
+                  </div>
+                </div>
+              )}
               {message.role === 'user'
                 ? message.content
                 : (
@@ -236,20 +265,41 @@ const ChatId = () => {
           {/* 正在流式生成的 AI 消息 */}
           {currentStream.isStreaming && (
             <div className={styles.aiReply}>
-              <div className={styles.streamingContent}>
-                <div className={styles.markdownContent}>
-                  {currentStream.content
-                    ? (
-                      <Viewer
-                        value={normalizeMarkdownText(currentStream.content)}
-                        plugins={markdownPluginsNoHighlight}
-                      />
-                    )
-                    : (
-                      <span className={styles.cursorInline}>▋</span>
-                    )}
+              {/* 搜索状态栏 */}
+              {currentStream.isSearching && (
+                <div className={styles.searchStatusBar}>
+                  <div className={styles.searchStatusLeft}>
+                    <SearchOutlined className={styles.searchIcon} />
+                    <span className={styles.searchLabel}>搜索网页</span>
+                    <span className={styles.searchDivider} />
+                    <span className={styles.searchQuery}>
+                      {currentStream.sources && currentStream.sources.length > 0
+                        ? currentStream.sources.map(s => s.title).join(' ')
+                        : currentStream.searchQuery
+                      }
+                    </span>
+                  </div>
+                  {currentStream.sources && currentStream.sources.length > 0 && (
+                    <div className={styles.searchStatusRight}>
+                      {currentStream.sources.length} 个结果
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
+              {currentStream.content ? (
+                <div className={styles.streamingContent}>
+                  <div className={styles.markdownContent}>
+                    <Viewer
+                      value={normalizeMarkdownText(currentStream.content)}
+                      plugins={markdownPluginsNoHighlight}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.cursorBlock}>
+                  <span className={styles.cursorInline}>▋</span>
+                </div>
+              )}
             </div>
           )}
           <div ref={endRef} className={styles.scrollSentinel} aria-hidden="true" />

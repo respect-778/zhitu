@@ -11,19 +11,14 @@ import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
 import tocbot from 'tocbot'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getUserInfo } from '@/store/modules/userStore'
+import { useAppSelector } from '@/store/hooks'
 
 const DetailContent: React.FC = () => {
   // react-router
   const { id } = useParams<{ id: string }>() // 获取当前 url 文章 id
   const navigate = useNavigate()
 
-  // 状态库
-  const userInfo = useAppSelector(state => state.user.userInfo) // 当前登录的用户信息
   const username = useAppSelector(state => state.user.username)
-
-  const dispatch = useAppDispatch()
 
   // useRef
   const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
@@ -126,12 +121,6 @@ const DetailContent: React.FC = () => {
   const handleComment = () => {
 
   }
-
-
-  useEffect(() => {
-    dispatch(getUserInfo())
-
-  }, [dispatch, username])
 
   useEffect(() => {
     getCommunityById()      // 获取当前文章内容
@@ -241,7 +230,7 @@ const DetailContent: React.FC = () => {
           <header className={styles.articleHeader}>
             <h1 className={styles.title}>{detail.title}</h1>
             <div className={styles.authorSection}>
-              <div><img src={userInfo.data.avatar || './imgs/admin.png'} alt="" className={styles.avatar} /></div>
+              <div><img src={detail.avatar || './imgs/admin.png'} alt="" className={styles.avatar} /></div>
               <div className={styles.meta}>
                 <span className={styles.name}>{detail.name}</span>
                 <span className={styles.time}>{formatDateTime(detail.time)}</span>
@@ -265,7 +254,7 @@ const DetailContent: React.FC = () => {
           <section className={styles.commentsPlaceholder}>
             <h3>留言 {detail.comments}</h3>
             <div className={styles.postComments}>
-              <div className={styles.authorAvatar}><img src={userInfo.data.avatar || './imgs/admin.png'} alt="作者" className={styles.avatar} /></div>
+              <div className={styles.authorAvatar}><img src={detail.avatar || './imgs/admin.png'} alt="作者" className={styles.avatar} /></div>
               <div className={styles.inputMulti}>
                 <input onKeyDown={handleComment} type="text" placeholder='写留言' className={styles.inputComments} />
               </div>
@@ -289,7 +278,7 @@ const DetailContent: React.FC = () => {
       <aside className={styles.avatarContainer}>
         <div className={styles.avatarContent}>
           <div className={styles.avatarTop}>
-            <img className={styles.img} src={userInfo.data.avatar || './imgs/admin.png'} alt="作者" draggable="false" />
+            <img className={styles.img} src={detail.avatar || './imgs/admin.png'} alt="作者" draggable="false" />
             <div className={styles.detail}>
               <div style={{ fontSize: '18px', fontWeight: '550' }}>{detail.name}</div>
               <div className={styles.signatureCon}>
@@ -318,13 +307,13 @@ const DetailContent: React.FC = () => {
           </div>
           <div className={styles.avatarBottom}>
             {
-              detail.name === userInfo.data.username ?
+              detail.name === username ?
                 <div className={styles.followedBtn}>作者</div>
                 :
                 detail.isFollowed ?
                   <div className={styles.followedBtn} onClick={() => hanldeFollow(detail.authorId!, 'unfollow')}>已关注</div>
                   :
-                  <div className={styles.followBtn} onClick={() => hanldeFollow(detail.authorId!, 'follow')}>关注</div>
+                  <div className={styles.followedBtn} onClick={() => hanldeFollow(detail.authorId!, 'follow')}>关注</div>
             }
             <div className={styles.messageBtn}>私信</div>
           </div>

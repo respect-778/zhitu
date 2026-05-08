@@ -69,7 +69,7 @@ const LoginForm: React.FC = () => {
           className={styles.formItem}
           rules={[
             { required: true, message: '请输入邮箱' },
-            { type: 'email', message: '请输入正确的邮箱格式' }
+            // { type: 'email', message: '请输入正确的邮箱格式' }
           ]}
         >
           <Input placeholder="请输入邮箱地址" autoComplete="email" />

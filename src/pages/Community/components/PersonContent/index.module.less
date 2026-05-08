@@ -1,0 +1,18 @@
+.personalContainer {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.embeddedSetting {
+  height: auto !important;
+  background-color: transparent !important;
+  overflow: visible !important;
+
+  // .page 是 Setting 的子元素，但 CSS Modules 下无法直接选
+  // 用 > div 选择器覆盖 .page
+  >div {
+    width: 100%;
+    height: auto;
+    border: none;
+  }
+}

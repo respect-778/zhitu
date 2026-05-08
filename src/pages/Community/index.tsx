@@ -6,13 +6,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { collectedCommunityAPI, getEarlyReportAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
 import { useSearchParams } from 'react-router';
 import ArticleList from '@/components/ArticleList';
-import { useAppSelector } from '@/store/hooks'
+import MyCollection from './components/MyCollection'
+import HistoryContent from './components/HistoryContent'
+import PersonalContent from './components/PersonContent'
 
 const Community = () => {
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
   const initialTab = searchParams.get('tab') // 获取当前 url 查询参数
-
-  const userInfo = useAppSelector(state => state.user.userInfo)
 
   const [content, setContent] = useState<IContent[]>([]) // 帖子列表
   const [searchValue, setSearchValue] = useState<string>('') // 输入框中搜索的内容
@@ -39,9 +39,9 @@ const Community = () => {
   // 我的记录
   const personalKeywords: IHotkeyword[] = [
     { id: 'history', name: '阅读历史' },
-    { id: 'collect', name: '我的收藏' },
+    { id: 'collection', name: '我的收藏' },
     { id: 'follow', name: '我的关注' },
-    { id: 'profile', name: '个人信息' },
+    { id: 'setting', name: '个人信息' },
   ]
 
   // 右侧公告栏
@@ -70,6 +70,11 @@ const Community = () => {
   const handlePersonalNavBar = (keyword: string) => {
     setActiveMenu(`menu-${keyword}`)
     setActiveTab(keyword)
+
+    setSearchParams(pre => { // 把当前选中的页数给到 searchParams
+      pre.set('tab', keyword)
+      return pre
+    }, { replace: true })
   }
 
   // 获取输入框中的内容
@@ -257,64 +262,64 @@ const Community = () => {
       </div>
 
       {/* 中间区域 */}
-      <div className={styles.middle}>
-        <ArticleList content={content} userInfo={userInfo} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />
+      <div className={`${styles.middle} ${activeTab === 'collection' || activeTab === 'history' || activeTab === 'setting' ? styles.middleFull : ''}`}>
+
+        {activeTab === 'new' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
+        {activeTab === 'recommend' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
+        {activeTab === 'hot' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
+        {activeTab === 'collection' && <MyCollection />}
+        {activeTab === 'history' && <HistoryContent />}
+        {activeTab === 'setting' && <PersonalContent />}
       </div>
 
       {/* 右侧区域 */}
-      <div className={styles.right}>
+      {activeTab === 'collection' || activeTab === 'history' || activeTab === 'setting' ?
+        null
+        :
+        <div className={styles.right}>
 
-        {/* 搜索框 */}
-        <div className={styles.formControl}>
-          <button className={styles.searchButton} type="submit">
-            <SearchOutlined />
-          </button>
-          <input onChange={handleSearchChange} onKeyDown={searchCommunity} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索文章" type="text" />
-          <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
-          {searchValue !== '' &&
-            <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>
-              <CloseCircleFilled />
+          {/* 搜索框 */}
+          <div className={styles.formControl}>
+            <button className={styles.searchButton} type="submit">
+              <SearchOutlined />
             </button>
-          }
-        </div>
+            <input onChange={handleSearchChange} onKeyDown={searchCommunity} value={searchValue} className={`${styles.input} ${styles.inputAlt}`} placeholder="搜索文章" type="text" />
+            <span className={`${styles.inputBorder} ${styles.inputBorderAlt}`}></span>
+            {searchValue !== '' &&
+              <button className={styles.delButton} onClick={() => clearSearchValue(activeTab)} type='submit'>
+                <CloseCircleFilled />
+              </button>
+            }
+          </div>
 
-        {/* 今日早报 */}
-        <div className={`${styles.rightCard} ${styles.trendingCard}`}>
-          <div className={styles.cardHeader}>
-            <div><ReadOutlined style={{ color: '#FFBF59' }} /> 今日早报</div>
-            <div style={{ fontSize: '12px', cursor: 'pointer' }} onClick={() => window.open(`/community/${earlyReport?.id}`)}>查看全部 <RightOutlined /></div>
-          </div>
-          <div className={styles.earlyReport}>
-            {earlyReport?.abstract}
-          </div>
-        </div>
-
-        {/* 系统公告 */}
-        <div className={`${styles.rightCard} ${styles.noticeCard}`}>
-          <div className={styles.cardHeader}>
-            <div><BellOutlined style={{ color: '#FFBF59' }} /> 公告栏</div>
-          </div>
-          {notices.map(notice => (
-            <div key={notice.id} className={styles.noticeItem}>
-              <div className={styles.noticeContent}>
-                <div className={styles.noticeTitle}>{notice.title}</div>
-                <div className={styles.noticeTime}>{notice.time}</div>
-              </div>
+          {/* 今日早报 */}
+          <div className={`${styles.rightCard} ${styles.trendingCard}`}>
+            <div className={styles.cardHeader}>
+              <div><ReadOutlined style={{ color: '#FFBF59' }} /> 今日早报</div>
+              <div style={{ fontSize: '12px', cursor: 'pointer' }} onClick={() => window.open(`/community/${earlyReport?.id}`)}>查看全部 <RightOutlined /></div>
             </div>
-          ))}
-        </div>
-
-
-
-        {/* 每日一句 (NEW) */}
-        {/* <div className={styles.dailyCard}>
-          <div className={styles.dailyTitle}> <ReadOutlined />每日一句</div>
-          <div className={styles.dailyContent}>
-            "Talk is cheap. Show me the code."
+            <div className={styles.earlyReport}>
+              {earlyReport?.abstract}
+            </div>
           </div>
-          <div className={styles.dailyAuthor}>—— Linus Torvalds</div>
-        </div> */}
-      </div>
+
+          {/* 系统公告 */}
+          <div className={`${styles.rightCard} ${styles.noticeCard}`}>
+            <div className={styles.cardHeader}>
+              <div><BellOutlined style={{ color: '#FFBF59' }} /> 公告栏</div>
+            </div>
+            {notices.map(notice => (
+              <div key={notice.id} className={styles.noticeItem}>
+                <div className={styles.noticeContent}>
+                  <div className={styles.noticeTitle}>{notice.title}</div>
+                  <div className={styles.noticeTime}>{notice.time}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      }
     </div>
   )
 }
