@@ -1,7 +1,6 @@
-﻿import React, { useEffect, useRef, useState } from 'react'
-import { useLayoutEffect } from 'react'
+﻿import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { HeartOutlined, HeartFilled, CommentOutlined, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, PlusOutlined } from '@ant-design/icons'
+import { HeartOutlined, HeartFilled, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, PlusOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
 import type { IContent, IContentDetail } from '@/types/community'
 import { formatDateTime } from '@/utils/formatDateTime'
@@ -10,8 +9,89 @@ import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCom
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
-import tocbot from 'tocbot'
+import { scroller } from 'react-scroll'
 import { useAppSelector } from '@/store/hooks'
+
+type TocItem = {
+  id: string
+  text: string
+  level: 1 | 2 | 3
+}
+
+// 目录只读取正文里的 h1-h3；滚动时预留顶部 sticky header 的高度。
+const HEADING_SELECTOR = 'h1, h2, h3'
+const TOC_SCROLL_OFFSET = -88
+const TOC_SCROLL_DURATION = 360
+const TOC_ACTIVATION_OFFSET = Math.abs(TOC_SCROLL_OFFSET) + 32
+
+// ByteMD 的 Viewer 会把 Markdown 渲染成真实 DOM，目录需要从渲染后的 DOM 里取标题。
+const getArticleHeadings = (articleRoot: HTMLElement | null) => {
+  const markdownBody = articleRoot?.querySelector('.markdown-body') as HTMLElement | null
+  if (!markdownBody) return []
+
+  return Array.from(markdownBody.querySelectorAll<HTMLElement>(HEADING_SELECTOR))
+}
+
+// 同步正文标题和目录数据：给每个标题补稳定 id，再生成 React 可渲染的目录数组。
+const syncArticleTocItems = (articleRoot: HTMLElement | null) => {
+  const headings = getArticleHeadings(articleRoot)
+
+  return headings.reduce<TocItem[]>((items, heading, index) => {
+    const text = heading.textContent?.trim()
+    const level = Number(heading.tagName.slice(1)) as TocItem['level']
+
+    if (!text || ![1, 2, 3].includes(level)) return items
+
+    const headingId = `article-heading-${index}`
+    // react-scroll 最终就是通过这个 id 找到正文标题并滚过去。
+    heading.id = headingId
+
+    items.push({
+      id: headingId,
+      text,
+      level,
+    })
+
+    return items
+  }, [])
+}
+
+const isSameTocItems = (first: TocItem[], second: TocItem[]) => {
+  if (first.length !== second.length) return false
+
+  return first.every((item, index) => {
+    const nextItem = second[index]
+    return item.id === nextItem.id && item.text === nextItem.text && item.level === nextItem.level
+  })
+}
+
+// 根据当前正文滚动位置计算应该高亮哪个目录项。
+const getActiveTocIdByScroll = (tocItems: TocItem[]) => {
+  if (!tocItems.length) return ''
+
+  let activeId = ''
+  let closestId = tocItems[0].id
+  let closestDistance = Number.POSITIVE_INFINITY
+
+  tocItems.forEach(item => {
+    const heading = document.getElementById(item.id)
+    if (!heading) return
+
+    const headingTop = heading.getBoundingClientRect().top
+    const distance = Math.abs(headingTop - TOC_ACTIVATION_OFFSET)
+
+    if (distance < closestDistance) {
+      closestDistance = distance
+      closestId = item.id
+    }
+
+    if (headingTop <= TOC_ACTIVATION_OFFSET) {
+      activeId = item.id
+    }
+  })
+
+  return activeId || closestId
+}
 
 const DetailContent: React.FC = () => {
   // react-router
@@ -22,7 +102,14 @@ const DetailContent: React.FC = () => {
 
   // useRef
   const articleRef = useRef<HTMLDivElement>(null) // 文章内容 ref
-  const tocbotRef = useRef<HTMLDivElement>(null) // 目录 ref
+  const tocbotRef = useRef<HTMLElement>(null) // 目录 ref
+  // 程序点击目录触发的平滑滚动期间，先不让滚动监听抢高亮。
+  const isTocScrollingRef = useRef(false)
+  const tocScrollTimerRef = useRef<number | null>(null)
+  // 用 requestAnimationFrame 合并滚动事件，避免滚动时频繁计算。
+  const scrollSpyFrameRef = useRef<number | null>(null)
+  // 保存最新目录数据，供滚动事件回调读取，避免闭包拿到旧状态。
+  const tocItemsRef = useRef<TocItem[]>([])
 
   // useState
   const [detail, setDetail] = useState<IContentDetail>({
@@ -48,20 +135,25 @@ const DetailContent: React.FC = () => {
     isFollowed: false
   }) // 文章详情
   const [hotArticle, setHotArticle] = useState<IContent[]>([]) // 热门文章
-  const [isComment, setIsComment] = useState(true) // 是否显示发表评论
   const [loading, setLoading] = useState(true) // 加载
+  const [tocItems, setTocItems] = useState<TocItem[]>([]) // 文章目录
+  const [activeTocId, setActiveTocId] = useState('') // 当前高亮目录
 
 
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 
-  // 根据 id 获取对应帖子详情
+  // 根据 id 获取对应文章详情
   const getCommunityById = async () => {
-    setLoading(true)
-
-    const res = await getCommunityByIdAPI(parseInt(id!))
-    setDetail(res.data)
-
-    setLoading(false)
+    try {
+      setLoading(true)
+      const res = await getCommunityByIdAPI(parseInt(id!))
+      setDetail(res.data)
+    } catch (error) {
+      message.error("获取文章失败")
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   // 获取热门文章
@@ -107,6 +199,11 @@ const DetailContent: React.FC = () => {
       const nextFollowed = res.data.isFollowed
       const nextFansCount = res.data.fans_count
       setDetail(pre => ({ ...pre, isFollowed: nextFollowed, fans_count: nextFansCount }))
+      if (action === 'follow') {
+        message.success("关注成功")
+      } else {
+        message.success("取消关注")
+      }
     } catch (error) {
       message.error("关注失败")
     }
@@ -117,9 +214,91 @@ const DetailContent: React.FC = () => {
     window.open(`/community/${id}/summary`)
   }
 
-  // 处理评论
-  const handleComment = () => {
+  // 当目录自动高亮到某项时，让左侧目录容器也滚到对应位置附近。
+  const scrollActiveTocItemIntoView = (tocId: string) => {
+    const tocElement = tocbotRef.current
+    if (!tocElement) return
 
+    const activeNode = tocElement.querySelector<HTMLElement>(`[data-toc-id="${tocId}"]`)
+    if (!activeNode) return
+
+    const viewTop = tocElement.scrollTop
+    const viewBottom = viewTop + tocElement.clientHeight
+    // 用矩形差值计算目录项相对滚动容器的位置，避免 offsetTop 带上外层布局偏移。
+    const tocRect = tocElement.getBoundingClientRect()
+    const activeRect = activeNode.getBoundingClientRect()
+    const itemTop = activeRect.top - tocRect.top + tocElement.scrollTop
+    const itemBottom = itemTop + activeRect.height
+    const padding = 24
+
+    if (itemTop < viewTop + padding) {
+      tocElement.scrollTo({ top: Math.max(itemTop - padding, 0), behavior: 'smooth' })
+      return
+    }
+
+    if (itemBottom > viewBottom - padding) {
+      tocElement.scrollTo({ top: itemBottom - tocElement.clientHeight + padding, behavior: 'smooth' })
+    }
+  }
+
+  // 页面滚动时的主流程：同步标题 id -> 算当前高亮 -> 同步目录滚动位置。
+  const updateActiveTocByScroll = () => {
+    const nextTocItems = syncArticleTocItems(articleRef.current)
+
+    if (!isSameTocItems(tocItemsRef.current, nextTocItems)) {
+      tocItemsRef.current = nextTocItems
+      setTocItems(nextTocItems)
+    }
+
+    const nextActiveTocId = getActiveTocIdByScroll(nextTocItems)
+    if (!nextActiveTocId) return
+
+    setActiveTocId(currentId => currentId === nextActiveTocId ? currentId : nextActiveTocId)
+    scrollActiveTocItemIntoView(nextActiveTocId)
+  }
+
+  // 点击目录项时，先立即高亮，再交给 react-scroll 平滑滚到正文标题。
+  const handleTocClick = (tocItem: TocItem) => {
+    const syncedTocItems = syncArticleTocItems(articleRef.current)
+    const target = document.getElementById(tocItem.id)
+
+    if (!isSameTocItems(tocItemsRef.current, syncedTocItems)) {
+      tocItemsRef.current = syncedTocItems
+      setTocItems(syncedTocItems)
+    }
+
+    if (!target) return
+
+    if (tocScrollTimerRef.current) {
+      window.clearTimeout(tocScrollTimerRef.current)
+    }
+
+    isTocScrollingRef.current = true
+    setActiveTocId(tocItem.id)
+    scrollActiveTocItemIntoView(tocItem.id)
+    scroller.scrollTo(tocItem.id, {
+      smooth: true,
+      duration: TOC_SCROLL_DURATION,
+      offset: TOC_SCROLL_OFFSET,
+    })
+
+    tocScrollTimerRef.current = window.setTimeout(() => {
+      setActiveTocId(tocItem.id)
+      scrollActiveTocItemIntoView(tocItem.id)
+      isTocScrollingRef.current = false
+      tocScrollTimerRef.current = null
+      window.requestAnimationFrame(updateActiveTocByScroll)
+    }, TOC_SCROLL_DURATION + 120)
+  }
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    tocbotRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+
+    const firstTocId = tocItemsRef.current[0]?.id
+    if (firstTocId) {
+      setActiveTocId(firstTocId)
+    }
   }
 
   useEffect(() => {
@@ -143,60 +322,107 @@ const DetailContent: React.FC = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [])
 
-  // 显示文章目录
-  useEffect(() => {
-    if (!articleRef.current || !tocbotRef.current) return
-    // 获取 markdownBody 元素
-    const markdownBody = articleRef.current.querySelector('.markdown-body') as HTMLElement | null
-    if (!markdownBody) return
-    const headingIdMap = new Map<string, number>()
-
-    // 基于标题文本生成稳定 id，避免 href 变成 "#" 导致历史记录多一条
-    const getHeadingId = (rawText: string, fallbackId?: string) => {
-      const baseId = (fallbackId || rawText || 'section')
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\u4e00-\u9fa5\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '') || 'section'
-
-      const count = headingIdMap.get(baseId) ?? 0
-      headingIdMap.set(baseId, count + 1)
-      return count === 0 ? baseId : `${baseId}-${count}`
+  // 显示文章目录：等 Viewer 把 Markdown 渲染进 DOM 后，再读取标题生成目录。
+  useLayoutEffect(() => {
+    if (!detail.content) {
+      setTocItems([])
+      setActiveTocId('')
+      return
     }
 
-    // 对 目录 进行初始化
-    tocbot.init({
-      tocElement: tocbotRef.current,   // 你左侧目录容器
-      contentElement: markdownBody,    // ByteMD Viewer 渲染内容
-      headingSelector: 'h1, h2, h3',   // 选择要显示的标题等级
-      collapseDepth: 6,
-      scrollSmooth: true,
-      scrollSmoothOffset: -76,         // 控制正文滚动停靠位置
-      headingsOffset: 76,
-      disableTocScrollSync: false,
-      tocScrollOffset: 72,             // 给目录滚动预留顶部空间，避免首个目录项被“顶住”遮挡
-      onClick: (event) => {
-        event.preventDefault()
-      },
-      headingObjectCallback: (obj, headingNode) => {
-        const heading = obj as { id?: string, textContent?: string }
-        const id = getHeadingId(heading.textContent ?? headingNode.innerText ?? '', heading.id || headingNode.id)
-        headingNode.id = id
-        return { ...heading, id }
-      },
-    })
+    const frameId = window.requestAnimationFrame(() => {
+      const nextTocItems = syncArticleTocItems(articleRef.current)
 
-    // 首次进入时，如果页面在顶部，确保目录滚动也在顶部
-    requestAnimationFrame(() => {
-      if (window.scrollY <= 1 && tocbotRef.current) {
+      tocItemsRef.current = nextTocItems
+      setTocItems(nextTocItems)
+      setActiveTocId(nextTocItems[0]?.id ?? '')
+
+      if (tocbotRef.current) {
         tocbotRef.current.scrollTop = 0
       }
     })
 
-    return () => tocbot.destroy()
+    return () => window.cancelAnimationFrame(frameId)
   }, [detail.content])
+
+  // 目录状态变化后，再确认一遍正文标题 id，防止 Viewer 重渲染后 id 丢失。
+  useLayoutEffect(() => {
+    if (!tocItems.length) return
+
+    const frameId = window.requestAnimationFrame(() => {
+      const nextTocItems = syncArticleTocItems(articleRef.current)
+      tocItemsRef.current = nextTocItems
+    })
+
+    return () => window.cancelAnimationFrame(frameId)
+  }, [tocItems])
+
+  // 手动滚动文章时自动更新目录高亮，并滚动左侧目录到当前项。
+  useEffect(() => {
+    if (!tocItems.length) return
+
+    const handleScrollSpy = () => {
+      if (scrollSpyFrameRef.current !== null) return
+
+      scrollSpyFrameRef.current = window.requestAnimationFrame(() => {
+        scrollSpyFrameRef.current = null
+
+        if (!isTocScrollingRef.current) {
+          updateActiveTocByScroll()
+        }
+      })
+    }
+
+    handleScrollSpy()
+    window.addEventListener('scroll', handleScrollSpy, { passive: true })
+    window.addEventListener('resize', handleScrollSpy)
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollSpy)
+      window.removeEventListener('resize', handleScrollSpy)
+
+      if (scrollSpyFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollSpyFrameRef.current)
+        scrollSpyFrameRef.current = null
+      }
+    }
+  }, [tocItems])
+
+  // 如果用户在程序平滑滚动期间手动滚动，就停止“点击滚动锁”，改由真实滚动位置接管高亮。
+  useEffect(() => {
+    const stopProgrammaticTocScroll = () => {
+      if (!isTocScrollingRef.current) return
+
+      isTocScrollingRef.current = false
+
+      if (tocScrollTimerRef.current) {
+        window.clearTimeout(tocScrollTimerRef.current)
+        tocScrollTimerRef.current = null
+      }
+
+      window.requestAnimationFrame(updateActiveTocByScroll)
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+        stopProgrammaticTocScroll()
+      }
+    }
+
+    window.addEventListener('wheel', stopProgrammaticTocScroll, { passive: true })
+    window.addEventListener('touchmove', stopProgrammaticTocScroll, { passive: true })
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('wheel', stopProgrammaticTocScroll)
+      window.removeEventListener('touchmove', stopProgrammaticTocScroll)
+      window.removeEventListener('keydown', handleKeyDown)
+
+      if (tocScrollTimerRef.current) {
+        window.clearTimeout(tocScrollTimerRef.current)
+      }
+    }
+  }, [])
 
   if (loading) {
     return (
@@ -206,7 +432,7 @@ const DetailContent: React.FC = () => {
     )
   }
 
-  if (!detail) {
+  if (detail.content === '' && detail.name === '') {
     return <div className={styles.errorContainer}>未找到该内容</div>
   }
 
@@ -249,28 +475,6 @@ const DetailContent: React.FC = () => {
 
           {/* 分隔线 */}
           <div className={styles.divider} />
-
-          {/* 这里可以扩展评论列表 */}
-          <section className={styles.commentsPlaceholder}>
-            <h3>留言 {detail.comments}</h3>
-            <div className={styles.postComments}>
-              <div className={styles.authorAvatar}><img src={detail.avatar || './imgs/admin.png'} alt="作者" className={styles.avatar} /></div>
-              <div className={styles.inputMulti}>
-                <input onKeyDown={handleComment} type="text" placeholder='写留言' className={styles.inputComments} />
-              </div>
-              <div onClick={() => setIsComment(!isComment)} className={styles.commentsBtn}>发送</div>
-            </div>
-            {/* {detail.comments === 0 || isComment ? */}
-            {isComment ?
-              <div className={styles.emptyCard}>
-                <div className={styles.emptyComments}>
-                  快来发布你的第一条评论吧...
-                </div>
-              </div>
-              :
-              <div>11</div>
-            }
-          </section>
         </article>
       </main>
 
@@ -321,9 +525,25 @@ const DetailContent: React.FC = () => {
       </aside>
 
       {/* 悬浮 目录 */}
-      <aside className={styles.tocbotContainer}>
-        <div className={styles.tocbotContent} ref={tocbotRef}></div>
-      </aside>
+      {tocItems.length > 0 &&
+        <aside className={styles.tocbotContainer}>
+          <nav className={styles.tocbotContent} ref={tocbotRef} aria-label="文章目录">
+            {tocItems.map(item => (
+              <button
+                key={item.id}
+                type="button"
+                // 左侧目录自动滚动时，用这个属性定位当前目录节点。
+                data-toc-id={item.id}
+                className={`${styles.tocLink} ${styles[`tocLevel${item.level}`]} ${activeTocId === item.id ? styles.tocActive : ''}`}
+                title={item.text}
+                onClick={() => handleTocClick(item)}
+              >
+                {item.text}
+              </button>
+            ))}
+          </nav>
+        </aside>
+      }
 
       {/* 悬浮 ai agent 助手 */}
       <aside className={styles.aiHelperContainer}>
@@ -376,10 +596,6 @@ const DetailContent: React.FC = () => {
           {detail.isCollected ? <StarFilled /> : <StarOutlined />}
           <span>{detail.collection}</span>
         </div>
-        <div className={styles.actionItem}>
-          <CommentOutlined />
-          <span>{detail.comments}</span>
-        </div>
         <div className={styles.dividerSmall} />
         <div className={styles.actionItem} onClick={() => message.success('正在下载 PDF')}>
           <FilePdfOutlined />
@@ -388,7 +604,7 @@ const DetailContent: React.FC = () => {
 
       {/* 悬浮 回到顶部按钮 */}
       {scrollYPosition >= 900 ?
-        <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.upCircle}>
+        <div onClick={handleBackToTop} className={styles.upCircle}>
           <UpCircleOutlined />
         </div>
         :

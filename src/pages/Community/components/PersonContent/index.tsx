@@ -1,10 +1,15 @@
-import Setting from "@/pages/Layout/components/Setting"
+import UserProfile from '@/components/UserProfile'
+import { useAppSelector } from '@/store/hooks'
 import styles from './index.module.less'
 
 const PersonalContent = () => {
+  const userId = Number(useAppSelector(state => state.user.userId))
+
+  // if (!userId) return null
+
   return (
     <div className={styles.personalContainer}>
-      <Setting className={styles.embeddedSetting} />
+      <UserProfile userId={userId} isSelf />
     </div>
   )
 }

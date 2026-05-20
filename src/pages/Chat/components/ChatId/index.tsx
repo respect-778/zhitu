@@ -1,4 +1,4 @@
-import { ArrowUpOutlined, BulbOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons"
+import { ArrowUpOutlined, BulbOutlined, SearchOutlined, XFilled } from "@ant-design/icons"
 import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
@@ -13,29 +13,104 @@ import { getStore } from "@/utils/store"
 import ScrollDownButton from "@/components/ScrollDownButton"
 
 
+type ChatStreamState = {
+  isStreaming: boolean
+  content: string
+  isSearching?: boolean
+  searchQuery?: string
+  sources?: Array<{ title: string, url: string }>
+}
+type PendingFirstMessage = {
+  sessionUuid: string
+  content: string
+  mode: number
+}
+type SubmitOptions = {
+  sessionUuid?: string
+  content?: string
+  mode?: number
+}
+
 const ChatId = () => {
   const { id } = useParams() // 获取动态路由
-  const sessionId = parseInt(id!) // 获取当前会话id
+  const sessionUuid = id ?? '' // 获取当前会话uuid
   const navigate = useNavigate()
   const [mode, setmode] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const [searchValue, setSearchValue] = useState('') // 输入框内容
   const { textareaRef } = useAutoResizeTextarea({ value: searchValue, minHeight: 44, maxHeight: 280 })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
-  const [messages, setMessages] = useState<IChatMessage[]>([]) // 聊天消息列表
-  const { historySession, searchValueFa, modeFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession } = useOutletContext<{ // 从父组件中拿状态和方法 
+  const {
+    historySession,
+    pendingFirstMessageBySession,
+    handleNewChatComplete,
+    getHistoryChatSession,
+    streamBySession,
+    setStreamBySession,
+    messagesBySession,
+    setMessagesBySession,
+    abortControllerMapRef
+  } = useOutletContext<{ // 从父组件中拿状态和方法 
     historySession: IChatSession[], // 从父组件那，拿到历史会话记录栏数据，这里用来显示 会话记录 title 在对话记录上面
-    searchValueFa: string,
-    modeFa: number,
-    isNewChat: boolean,
-    handleNewChatComplete: () => void,
+    pendingFirstMessageBySession: Record<string, PendingFirstMessage>,
+    handleNewChatComplete: (sessionUuid?: string) => void,
     getHistoryChatSession: () => void,
-    streamBySession: Record<number, { isStreaming: boolean, content: string, isSearching: boolean, searchQuery: string, sources: Array<{ title: string, url: string }> }>,
-    setStreamBySession: React.Dispatch<React.SetStateAction<Record<number, { isStreaming: boolean, content: string }>>>
+    streamBySession: Record<string, ChatStreamState>,
+    setStreamBySession: React.Dispatch<React.SetStateAction<Record<string, ChatStreamState>>>,
+    messagesBySession: Record<string, IChatMessage[]>,
+    setMessagesBySession: React.Dispatch<React.SetStateAction<Record<string, IChatMessage[]>>>,
+    abortControllerMapRef: React.MutableRefObject<Record<string, AbortController | undefined>>
   }>()
-  const currentStream = streamBySession[sessionId] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
-  const titleRef = useRef<HTMLDivElement>(null)
-  const [isTitleOverflow, setIsTitleOverflow] = useState(false)
-  const currentSessionTitle = historySession.find(item => item.id === sessionId)?.session_title ?? ''
+  const pendingFirstMessage = pendingFirstMessageBySession[sessionUuid]
+  const currentMessages = messagesBySession[sessionUuid] ?? []
+  const currentStream = streamBySession[sessionUuid] ?? { isStreaming: false, content: '' } // 获取当前会话的流式字典信息
+  const currentSessionTitle = historySession.find(item => item.uuid === sessionUuid)?.session_title ?? ''
+
+  const currentSessionUuidRef = useRef(sessionUuid)
+  currentSessionUuidRef.current = sessionUuid
+  const consumedPendingRef = useRef<Record<string, boolean>>({}) // 防止新会话首条消息重复消费
+
+  const isTempAiMessage = (message?: IChatMessage) =>
+    message?.role === 'ai' && typeof message.id === 'number' && message.id < 0
+
+  const createTempAiMessage = (content: string): IChatMessage => ({
+    id: -Date.now(),
+    role: 'ai',
+    content,
+    thinking_mode: 0,
+    created_at: new Date().toISOString()
+  })
+
+  const mergeMessagesWithLocalPartial = (serverMessages: IChatMessage[], localMessages: IChatMessage[]) => {
+    const lastLocalMessage = localMessages[localMessages.length - 1]
+    const lastServerMessage = serverMessages[serverMessages.length - 1]
+
+    if (isTempAiMessage(lastLocalMessage) && lastServerMessage?.role !== 'ai') {
+      return [...serverMessages, lastLocalMessage]
+    }
+
+    return serverMessages
+  }
+
+  const upsertLocalAiMessage = (targetSessionUuid: string, content: string) => {
+    if (!content.trim()) return
+
+    setMessagesBySession(pre => {
+      const messages = pre[targetSessionUuid] ?? []
+      const lastMessage = messages[messages.length - 1]
+
+      if (isTempAiMessage(lastMessage)) {
+        return {
+          ...pre,
+          [targetSessionUuid]: [...messages.slice(0, -1), { ...lastMessage, content }]
+        }
+      }
+
+      return {
+        ...pre,
+        [targetSessionUuid]: [...messages, createTempAiMessage(content)]
+      }
+    })
+  }
 
   // ai回复时，自动跟随 ai 的 hook
   const {
@@ -46,7 +121,7 @@ const ChatId = () => {
     scrollToBottomAndLock
   } = useStreamingAutoFollow({
     isStreaming: currentStream.isStreaming,
-    depKey: `${messages.length}-${currentStream.content.length}`,
+    depKey: `${currentMessages.length}-${currentStream.content.length}`,
     bottomThreshold: 24,
   })
 
@@ -66,91 +141,126 @@ const ChatId = () => {
     }
   }
 
-  // 获取当前 会话id 对应的聊天记录
-  const getCurrentChatMessage = async () => {
-    try {
-      const res = await getChatMessageAPI(sessionId)
-      setMessages(res.data)
-    } catch (error) {
+  // 获取指定会话对应的聊天记录
+  const getCurrentChatMessage = async (targetSessionUuid = sessionUuid) => {
+    if (!targetSessionUuid) {
       navigate('/chat', { replace: true })
+      return
+    }
+
+    try {
+      const res = await getChatMessageAPI(targetSessionUuid)
+      setMessagesBySession(pre => ({
+        ...pre,
+        [targetSessionUuid]: mergeMessagesWithLocalPartial(res.data, pre[targetSessionUuid] ?? [])
+      }))
+    } catch (error) {
+      if (currentSessionUuidRef.current === targetSessionUuid) {
+        navigate('/chat', { replace: true })
+      }
       console.error('获取聊天记录失败:', error)
 
     }
   }
 
   // handleSubmit 统一提交问题逻辑 （子路由里 不需要 创建聊天会话）（这里分 新对话 和 旧对话）
-  const handleSubmit = async () => {
-    if (isNewChat) {
-      if (searchValueFa.trim() === '') return
-    } else {
-      // 输入框为空，直接返回
-      if (searchValue.trim() === '') return
+  const handleSubmit = async (options: SubmitOptions = {}) => {
+    const activeSessionUuid = options.sessionUuid ?? sessionUuid
+
+    if (!activeSessionUuid) {
+      navigate('/chat', { replace: true })
+      return
     }
 
-    let userMessage = ''
-    let currentMode = 0
-    if (isNewChat) {
-      userMessage = searchValueFa
-      currentMode = modeFa
-    } else {
-      userMessage = searchValue
-      currentMode = mode
-    }
-
-    const activeSessionId = sessionId
+    const userMessage = options.content ?? searchValue
+    const currentMode = options.mode ?? mode
+    if (userMessage.trim() === '') return
 
     // 新问题提交时，优先锁定到底部，确保马上跟随 AI 回复区域
-    scrollToBottomAndLock()
+    if (currentSessionUuidRef.current === activeSessionUuid) {
+      scrollToBottomAndLock()
+    }
 
     // 1. 创建 user 聊天记录
     try {
-      await addChatMessageAPI({ session_id: activeSessionId, role: 'user', content: userMessage }) // 创建 用户 聊天记录
-      getCurrentChatMessage() // 获取最新消息列表
-      scrollToBottomAndLock()
+      await addChatMessageAPI({ session_uuid: activeSessionUuid, role: 'user', content: userMessage }) // 创建 用户 聊天记录
+      await getCurrentChatMessage(activeSessionUuid) // 获取最新消息列表
+      if (currentSessionUuidRef.current === activeSessionUuid) {
+        scrollToBottomAndLock()
+      }
     } catch (error) {
       console.log(error)
     }
 
-    setSearchValue('') // 提交后，清空输入框
+    if (currentSessionUuidRef.current === activeSessionUuid) {
+      setSearchValue('') // 提交后，清空输入框
+    }
 
     // 开启流式生成并记录当前开启流式的会话id
-    setStreamBySession(pre => ({ ...pre, [activeSessionId]: { isStreaming: true, content: '' } }))
+    setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { isStreaming: true, content: '' } }))
 
     // 2. 流式调用 ai 大模型
+    const controller = new AbortController()
+    abortControllerMapRef.current[activeSessionUuid] = controller
+
+    let streamedContent = ''
+
     try {
-      await callChatStreamAPI(
+      streamedContent = await callChatStreamAPI(
         currentMode,
         userMessage,
-        activeSessionId,
+        activeSessionUuid,
         (content) => {
           // 每次收到新内容就更新（保留搜索状态）
-          setStreamBySession(pre => ({ ...pre, [activeSessionId]: { ...pre[activeSessionId], isStreaming: true, content } }))
+          setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], isStreaming: true, content } }))
         },
         (query) => {
+          // 更新搜索状态
           setStreamBySession(pre => ({
-            ...pre,
-            [activeSessionId]: { ...pre[activeSessionId], isSearching: true, searchQuery: query }
+            ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], isSearching: true, searchQuery: query }
           }))
         },
         (sources) => {
+          // 更新搜索结果
           setStreamBySession(pre => ({
-            ...pre,
-            [activeSessionId]: { ...pre[activeSessionId], sources }
+            ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], sources }
           }))
         },
         (error) => {
           console.error('流式调用错误:', error)
-        }
+        },
+        false,
+        controller.signal
       )
     } catch (error) {
-      await addChatMessageAPI({ session_id: activeSessionId, role: 'ai', content: `AI调用失败:${error}` })
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return
+      }
+      await addChatMessageAPI({ session_uuid: activeSessionUuid, role: 'ai', content: `AI调用失败:${error}` })
       console.error('AI 调用失败:', error)
     } finally {
-      handleNewChatComplete() // 通知父组件调用此函数 -> 设置当前聊天不是 新聊天
+      const hasStreamedContent = streamedContent.trim() !== ''
+
+      handleNewChatComplete(activeSessionUuid) // 通知父组件清理该会话的待发送首条消息
+
+      if (hasStreamedContent) {
+        upsertLocalAiMessage(activeSessionUuid, streamedContent)
+      }
+
+      if (currentSessionUuidRef.current === activeSessionUuid) {
+        setIsInputEmpty(true)
+      }
+      setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], isStreaming: false, content: '' } })) // 结束流式生成并清空内容（保留搜索状态）
+      if (abortControllerMapRef.current[activeSessionUuid] === controller) {
+        delete abortControllerMapRef.current[activeSessionUuid]
+      }
+
+      if (hasStreamedContent || controller.signal.aborted) {
+        await new Promise(resolve => setTimeout(resolve, 300))
+      }
+
+      await getCurrentChatMessage(activeSessionUuid) // 刷新消息列表（后端已保存 AI 回复）
       getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
-      getCurrentChatMessage() // 刷新消息列表（后端已保存 AI 回复）
-      setIsInputEmpty(true)
-      setStreamBySession(pre => ({ ...pre, [activeSessionId]: { ...pre[activeSessionId], isStreaming: false, content: '' } })) // 结束流式生成并清空内容（保留搜索状态）
     }
   }
 
@@ -170,42 +280,37 @@ const ChatId = () => {
     }
   }
 
+  // 暂停回复按钮
+  const handleStopGeneration = () => {
+    abortControllerMapRef.current[sessionUuid]?.abort()
+  }
+
   // 进入到界面滚动到底部
   useLayoutEffect(() => {
     // 这里需要考虑的是：在组件挂载完之后，ai聊天框这里还需要加载出聊天记录，所以如果不先让聊天记录加载出来
     // 那么滚动到底部的效果就是在聊天记录都没有出现的情况下就触发了，也就导致了后续聊天记录加载出来时，发现没有滚动到底部的效果。
-    if (messages.length === 0) return
+    if (currentMessages.length === 0) return
     scrollToBottomAndLock()
-  }, [messages.length])
+  }, [currentMessages.length])
 
   // 当 动态路由 id 发生改变，就调用方法，获取当前 会话id 下的聊天记录
   useEffect(() => {
     getCurrentChatMessage() // 获取到当前 会话id 的数据，显示在界面中
-  }, [sessionId])
+  }, [sessionUuid])
 
-  // 如果当前是新会话，才调用一次
+  // 只匹配当前会话的首条待发送消息
   useEffect(() => {
-    if (isNewChat) {
-      handleSubmit()
-    }
-  }, [isNewChat])
+    if (!pendingFirstMessage || pendingFirstMessage.sessionUuid !== sessionUuid) return
+    if (consumedPendingRef.current[pendingFirstMessage.sessionUuid]) return
 
-  useLayoutEffect(() => {
-    const el = titleRef.current
-    if (!el) return
-    setIsTitleOverflow(el.scrollWidth > el.clientWidth)
-  }, [currentSessionTitle])
-
-  useEffect(() => {
-    const handleResize = () => {
-      const el = titleRef.current
-      if (!el) return
-      setIsTitleOverflow(el.scrollWidth > el.clientWidth)
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [currentSessionTitle])
+    consumedPendingRef.current[pendingFirstMessage.sessionUuid] = true
+    handleNewChatComplete(pendingFirstMessage.sessionUuid)
+    handleSubmit({
+      sessionUuid: pendingFirstMessage.sessionUuid,
+      content: pendingFirstMessage.content,
+      mode: pendingFirstMessage.mode
+    })
+  }, [pendingFirstMessage, sessionUuid])
 
   // // 流式结束后再统一高亮代码，避免流式阶段高频闪烁与滚动抖动
   // useLayoutEffect(() => {
@@ -220,23 +325,23 @@ const ChatId = () => {
   //       hljs.highlightElement(block)
   //     }
   //   })
-  // }, [messages, currentStream.isStreaming, sessionId])
+  // }, [currentMessages, currentStream.isStreaming, sessionUuid])
 
 
   return (
     <div className={styles.container}>
       {/* 聊天对话框 */}
       <div className={styles.top}>
-        <div ref={titleRef} className={`${styles.title} ${isTitleOverflow ? styles.titleOverflow : ''}`}>{currentSessionTitle}</div>
+        <div className={styles.title}>{currentSessionTitle}</div>
         <div className={styles.chatConversation} ref={chatContainerRef} onScroll={onUserScroll}>
           {/* 历史消息 */}
-          {messages.map((message, index) => (
+          {currentMessages.map((message, index) => (
             <div
               key={message.id}
               className={message.role === 'user' ? styles.userQuestion : styles.aiReply}
             >
               {/* 流式结束后，在最后一条 AI 消息上保留搜索状态栏 */}
-              {message.role === 'ai' && index === messages.length - 1 && !currentStream.isStreaming && currentStream.sources && currentStream.sources.length > 0 && (
+              {message.role === 'ai' && index === currentMessages.length - 1 && !currentStream.isStreaming && currentStream.sources && currentStream.sources.length > 0 && (
                 <div className={styles.searchStatusBar}>
                   <div className={styles.searchStatusLeft}>
                     <SearchOutlined className={styles.searchIcon} />
@@ -334,9 +439,9 @@ const ChatId = () => {
                 {getStore('aiName') || '未配置'}
               </Space>
             </div>
-            <div onClick={clickQuestion}>
-              <div className={`${styles.submitImg} ${isInputEmpty || currentStream.isStreaming ? styles.inputActive : ''} `}>
-                {currentStream.isStreaming ? <LoadingOutlined /> : <ArrowUpOutlined />}
+            <div onClick={currentStream.isStreaming ? handleStopGeneration : clickQuestion}>
+              <div className={`${styles.submitImg} ${isInputEmpty ? styles.inputActive : ''} ${currentStream.isStreaming ? styles.stopActive : ''} `}>
+                {currentStream.isStreaming ? <XFilled /> : <ArrowUpOutlined />}
               </div>
             </div>
           </div>

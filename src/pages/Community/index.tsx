@@ -1,14 +1,15 @@
 import styles from './index.module.less'
-import type { IContent, IContentPageParams, IHotkeyword, INavItems } from '@/types/community'
-import { SearchOutlined, BellOutlined, ReadOutlined, CloseCircleFilled, RightOutlined } from '@ant-design/icons'
-import { message } from 'antd'
+import type { IContent, IContentPageParams, IPersonItem, INavItems } from '@/types/community'
+import { SearchOutlined, BellOutlined, ReadOutlined, CloseCircleFilled, RightOutlined, StarOutlined, CalendarOutlined, HistoryOutlined, TeamOutlined, UserOutlined, BookOutlined, AppstoreOutlined } from '@ant-design/icons'
 import React, { useCallback, useEffect, useState } from 'react'
-import { collectedCommunityAPI, getEarlyReportAPI, getHotCommunityListAPI, getNewCommunityListAPI, likeCommunityAPI, searchCommunityAPI } from '@/api/community';
+import { getEarlyReportAPI, getNewCommunityListAPI, searchCommunityAPI } from '@/api/community';
 import { useSearchParams } from 'react-router';
 import ArticleList from '@/components/ArticleList';
 import MyCollection from './components/MyCollection'
 import HistoryContent from './components/HistoryContent'
 import PersonalContent from './components/PersonContent'
+import MyFollowing from './components/MyFollowing'
+import WeeklyDigest from '@/components/WeeklyDigest'
 
 const Community = () => {
   const [searchParams, setSearchParams] = useSearchParams() // 设置查询参数
@@ -30,18 +31,17 @@ const Community = () => {
 
   // 公共精选
   const navItems: INavItems[] = [
-    { id: 'new', label: '最新内容', icon: '' },
-    { id: 'recommend', label: '为你推荐', icon: '' },
-    { id: 'hot', label: '精选周刊', icon: '' },
-    { id: 'relax', label: '放松愉悦', icon: '' },
+    { id: 'new', label: '最新内容', icon: <AppstoreOutlined /> },
+    { id: 'recommend', label: '为你推荐', icon: <StarOutlined /> },
+    { id: 'week', label: '精选周刊', icon: <CalendarOutlined /> },
   ]
 
   // 我的记录
-  const personalKeywords: IHotkeyword[] = [
-    { id: 'history', name: '阅读历史' },
-    { id: 'collection', name: '我的收藏' },
-    { id: 'follow', name: '我的关注' },
-    { id: 'setting', name: '个人信息' },
+  const personalKeywords: IPersonItem[] = [
+    { id: 'history', name: '阅读历史', icon: <HistoryOutlined /> },
+    { id: 'collection', name: '我的收藏', icon: <BookOutlined /> },
+    { id: 'follow', name: '我的关注', icon: <TeamOutlined /> },
+    { id: 'personal', name: '个人信息', icon: <UserOutlined /> },
   ]
 
   // 右侧公告栏
@@ -54,15 +54,30 @@ const Community = () => {
   const handleNavBar = async (navType: string) => {
     setActiveMenu(`menu-${navType}`)
     setActiveTab(navType)
-    if (navType === 'recommend') {
+    setIsEmpty(false)
+    if (navType === 'week') {
       setSearchValue('')
-      handlePageSize(1, pageParams.pageSize, navType)
-    } else if (navType === 'hot') {
+      setSearchParams(pre => { // 把当前选中的页数给到 searchParams
+        pre.set('tab', navType)
+        pre.delete('page')
+        return pre
+      }, { replace: true })
+    } else if (navType === 'recommend') {
       setSearchValue('')
-      handlePageSize(1, pageParams.pageSize, navType)
+      setSearchParams(pre => { // 把当前选中的页数给到 searchParams
+        pre.delete('tab')
+        pre.delete('page')
+        return pre
+      }, { replace: true })
+      handlePageSize(1, pageParams.pageSize, navType, '')
     } else if (navType === 'new') {
       setSearchValue('')
-      handlePageSize(1, pageParams.pageSize, navType)
+      setSearchParams(pre => { // 把当前选中的页数给到 searchParams
+        pre.delete('tab')
+        pre.delete('page')
+        return pre
+      }, { replace: true })
+      handlePageSize(1, pageParams.pageSize, navType, '')
     }
   }
 
@@ -77,9 +92,21 @@ const Community = () => {
     }, { replace: true })
   }
 
-  // 获取输入框中的内容
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
+  // 每日早报
+  const getEarlyReport = useCallback(async () => {
+    try {
+      const res = await getEarlyReportAPI()
+      setEarlyReport(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+  // 查看全部早报
+  const handleEarlyReport = () => {
+    if (!earlyReport?.id) return
+
+    window.open(`/community/${earlyReport.id}`)
   }
 
   // 清空输入框和当前搜索内容并回到最初页
@@ -93,28 +120,22 @@ const Community = () => {
     } else if (navType === 'new') {
       const res = await getNewCommunityListAPI({ pageNum: 1, pageSize: pageParams.pageSize })
       tabPage(res.data, 1, pageParams.pageSize)
-    } else if (navType === 'hot') {
-      const res = await getHotCommunityListAPI({ pageNum: 1, pageSize: pageParams.pageSize })
-      tabPage(res.data, 1, pageParams.pageSize)
     }
   }
 
-  // 每日早报
-  const getEarlyReport = useCallback(async () => {
-    try {
-      const res = await getEarlyReportAPI()
-      setEarlyReport(res.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+  // 获取输入框中的内容
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
 
   // 搜索（是通过 推荐 的内容去搜索的，本质上 使用哪个接口都没有关系）
   const searchCommunity = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      // 重置内容不存在
+      setIsEmpty(false)
       // 如果搜索框为空，重置为所有帖子列表
       if (searchValue.trim() === '') { // 判断搜索框中的值是否为空
-        handlePageSize(1, pageParams.pageSize, activeTab)
+        handlePageSize(1, pageParams.pageSize, activeTab, '')
         return
       }
 
@@ -122,6 +143,7 @@ const Community = () => {
 
       if (res.data.list.length === 0) { // 当没有搜索到结果时
         setIsEmpty(true) // 设置内容不存在
+        setSearchValue('') // 清空搜索框
       }
 
       setPageParams(pre => ({ // 设置分页需要的参数，使分页组件的显示为当前搜索过后的结果
@@ -147,16 +169,13 @@ const Community = () => {
   }
 
   // 分页（也是推荐）
-  const handlePageSize = async (page: number, pageSize: number, navType: string) => {
+  const handlePageSize = async (page: number, pageSize: number, navType: string, keyword?: string) => {
     setLoading(true)
     if (navType === 'recommend') {
-      const res = await searchCommunityAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
-      tabPage(res.data, page, pageSize)
-    } else if (navType === 'hot') {
-      const res = await getHotCommunityListAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
+      const res = await searchCommunityAPI({ keyword, pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     } else if (navType === 'new') {
-      const res = await getNewCommunityListAPI({ keyword: searchValue.trim(), pageNum: page, pageSize })
+      const res = await getNewCommunityListAPI({ keyword, pageNum: page, pageSize })
       tabPage(res.data, page, pageSize)
     }
     setLoading(false)
@@ -182,36 +201,8 @@ const Community = () => {
     window.open(`/community/${id}`)
   }
 
-  // 点击喜欢时触发（做了乐观更新 -> 用户在网络不加的情况下，点击喜欢按钮也会显示，不会出现点击没反应）
-  const handleLike = async (id: number, isLiked: boolean) => {
-    // 乐观更新 UI，当后一个状态依赖前一个状态时，需要使用 pre => pre 这种形式
-    setContent(pre => pre.map(item =>
-      item.id === id ? { ...item, isLiked: !isLiked, likes: isLiked ? item.likes - 1 : item.likes + 1 } : item
-    ))
-
-    try {
-      // 成功调用接口，无序额外操作，后端同步 UI 变化
-      await likeCommunityAPI(id, isLiked) // 调用接口，提醒后端同步修改赞
-    } catch (error) {
-      message.error(`网络错误，点赞失败`)
-    }
-  }
-
-  // 点击收藏时触发
-  const handleCollection = async (id: number, isCollected: boolean) => {
-    setContent(pre => pre.map(item => {
-      return item.id === id ? { ...item, isCollected: !isCollected, collection: isCollected ? item.collection - 1 : item.collection + 1 } : item
-    }))
-
-    try {
-      await collectedCommunityAPI(id, isCollected) // 调用接口，提醒后端同步修改收藏量
-    } catch (error) {
-      message.error(`网络错误，收藏失败`)
-    }
-  }
-
   useEffect(() => {
-    handlePageSize(pageParams.pageNum, pageParams.pageSize, activeTab)
+    handlePageSize(pageParams.pageNum, pageParams.pageSize, activeTab, '')
     getEarlyReport() // 获取早报
   }, [])
 
@@ -231,7 +222,7 @@ const Community = () => {
                     onClick={() => handleNavBar(item.id)}
                     className={`${styles.navItem} ${activeMenu === `menu-${item.id}` ? styles.active : ""}`}
                   >
-                    {item.label}
+                    {item.icon} {item.label}
                   </div>
                 )
               })}
@@ -249,7 +240,7 @@ const Community = () => {
                     onClick={() => handlePersonalNavBar(keyword.id)}
                     className={`${styles.navItem} ${activeMenu === `menu-${keyword.id}` ? styles.active : ""}`}
                   >
-                    {keyword.name}</div>
+                    {keyword.icon} {keyword.name}</div>
                 )
               })}
             </div>
@@ -262,18 +253,19 @@ const Community = () => {
       </div>
 
       {/* 中间区域 */}
-      <div className={`${styles.middle} ${activeTab === 'collection' || activeTab === 'history' || activeTab === 'setting' ? styles.middleFull : ''}`}>
+      <div className={`${styles.middle} ${activeTab === 'week' || activeTab === 'collection' || activeTab === 'history' || activeTab === 'follow' || activeTab === 'personal' ? styles.middleFull : ''}`}>
 
-        {activeTab === 'new' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
-        {activeTab === 'recommend' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
-        {activeTab === 'hot' && <ArticleList content={content} loading={loading} pageParams={pageParams} isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handleLike={handleLike} handleCollection={handleCollection} handlePageSize={handlePageSize} />}
+        {activeTab === 'new' && <ArticleList content={content} loading={loading} pageParams={pageParams} searchValue={searchValue} title='最新内容' subTitle='从公共质量池中挑出的高质量内容' isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handlePageSize={handlePageSize} />}
+        {activeTab === 'recommend' && <ArticleList content={content} loading={loading} pageParams={pageParams} searchValue={searchValue} title='为你推荐' subTitle='基于你的兴趣和历史行为推荐' isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handlePageSize={handlePageSize} />}
+        {activeTab === 'week' && <WeeklyDigest />}
         {activeTab === 'collection' && <MyCollection />}
         {activeTab === 'history' && <HistoryContent />}
-        {activeTab === 'setting' && <PersonalContent />}
+        {activeTab === 'follow' && <MyFollowing />}
+        {activeTab === 'personal' && <PersonalContent />}
       </div>
 
       {/* 右侧区域 */}
-      {activeTab === 'collection' || activeTab === 'history' || activeTab === 'setting' ?
+      {activeTab === 'week' || activeTab === 'collection' || activeTab === 'history' || activeTab === 'follow' || activeTab === 'personal' ?
         null
         :
         <div className={styles.right}>
@@ -296,7 +288,7 @@ const Community = () => {
           <div className={`${styles.rightCard} ${styles.trendingCard}`}>
             <div className={styles.cardHeader}>
               <div><ReadOutlined style={{ color: '#FFBF59' }} /> 今日早报</div>
-              <div style={{ fontSize: '12px', cursor: 'pointer' }} onClick={() => window.open(`/community/${earlyReport?.id}`)}>查看全部 <RightOutlined /></div>
+              <div style={{ fontSize: '12px', cursor: 'pointer' }} onClick={handleEarlyReport}>查看全部 <RightOutlined /></div>
             </div>
             <div className={styles.earlyReport}>
               {earlyReport?.abstract}

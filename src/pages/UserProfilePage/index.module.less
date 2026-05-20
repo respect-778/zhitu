@@ -1,0 +1,36 @@
+.container {
+  margin: 0 auto;
+  padding: 0 200px;
+  background: var(--bg-color);
+}
+
+.backBar {
+  padding: 16px 0 0;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--theme-color-hover);
+  }
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 16px;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,125 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  user-select: none;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.toolBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover);
+  }
+}
+
+.fileTree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color);
+    border-radius: 3px;
+  }
+}
+
+.treeNode {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding-right: 8px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--theme-color-hover);
+  }
+
+  &.active {
+    background: var(--chat-history-item-hover);
+  }
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+
+  &.arrowExpanded {
+    transform: rotate(90deg);
+  }
+}
+
+.nodeIcon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.nodeName {
+  font-size: 13px;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.renameInput {
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+  font-size: 13px;
+}
+
+.folderChildren {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.18s ease-out;
+
+  &.folderExpanded {
+    grid-template-rows: 1fr;
+  }
+}
+
+.folderChildrenInner {
+  overflow: hidden;
+}

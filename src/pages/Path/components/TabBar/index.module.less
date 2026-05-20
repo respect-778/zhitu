@@ -1,0 +1,118 @@
+.tabBar {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  min-height: 36px;
+  user-select: none;
+}
+
+.tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 12px;
+  min-width: 80px;
+  max-width: 180px;
+  cursor: pointer;
+  border-right: 1px solid var(--border-color);
+  transition: background 0.1s ease;
+  background: transparent;
+  animation: tabFadeIn 0.15s ease-out;
+
+  &:hover {
+    background: var(--theme-color-hover);
+
+    .tabClose {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    background: var(--bg-color);
+    border-bottom: 2px solid var(--primary-color);
+
+    .tabName {
+      color: var(--text-color);
+    }
+
+    .tabClose {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabName {
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 36px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tabClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0;
+  transition: all 0.1s ease;
+  flex-shrink: 0;
+  margin-left: 6px;
+
+  &:hover {
+    background: var(--theme-color-hover);
+    color: var(--text-color);
+  }
+}
+
+.newTabBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-width: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover);
+  }
+}

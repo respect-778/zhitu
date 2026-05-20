@@ -5,7 +5,8 @@ import {
   MessageOutlined,
   PlusOutlined,
   RightOutlined,
-  UpOutlined
+  UpOutlined,
+  XFilled
 } from '@ant-design/icons'
 import { Viewer } from '@bytemd/react'
 import { Drawer } from 'antd'
@@ -168,7 +169,7 @@ const SummaryAI = () => {
     // 流式调用 AI，并把增量内容写入当前会话的流式状态
     try {
       await callChatStreamAPI(
-        0,
+        1,
         userMessage,
         sessionId,
         content => {
@@ -177,6 +178,8 @@ const SummaryAI = () => {
             [sessionId]: { isStreaming: true, content }
           }))
         },
+        () => { },
+        () => { },
         error => {
           console.error('流式调用错误:', error)
         },
@@ -193,8 +196,10 @@ const SummaryAI = () => {
       })
       console.error('AI 调用失败:', error)
     } finally {
-      if (signal?.aborted) return // 如果是取消接口，不执行后续操作
-
+      // 如果是暂停，等待后端保存部分内容到数据库
+      if (abortControllerRef.current?.signal.aborted) {
+        await new Promise(resolve => setTimeout(resolve, 300))
+      }
       // 流式结束后，刷新消息和历史会话，并关闭流式状态
       await getSummaryMessage()
       await getHistorySession()
@@ -264,7 +269,7 @@ const SummaryAI = () => {
     // 流式调用 AI，并把增量内容写入当前会话的流式状态
     try {
       await callChatStreamAPI(
-        0,
+        1,
         userMessage,
         activeSessionId,
         content => {
@@ -273,6 +278,8 @@ const SummaryAI = () => {
             [activeSessionId]: { isStreaming: true, content }
           }))
         },
+        () => { },
+        () => { },
         error => {
           console.error('流式调用错误:', error)
         },
@@ -289,8 +296,10 @@ const SummaryAI = () => {
       })
       console.error('AI 调用失败:', error)
     } finally {
-      if (signal?.aborted) return // 如果是取消接口，不执行后续操作
-
+      // 如果是暂停，等待后端保存部分内容到数据库
+      if (abortControllerRef.current?.signal.aborted) {
+        await new Promise(resolve => setTimeout(resolve, 300))
+      }
       // 流式结束后，刷新消息和历史会话，并关闭流式状态
       await getSummaryMessage()
       await getHistorySession()
@@ -574,11 +583,11 @@ const SummaryAI = () => {
               </div>
               <button
                 type="button"
-                disabled={isInputEmpty || currentStream.isStreaming || isFirstSummary}
-                className={`${styles.sendButton} ${!isInputEmpty && !currentStream.isStreaming ? styles.activeBtn : ''}`}
-                onClick={() => handleSubmit(abortControllerRef.current?.signal)}
+                disabled={currentStream.isStreaming ? false : (isInputEmpty || isFirstSummary)}
+                className={`${styles.sendButton} ${!isInputEmpty ? styles.activeBtn : ''} ${currentStream.isStreaming ? styles.stopActive : ''}`}
+                onClick={currentStream.isStreaming ? () => abortControllerRef.current?.abort() : () => handleSubmit(abortControllerRef.current?.signal)}
               >
-                {currentStream.isStreaming || isFirstSummary ? <LoadingOutlined /> : <ArrowRightOutlined />}
+                {currentStream.isStreaming || isFirstSummary ? <XFilled /> : <ArrowRightOutlined />}
               </button>
             </div>
           </div>

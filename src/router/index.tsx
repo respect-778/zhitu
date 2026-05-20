@@ -9,10 +9,14 @@ import Layout from "@/pages/Layout";
 // 二级路由（懒加载）
 import Welcome from "@/pages/Welcome";
 const Path = React.lazy(() => import('@/pages/Path'))
+const Resume = React.lazy(() => import('@/pages/Resume'))
+const ResumeWorkbench = React.lazy(() => import('@/pages/Resume/components/Workbench'))
+
 const Community = React.lazy(() => import('@/pages/Community'))
 const PublishContent = React.lazy(() => import('@/pages/Community/components/PublishContent'))
 const Chat = React.lazy(() => import('@/pages/Chat'))
-const DetailContent = React.lazy(() => import('@/pages/Community/components/DetailContent'))
+const DetailContent = React.lazy(() => import('@/pages/Community/components/DetailContent/index'))
+const UserProfilePage = React.lazy(() => import('@/pages/UserProfilePage'))
 import SummaryAI from "@/pages/Community/components/SummaryAI";
 import LoginForm from "@/pages/Login/components/LoginForm/LoginForm";
 import Register from "@/pages/Login/components/Register";
@@ -53,6 +57,7 @@ const router = createBrowserRouter([
         path: '/chat',
         element: <Suspense fallback={<Loading />}><Chat /></Suspense>,
         children: [
+          // 三级路由
           {
             path: '/chat/:id',
             element: <Suspense fallback={<Loading />}><ChatId /></Suspense>
@@ -63,7 +68,19 @@ const router = createBrowserRouter([
         path: '/setting',
         element: <Setting />
       },
+      {
+        path: '/user/:id',
+        element: <Suspense fallback={<Loading />}><UserProfilePage /></Suspense>
+      },
+      {
+        path: '/resume',
+        element: <Suspense fallback={<Loading />}><Resume /></Suspense>
+      },
     ]
+  },
+  {
+    path: '/resume/:id',
+    element: <AuthRouter><Suspense fallback={<Loading />}><ResumeWorkbench /></Suspense></AuthRouter>
   },
   {
     path: '/community/:id',

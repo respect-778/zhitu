@@ -4,25 +4,9 @@ import { message, Popconfirm, Modal, Select, DatePicker } from 'antd'
 import { createFolderAPI, deleteFolderAPI, getFoldersAPI } from '@/api/community'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
-
-export interface IFolder {
-  id: number
-  name: string
-  color: string
-}
-
-export interface IArticleItem {
-  id: number
-  post_id: number
-  title?: string
-  abstract?: string
-  cover?: string
-  username?: string
-  avatar?: string
-  last_read_at?: string
-  created_at?: string
-  read_count?: number
-}
+import type { IArticleItem, IFolder } from '@/types/community'
+import locale from 'antd/locale/zh_CN';
+import 'dayjs/locale/zh-cn';
 
 interface SubArticleListProps {
   headerTitle: string
@@ -307,6 +291,7 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
                   <div className={styles.datePickerWrap}>
                     <DatePicker
                       open
+                      locale={locale.DatePicker}
                       onChange={(date) => {
                         onDateChange?.(date ? date.format('YYYY-MM-DD') : null)
                         setShowDatePicker(false)
@@ -329,9 +314,9 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
                   <div key={item.id} className={styles.card}>
                     <div className={styles.cardTop}>
                       {item.cover ? (
-                        <img src={item.cover} alt="封面" className={styles.cardCover} />
+                        <img src={item.cover} alt="封面" className={styles.cardCover} loading='lazy' decoding='async' />
                       ) : (
-                        <img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} />
+                        <img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} loading='lazy' decoding='async' />
                       )}
                       <div className={styles.cardBody}>
                         <div className={styles.cardTitle}>{item.title}</div>

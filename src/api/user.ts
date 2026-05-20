@@ -33,8 +33,16 @@ export const getUserInfoAPI = (): Promise<IUserInfo> => {
   });
 };
 
+// 获取用户公开资料接口
+export const getUserProfileAPI = (userId: number) => {
+  return httpInstance({
+    url: `/user/profile/${userId}`,
+    method: 'get'
+  })
+}
+
 // 更新用户信息接口
-export const updateUserInfoAPI = (data: { username: string, avatar?: string, mobile: string, gender: number, birthday: string, degree: string }): Promise<IUserInfo> => {
+export const updateUserInfoAPI = (data: { username: string, avatar?: string, mobile: string, gender: number, birthday: string, degree: string, bio?: string }): Promise<IUserInfo> => {
   return httpInstance({
     url: "/user/info",
     method: "put",

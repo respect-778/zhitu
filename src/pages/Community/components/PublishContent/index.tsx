@@ -7,15 +7,15 @@ import type { BytemdLocale } from "bytemd"
 import type { Image as MdastImage } from "mdast"
 import styles from "./index.module.less"
 import { useBeforeUnload, useBlocker, useNavigate } from "react-router"
-import { addCommunityAPI, articleAbstractAPI, uploadImageAPI } from "@/api/community"
+import { addCommunityAPI, articleAbstractAPI, articleKeywordsAPI, uploadImageAPI } from "@/api/community"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { confirmSave, cancelSave, setSavedContentValue, setSavedTitleValue, delSavedTitleValue, delSavedContentValue } from "@/store/modules/communityStore"
 import { getStore } from "@/utils/store"
-import { message, Modal, Popover, Image, Button } from "antd"
+import { message, Modal, Popover, Image, Button, Tag } from "antd"
 import type { IContent } from "@/types/community"
 import { formatDateTime } from "@/utils/formatDateTime"
 import { useSingleImageUpload } from "@/hooks/useSingleImageUpload"
-import { SignatureOutlined } from "@ant-design/icons"
+import { SignatureOutlined, TagsOutlined, CloseCircleOutlined } from "@ant-design/icons"
 
 const zhHansLocale: Partial<BytemdLocale> = {
   write: "编辑",
@@ -132,6 +132,8 @@ const PublishContent = () => {
   const [titleLayout, setTitleLayout] = useState<TitleLayoutState>(initialTitleLayoutState) // 仅用于标题位置与显隐控制的布局状态。
   const [abstractValue, setAbstractValue] = useState("") // 摘要
   const [isAbstractLoading, setIsAbstractLoading] = useState(false) // 摘要加载中
+  const [keywordsValue, setKeywordsValue] = useState<string[]>([]) // 关键词
+  const [isKeywordsLoading, setIsKeywordsLoading] = useState(false) // 关键词加载中
 
   const { imgUrl, setImgUrl, handleSingleImg } = useSingleImageUpload()
 
@@ -220,6 +222,25 @@ const PublishContent = () => {
     setAbstractValue(e.target.value)
   }
 
+  // 文章关键词
+  const handleKeywords = async () => {
+    try {
+      setIsKeywordsLoading(true)
+      const res = await articleKeywordsAPI(titleValue, contentValue)
+      setKeywordsValue(res.data.keywords)
+      setIsKeywordsLoading(false)
+      message.success("AI提取关键词成功")
+    } catch (error) {
+      message.error("AI提取关键词失败")
+      setIsKeywordsLoading(false)
+    }
+  }
+
+  // 删除单个关键词
+  const handleDeleteKeyword = (keyword: string) => {
+    setKeywordsValue(prev => prev.filter(kw => kw !== keyword))
+  }
+
   // 文章摘要
   const hanldeAbstract = async () => {
     try {
@@ -234,6 +255,28 @@ const PublishContent = () => {
       setIsAbstractLoading(false)
     }
   }
+
+  // 文章关键词
+  const keywordsPreview = (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px', maxWidth: '280px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', minHeight: '32px' }}>
+        {keywordsValue.length > 0 ? keywordsValue.map(kw => (
+          <Tag
+            key={kw}
+            color="blue"
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '4px', padding: '2px 8px', fontSize: '13px' }}
+          >
+            {kw}
+            <CloseCircleOutlined onClick={() => handleDeleteKeyword(kw)} style={{ cursor: 'pointer', fontSize: '11px' }} />
+          </Tag>
+        )) : <span style={{ color: '#999', fontSize: '13px' }}>点击下方按钮提取关键词</span>}
+      </div>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+        <Button loading={isKeywordsLoading} onClick={handleKeywords} style={{ borderRadius: '5px', padding: '5px 10px', fontSize: '13px', cursor: 'pointer' }}><TagsOutlined /> AI提取关键词</Button>
+        <div>{keywordsValue.length} / 5</div>
+      </div>
+    </div>
+  )
 
   // 文章摘要
   const abstractPreview = (
@@ -272,62 +315,6 @@ const PublishContent = () => {
     message.success("保存成功")
   }
 
-  // 发送文章
-  const handlePublishBlog = async () => {
-    if (!titleValue || !contentValue) {
-      message.warning("请输入文章内容")
-      return
-    }
-
-    if (titleValue.length < 5 || titleValue.length > 100) {
-      message.warning("标题长度应在5 ~ 100个字之间")
-      return
-    }
-
-    if (abstractValue === '') {
-      message.warning("请输入摘要")
-      return
-    }
-
-    if (imgs.current.length > 10) {
-      message.warning("文章图片最多上传 10 张")
-      return
-    }
-
-    const data: IContent = {
-      avatar: userInfo.data.avatar,
-      name: userInfo.data.username,
-      time: formatDateTime(JSON.stringify(new Date())),
-      title: titleValue,
-      content: contentValue,
-      cover: imgUrl || '',
-      abstract: abstractValue,
-      likes: 0,
-      comments: 0,
-      collection: 0,
-      photo: imgs.current,
-      isLiked: false,
-      isCollected: false,
-      Pageviews: 0
-    }
-    console.log(data)
-
-    try {
-      await addCommunityAPI(data)
-
-      message.success("文章发布成功")
-      dispatch(cancelSave())
-      // 清空保存的文章标题和内容
-      dispatch(delSavedTitleValue())
-      dispatch(delSavedContentValue())
-      allowLeaveRef.current = true // 不被拦截
-      navigate("/community")
-    } catch (error) {
-      console.log(error)
-      message.error("文章发布失败")
-    }
-  }
-
   // 上传图片
   const uploadImages = (files: File[]): Promise<Pick<MdastImage, "url" | "alt" | "title">[]> => {
     return Promise.all(
@@ -351,6 +338,68 @@ const PublishContent = () => {
       })
     )
   }
+
+  // 发送文章
+  const handlePublishBlog = async () => {
+    if (!titleValue || !contentValue) {
+      message.warning("请输入文章内容")
+      return
+    }
+
+    if (titleValue.length < 5 || titleValue.length > 100) {
+      message.warning("标题长度应在5 ~ 100个字之间")
+      return
+    }
+
+    if (abstractValue === '') {
+      message.warning("请输入摘要")
+      return
+    }
+
+    if (keywordsValue.length === 0) {
+      message.warning("请提取文章标签")
+      return
+    }
+
+    if (imgs.current.length > 10) {
+      message.warning("文章图片最多上传 10 张")
+      return
+    }
+
+    const data: IContent = {
+      avatar: userInfo.data.avatar,
+      name: userInfo.data.username,
+      time: formatDateTime(JSON.stringify(new Date())),
+      title: titleValue,
+      content: contentValue,
+      cover: imgUrl || '',
+      abstract: abstractValue,
+      keywords: keywordsValue,
+      likes: 0,
+      comments: 0,
+      collection: 0,
+      photo: imgs.current,
+      isLiked: false,
+      isCollected: false,
+      Pageviews: 0
+    }
+
+    try {
+      await addCommunityAPI(data)
+
+      message.success("文章发布成功")
+      dispatch(cancelSave())
+      // 清空保存的文章标题和内容
+      dispatch(delSavedTitleValue())
+      dispatch(delSavedContentValue())
+      allowLeaveRef.current = true // 不被拦截
+      navigate("/community")
+    } catch (error) {
+      console.log(error)
+      message.error("文章发布失败")
+    }
+  }
+
 
   // 组件挂载后，检查是否有保存草稿
   useEffect(() => {
@@ -441,6 +490,14 @@ const PublishContent = () => {
           <img style={{ height: '60px' }} src="/imgs/logo.png" alt="log" draggable="false" />
         </div>
         <div className={styles.publishBtns}>
+          <Popover
+            trigger="click"
+            content={keywordsPreview}
+          >
+            <div className={styles.abstractBtn}>
+              文章标签
+            </div>
+          </Popover>
           <Popover
             trigger="click"
             content={abstractPreview}

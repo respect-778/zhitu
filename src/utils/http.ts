@@ -22,6 +22,7 @@ const setAuthorization = (config: { headers?: unknown }, token: string): void =>
 // 当 refresh token 也过期，就把当前的用户信息、token清除
 const clearAuthState = (): void => {
   delStore('token')
+  delStore('userId')
   delStore('username')
   delStore('userInfo')
 }

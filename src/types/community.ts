@@ -6,9 +6,10 @@ export interface INavItems {
   icon?: ReactNode
 }
 
-export interface IHotkeyword {
+export interface IPersonItem {
   id: string
   name: string
+  icon?: ReactNode
 }
 
 export interface IContent {
@@ -20,6 +21,7 @@ export interface IContent {
   content: string
   cover?: string // 封面
   abstract: string // 摘要
+  keywords?: string[] // 关键词
   art_count?: number
   likes: number
   comments: number
@@ -48,4 +50,57 @@ export interface IContentPageParams {
   pageNum: number
   pageSize: number
   total: number
+}
+
+export interface IFolder {
+  id: number
+  name: string
+  color: string
+}
+
+export interface IWeeklyItem {
+  issueNumber: number
+  postId: number
+  title: string
+  abstract: string
+  author: string
+  avatar: string
+  date: string
+  weekStart: string
+  likes: number
+  collection: number
+  pageviews: number
+}
+
+export interface IFollowingUser {
+  id: number
+  username: string
+  avatar: string
+  art_count: number
+  fans_count: number
+}
+
+export interface IUserProfile {
+  id: number
+  username: string
+  avatar: string
+  bio: string
+  art_count: number
+  fans_count: number
+  follow_count: number
+  like_count: number
+  isFollowed: boolean
+}
+
+export interface IArticleItem {
+  id: number
+  post_id: number
+  title?: string
+  abstract?: string
+  cover?: string
+  username?: string
+  avatar?: string
+  last_read_at?: string
+  created_at?: string
+  read_count?: number
 }

@@ -40,7 +40,7 @@
     .userQuestion {
       align-self: flex-end;
       max-width: 59.6%;
-      background: #5381f3;
+      background: var(--primary-color);
       color: #ffffff;
       padding: 10px 16px;
       border-radius: 16px;
@@ -90,6 +90,57 @@
       :global(.markdown-body code:not(pre code)) {
         padding: 0.15em 0.4em;
         border-radius: 6px;
+      }
+    }
+
+    // 暗黑模式下 bytemd markdown 元素颜色适配
+    :global([data-theme="dark"]) & {
+      :global(.markdown-body pre) {
+        background-color: #1E293B;
+        color: #e2e8f0;
+      }
+
+      :global(.markdown-body pre code) {
+        color: #e2e8f0;
+      }
+
+      :global(.markdown-body code:not(pre code)) {
+        background-color: #1E293B;
+        color: #e2e8f0;
+      }
+
+      :global(.markdown-body table) {
+        background-color: transparent;
+      }
+
+      :global(.markdown-body table tr) {
+        background-color: transparent;
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      :global(.markdown-body table tr:nth-child(2n)) {
+        background-color: rgba(255, 255, 255, 0.06);
+      }
+
+      :global(.markdown-body table th) {
+        background-color: #1E293B;
+        color: #f5f5f7;
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      :global(.markdown-body table td) {
+        color: #f5f5f7;
+        border-color: rgba(255, 255, 255, 0.12);
+        background-color: transparent;
+      }
+
+      :global(.markdown-body blockquote) {
+        border-left-color: rgba(255, 255, 255, 0.2);
+        color: #c8cdd3;
+      }
+
+      :global(.markdown-body hr) {
+        background-color: rgba(255, 255, 255, 0.1);
       }
     }
 
@@ -160,7 +211,7 @@
       .streamingCursorMixin() {
         content: '▋';
         display: inline;
-        color: #5381f3;
+        color: var(--primary-color);
         font-size: 18px;
         font-weight: 500;
         line-height: 1;
@@ -216,7 +267,7 @@
     .cursorInline {
       display: inline-block;
       margin-left: 2px;
-      color: #5381f3;
+      color: var(--primary-color);
       font-size: 18px;
       line-height: 1;
       font-weight: 600;
@@ -291,7 +342,7 @@
       border: none;
       outline: none;
       resize: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-color);
       background-color: var(--bg-color);
       font-family: inherit; // 继承页面主体字体
@@ -329,7 +380,7 @@
 
         &.active {
           background-color: #edf3fe;
-          color: #3964fe;
+          color: var(--primary-color);
           border: 1px solid #b7c8fe;
         }
       }
@@ -343,7 +394,7 @@
         transition: background 0.2s ease 0s;
 
         &:hover {
-          background-color: #f5f5f7;
+          background-color: var(--chat-model-hover);
         }
       }
 
@@ -356,7 +407,7 @@
         align-items: center;
         width: 35px;
         height: 35px;
-        background: #5381f3;
+        background: var(--primary-color);
         border-radius: 50%;
         font-size: 20px;
         color: #fff;
@@ -364,8 +415,15 @@
 
         &.inputActive {
           color: #fff;
-          background: #b0c1ff;
+          background: #a6bfd3;
           cursor: not-allowed; // 显示禁止光标
+        }
+
+        &.stopActive {
+          color: #fff;
+          background: var(--primary-color);
+          font-size: 13px;
+          cursor: pointer;
         }
       }
     }

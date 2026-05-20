@@ -1,6 +1,6 @@
 import { ConfigProvider, Pagination, Skeleton } from 'antd';
 import styles from './index.module.less';
-import { CommentOutlined, HeartFilled, HeartOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
+import { TagOutlined } from '@ant-design/icons';
 import { formatDateTime } from '@/utils/formatDateTime';
 import zhCN from 'antd/lib/locale/zh_CN';
 
@@ -13,21 +13,22 @@ interface ArticleListProps {
     pageSize: number;
     total: number;
   };
+  searchValue: string;
+  title: string,
+  subTitle: string,
   isEmpty: boolean;
   handleDetail: (id: number) => void;
-  handleLike: (id: number, isLiked: boolean) => void;
-  handleCollection: (id: number, isCollected: boolean) => void;
-  handlePageSize: (page: number, pageSize: number, activeTab: string) => void;
+  handlePageSize: (page: number, pageSize: number, activeTab: string, searchValue?: string) => void;
 }
 
 
-const ArticleList = ({ content, loading, activeTab, pageParams, isEmpty, handleDetail, handleLike, handleCollection, handlePageSize }: ArticleListProps) => {
+const ArticleList = ({ content, loading, activeTab, pageParams, searchValue, title, subTitle, isEmpty, handleDetail, handlePageSize }: ArticleListProps) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div className={styles.middleHeader}>
-        <div className={styles.subTitle}>精选内容</div>
+        <div className={styles.subTitle}>{title}</div>
         <div style={{ fontSize: '13px', color: '#8e9aa7' }}>/</div>
-        <div style={{ fontSize: '13px', color: '#8e9aa7' }}>从公共质量池中挑出的高质量内容</div>
+        <div style={{ fontSize: '13px', color: '#8e9aa7' }}>{subTitle}</div>
       </div>
       <div style={{ borderBottom: '1px solid #b4b4bd80' }}></div>
       {content.length !== 0 &&
@@ -41,7 +42,7 @@ const ArticleList = ({ content, loading, activeTab, pageParams, isEmpty, handleD
                       <div onClick={() => handleDetail(item.id!)}>
                         <div className={styles.cardTop}>
                           {item.cover ?
-                            <div><img src={item.cover} alt="封面" className={styles.cardCover} /></div>
+                            <div><img src={item.cover} loading="lazy" decoding="async" alt="封面" className={styles.cardCover} /></div>
                             :
                             <div><img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} /></div>
                           }
@@ -56,15 +57,13 @@ const ArticleList = ({ content, loading, activeTab, pageParams, isEmpty, handleD
                         </div>
                       </div>
                       <div className={styles.cardBottom}>
-                        <div className={`${styles.actionItem} ${item.isLiked ? styles.active : ''}`} onClick={() => handleLike(item.id!, item.isLiked)}>
-                          {item.isLiked ? <HeartFilled /> : <HeartOutlined />}
-                          <span>{item.likes}</span>
-                        </div>
-                        <div className={`${styles.actionItem} ${item.isCollected ? styles.active : ''}`} onClick={() => handleCollection(item.id!, item.isCollected)}>
-                          {item.isCollected ? <StarFilled /> : <StarOutlined />}
-                          <span>{item.collection}</span>
-                        </div>
-                        <div className={styles.actionItem}> <CommentOutlined /> {item.comments}</div>
+                        {item.keywords && item.keywords.length > 0 ? (
+                          item.keywords.map((kw: string) => (
+                            <span key={kw} className={styles.keywordTag}>
+                              <TagOutlined style={{ fontSize: '11px' }} /> {kw}
+                            </span>
+                          ))
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -75,7 +74,7 @@ const ArticleList = ({ content, loading, activeTab, pageParams, isEmpty, handleD
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles.pagination}>
               <ConfigProvider locale={zhCN}>
-                <Pagination onChange={(page, pageSize) => handlePageSize(page, pageSize, activeTab)} current={pageParams.pageNum} pageSize={pageParams.pageSize} total={pageParams.total} />
+                <Pagination onChange={(page, pageSize) => handlePageSize(page, pageSize, activeTab, searchValue)} current={pageParams.pageNum} pageSize={pageParams.pageSize} total={pageParams.total} />
               </ConfigProvider>
             </div>
           </div>

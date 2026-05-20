@@ -1,10 +1,10 @@
-# 知途 (Zhitu)
+# knowvia (Zhitu)
 
 ## 项目概述
 
-知途是一个全栈 Web 应用程序，采用前后端分离架构。
+knowvia是一个全栈 Web 应用程序，采用前后端分离架构。
 
-- **项目名称**: 知途 (Zhitu)
+- **项目名称**: knowvia
 - **架构**: 前后端分离
 - **后端**: Node.js + Express + TypeScript + MySQL
 - **前端**: React + TypeScript + Vite + Ant Design + Redux Toolkit
@@ -12,7 +12,7 @@
 ## 项目结构
 
 ```
-知途/
+knowvia/
 ├── backend/          # 后端服务
 │   ├── src/          # 源代码
 │   │   ├── controllers/  # 控制器层 (业务逻辑)

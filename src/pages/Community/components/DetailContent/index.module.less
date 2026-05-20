@@ -1,6 +1,5 @@
 .wrapper {
   background-color: var(--bg-color);
-  background-image: url("/imgs/detail.png");
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -120,70 +119,6 @@
     margin-top: 20px;
     height: 1px;
     background-color: var(--border-color);
-  }
-
-  .commentsPlaceholder {
-
-    // 发表评论条框
-    .postComments {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      gap: 10px;
-
-      // 作者头像
-      .authorAvatar {
-
-        .avatar {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-        }
-      }
-
-      // 留言输入框
-      .inputMulti {
-
-        .inputComments {
-          width: 650px;
-          border: none;
-          outline: none;
-          box-shadow: none;
-          background-color: var(--bg-secondary);
-          color: var(--text-color);
-          padding: 15px 10px;
-          font-size: 16px;
-          border-radius: 5px;
-        }
-      }
-
-      .commentsBtn {
-        width: 40px;
-        border: 1px solid gray;
-        border-radius: 20px;
-        background-color: var(--bg-color);
-        padding: 5px 10px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.3s ease 0s;
-      }
-    }
-
-    .emptyCard {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 60px;
-      background-color: var(--bg-secondary);
-      border-radius: 16px;
-    }
-
-    .emptyComments {
-      text-align: center;
-      color: var(--text-secondary);
-      font-style: italic;
-    }
   }
 }
 
@@ -324,12 +259,15 @@
     margin: 2px 4px 8px;
   }
 
+  // 左侧目录自己滚动，正文滚动时会自动把当前高亮项带到可视区域。
   .tocbotContent {
+    display: block;
     height: calc(100vh - 360px);
+    overflow-x: hidden;
     overflow-y: auto;
-    padding: 0 4px 4px 2px;
+    padding: 0 6px 4px 2px;
     scrollbar-width: thin;
-    scrollbar-color: var(--border-color) transparent;
+    scrollbar-color: var(--border-color);
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -340,56 +278,70 @@
       background-color: var(--border-color);
     }
 
-    :global(.toc-list) {
-      margin: 0;
-      padding-left: 0;
-      list-style: none;
-    }
-
-    :global(.toc-list .toc-list) {
-      margin-top: 4px;
-      padding-left: 12px;
-      border-left: 1px solid var(--border-color);
-    }
-
-    :global(.toc-list-item) {
-      margin: 2px 0;
-    }
-
-    :global(.toc-link) {
-      display: block;
-      border-radius: 8px;
-      padding: 6px 8px;
-      font-size: 15px;
-      line-height: 1.45;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    :global(.toc-link:hover) {
-      color: var(--text-color);
-      background-color: var(--bg-secondary);
-    }
-
-    :global(.toc-link.node-name--H1) {
-      font-weight: 600;
-      color: var(--text-color);
-    }
-
-    :global(.toc-link.node-name--H3) {
-      font-size: 12px;
-      opacity: 0.92;
-    }
-
-    :global(.toc-link.is-active-link) {
-      color: var(--primary-color);
-      background-color: rgba(57, 110, 255, 0.1);
-    }
   }
+}
+
+// 目录项统一一行显示，过长用省略号，保证 hover 和 active 的宽度一致。
+.tocLink {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  appearance: none;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: normal;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--text-color);
+    background-color: var(--bg-secondary);
+  }
+}
+
+.tocLevel1 {
+  width: 100%;
+  padding: 7px 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.tocLevel2 {
+  width: 100%;
+  padding: 7px 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.tocLevel3 {
+  width: calc(100% - 18px);
+  padding: 6px 8px 6px 30px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #68707d;
+}
+
+// 高亮色跟随全局主题色。
+.tocActive {
+  color: var(--primary-color) !important;
+  background-color: rgba(57, 110, 255, 0.1);
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
 }
 
 @media (max-width: 1360px) {
@@ -477,7 +429,7 @@
     overflow-y: auto;
     padding: 0 4px 4px 2px;
     scrollbar-width: thin;
-    scrollbar-color: var(--border-color) transparent;
+    scrollbar-color: var(--border-color);
 
 
     &::-webkit-scrollbar {

@@ -1,0 +1,79 @@
+.header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-color);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--primary-color, #1677ff);
+    color: var(--primary-color, #1677ff);
+  }
+}
+
+.titleInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+  width: 200px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+
+  &:hover, &:focus {
+    background: rgba(0, 0, 0, 0.05);
+    :global(.dark) & { background: rgba(255, 255, 255, 0.08); }
+  }
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exportBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: var(--primary-color, #1677ff);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.85; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

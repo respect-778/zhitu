@@ -3,6 +3,15 @@ import { delStore, getStore } from "@/utils/store"
 import { message } from "antd"
 import { refreshAccessTokenByFetch } from "./token"
 
+type ChatSessionKey = string | number
+
+const buildSessionPayload = (session: ChatSessionKey | null) => {
+  if (session === null) return { session_id: null }
+  return typeof session === 'string'
+    ? { session_uuid: session }
+    : { session_id: session }
+}
+
 // // 调用 AI 大模型（非流式，兼容旧接口）
 // export const callChatAPI = (mode: number, userMessage: string) => {
 //   return httpInstance({
@@ -20,7 +29,7 @@ import { refreshAccessTokenByFetch } from "./token"
 export const callChatStreamAPI = async (
   mode: number,
   userMessage: string,
-  session_id: number | null,
+  session: ChatSessionKey | null,
   onMessage: (content: string) => void,
   onSearching?: (query: string) => void, // 搜索状态
   onSources?: (sources: Array<{ title: string, url: string }>) => void, // 搜索来源
@@ -34,7 +43,7 @@ export const callChatStreamAPI = async (
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${getStore('token')}` // 添加 access token
     },
-    body: JSON.stringify({ mode, userMessage, session_id }),
+    body: JSON.stringify({ mode, userMessage, ...buildSessionPayload(session) }),
     signal: signal // 用于取消请求
   })
 
@@ -42,7 +51,7 @@ export const callChatStreamAPI = async (
   if (response.status === 401 && !_retried) { // 状态为 401 并且是第一次调用
     try {
       await refreshAccessTokenByFetch() // 设置最新 token
-      return callChatStreamAPI(mode, userMessage, session_id, onMessage, onSearching, onSources, onError, true) // 重新调用原请求
+      return callChatStreamAPI(mode, userMessage, session, onMessage, onSearching, onSources, onError, true, signal) // 重新调用原请求
     } catch (error) {
       // 双 token 都失效时，清理并回登录页
       delStore('token')
@@ -177,6 +186,10 @@ export const callChatStreamAPI = async (
       }
     }
   } catch (error) {
+    // 用户主动 abort 不算错误，静默处理
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return fullContent  // 返回已累积的部分内容
+    }
     console.error('流式读取错误:', error)
     throw error
   } finally {
@@ -187,13 +200,11 @@ export const callChatStreamAPI = async (
 }
 
 // 根据 会话id 查找对应的聊天记录
-export const getChatMessageAPI = (session_id: number) => {
+export const getChatMessageAPI = (session: ChatSessionKey) => {
   return httpInstance({
     url: '/chat/getMessage',
     method: 'get',
-    params: {
-      session_id
-    }
+    params: buildSessionPayload(session)
   })
 }
 
@@ -220,7 +231,7 @@ export const getHistorySessionAPI = (scene_type?: string) => {
 }
 
 // 创建聊天记录
-export const addChatMessageAPI = (data: { session_id: number, role: string, content: string }) => {
+export const addChatMessageAPI = (data: { session_uuid?: string, session_id?: number, role: string, content: string }) => {
   return httpInstance({
     url: '/chat/addMessage',
     method: 'post',
@@ -238,20 +249,20 @@ export const addChatSessionAPI = (data: { user_id: number, session_title: string
 }
 
 // 删除聊天会话
-export const delChatSessionAPI = (session_id: number) => {
+export const delChatSessionAPI = (session: ChatSessionKey) => {
   return httpInstance({
-    url: '/chat/delSession/' + session_id,
+    url: '/chat/delSession/' + session,
     method: 'delete',
   })
 }
 
 // 重命名聊天会话标题
-export const renameChatSessionTitleAPI = (session_id: number, title: string) => {
+export const renameChatSessionTitleAPI = (session: ChatSessionKey, title: string) => {
   return httpInstance({
     url: '/chat/renameTitle',
     method: 'post',
     data: {
-      session_id,
+      ...buildSessionPayload(session),
       title
     }
   })
@@ -275,4 +286,20 @@ export const getAiModelAPI = () => {
     url: '/chat/getAiModel',
     method: 'get'
   })
+}
+
+interface PolishContentResponse {
+  message: string
+  data?: string | {
+    content?: string
+  }
+}
+
+// 简历字段润色：普通 JSON 请求，响应由 httpInstance 统一解包。
+export const polishContentAPI = (content: string, fieldType: string): Promise<PolishContentResponse> => {
+  return httpInstance({
+    url: '/chat/polish',
+    method: 'post',
+    data: { content, fieldType }
+  }) as unknown as Promise<PolishContentResponse>
 }

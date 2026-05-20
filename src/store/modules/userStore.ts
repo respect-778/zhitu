@@ -16,7 +16,7 @@ const initialState: UserState = {
   userId: getStore('userId') || '',
   username: getStore('username') || '',
   token: getStore('token') || '',
-  userInfo: { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
+  userInfo: { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', bio: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
 }
 
 const userStore = createSlice({
@@ -39,9 +39,11 @@ const userStore = createSlice({
       state.userInfo = action.payload
     },
     clearUserInfo(state) {
+      state.userId = ''
       state.token = ''
       state.username = ''
-      state.userInfo = { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
+      state.userInfo = { message: '', data: { id: '', username: '', avatar: '', email: '', mobile: '', gender: 0, birthday: '', degree: '', bio: '', art_count: 0, follow_count: 0, fans_count: 0, like_count: 0, community_count: 0, favorites_count: 0 }, token: '' }
+      delStore('userId')
       delStore('token')
       delStore('username')
       delStore('userInfo')
@@ -54,6 +56,7 @@ const fetchLogin = (formData: IUser) => {
   return async (dispatch: AppDispatch) => {
     const res = await loginAPI(formData)
     dispatch(setToken(res.token)) // 在登录这里存 access token
+    await dispatch(getUserInfo())
   }
 }
 

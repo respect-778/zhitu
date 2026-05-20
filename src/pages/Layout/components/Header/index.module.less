@@ -72,17 +72,17 @@
 
       &:hover {
         background: rgba(0, 0, 0, 0.05);
-        color: #1677ff;
+        color: #5a7296;
       }
 
       :global(.dark) &:hover {
         background: rgba(255, 255, 255, 0.1);
-        color: #1677ff;
+        color: var(--primary-color);
       }
 
       &.active {
-        background: #e6f4ff;
-        color: #1677ff;
+        background: #ECF2FB;
+        color: var(--primary-color);
 
         :global(.dark) & {
           background: #111b26;
@@ -96,6 +96,38 @@
   display: flex;
   align-items: center;
   gap: 20px;
+
+  .github {
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--text-color, #333);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: #5a7296;
+    }
+
+    :global(.dark) &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--primary-color);
+    }
+
+    &.active {
+      background: #ECF2FB;
+      color: var(--primary-color);
+
+      :global(.dark) & {
+        background: #111b26;
+      }
+    }
+  }
 
   .dropdown {
     display: flex;
@@ -124,9 +156,8 @@
     color: var(--text-color);
 
     &:hover {
-      border-color: #1677ff;
-      color: #1677ff;
-      transform: translateY(-1px);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
     }
   }
 

@@ -203,6 +203,7 @@
 
 .moveBtn {
   cursor: col-resize;
+  user-select: none;
 }
 
 .main {
@@ -596,6 +597,13 @@
     color: #fff;
     cursor: pointer;
   }
+
+  &.stopActive {
+    background: #151b28;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+  }
 }
 
 .scrollDownBtn {
@@ -616,7 +624,7 @@
 
 @media (max-width: 1200px) {
   .body {
-    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-columns: 280px 5px minmax(0, 1fr);
   }
 
   .coverCanvas {

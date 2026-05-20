@@ -5,8 +5,8 @@
   }
 
   .subTitle {
-    font-size: 19px;
-    font-weight: 600;
+    font-size: 22px;
+    font-weight: 500;
     color: var(--subTitle-color);
   }
 
@@ -125,32 +125,29 @@
       }
     }
 
-    // 卡片底部（喜欢、评论、收藏）
+    // 卡片底部（关键词标签）
     .cardBottom {
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 10px;
       border-top: 1px solid var(--border-color);
 
-      .actionItem {
-        display: flex;
+      .keywordTag {
+        display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        color: var(--text-secondary);
+        gap: 4px;
+        padding: 2px 10px;
+        font-size: 12px;
+        color: #5b7083;
+        background: #f0f3f5;
+        border-radius: 12px;
         transition: all 0.2s ease;
-        font-size: 14px;
-        padding: 4px 8px;
+        user-select: none;
 
-        &:hover {
-          color: var(--primary-color);
-        }
-
-        &.active {
-          color: #ff4d4f;
-
-          &.active:nth-child(2) {
-            color: #ffc53d;
-          }
+        [data-theme='dark'] & {
+          color: #8899a6;
+          background: #253341;
         }
       }
     }

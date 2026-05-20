@@ -1,6 +1,7 @@
 // chat 会话类型
 export interface IChatSession {
   id?: number // 会话 id
+  uuid: string // uuid
   user_id: number // 用户 id
   session_title: string // 会话标题
   scene_type: string // 场景类型

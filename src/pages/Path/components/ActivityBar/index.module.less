@@ -1,0 +1,55 @@
+.activityBar {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 8px 0;
+  user-select: none;
+}
+
+.topIcons,
+.bottomIcons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  position: relative;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover);
+  }
+
+  &.active {
+    color: var(--text-color);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--primary-color);
+      border-radius: 0 2px 2px 0;
+    }
+  }
+}

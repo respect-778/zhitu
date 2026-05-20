@@ -1,0 +1,45 @@
+.workbench {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.side {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sideDivider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
+  flex-shrink: 0;
+}
+
+.edit {
+  width: 340px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+.preview {
+  flex: 1;
+  overflow-y: auto;
+  background: #e8e8e8;
+
+  :global(.dark) & {
+    background: #111;
+  }
+}

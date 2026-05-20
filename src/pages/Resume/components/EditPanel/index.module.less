@@ -1,0 +1,110 @@
+.panel {
+  padding: 20px 16px;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.field {
+  margin-bottom: 12px;
+  flex: 1;
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted, #888);
+    margin-bottom: 4px;
+  }
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.prefixedField {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.prefixInput {
+  flex-shrink: 0;
+}
+
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--bg-color);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #bbb);
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #ff4d4f;
+  }
+}
+
+.avatarUpload {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px dashed var(--border-color);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--primary-color, #1677ff);
+  }
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  font-size: 11px;
+  color: var(--text-muted, #bbb);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* 字段旁边的 AI 润色入口按钮。 */
+.polishBtn {
+  margin-top: 4px;
+  font-size: 12px;
+  height: auto;
+  color: var(--primary-color);
+}

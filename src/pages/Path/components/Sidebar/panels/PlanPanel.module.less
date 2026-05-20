@@ -1,0 +1,146 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 4px;
+  height: 100%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color);
+    border-radius: 3px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+  padding-bottom: 8px;
+}
+
+.headerIcon {
+  font-size: 14px;
+}
+
+.section {
+  padding: 8px 0;
+}
+
+.planTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 6px;
+}
+
+.progressInfo {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
+}
+
+.weekTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.taskCount {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.taskItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 3px 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.checkbox {
+  accent-color: var(--primary-color);
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.taskDone {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.nextLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.nextTitle {
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.viewBtn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--theme-color-hover);
+  }
+}

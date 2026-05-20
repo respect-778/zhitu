@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { message } from 'antd';
 import SubArticleList from '@/components/subArticleList';
-import type { IArticleItem } from '@/components/subArticleList';
+import type { IArticleItem } from '@/types/community';
 import { getReadingHistoryAPI, deleteHistoryAPI, moveHistoryToFolderAPI } from '@/api/community';
 
 const HistoryContent = () => {

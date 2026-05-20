@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined } from '@ant-design/icons'
+import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons'
 import { Input, Select, DatePicker, message, Modal, Button } from 'antd'
 import styles from './index.module.less'
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
@@ -11,11 +11,12 @@ import Config from '@/pages/Chat/components/Config'
 import type { IProvider } from '@/types/chat'
 import { getAiModelAPI, uploadAiModelAPI } from '@/api/chat'
 import { getStore, setStore } from '@/utils/store'
+import { useNavigate } from 'react-router'
 
 // 标签页列表
 const tabList = [
   { key: '1', tab: '账户与身份', icon: <UserOutlined /> },
-  { key: '2', tab: 'API Key', icon: <KeyOutlined /> }
+  { key: '2', tab: '个人密钥', icon: <KeyOutlined /> }
 ]
 
 // 性别映射
@@ -79,6 +80,8 @@ const InfoRow = ({ icon, label, value }: { icon: React.ReactNode; label: string;
 )
 
 const Setting = ({ className }: { className?: string }) => {
+  const navigate = useNavigate()
+
   const userInfo = useAppSelector(state => state.user.userInfo)
   const dispatch = useAppDispatch()
 
@@ -96,6 +99,7 @@ const Setting = ({ className }: { className?: string }) => {
     gender: userInfo.data.gender,
     birthday: userInfo.data.birthday,
     degree: userInfo.data.degree,
+    bio: userInfo.data.bio || '',
   })
 
   // 图片上传 hook
@@ -110,6 +114,7 @@ const Setting = ({ className }: { className?: string }) => {
       gender: userInfo.data.gender,
       birthday: userInfo.data.birthday,
       degree: userInfo.data.degree,
+      bio: userInfo.data.bio || '',
     })
     setImgUrl('')
     setIsEditing(true)
@@ -130,6 +135,7 @@ const Setting = ({ className }: { className?: string }) => {
     try {
       await updateUserInfoAPI({
         ...form,
+        bio: form.bio,
         ...(imgUrl ? { avatar: imgUrl } : {}),
       })
       await dispatch(getUserInfo())
@@ -194,8 +200,13 @@ const Setting = ({ className }: { className?: string }) => {
     <div className={`${styles.settingContainer} ${className || ''}`}>
       <div className={styles.page}>
         <div className={styles.left}>
+          <div className={styles.backBar}>
+            <button className={styles.backBtn} onClick={() => navigate(-1)}>
+              <LeftOutlined /> 返回
+            </button>
+          </div>
           <div className={styles.title} style={{ fontSize: '16px' }}>
-            <div><SettingOutlined /></div>
+            <div> <SettingOutlined /></div>
             <div>设置</div>
           </div>
           <div className={styles.line}></div>
@@ -211,11 +222,11 @@ const Setting = ({ className }: { className?: string }) => {
           </div>
         </div>
         <div className={styles.right}>
-          <div className={styles.title} style={{ fontSize: '15px', marginBottom: '30px' }}>
-            <div><UserOutlined /></div>
-            <div>账号与身份</div>
-          </div>
           <div className={styles.content}>
+            <div className={styles.title} style={{ fontSize: '15px' }}>
+              <div><UserOutlined /></div>
+              <div>账号与身份</div>
+            </div>
             {/* 账号与身份区域 */}
             <div className={styles.contentContainer}>
               <div className={styles.accountTop}>
@@ -362,10 +373,37 @@ const Setting = ({ className }: { className?: string }) => {
                         : emptyText(userInfo.data.degree)
                     }
                   />
+                  <InfoRow
+                    icon={<FormOutlined />}
+                    label="个性签名"
+                    value={
+                      isEditing
+                        ? <div className={styles.bioWrap}>
+                          <textarea
+                            value={form.bio}
+                            onChange={e => {
+                              if (e.target.value.length <= 100) setForm({ ...form, bio: e.target.value })
+                            }}
+                            placeholder="介绍一下自己吧..."
+                            className={styles.bioTextarea}
+                            maxLength={100}
+                            rows={3}
+                          />
+                          <span className={styles.bioCount}>{form.bio.length}/100</span>
+                        </div>
+                        : <span>{userInfo.data.bio || <span className={styles.emptyText}>这个作者很懒，什么也没留下~</span>}</span>
+                    }
+                  />
                 </div>
               </div>
             </div>
 
+            <div className={styles.line}></div>
+
+            <div className={styles.title} style={{ fontSize: '15px' }}>
+              <div><KeyOutlined /></div>
+              <div>个人密钥</div>
+            </div>
             {/* API Key 区域 */}
             <div className={styles.contentContainer}>
               <div className={styles.keyTop}>
@@ -377,6 +415,8 @@ const Setting = ({ className }: { className?: string }) => {
                 {getStore('aiName') ? <div className={styles.smContent}>当前配置：{getStore('aiName')}</div> : <div className={styles.smContent}>未配置</div>}
               </div>
             </div>
+
+            <div className={styles.line}></div>
           </div>
         </div>
       </div>

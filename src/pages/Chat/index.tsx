@@ -5,16 +5,29 @@ import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import { addChatSessionAPI, delChatSessionAPI, getAiModelAPI, getHistorySessionAPI, renameChatSessionTitleAPI, uploadAiModelAPI } from "@/api/chat";
 import { useAppSelector } from "@/store/hooks";
-import type { IChatSession, IProvider } from "@/types/chat";
+import type { IChatMessage, IChatSession, IProvider } from "@/types/chat";
 import type { MenuProps } from "antd";
 import { isTimeInRange } from "@/utils/isTimeInRange";
 import { Button, Dropdown, message, Modal, Space } from "antd";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import Config from "./components/Config";
 import { getStore, setStore } from "@/utils/store";
+import TextType from "@/components/TextType/TextType";
 
 
 type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
+type ChatStreamState = {
+  isStreaming: boolean
+  content: string
+  isSearching?: boolean
+  searchQuery?: string
+  sources?: Array<{ title: string, url: string }>
+}
+type PendingFirstMessage = {
+  sessionUuid: string
+  content: string
+  mode: number
+}
 
 const Chat: React.FC = () => {
   const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内']
@@ -23,26 +36,29 @@ const Chat: React.FC = () => {
   const [modeFa, setModeFa] = useState(0) // 是否选中思考模型，默认 0 为不选择
   const [searchValueFa, setSearchValueFa] = useState('') // 输入框内容
   const { textareaRef, resize } = useAutoResizeTextarea({ value: searchValueFa, minHeight: 44, maxHeight: 280 }) // textarea 自适应高度 hook
-  const [historyActive, setHistoryActive] = useState(parseInt(id!)) // 是否点击了其中某个历史会话
+  const [historyActive, setHistoryActive] = useState(id ?? '') // 是否点击了其中某个历史会话
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
   const [historySession, setHistorySession] = useState<IChatSession[]>([]) // 历史记录数据
   const userInfo = useAppSelector(state => state.user.userInfo) // 获取用户 id
   const [isModalOpen, setIsModalOpen] = useState(false); // 是否弹出多功能框
-  const [isMulSessionId, setIsMulSessionId] = useState<number | null>(null) // 选中的多功能会话 id
-  const [renameTitleMap, setRenameTitleMap] = useState<Record<number, { isRename: boolean, title: string }>>({}) // 重命名会话标题
+  const [isMulSessionUuid, setIsMulSessionUuid] = useState<string | null>(null) // 选中的多功能会话 uuid
+  const [renameTitleMap, setRenameTitleMap] = useState<Record<string, { isRename: boolean, title: string }>>({}) // 重命名会话标题
   const renameInputRef = useRef<HTMLInputElement>(null)
-  const [isNewChat, setIsNewChat] = useState(false) // 控制子组件，调用提交问题的接口
-  const [streamBySession, setStreamBySession] = useState<Record<number, { isStreaming: boolean, content: string, isSearching: boolean, searchQuery: string, sources: Array<{ title: string, url: string }> }>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
+  const [pendingFirstMessageBySession, setPendingFirstMessageBySession] = useState<Record<string, PendingFirstMessage>>({}) // 按会话保存新会话首条待发送消息
+  const [streamBySession, setStreamBySession] = useState<Record<string, ChatStreamState>>({}) // 流式状态字典，用于区分不同会话之间的流式调用情况
+  const [messagesBySession, setMessagesBySession] = useState<Record<string, IChatMessage[]>>({}) // 按会话保存聊天消息，切换会话时不丢正在生成的内容
+  const abortControllerMapRef = useRef<Record<string, AbortController | undefined>>({}) // 按会话保存中止控制器
   const [isOpenConfig, setIsOpenConfig] = useState(false) // 是否打开 apikey 配置
   const [selectedAI, setSelectedAI] = useState<IProvider>({ name: '', img: '' }) // 选择的 ai 厂商
   const [configuredAI, setConfiguredAI] = useState('') // 当前配置好的 ai 厂商
   const [apiKey, setApiKey] = useState('') // apikey
   const [configLoading, setConfigLoading] = useState(false) // ai 正在配置中
+  const activeHistoryUuid = id ?? historyActive
 
 
   // 开启新对话 （进入界面 -> 没有调用方法）
   const handleNewChat = () => {
-    setHistoryActive(0) // 重置左侧历史栏高亮
+    setHistoryActive('') // 重置左侧历史栏高亮
     setIsInputEmpty(true) // 输入框为空
     handleNewChatComplete()
     navigate('/chat')
@@ -86,9 +102,6 @@ const Chat: React.FC = () => {
     }
   ]
 
-  const currentAi = aiProviders.find(model => model.name === configuredAI)
-  const currentAiImg = currentAi?.img ?? '' // 当前模型的图片
-
   // 关闭配置弹框
   const handleConfigCancel = () => {
     setIsOpenConfig(false)
@@ -123,7 +136,7 @@ const Chat: React.FC = () => {
       message.success("模型配置成功")
       handleConfigCancel()
       getAiModel()
-    } catch (error) {
+    } catch {
       setConfigLoading(false)
       setApiKey('')
       message.error("API密钥错误")
@@ -141,18 +154,18 @@ const Chat: React.FC = () => {
   }
 
   // 点击任意历史会话记录 （进入界面 -> 没有调用方法）
-  const handleClickHistory = (id: number) => {
-    setHistoryActive(id) // 设置选中历史记录高亮
-    navigate(`/chat/${id}`)
+  const handleClickHistory = (uuid: string) => {
+    setHistoryActive(uuid) // 设置选中历史记录高亮
+    navigate(`/chat/${uuid}`)
   }
 
   // 多功能弹窗按钮（数组 -> 函数（该函数直接返回数组！！！）新思路）
-  const multiDropdown = (selectId: number, session_title: string): MenuProps['items'] => [
+  const multiDropdown = (selectUuid: string, session_title: string): MenuProps['items'] => [
     {
       key: '0',
       onClick: async (e) => {
         e.domEvent.stopPropagation()
-        setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: true, title: session_title } }))
+        setRenameTitleMap(pre => ({ ...pre, [selectUuid]: { isRename: true, title: session_title } }))
       },
       label: (
         <div style={{ padding: '3px 2px' }}>
@@ -179,7 +192,7 @@ const Chat: React.FC = () => {
       onClick: (e) => {
         e.domEvent.stopPropagation()
         setIsModalOpen(true)
-        setIsMulSessionId(selectId)
+        setIsMulSessionUuid(selectUuid)
       },
       label: (
         <div>
@@ -191,11 +204,11 @@ const Chat: React.FC = () => {
   ]
 
   // 重命名标题
-  const handleRenameTitle = async (e: React.KeyboardEvent<HTMLInputElement>, selectId: number) => {
+  const handleRenameTitle = async (e: React.KeyboardEvent<HTMLInputElement>, selectUuid: string) => {
     if (e.key === 'Enter') {
       try {
-        await renameChatSessionTitleAPI(selectId, renameTitleMap[selectId].title) // 调用接口重命名
-        setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: false, title: '' } })) // 重置
+        await renameChatSessionTitleAPI(selectUuid, renameTitleMap[selectUuid].title) // 调用接口重命名
+        setRenameTitleMap(pre => ({ ...pre, [selectUuid]: { isRename: false, title: '' } })) // 重置
         getHistoryChatSession() // 获取最新的历史记录框
       } catch (error) {
         console.log(error)
@@ -204,14 +217,14 @@ const Chat: React.FC = () => {
   }
 
   // 当重命名标题失焦
-  const handleTitleBlur = async (selectId: number) => {
-    setRenameTitleMap(pre => ({ ...pre, [selectId]: { isRename: false, title: '' } }))
+  const handleTitleBlur = async (selectUuid: string) => {
+    setRenameTitleMap(pre => ({ ...pre, [selectUuid]: { isRename: false, title: '' } }))
   }
 
   // 删除会话记录 （进入界面 -> 没有调用方法）
   const delChatSession = async () => {
-    if (isMulSessionId == null) return
-    await delChatSessionAPI(isMulSessionId) // 删除被选中的会话记录
+    if (isMulSessionUuid == null) return
+    await delChatSessionAPI(isMulSessionUuid) // 删除被选中的会话记录
     setIsModalOpen(false)
     navigate('/chat') // 删除后回到起始页去
     getHistoryChatSession() // 重新加载一次历史对话框
@@ -232,27 +245,39 @@ const Chat: React.FC = () => {
     setIsInputEmpty(true) // 输入框为空
 
     // 1. 创建聊天会话
-    let sessionId = 0
+    let sessionUuid = ''
     try {
       const user_id = parseInt(userInfo.data.id)
       const sessionRes = await addChatSessionAPI({ user_id, session_title: userMessage }) // 创建聊天会话
-      sessionId = sessionRes.data.session_id
+      sessionUuid = sessionRes.data.session_uuid
     } catch (error) {
       console.log(error)
       return // 如果聊天会话创建失败，就终止
     }
 
-    setHistoryActive(sessionId)
+    if (!sessionUuid) return
 
-    setIsNewChat(true) // 控制子组件调用父组件 -> 设定当前为 新聊天界面
+    setHistoryActive(sessionUuid)
+    setPendingFirstMessageBySession(pre => ({
+      ...pre,
+      [sessionUuid]: { sessionUuid, content: userMessage, mode: modeFa }
+    }))
+    setSearchValueFa('')
 
     // 2. 跳转到会话页面
-    navigate(`/chat/${sessionId}`)
+    navigate(`/chat/${sessionUuid}`)
   }
 
   // 处理重置新对话逻辑
-  const handleNewChatComplete = () => {
-    setIsNewChat(false) // 重置为 不是 新聊天
+  const handleNewChatComplete = (sessionUuid?: string) => {
+    setPendingFirstMessageBySession(pre => {
+      if (!sessionUuid) return {}
+      if (!pre[sessionUuid]) return pre
+
+      const next = { ...pre }
+      delete next[sessionUuid]
+      return next
+    })
     setSearchValueFa('')
   }
 
@@ -286,7 +311,16 @@ const Chat: React.FC = () => {
 
   // 在组件挂载的时候获取一次当前用户配置的 ai 信息
   useEffect(() => {
-    getAiModel()
+    void Promise.resolve().then(getAiModel)
+  }, [])
+
+  // 离开 Chat 页面时，终止还在生成的请求
+  useEffect(() => {
+    const controllerMap = abortControllerMapRef.current
+
+    return () => {
+      Object.values(controllerMap).forEach(controller => controller?.abort())
+    }
   }, [])
 
   // 在组件挂载之后聚焦输入框
@@ -318,7 +352,7 @@ const Chat: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.left}>
         {/* 开启新对话 */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.newChatWrap}>
           <div onClick={handleNewChat} className={styles.newChat}>
             <div><PlusCircleOutlined /></div>
             <div>开启新对话</div>
@@ -327,27 +361,33 @@ const Chat: React.FC = () => {
         {/* 历史记录 */}
         <div className={styles.historyChat}>
           {days.map(day => {
+            const sessions = historySession.filter(item =>
+              item.updated_at && isTimeInRange(item.updated_at, day)
+            )
+
+            if (sessions.length === 0) return null
+
             return (
               <div key={day} className={styles.historyList}>
                 <div className={styles.historyTitle}>{day}</div>
                 <div className={styles.historyCard}>
-                  {historySession.map(item => {
-                    if (isTimeInRange(item.updated_at!, day)) { // 给历史记录按照时间进行分类
-                      return (
-                        <div key={item.id}>
-                          {renameTitleMap[item.id!]?.isRename ?
-                            <input ref={renameInputRef} value={renameTitleMap[item.id!].title} onChange={(e) => setRenameTitleMap(pre => ({ ...pre, [item.id!]: { isRename: true, title: e.target.value } }))} onKeyDown={(e) => handleRenameTitle(e, item.id!)} onBlur={() => handleTitleBlur(item.id!)} className={styles.renameSessionTitle} type="text" />
-                            :
-                            <div onClick={() => handleClickHistory(item.id!)} className={`${styles.historyItem} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>
-                              <div className={`${styles.historySessionTitle} ${historyActive && historyActive == item.id ? styles.historyActive : ''}`}>{item.session_title}</div>
-                              <Dropdown menu={{ items: multiDropdown(item.id!, item.session_title!) }} placement='bottom' trigger={['click']}><div onClick={(e) => e.stopPropagation()} className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
-                            </div>
-                          }
-                        </div>
-                      )
-                    }
-                  })
-                  }
+                  {sessions.map(item => {
+                    const sessionUuid = item.uuid
+                    if (!sessionUuid) return null
+
+                    return (
+                      <div key={sessionUuid}>
+                        {renameTitleMap[sessionUuid]?.isRename ?
+                          <input ref={renameInputRef} className={styles.renameSessionTitle} value={renameTitleMap[sessionUuid].title} onChange={(e) => setRenameTitleMap(pre => ({ ...pre, [sessionUuid]: { isRename: true, title: e.target.value } }))} onKeyDown={(e) => handleRenameTitle(e, sessionUuid)} onBlur={() => handleTitleBlur(sessionUuid)} type="text" />
+                          :
+                          <div onClick={() => handleClickHistory(sessionUuid)} className={`${styles.historyItem} ${activeHistoryUuid === sessionUuid ? styles.historyActive : ''}`}>
+                            <div className={`${styles.historySessionTitle} ${activeHistoryUuid === sessionUuid ? styles.historyActive : ''}`}>{item.session_title}</div>
+                            <Dropdown menu={{ items: multiDropdown(sessionUuid, item.session_title!) }} placement='bottom' trigger={['click']}><div onClick={(e) => e.stopPropagation()} className={styles.historyBtn}><EllipsisOutlined /></div></Dropdown>
+                          </div>
+                        }
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )
@@ -358,8 +398,16 @@ const Chat: React.FC = () => {
         <div className={styles.right}>
           {/* ai 先导语 */}
           <div className={styles.introductory} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {currentAiImg ? <img style={{ height: '25px', }} src={currentAiImg} alt="ai" /> : ''}
-            <div>今天有什么可以帮到你？</div>
+            <TextType
+              text={["今天有什么可以帮到你？", "有什么可以帮忙的？"]}
+              typingSpeed={75}
+              pauseDuration={1500}
+              showCursor
+              cursorCharacter="_"
+              deletingSpeed={50}
+              cursorBlinkDuration={0.5}
+            />
+            {/* <div>今天有什么可以帮到你？</div> */}
           </div>
           {/* ai 聊天输入框 */}
           <div className={styles.chatBox} onClick={() => textareaRef.current?.focus()}>
@@ -380,7 +428,17 @@ const Chat: React.FC = () => {
         </div>
         :
         /* 通过 context 属性传递数据 */
-        <Outlet context={{ historySession, searchValueFa, modeFa, isNewChat, handleNewChatComplete, getHistoryChatSession, streamBySession, setStreamBySession }} />
+        <Outlet context={{
+          historySession,
+          pendingFirstMessageBySession,
+          handleNewChatComplete,
+          getHistoryChatSession,
+          streamBySession,
+          setStreamBySession,
+          messagesBySession,
+          setMessagesBySession,
+          abortControllerMapRef
+        }} />
       }
 
       <Modal

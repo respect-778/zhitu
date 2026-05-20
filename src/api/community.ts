@@ -15,6 +15,15 @@ export const getCommunityListAPI = () => {
   })
 }
 
+// 精选周刊接口
+export const getWeeklyDigestAPI = (params: { pageNum: number; pageSize: number; }) => {
+  return httpInstance({
+    url: "/community/weekly",
+    method: "get",
+    params
+  })
+}
+
 // 热门接口
 export const getHotCommunityListAPI = (params: { keyword?: string; pageNum: number; pageSize: number; }) => {
   return httpInstance({
@@ -104,6 +113,14 @@ export const followCommunityAPI = (authorId: number, action: 'follow' | 'unfollo
   })
 }
 
+// 获取关注列表
+export const getFollowingListAPI = () => {
+  return httpInstance({
+    url: '/community/following',
+    method: 'get'
+  })
+}
+
 // 浏览量接口
 export const pageviewsCommunityAPI = (articleId: number) => {
   return httpInstance({
@@ -135,6 +152,18 @@ export const articleAbstractAPI = (title: string, content: string) => {
   })
 }
 
+// ai 提取文章关键词接口
+export const articleKeywordsAPI = (title: string, content: string) => {
+  return httpInstance({
+    url: '/community/keywords',
+    method: 'post',
+    data: {
+      title,
+      content
+    }
+  })
+}
+
 // 获取早报的接口
 export const getEarlyReportAPI = () => {
   return httpInstance({
@@ -144,47 +173,59 @@ export const getEarlyReportAPI = () => {
 }
 
 // 文件夹相关 
-
+// 创建文件夹
 export const createFolderAPI = (data: { name: string; color: string; type: 'collection' | 'history' }) => {
   return httpInstance({ url: '/community/folder', method: 'post', data })
 }
 
+// 获取文件夹内容
 export const getFoldersAPI = (type: 'collection' | 'history') => {
   return httpInstance({ url: '/community/folders', method: 'get', params: { type } })
 }
 
+// 删除文件夹
 export const deleteFolderAPI = (id: number) => {
   return httpInstance({ url: `/community/folder/${id}`, method: 'delete' })
 }
 
+// 更改文件夹名字
 export const renameFolderAPI = (id: number, name: string) => {
   return httpInstance({ url: `/community/folder/${id}`, method: 'put', data: { name } })
 }
 
 // 阅读历史相关
-
+// 获取阅读历史
 export const getReadingHistoryAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: string; date?: string }) => {
   return httpInstance({ url: '/community/history', method: 'get', params })
 }
 
+// 删除阅读历史
 export const deleteHistoryAPI = (id: number) => {
   return httpInstance({ url: `/community/history/${id}`, method: 'delete' })
 }
 
+// 移动阅读历史到文件夹
 export const moveHistoryToFolderAPI = (id: number, folder_id: number | null) => {
   return httpInstance({ url: `/community/history/${id}/folder`, method: 'put', data: { folder_id } })
 }
 
 // 收藏列表相关
-
+// 获取收藏列表
 export const getCollectionListAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: string; date?: string }) => {
   return httpInstance({ url: '/community/favorites', method: 'get', params })
 }
 
+// 删除收藏
 export const deleteCollectionAPI = (id: number) => {
   return httpInstance({ url: `/community/favorites/${id}`, method: 'delete' })
 }
 
+// 移动收藏到文件夹
 export const moveCollectionToFolderAPI = (id: number, folder_id: number | null) => {
   return httpInstance({ url: `/community/favorites/${id}/folder`, method: 'put', data: { folder_id } })
+}
+
+// 获取指定用户的文章列表
+export const getUserPostsAPI = (userId: number, params: { sort: 'hot' | 'new'; pageNum: number; pageSize: number }) => {
+  return httpInstance({ url: `/community/user/${userId}/posts`, method: 'get', params })
 }

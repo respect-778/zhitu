@@ -1,0 +1,182 @@
+/* ========== 外层包裹 ========== */
+.wrapper {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0px 0px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--subTitle-color);
+}
+
+.headerDivider {
+  font-size: 13px;
+  color: #8e9aa7;
+}
+
+.headerDesc {
+  font-size: 13px;
+  color: #8e9aa7;
+}
+
+/* ========== 内容区 ========== */
+.content {
+  padding: 24px 0;
+}
+
+/* ========== 用户卡片网格 ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  transition: border-color 0.25s ease 0s;
+  transition: box-shadow 0.25s ease 0s;
+
+  &:hover {
+    border-color: #d0d5dd;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.cardMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+  margin-bottom: 12px;
+  transition: border-color 0.2s ease;
+
+  .card:hover & {
+    border-color: #3964fe;
+  }
+}
+
+.username {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.statIcon {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ========== 已关注按钮 ========== */
+.unfollowBtn {
+  width: 100%;
+  padding: 6px 0;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--theme-color-hover);
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #e74c3c;
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.06);
+  }
+}
+
+/* ========== 空状态 ========== */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  color: #d0d5dd;
+  margin-bottom: 16px;
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 6px;
+}
+
+.emptyDesc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ========== 骨架屏 ========== */
+.loadingWrap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.skeletonCard {
+  height: 180px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--theme-color-hover) 25%, var(--border-color) 50%, var(--theme-color-hover) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
