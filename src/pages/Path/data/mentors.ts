@@ -1,4 +1,4 @@
-import type { MentorPersona } from '@/types/growth'
+import type { MentorPersona } from '@/types/path'
 
 export const MENTORS: MentorPersona[] = [
   {

@@ -7,20 +7,22 @@ import {
   SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  ShareAltOutlined,
 } from '@ant-design/icons'
-import type { SidebarPanel } from '@/types/growth'
+import type { SidebarPanel } from '@/types/path'
 import styles from './index.module.less'
 
 
 interface Props {
-  activePanel: SidebarPanel      // 当前激活的侧栏面板
-  isClose: boolean               // 侧栏是否已收起（控制图标方向）
-  onPanelChange: (panel: SidebarPanel) => void  // 切换侧栏面板
-  onToggleSidebar: () => void    // 展开/收起侧栏
+  activePanel: SidebarPanel
+  isClose: boolean
+  showingGraph: boolean
+  onPanelChange: (panel: SidebarPanel) => void
+  onToggleSidebar: () => void
+  onShowGraph: () => void
 }
 
-/** 最左侧图标栏 — 顶部：侧栏开关 + 4个面板切换；底部：设置 */
-const ActivityBar: React.FC<Props> = ({ activePanel, isClose, onPanelChange, onToggleSidebar }) => {
+const ActivityBar: React.FC<Props> = ({ activePanel, isClose, showingGraph, onPanelChange, onToggleSidebar, onShowGraph }) => {
   const panels: { key: SidebarPanel; icon: React.ReactNode; title: string }[] = [
     { key: 'close', icon: isClose ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />, title: isClose ? '展开侧栏' : '收起侧栏' },
     { key: 'files', icon: <FileOutlined />, title: '文件浏览器' },
@@ -42,6 +44,13 @@ const ActivityBar: React.FC<Props> = ({ activePanel, isClose, onPanelChange, onT
             {p.icon}
           </button>
         ))}
+        <button
+          className={`${styles.iconBtn} ${showingGraph ? styles.active : ''}`}
+          onClick={onShowGraph}
+          title="关系图谱"
+        >
+          <ShareAltOutlined />
+        </button>
       </div>
       <div className={styles.bottomIcons}>
         <button className={styles.iconBtn} title="设置">

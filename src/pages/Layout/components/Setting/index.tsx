@@ -40,31 +40,38 @@ const degreeOptions = [
 const aiProviders: IProvider[] = [
   {
     name: 'Anthropic',
-    img: '/imgs/anthropic.png'
+    img: '/imgs/anthropic.png',
+    docUrl: 'https://platform.claude.com/docs/en/manage-claude/authentication'
   },
   {
     name: 'OpenAI',
-    img: '/imgs/openai.png'
+    img: '/imgs/openai.png',
+    docUrl: 'https://platform.openai.com/docs/quickstart'
   },
   {
     name: 'Google',
-    img: '/imgs/gemini-color.png'
+    img: '/imgs/gemini-color.png',
+    docUrl: 'https://ai.google.dev/gemini-api/docs/api-key'
   },
   {
     name: 'Moonshot',
-    img: '/imgs/moonshot.png'
+    img: '/imgs/moonshot.png',
+    docUrl: 'https://platform.moonshot.cn/docs/api/chat'
   },
   {
     name: 'Deepseek',
-    img: '/imgs/deepseek-color.png'
+    img: '/imgs/deepseek-color.png',
+    docUrl: 'https://api-docs.deepseek.com/'
   },
   {
     name: 'Qwen',
-    img: '/imgs/qwen-color.png'
+    img: '/imgs/qwen-color.png',
+    docUrl: 'https://help.aliyun.com/zh/model-studio/get-api-key'
   },
   {
     name: 'GLM',
-    img: '/imgs/zhipu-color.png'
+    img: '/imgs/zhipu-color.png',
+    docUrl: 'https://docs.bigmodel.cn/cn/guide/start/quick-start'
   }
 ]
 

@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router';
 import { message } from 'antd';
 import SubArticleList from '@/components/subArticleList';
 import type { IArticleItem } from '@/types/community';
 import { getReadingHistoryAPI, deleteHistoryAPI, moveHistoryToFolderAPI } from '@/api/community';
 
-const HistoryContent = () => {
-  const navigate = useNavigate();
+// 通知父组件切空状态按钮
+interface HistoryContentProps {
+  onExploreClick?: () => void;
+}
+
+const HistoryContent = ({ onExploreClick }: HistoryContentProps) => {
   const [list, setList] = useState<IArticleItem[]>([]);
   const [count, setCount] = useState(0);
   const [activeFolderId, setActiveFolderId] = useState<number | null>(null);
@@ -72,11 +75,12 @@ const HistoryContent = () => {
         searchPlaceholder="搜索浏览过的文章..."
         emptyTitle="还没有浏览记录"
         emptyDesc="去社区逛逛，发现感兴趣的内容"
-        onEmptyBtnClick={() => navigate('/community')}
+        onEmptyBtnClick={onExploreClick}
         list={list}
         onSearch={setKeyword}
         onFolderChange={setActiveFolderId}
         onSortChange={setSort}
+        onReset={setDate}
         onDateChange={setDate}
         onContinueRead={handleContinueRead}
         onMoveToFolder={handleMoveToFolder}

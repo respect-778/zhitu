@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router';
 import { message } from 'antd';
 import SubArticleList from '@/components/subArticleList';
 import type { IArticleItem } from '@/types/community';
 import { getCollectionListAPI, deleteCollectionAPI, moveCollectionToFolderAPI } from '@/api/community';
 
-const MyCollection = () => {
-  const navigate = useNavigate();
+// 通知父组件切空状态按钮
+interface MyCollectionProps {
+  onExploreClick?: () => void;
+}
+
+const MyCollection = ({ onExploreClick }: MyCollectionProps) => {
   const [list, setList] = useState<IArticleItem[]>([]);
   const [count, setCount] = useState(0);
   const [activeFolderId, setActiveFolderId] = useState<number | null>(null);
@@ -72,11 +75,12 @@ const MyCollection = () => {
         searchPlaceholder="搜索收藏的文章..."
         emptyTitle="还没有收藏任何内容"
         emptyDesc="在阅读文章时点击收藏按钮，好内容不会错过"
-        onEmptyBtnClick={() => navigate('/community')}
+        onEmptyBtnClick={onExploreClick}
         list={list}
         onSearch={setKeyword}
         onFolderChange={setActiveFolderId}
         onSortChange={setSort}
+        onReset={setDate}
         onDateChange={setDate}
         onContinueRead={handleContinueRead}
         onMoveToFolder={handleMoveToFolder}

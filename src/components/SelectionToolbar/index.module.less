@@ -1,0 +1,95 @@
+.toolbar {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  animation: toolbarFadeIn 0.15s ease-out;
+}
+
+@keyframes toolbarFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.colors {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.colorDot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  padding: 0;
+  outline: none;
+
+  &:hover {
+    transform: scale(1.2);
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-color, #e5e5e5);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.citeBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--theme-color-hover, rgba(0, 0, 0, 0.04));
+  }
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  padding: 0;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover, rgba(0, 0, 0, 0.04));
+  }
+}

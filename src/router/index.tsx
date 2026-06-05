@@ -32,7 +32,6 @@ import Setting from "@/pages/Layout/components/Setting";
 
 
 
-
 // 创建浏览器路由
 const router = createBrowserRouter([
   // 一级路由

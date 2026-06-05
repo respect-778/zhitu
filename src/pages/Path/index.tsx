@@ -1,25 +1,26 @@
 import type React from 'react'
 import { useEffect, useMemo, useCallback, useRef, useState } from 'react'
-import { message, ConfigProvider } from 'antd'
+import { message } from 'antd'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
-  loadGrowthWorkspace,
+  loadPathWorkspace,
   createFile, deleteFile, renameFile, updateFileContent,
+  moveFile, batchDeleteFiles, batchCreateFiles,
   openTab, closeTab, setActiveTab,
   toggleFolder, collapseAllFolders,
   setSidebarPanel, toggleSidebar, sortFiles,
-} from '@/store/modules/growthStore'
-import type { SidebarPanel } from '@/types/growth'
+  flushSync,
+} from '@/store/modules/pathStore'
+import type { SidebarPanel } from '@/types/path'
 import ActivityBar from './components/ActivityBar'
 import Sidebar from './components/Sidebar'
 import TabBar from './components/TabBar'
 import EditorArea from './components/EditorArea'
 import StatusBar from './components/StatusBar'
 import { getMentor } from './data/mentors'
+import QuickSwitcher from './components/QuickSwitcher'
 import styles from './index.module.less'
 
-// Ant Design 主题覆盖，统一使用项目主色
-const THEME_TOKEN = { colorPrimary: '#2e5995' }
 
 /** 成长规划主页面 — 仿 Obsidian 三栏布局：ActivityBar | Sidebar | MainArea */
 const Path: React.FC = () => {
@@ -29,19 +30,20 @@ const Path: React.FC = () => {
     files, openTabs, activeTabId,
     sidebarPanel, sidebarVisible, expandedFolderIds,
     mentorId,
-  } = useAppSelector(state => state.growth)
+  } = useAppSelector(state => state.path)
 
   // 标签页前进/后退导航历史
   const [navHistory, setNavHistory] = useState<string[]>([])
   const [navIndex, setNavIndex] = useState(-1)
-  // 侧栏收起状态（控制 ActivityBar 上的图标方向）
   const [isClose, setIsClose] = useState(false)
-  // 标记本次 activeTabId 变化是导航按钮触发的，避免重复推入历史
+  const [graphOpen, setGraphOpen] = useState(false)
+  const [graphActive, setGraphActive] = useState(false)
+  const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false)
   const isNavAction = useRef(false)
 
   // 初始化：加载用户工作区数据
   useEffect(() => {
-    if (userId) dispatch(loadGrowthWorkspace(userId))
+    if (userId) dispatch(loadPathWorkspace(userId))
   }, [dispatch, userId])
 
   // 监听 activeTabId 变化，维护导航历史栈
@@ -128,6 +130,16 @@ const Path: React.FC = () => {
     dispatch(updateFileContent({ id, content }))
   }, [dispatch])
 
+  // 重命名文件（含同级重名校验），返回是否成功
+  const handleRenameFile = useCallback((id: string, name: string): boolean => {
+    const target = files.find(f => f.id === id)
+    if (!target) return false
+    const duplicate = files.some(f => f.id !== id && f.parentId === target.parentId && f.name === name)
+    if (duplicate) return false
+    dispatch(renameFile({ id, name }))
+    return true
+  }, [files, dispatch])
+
   // 导入多个文件（md/txt/markdown）
   const handleImportFiles = useCallback(async (fileList: FileList) => {
     for (const f of Array.from(fileList)) {
@@ -174,57 +186,105 @@ const Path: React.FC = () => {
     message.success(`已按${by === 'name' ? '名称' : by === 'created' ? '创建时间' : '修改时间'}排序`)
   }, [dispatch])
 
+  // 全局快捷键：Alt+N 新建笔记，Ctrl+O 打开快速切换器
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.key === 'n') {
+        e.preventDefault()
+        handleCreateFile(null, 'file')
+      } else if (e.ctrlKey && e.key === 'o') {
+        e.preventDefault()
+        setQuickSwitcherOpen(true)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleCreateFile])
+
+  useEffect(() => {
+    // 定义 beforeunload 的回调
+    const handler = () => flushSync()
+
+    // 注册监听：：浏览器刷新、关标签页、输入新 URL 时触发
+    window.addEventListener('beforeunload', handler)
+
+    return () => {
+      // 浏览器原生事件，SPA 路由跳转不会触发
+      window.removeEventListener('beforeunload', handler)
+
+      flushSync() // SPA 路由跳转时处理，原生事件是不会处理的
+    }
+  }, [])
+
   return (
-    <ConfigProvider theme={{ token: THEME_TOKEN }}>
-      <div className={styles.container}>
-        <div className={styles.workspace}>
-          <ActivityBar activePanel={sidebarPanel} isClose={isClose} onPanelChange={handlePanelChange} onToggleSidebar={handleToggleSidebar} />
+    <div className={styles.container}>
+      <div className={styles.workspace}>
+        <ActivityBar activePanel={sidebarPanel} isClose={isClose} showingGraph={graphOpen} onPanelChange={handlePanelChange} onToggleSidebar={handleToggleSidebar} onShowGraph={() => { if (graphOpen) { setGraphOpen(false); setGraphActive(false) } else { setGraphOpen(true); setGraphActive(true) } }} />
 
-          <div className={`${styles.sidebarWrap} ${!sidebarVisible ? styles.sidebarCollapsed : ''}`}>
-            <Sidebar
-              files={files}
-              expandedIds={expandedFolderIds}
-              activeFileId={activeTabId}
-              activePanel={sidebarPanel}
-              mentorId={mentorId}
-              onToggleFolder={(id) => dispatch(toggleFolder(id))}
-              onSelectFile={handleSelectFile}
-              onCreateFile={handleCreateFile}
-              onDeleteFile={(id) => dispatch(deleteFile(id))}
-              onRenameFile={(id, name) => dispatch(renameFile({ id, name }))}
-              onImportFiles={handleImportFiles}
-              onImportFolder={handleImportFolder}
-              onCollapseAll={() => dispatch(collapseAllFolders())}
-              onSort={handleSort}
-            />
-          </div>
-
-          <div className={styles.mainArea}>
-            <TabBar
-              tabs={tabFiles}
-              activeTabId={activeTabId}
-              onSelect={(id) => dispatch(setActiveTab(id))}
-              onClose={(id) => dispatch(closeTab(id))}
-              onNew={() => handleCreateFile(null, 'file')}
-            />
-            <EditorArea
-              file={activeFile}
-              onContentChange={handleContentChange}
-              canGoBack={canGoBack}
-              canGoForward={canGoForward}
-              onNavBack={handleNavBack}
-              onNavForward={handleNavForward}
-            />
-          </div>
+        <div className={`${styles.sidebarWrap} ${!sidebarVisible ? styles.sidebarCollapsed : ''}`}>
+          <Sidebar
+            files={files}
+            expandedIds={expandedFolderIds}
+            activeFileId={activeTabId}
+            activePanel={sidebarPanel}
+            mentorId={mentorId}
+            onToggleFolder={(id) => dispatch(toggleFolder(id))}
+            onSelectFile={handleSelectFile}
+            onCreateFile={handleCreateFile}
+            onDeleteFile={(id) => dispatch(deleteFile(id))}
+            onRenameFile={(id, name) => { handleRenameFile(id, name) }}
+            onMoveFile={(id, newParentId) => dispatch(moveFile({ id, newParentId }))}
+            onBatchDeleteFiles={(ids) => dispatch(batchDeleteFiles(ids))}
+            onBatchCreateFiles={(items) => dispatch(batchCreateFiles(items))}
+            onImportFiles={handleImportFiles}
+            onImportFolder={handleImportFolder}
+            onCollapseAll={() => dispatch(collapseAllFolders())}
+            onSort={handleSort}
+          />
         </div>
 
-        <StatusBar
-          mentorName={mentor?.nameZh}
-          fileCount={fileCount}
-          wordCount={wordCount}
-        />
+        <div className={styles.mainArea}>
+          <TabBar
+            tabs={tabFiles}
+            activeTabId={activeTabId}
+            showGraph={graphOpen}
+            graphActive={graphActive}
+            onSelect={(id) => { setGraphActive(false); dispatch(setActiveTab(id)) }}
+            onClose={(id) => dispatch(closeTab(id))}
+            onCloseGraph={() => { setGraphOpen(false); setGraphActive(false) }}
+            onSelectGraph={() => setGraphActive(true)}
+            onNew={() => handleCreateFile(null, 'file')}
+          />
+          <EditorArea
+            file={activeFile}
+            files={files}
+            showGraph={graphActive}
+            onContentChange={handleContentChange}
+            onRenameFile={handleRenameFile}
+            onSelectFile={(id) => { setGraphActive(false); handleSelectFile(id) }}
+            canGoBack={canGoBack}
+            canGoForward={canGoForward}
+            onNavBack={handleNavBack}
+            onNavForward={handleNavForward}
+            onCreateFile={() => handleCreateFile(null, 'file')}
+          />
+        </div>
       </div>
-    </ConfigProvider>
+
+      <StatusBar
+        mentorName={mentor?.nameZh}
+        fileCount={fileCount}
+        wordCount={wordCount}
+      />
+
+      <QuickSwitcher
+        visible={quickSwitcherOpen}
+        files={files}
+        onSelect={(id) => { setGraphActive(false); handleSelectFile(id) }}
+        onClose={() => setQuickSwitcherOpen(false)}
+        onCreate={() => handleCreateFile(null, 'file')}
+      />
+    </div>
   )
 }
 

@@ -91,6 +91,74 @@
   display: flex;
 }
 
+.inlineTitle {
+  padding: 16px 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.titleInput {
+  width: 60%;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+  padding: 0;
+  caret-color: var(--primary-color);
+
+  &::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+  }
+}
+
+.titleError {
+  color: #e74c3c;
+}
+
+.titleErrorMsg {
+  font-size: 12px;
+  color: #e74c3c;
+  padding-left: 2px;
+}
+
+.graphCanvas {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  cursor: default;
+
+  canvas {
+    cursor: default !important;
+  }
+}
+
+.graphEmpty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.graphEmptyHint {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
 .vditorContainer {
   flex: 1;
   min-height: 0;

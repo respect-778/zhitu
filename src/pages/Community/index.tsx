@@ -98,7 +98,7 @@ const Community = () => {
       const res = await getEarlyReportAPI()
       setEarlyReport(res.data)
     } catch (error) {
-      console.log(error)
+      throw error
     }
   }, [])
 
@@ -258,8 +258,8 @@ const Community = () => {
         {activeTab === 'new' && <ArticleList content={content} loading={loading} pageParams={pageParams} searchValue={searchValue} title='最新内容' subTitle='从公共质量池中挑出的高质量内容' isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handlePageSize={handlePageSize} />}
         {activeTab === 'recommend' && <ArticleList content={content} loading={loading} pageParams={pageParams} searchValue={searchValue} title='为你推荐' subTitle='基于你的兴趣和历史行为推荐' isEmpty={isEmpty} activeTab={activeTab} handleDetail={handleDetail} handlePageSize={handlePageSize} />}
         {activeTab === 'week' && <WeeklyDigest />}
-        {activeTab === 'collection' && <MyCollection />}
-        {activeTab === 'history' && <HistoryContent />}
+        {activeTab === 'collection' && <MyCollection onExploreClick={() => handleNavBar('new')} />}
+        {activeTab === 'history' && <HistoryContent onExploreClick={() => handleNavBar('new')} />}
         {activeTab === 'follow' && <MyFollowing />}
         {activeTab === 'personal' && <PersonalContent />}
       </div>

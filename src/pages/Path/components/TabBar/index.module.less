@@ -3,7 +3,7 @@
   align-items: stretch;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
-  min-height: 36px;
+  min-height: 38px;
   user-select: none;
 }
 
@@ -29,7 +29,6 @@
   border-right: 1px solid var(--border-color);
   transition: background 0.1s ease;
   background: transparent;
-  animation: tabFadeIn 0.15s ease-out;
 
   &:hover {
     background: var(--theme-color-hover);
@@ -50,17 +49,6 @@
     .tabClose {
       opacity: 1;
     }
-  }
-}
-
-@keyframes tabFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

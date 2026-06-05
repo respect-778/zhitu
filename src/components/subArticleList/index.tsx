@@ -23,6 +23,7 @@ interface SubArticleListProps {
   onSearch?: (keyword: string) => void
   onFolderChange?: (folderId: number | null) => void
   onSortChange?: (sort: 'newest' | 'oldest') => void
+  onReset?: (date: string | null) => void
   onDateChange?: (date: string | null) => void
   list: IArticleItem[]
   onContinueRead?: (postId: number) => void
@@ -48,6 +49,7 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
   onSearch,
   onFolderChange,
   onSortChange,
+  onReset,
   onDateChange,
   list,
   onContinueRead,
@@ -303,6 +305,7 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
                   </div>
                 )}
               </div>
+              <div className={styles.resetBtn} onClick={() => onReset?.(null)}>重置</div>
             </div>
           </div>
 

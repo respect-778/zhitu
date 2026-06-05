@@ -15,8 +15,8 @@ interface IProps {
 const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, configuredAI }: IProps) => {
 
   // 处理选中的 ai 厂商
-  const handleSelected = (name: string, img: string) => {
-    setSelectedAI({ name, img })
+  const handleSelected = (provider: IProvider) => {
+    setSelectedAI(provider)
   }
 
 
@@ -27,7 +27,7 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, con
         <div className={styles.aiProvider}>
           {aiProviders.map(provider => {
             return (
-              <div className={`${styles.content} ${provider.name === configuredAI ? styles.active : ''}`} onClick={() => handleSelected(provider.name, provider.img)} key={provider.name}>
+              <div className={`${styles.content} ${provider.name === configuredAI ? styles.active : ''}`} onClick={() => handleSelected(provider)} key={provider.name}>
                 <div className={styles.imgContainer}><img className={styles.img} src={`${provider.img}`} alt="ai" /></div>
                 <div className={styles.name}>{provider.name}</div>
               </div>
@@ -43,7 +43,11 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, con
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                 <div style={{ color: '#6099f7', cursor: 'pointer' }} onClick={() => setSelectedAI({ name: '', img: '' })}>更换提供商</div>
                 <div style={{ height: '12px', border: '1px solid #b5b4b4' }}></div>
-                <div style={{ color: '#6099f7', cursor: 'pointer' }}>查看文档 <LinkOutlined /></div>
+                {selectedAI.docUrl && (
+                  <a href={selectedAI.docUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#6099f7', cursor: 'pointer', textDecoration: 'none' }}>
+                    查看文档 <LinkOutlined />
+                  </a>
+                )}
               </div>
             </div>
           </div>

@@ -41,6 +41,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px 0;
+  transition: outline 0.15s ease;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -49,6 +50,13 @@
   &::-webkit-scrollbar-thumb {
     background: var(--scrollbar-color);
     border-radius: 3px;
+  }
+
+  &.dropTargetRoot {
+    background: rgba(46, 89, 149, 0.04);
+    outline: 2px dashed rgba(46, 89, 149, 0.4);
+    outline-offset: -2px;
+    border-radius: 4px;
   }
 }
 
@@ -67,6 +75,25 @@
 
   &.active {
     background: var(--chat-history-item-hover);
+  }
+
+  &.selected {
+    background: rgba(46, 89, 149, 0.12);
+  }
+
+  &.selected.active {
+    background: rgba(46, 89, 149, 0.18);
+  }
+
+  &.dragging {
+    opacity: 0.4;
+  }
+
+  &.dropTarget {
+    background: rgba(46, 89, 149, 0.15);
+    outline: 2px dashed rgba(46, 89, 149, 0.5);
+    outline-offset: -2px;
+    border-radius: 4px;
   }
 }
 
@@ -122,4 +149,48 @@
 
 .folderChildrenInner {
   overflow: hidden;
+}
+
+.multiMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.multiMenu {
+  position: fixed;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+  min-width: 160px;
+  z-index: 1001;
+}
+
+.multiMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--text-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+
+  &:hover {
+    background: var(--theme-color-hover);
+  }
+
+  &.danger {
+    color: #e74c3c;
+
+    &:hover {
+      background: rgba(231, 76, 60, 0.08);
+    }
+  }
 }

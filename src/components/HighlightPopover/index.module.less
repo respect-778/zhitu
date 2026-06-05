@@ -1,0 +1,228 @@
+.popover {
+  position: fixed;
+  z-index: 1100;
+  width: 320px;
+  padding: 16px;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.92));
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  animation: popoverFadeIn 0.15s ease-out;
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover);
+  }
+}
+
+.quoteBlock {
+  padding: 10px 12px;
+  background: var(--bg-secondary, rgba(0, 0, 0, 0.03));
+  border-left: 3px solid var(--border-color, #e5e5e5);
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 10px;
+}
+
+.quoteText {
+  font-size: 13px;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.noteText {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 8px;
+  font-style: italic;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.editBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    color: var(--text-color);
+    background: var(--theme-color-hover);
+  }
+}
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: #e74c3c;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(231, 76, 60, 0.08);
+  }
+}
+
+/* ---------- 编辑态 ---------- */
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.colorLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.colorDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.colorDotActive {
+    border-color: var(--primary-color, #1677ff);
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+  }
+}
+
+.noteInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-color);
+  background: var(--bg-color, #fff);
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+
+  &:focus {
+    border-color: var(--primary-color, #1677ff);
+  }
+}
+
+.editActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancelBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 6px;
+
+  &:hover {
+    background: var(--theme-color-hover);
+  }
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: var(--primary-color, #1677ff);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 6px;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}

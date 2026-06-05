@@ -1,3 +1,4 @@
+/** 虚拟文件系统节点（文件或文件夹） */
 export interface VFile {
   id: string
   name: string
@@ -17,6 +18,7 @@ export interface VFile {
   order: number
 }
 
+/** 成长计划 */
 export interface GrowthPlan {
   id: string
   userId: string
@@ -36,6 +38,7 @@ export interface GrowthPlan {
   updatedAt: string
 }
 
+/** 每周目标 */
 export interface WeeklyGoal {
   id: string
   weekNumber: number
@@ -46,6 +49,7 @@ export interface WeeklyGoal {
   summaryGeneratedAt?: string
 }
 
+/** 成长任务 */
 export interface GrowthTask {
   id: string
   title: string
@@ -55,6 +59,7 @@ export interface GrowthTask {
   reflection?: string
 }
 
+/** 导师人格 */
 export interface MentorPersona {
   id: string
   name: string
@@ -64,4 +69,22 @@ export interface MentorPersona {
   category: string
 }
 
+/** 侧栏面板类型 */
 export type SidebarPanel = 'close' | 'files' | 'search' | 'plan' | 'mentor'
+
+/** 关系图谱节点 */
+export interface GraphNode {
+  id: string
+  name: string
+  x?: number
+  y?: number
+  vx?: number
+  vy?: number
+}
+
+/** 关系图谱连线 */
+export interface GraphLink {
+  source: string | GraphNode
+  target: string | GraphNode
+  type: 'wikilink' | 'folder' | 'tag'
+}

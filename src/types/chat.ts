@@ -27,5 +27,6 @@ export interface IChatMessage {
 // AI 提供商类型
 export interface IProvider {
   name: string,
-  img: string
+  img: string,
+  docUrl?: string
 }

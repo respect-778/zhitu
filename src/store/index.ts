@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./modules/userStore"
 import communityReducer from "./modules/communityStore"
 import resumeReducer from "./modules/resumeStore"
-import growthReducer from "./modules/growthStore"
+import pathReducer from "./modules/pathStore"
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     community: communityReducer,
     resume: resumeReducer,
-    growth: growthReducer,
+    path: pathReducer,
   }
 })
 

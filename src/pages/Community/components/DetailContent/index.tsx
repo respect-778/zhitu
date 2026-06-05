@@ -1,11 +1,16 @@
-﻿import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+﻿import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { HeartOutlined, HeartFilled, StarOutlined, StarFilled, UpCircleOutlined, EyeFilled, FilePdfOutlined, PlusOutlined } from '@ant-design/icons'
 import { Skeleton, message } from 'antd'
 import type { IContent, IContentDetail } from '@/types/community'
+import type { Highlight } from '@/types/highlight'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI, pageviewsCommunityAPI, followCommunityAPI } from '@/api/community'
+import { getHighlightsAPI, saveHighlightsAPI, addCitationAPI } from '@/api/highlight'
+import { applyHighlights } from '@/utils/highlightRenderer'
+import SelectionToolbar from '@/components/SelectionToolbar'
+import HighlightPopover from '@/components/HighlightPopover'
 import { useScrollYPosition } from '@/hooks/useScrollYPosition'
 import { Viewer } from '@bytemd/react'
 import { markdownPlugins } from '@/utils/markdown'
@@ -139,6 +144,11 @@ const DetailContent: React.FC = () => {
   const [tocItems, setTocItems] = useState<TocItem[]>([]) // 文章目录
   const [activeTocId, setActiveTocId] = useState('') // 当前高亮目录
 
+  // 高亮标注
+  const [highlights, setHighlights] = useState<Highlight[]>([])
+  const [activePopover, setActivePopover] = useState<{ highlight: Highlight; rect: DOMRect } | null>(null)
+  const highlightsRef = useRef<Highlight[]>([])
+  const isApplyingHighlightsRef = useRef(false)
 
   const { scrollYPosition } = useScrollYPosition() // 1000 显示 回到顶部
 
@@ -301,10 +311,145 @@ const DetailContent: React.FC = () => {
     }
   }
 
+  // 选中文字后点击颜色，创建新高亮并立即保存
+  const handleAddHighlight = useCallback((color: string, ctx: { text: string; textBefore: string; textAfter: string }) => {
+    const newHighlight: Highlight = {
+      id: crypto.randomUUID(),
+      text: ctx.text,
+      textBefore: ctx.textBefore,
+      textAfter: ctx.textAfter,
+      color,
+      note: '',
+      createdAt: new Date().toISOString(),
+    }
+
+    const next = [...highlightsRef.current, newHighlight]
+    highlightsRef.current = next
+    setHighlights(next)
+    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+  }, [id])
+
+  // 编辑已有高亮（换颜色 / 写想法）并立即保存
+  const handleEditHighlight = useCallback((hlId: string, updates: { color?: string; note?: string }) => {
+    const next = highlightsRef.current.map(h => h.id === hlId ? { ...h, ...updates } : h)
+    highlightsRef.current = next
+    setHighlights(next)
+    setActivePopover(null)
+    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+  }, [id])
+
+  // 删除高亮并立即保存
+  const handleDeleteHighlight = useCallback((hlId: string) => {
+    const next = highlightsRef.current.filter(h => h.id !== hlId)
+    highlightsRef.current = next
+    setHighlights(next)
+    setActivePopover(null)
+    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+  }, [id])
+
+  // 添加引用到学习规划（从选区工具条调用）
+  const handleAddCitation = useCallback(async (ctx: { text: string; textBefore: string; textAfter: string }) => {
+    try {
+      await addCitationAPI({ text: ctx.text, sourceId: parseInt(id!), sourceTitle: detail.title })
+      message.success('已添加到引用收藏')
+    } catch {
+      message.error('添加引用失败')
+    }
+  }, [id, detail.title])
+
+  // 添加引用到学习规划（从高亮弹窗调用）
+  const handlePopoverCite = useCallback(async (text: string) => {
+    try {
+      await addCitationAPI({ text, sourceId: parseInt(id!), sourceTitle: detail.title })
+      message.success('已添加到引用收藏')
+    } catch {
+      message.error('添加引用失败')
+    }
+  }, [id, detail.title])
+
   useEffect(() => {
     getCommunityById()      // 获取当前文章内容
     getHotCommunityList()   // 获取热门文章
   }, [])
+
+  // 加载该用户在本文的高亮数据
+  useEffect(() => {
+    if (!id) return
+    getHighlightsAPI(parseInt(id))
+      .then(res => {
+        setHighlights(res.data)
+        highlightsRef.current = res.data
+      })
+      .catch(() => {})
+  }, [id])
+
+  // 高亮数据或正文变化时，重新渲染 DOM 中的 <mark>
+  useEffect(() => {
+    if (!detail.content || highlights.length === 0) return
+    // 双 rAF 确保 Viewer 已完成 DOM 渲染
+    const outerFrame = requestAnimationFrame(() => {
+      const innerFrame = requestAnimationFrame(() => {
+        const container = articleRef.current?.querySelector('.markdown-body') as HTMLElement | null
+        if (!container || !container.textContent) return
+        isApplyingHighlightsRef.current = true
+        applyHighlights(container, highlights)
+        isApplyingHighlightsRef.current = false
+      })
+      cleanupInner = () => cancelAnimationFrame(innerFrame)
+    })
+    let cleanupInner: (() => void) | undefined
+    return () => {
+      cancelAnimationFrame(outerFrame)
+      cleanupInner?.()
+    }
+  }, [highlights, detail.content])
+
+  // Viewer 重绘会冲掉 <mark>，用 MutationObserver 检测并重新渲染
+  useEffect(() => {
+    if (!detail.content) return
+    const container = articleRef.current?.querySelector('.markdown-body') as HTMLElement | null
+    if (!container) return
+
+    let debounceTimer: number | null = null
+    const observer = new MutationObserver(() => {
+      if (isApplyingHighlightsRef.current) return
+      if (highlightsRef.current.length === 0) return
+      // 防抖：Viewer 可能连续触发多次 mutation
+      if (debounceTimer) cancelAnimationFrame(debounceTimer)
+      debounceTimer = requestAnimationFrame(() => {
+        debounceTimer = null
+        if (container.querySelector('mark[data-highlight-id]')) return
+        isApplyingHighlightsRef.current = true
+        applyHighlights(container, highlightsRef.current)
+        isApplyingHighlightsRef.current = false
+      })
+    })
+
+    observer.observe(container, { childList: true, subtree: true })
+    return () => {
+      observer.disconnect()
+      if (debounceTimer) cancelAnimationFrame(debounceTimer)
+    }
+  }, [detail.content])
+
+  // 事件委托：点击已高亮的 <mark> 弹出详情
+  useEffect(() => {
+    const container = articleRef.current?.querySelector('.markdown-body') as HTMLElement | null
+    if (!container) return
+
+    const handleClick = (e: MouseEvent) => {
+      const mark = (e.target as HTMLElement).closest<HTMLElement>('mark[data-highlight-id]')
+      if (!mark) return
+
+      const hlId = mark.getAttribute('data-highlight-id')
+      const hl = highlightsRef.current.find(h => h.id === hlId)
+      if (!hl) return
+
+      setActivePopover({ highlight: hl, rect: mark.getBoundingClientRect() })
+    }
+    container.addEventListener('click', handleClick)
+    return () => container.removeEventListener('click', handleClick)
+  }, [detail.content])
 
 
   // 浏览量
@@ -609,6 +754,19 @@ const DetailContent: React.FC = () => {
         </div>
         :
         ''}
+
+      {/* 选中文字浮动工具条 */}
+      <SelectionToolbar containerRef={articleRef} onHighlight={handleAddHighlight} onCite={handleAddCitation} />
+
+      {/* 划线详情 / 编辑弹窗 */}
+      <HighlightPopover
+        highlight={activePopover?.highlight ?? null}
+        anchorRect={activePopover?.rect ?? null}
+        onClose={() => setActivePopover(null)}
+        onEdit={handleEditHighlight}
+        onDelete={handleDeleteHighlight}
+        onCite={handlePopoverCite}
+      />
     </div>
   )
 }
