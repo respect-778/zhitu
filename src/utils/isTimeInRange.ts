@@ -1,4 +1,4 @@
-type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
+type TimeRange = '今天' | '昨天' | '7天内' | '30天内' | '30天外';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -47,6 +47,7 @@ const getLocalDayStart = (date: Date) =>
  * - 昨天：昨天
  * - 7天内：前 2-7 天
  * - 30天内：前 8-30 天
+ * - 更早：30 天以前
  */
 export function isTimeInRange(targetTime: Date | string | number, range: TimeRange): boolean {
   const targetDate = parseDate(targetTime);
@@ -72,6 +73,9 @@ export function isTimeInRange(targetTime: Date | string | number, range: TimeRan
 
     case '30天内':
       return diffDays >= 8 && diffDays <= 30;
+
+    case '30天外':
+      return diffDays > 30;
 
     default:
       return false;

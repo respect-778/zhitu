@@ -54,3 +54,47 @@
   --chat-model-hover: #6a696998;
   --selection-color: #4a76b3;
 }
+
+html[data-theme="dark"] .ant-pagination {
+  .ant-pagination-item {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+
+    a {
+      color: var(--text-color);
+    }
+
+    &:hover {
+      background-color: var(--theme-color-hover);
+      border-color: var(--community-title-color);
+    }
+  }
+
+  .ant-pagination-item-active {
+    background-color: var(--primary-color-hover);
+    border-color: var(--community-title-color);
+
+    &, &:hover {
+      background-color: var(--primary-color-hover);
+    }
+
+    a, &:hover a {
+      color: var(--text-color);
+    }
+  }
+
+  .ant-pagination-prev, .ant-pagination-next {
+    .ant-pagination-item-link {
+      color: var(--text-color);
+    }
+
+    &:hover .ant-pagination-item-link {
+      background-color: var(--theme-color-hover);
+    }
+
+    &.ant-pagination-disabled .ant-pagination-item-link {
+      color: var(--text-secondary);
+      background-color: transparent;
+    }
+  }
+}

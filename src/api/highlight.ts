@@ -13,7 +13,7 @@ export const saveHighlightsAPI = (postId: number, highlights: Highlight[]): Prom
 }
 
 // 添加引用到学习规划
-export const addCitationAPI = (data: { text: string; sourceId: number; sourceTitle: string }): Promise<{ data: { fileId: string } }> => {
+export const addCitationAPI = (data: { text: string; question?: string; sourceId: string | number; sourceTitle: string; sourceType?: 'chat' | 'community' }): Promise<{ data: { fileId: string } }> => {
   return httpInstance({ url: '/growth/cite', method: 'post', data })
 }
 
@@ -29,5 +29,5 @@ export const saveHighlightsSync = (postId: number, highlights: Highlight[]) => {
     },
     body: JSON.stringify({ highlights }),
     keepalive: true,
-  }).catch(() => {})
+  }).catch(() => { })
 }

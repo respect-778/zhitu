@@ -144,6 +144,32 @@
       }
     }
 
+    .markdownBtn {
+      display: flex;
+      gap: 10px;
+
+      .iconBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.15s ease;
+        position: relative;
+
+        &:hover {
+          color: var(--text-color);
+          background: var(--theme-color-hover);
+        }
+      }
+    }
+
     .searchStatusBar {
       display: flex;
       align-items: center;

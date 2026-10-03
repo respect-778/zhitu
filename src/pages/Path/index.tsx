@@ -165,7 +165,7 @@ const Path: React.FC = () => {
         if (!folderIdMap.has(folderPath)) {
           const folderId = crypto.randomUUID()
           folderIdMap.set(folderPath, folderId)
-          dispatch(createFile({ name: parts[i], type: 'folder', parentId: currentParentId }))
+          dispatch(createFile({ id: folderId, name: parts[i], type: 'folder', parentId: currentParentId }))
         }
         currentParentId = folderIdMap.get(folderPath) ?? null
       }

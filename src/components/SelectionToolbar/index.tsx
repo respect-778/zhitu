@@ -49,8 +49,18 @@ const SelectionToolbar: React.FC<Props> = ({ containerRef, onHighlight, onCite }
           return
         }
 
+        // 选区完全在已有高亮内，不弹工具条（走 Popover 流程）
         const sel = window.getSelection()!
-        const rect = sel.getRangeAt(0).getBoundingClientRect()
+        const range = sel.getRangeAt(0)
+        const startMark = (range.startContainer.parentElement)?.closest('mark[data-highlight-id]')
+        const endMark = (range.endContainer.parentElement)?.closest('mark[data-highlight-id]')
+        if (startMark && endMark && startMark === endMark) {
+          setVisible(false)
+          cachedCtxRef.current = null
+          return
+        }
+
+        const rect = range.getBoundingClientRect()
         const toolbarWidth = 280
         let x = rect.left + rect.width / 2 - toolbarWidth / 2
         x = Math.max(8, Math.min(x, window.innerWidth - toolbarWidth - 8))

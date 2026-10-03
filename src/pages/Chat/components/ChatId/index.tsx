@@ -1,16 +1,17 @@
-import { ArrowUpOutlined, BulbOutlined, SearchOutlined, XFilled } from "@ant-design/icons"
+import { ArrowUpOutlined, BookOutlined, BulbOutlined, CopyOutlined, ReloadOutlined, SearchOutlined, XFilled } from "@ant-design/icons"
 import styles from './index.module.less'
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
-import { addChatMessageAPI, callChatStreamAPI, getChatMessageAPI } from "@/api/chat"
+import { addChatMessageAPI, callChatStreamAPI, deleteChatMessageAPI, getChatMessageAPI } from "@/api/chat"
 import type { IChatMessage, IChatSession } from "@/types/chat"
 import { useNavigate, useOutletContext, useParams } from "react-router"
-import { Space } from "antd"
+import { message as antdMessage, Space } from "antd"
 import { Viewer } from "@bytemd/react"
 import { markdownPluginsNoHighlight, normalizeMarkdownText } from "@/utils/markdown"
 import { useStreamingAutoFollow } from "@/hooks/useStreamingAutoFollow"
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea"
 import { getStore } from "@/utils/store"
 import ScrollDownButton from "@/components/ScrollDownButton"
+import { addCitationAPI } from "@/api/highlight"
 
 
 type ChatStreamState = {
@@ -39,6 +40,7 @@ const ChatId = () => {
   const [searchValue, setSearchValue] = useState('') // 输入框内容
   const { textareaRef } = useAutoResizeTextarea({ value: searchValue, minHeight: 44, maxHeight: 280 })
   const [isInputEmpty, setIsInputEmpty] = useState(true) // 输入框是否为空，默认为空
+  const [messageApi, contextHolder] = antdMessage.useMessage()
   const {
     historySession,
     pendingFirstMessageBySession,
@@ -196,16 +198,23 @@ const ChatId = () => {
       setSearchValue('') // 提交后，清空输入框
     }
 
-    // 开启流式生成并记录当前开启流式的会话id
+    await generateAiReply({ activeSessionUuid, userMessage, currentMode })
+  }
+
+  // 流式调用 AI 大模型（从 handleSubmit 中提取，handleRetry 复用）
+  // 负责：开启流式状态 → SSE 调用 → 回调更新流内容/搜索状态/来源 → 结束后保存本地临时消息 → 刷新服务端消息列表
+  const generateAiReply = async ({ activeSessionUuid, userMessage, currentMode }: { activeSessionUuid: string, userMessage: string, currentMode: number }) => {
+    // 1. 开启流式生成状态
     setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { isStreaming: true, content: '' } }))
 
-    // 2. 流式调用 ai 大模型
+    // 2. 创建 AbortController，用于「暂停回复」按钮取消请求
     const controller = new AbortController()
     abortControllerMapRef.current[activeSessionUuid] = controller
 
     let streamedContent = ''
 
     try {
+      // 3. SSE 流式调用 AI 大模型
       streamedContent = await callChatStreamAPI(
         currentMode,
         userMessage,
@@ -221,7 +230,7 @@ const ChatId = () => {
           }))
         },
         (sources) => {
-          // 更新搜索结果
+          // 更新搜索来源结果
           setStreamBySession(pre => ({
             ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], sources }
           }))
@@ -233,9 +242,11 @@ const ChatId = () => {
         controller.signal
       )
     } catch (error) {
+      // 用户主动 abort 不算错误，静默返回
       if (error instanceof DOMException && error.name === 'AbortError') {
         return
       }
+      // AI 调用失败时，保存一条错误消息到数据库
       await addChatMessageAPI({ session_uuid: activeSessionUuid, role: 'ai', content: `AI调用失败:${error}` })
       console.error('AI 调用失败:', error)
     } finally {
@@ -243,6 +254,7 @@ const ChatId = () => {
 
       handleNewChatComplete(activeSessionUuid) // 通知父组件清理该会话的待发送首条消息
 
+      // 流式结束后，先用本地临时消息占位，避免闪烁
       if (hasStreamedContent) {
         upsertLocalAiMessage(activeSessionUuid, streamedContent)
       }
@@ -250,17 +262,19 @@ const ChatId = () => {
       if (currentSessionUuidRef.current === activeSessionUuid) {
         setIsInputEmpty(true)
       }
-      setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], isStreaming: false, content: '' } })) // 结束流式生成并清空内容（保留搜索状态）
+      // 结束流式生成并清空流内容（保留搜索状态供历史消息显示）
+      setStreamBySession(pre => ({ ...pre, [activeSessionUuid]: { ...pre[activeSessionUuid], isStreaming: false, content: '' } }))
       if (abortControllerMapRef.current[activeSessionUuid] === controller) {
         delete abortControllerMapRef.current[activeSessionUuid]
       }
 
+      // 等待 300ms 让后端完成消息持久化，再拉取最新消息列表
       if (hasStreamedContent || controller.signal.aborted) {
         await new Promise(resolve => setTimeout(resolve, 300))
       }
 
       await getCurrentChatMessage(activeSessionUuid) // 刷新消息列表（后端已保存 AI 回复）
-      getHistoryChatSession() // 通过父组件传递过来的方法 -> 获取最新历史记录
+      getHistoryChatSession() // 刷新左侧历史会话记录
     }
   }
 
@@ -283,6 +297,59 @@ const ChatId = () => {
   // 暂停回复按钮
   const handleStopGeneration = () => {
     abortControllerMapRef.current[sessionUuid]?.abort()
+  }
+
+  // 复制
+  const handleCopy = async (message: IChatMessage) => {
+    try {
+      await navigator.clipboard.writeText(message.content)
+      messageApi.success('已复制')
+    } catch (error) {
+      messageApi.error('复制失败')
+      console.error('复制失败:', error)
+    }
+  }
+
+  // 引用
+  const handleQuote = async (message: IChatMessage, index: number) => {
+    const userMessage = currentMessages.slice(0, index).reverse().find(item => item.role === 'user')
+
+    try {
+      await addCitationAPI({ text: message.content, question: userMessage?.content, sourceId: sessionUuid, sourceTitle: currentSessionTitle, sourceType: 'chat' })
+      messageApi.success('引用成功')
+    } catch (error) {
+      messageApi.error('引用失败')
+      console.log('引用失败', error)
+    }
+  }
+
+  // 重试：删除旧 AI 回复 → 从本地移除 → 用原始用户问题重新生成（不会重复创建用户消息）
+  const handleRetry = async (message: IChatMessage, index: number) => {
+    if (currentStream.isStreaming || !message.id) return
+
+    // 通过 index 向前查找最近的一条 user 消息，作为重试的原始问题
+    const userMessage = currentMessages.slice(0, index).reverse().find(item => item.role === 'user')
+    if (!userMessage) return
+
+    // 1. 从数据库删除旧的 AI 回复
+    try {
+      await deleteChatMessageAPI(message.id)
+    } catch (error) {
+      messageApi.error('删除失败，无法重试')
+      console.error('删除旧回复失败:', error)
+      return
+    }
+
+    // 2. 从本地消息列表中移除旧 AI 回复
+    setMessagesBySession(pre => {
+      const messages = pre[sessionUuid] ?? []
+      // 去除掉 id 不等于当前选中的这个 message.id 的 AI 回复，其余的保留
+      return { ...pre, [sessionUuid]: messages.filter(m => m.id !== message.id) }
+    })
+
+    // 3. 复用 generateAiReply 重新生成 AI 回复
+    scrollToBottomAndLock()
+    await generateAiReply({ activeSessionUuid: sessionUuid, userMessage: userMessage.content, currentMode: mode })
   }
 
   // 进入到界面滚动到底部
@@ -330,6 +397,7 @@ const ChatId = () => {
 
   return (
     <div className={styles.container}>
+      {contextHolder}
       {/* 聊天对话框 */}
       <div className={styles.top}>
         <div className={styles.title}>{currentSessionTitle}</div>
@@ -357,11 +425,18 @@ const ChatId = () => {
               {message.role === 'user'
                 ? message.content
                 : (
-                  <div className={styles.markdownContent}>
-                    <Viewer
-                      value={normalizeMarkdownText(message.content)}
-                      plugins={markdownPluginsNoHighlight}
-                    />
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px' }}>
+                    <div className={styles.markdownContent}>
+                      <Viewer
+                        value={normalizeMarkdownText(message.content)}
+                        plugins={markdownPluginsNoHighlight}
+                      />
+                    </div>
+                    <div className={styles.markdownBtn}>
+                      <button className={styles.iconBtn} onClick={() => handleCopy(message)} title="复制"><CopyOutlined /></button>
+                      <button className={styles.iconBtn} onClick={() => handleQuote(message, index)} title="引用"><BookOutlined /></button>
+                      <button className={styles.iconBtn} onClick={() => handleRetry(message, index)} title="重试"><ReloadOutlined /></button>
+                    </div>
                   </div>
                 )
               }

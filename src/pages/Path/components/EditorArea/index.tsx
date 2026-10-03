@@ -30,11 +30,19 @@ function useGraphData(files: VFile[]) {
     const nodes: GraphNode[] = fileNodes.map(f => ({ id: f.id, name: f.name }))
     const links: GraphLink[] = []
     const nameToId = new Map(fileNodes.map(f => [f.name, f.id]))
+    const degreeMap = new Map<string, number>()
+
+    const addLink = (source: string, target: string, type: GraphLink['type']) => {
+      links.push({ source, target, type })
+      degreeMap.set(source, (degreeMap.get(source) ?? 0) + 1)
+      degreeMap.set(target, (degreeMap.get(target) ?? 0) + 1)
+    }
+
     for (const f of fileNodes) {
       if (f.content) {
         for (const linked of extractWikilinks(f.content)) {
           const targetId = nameToId.get(linked)
-          if (targetId && targetId !== f.id) links.push({ source: f.id, target: targetId, type: 'wikilink' })
+          if (targetId && targetId !== f.id) addLink(f.id, targetId, 'wikilink')
         }
       }
       const tags = f.metadata?.tags ?? []
@@ -42,15 +50,15 @@ function useGraphData(files: VFile[]) {
         for (const other of fileNodes) {
           if (other.id <= f.id) continue
           if (tags.some(t => (other.metadata?.tags ?? []).includes(t)))
-            links.push({ source: f.id, target: other.id, type: 'tag' })
+            addLink(f.id, other.id, 'tag')
         }
       }
       if (f.parentId) {
         for (const sib of fileNodes.filter(o => o.parentId === f.parentId && o.id > f.id))
-          links.push({ source: f.id, target: sib.id, type: 'folder' })
+          addLink(f.id, sib.id, 'folder')
       }
     }
-    return { nodes, links }
+    return { nodes, links, degreeMap }
   }, [files])
 }
 
@@ -90,7 +98,7 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fgRef = useRef<any>(null)
-  const { nodes, links } = useGraphData(files)
+  const { nodes, links, degreeMap } = useGraphData(files)
   const graphData = useMemo(() => ({ nodes, links }), [nodes, links])
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
   const [size, setSize] = useState({ w: 800, h: 600 })
@@ -98,6 +106,8 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
   const hoveredIdRef = useRef<string | null>(null)
   const highlightRef = useRef<Map<string, number>>(new Map())
   const rafRef = useRef<number | null>(null)
+  const degreeMapRef = useRef(degreeMap)
+  useEffect(() => { degreeMapRef.current = degreeMap }, [degreeMap])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -112,6 +122,28 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
     const canvas = containerRef.current.querySelector('canvas')
     if (canvas) canvasRef.current = canvas
   })
+
+  // 配置力学引擎：排斥力 + 连线距离 + 向心力 + 初始 zoomToFit
+  useEffect(() => {
+    const fg = fgRef.current
+    if (!fg) return
+
+    fg.d3Force('charge')?.strength((d: GraphNode) => {
+      const degree = degreeMapRef.current.get(d.id) ?? 0
+      return degree > 0 ? -200 - degree * 30 : -100
+    })
+
+    fg.d3Force('link')?.distance((link: GraphLink) => {
+      if (link.type === 'wikilink') return 80
+      if (link.type === 'tag') return 120
+      return 150
+    })
+
+    fg.d3Force('center')?.strength(0.03)
+
+    const timer = setTimeout(() => fg.zoomToFit(400, 60), 600)
+    return () => clearTimeout(timer)
+  }, [graphData])
 
   const linksRef = useRef(links)
   const nodesRef = useRef(nodes)
@@ -160,12 +192,13 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
     const n = node as GraphNode & { x: number; y: number }
     const v = highlightRef.current.get(n.id) ?? 0
     const anyHovered = hoveredIdRef.current !== null
+    const degree = degreeMapRef.current.get(n.id) ?? 0
 
-    // v: 0=unrelated, 1=neighbor, 2=hovered
-    // radius: hovered=7, neighbor=5, default=3.5, dimmed=3
+    // 基础半径按连接数缩放：3 ~ 10px
+    const baseR = 3 + Math.min(degree, 8) * 0.9
     const r = anyHovered
-      ? (v > 1.5 ? 3.5 + (v - 1) * 3.5 : v > 0.5 ? 3 + v * 2 : 3 + v * 0.5)
-      : 3.5
+      ? (v > 1.5 ? baseR + (v - 1) * 3 : v > 0.5 ? baseR - 0.5 + v * 1.5 : baseR - 0.5 + v * 0.3)
+      : baseR
 
     ctx.beginPath()
     ctx.arc(n.x, n.y, r, 0, 2 * Math.PI)
@@ -190,20 +223,28 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
     }
     ctx.fill()
 
+    // 缩放太小时不显示文字标签，避免密密麻麻
+    const showLabel = globalScale >= 0.6 || v > 0.5
+    if (!showLabel) return
+
     const label = n.name.length > 20 ? n.name.slice(0, 20) + '...' : n.name
-    const fs = Math.max(10, 12 / globalScale)
-    ctx.font = `${fs}px sans-serif`
+    const fs = v > 1.5 ? Math.max(12, 14 / globalScale) : Math.max(10, 12 / globalScale)
+    ctx.font = v > 1.5 ? `bold ${fs}px sans-serif` : `${fs}px sans-serif`
     ctx.textAlign = 'center'
 
+    // 标签透明度：缩放渐显 + hover 状态
+    let labelAlpha: number
     if (!anyHovered) {
-      ctx.fillStyle = isDark ? 'rgba(220,220,220,0.5)' : 'rgba(50,50,50,0.5)'
+      const scaleAlpha = globalScale < 1.0 ? Math.max(0.15, (globalScale - 0.6) / 0.6) : 0.6
+      labelAlpha = scaleAlpha
+    } else if (v > 1.5) {
+      labelAlpha = 1
     } else if (v > 0.5) {
-      const labelAlpha = 0.5 + Math.min(v, 1) * 0.5
-      ctx.fillStyle = isDark ? `rgba(220,220,220,${labelAlpha})` : `rgba(50,50,50,${labelAlpha})`
+      labelAlpha = 0.5 + Math.min(v, 1) * 0.5
     } else {
-      const labelAlpha = DIM_ALPHA + (0.5 - DIM_ALPHA) * v
-      ctx.fillStyle = isDark ? `rgba(220,220,220,${labelAlpha})` : `rgba(50,50,50,${labelAlpha})`
+      labelAlpha = DIM_ALPHA + (0.3 - DIM_ALPHA) * v
     }
+    ctx.fillStyle = isDark ? `rgba(220,220,220,${labelAlpha})` : `rgba(50,50,50,${labelAlpha})`
     ctx.fillText(label, n.x, n.y + r + fs * 0.9)
   }, [isDark])
 

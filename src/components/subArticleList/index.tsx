@@ -296,7 +296,7 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
                       locale={locale.DatePicker}
                       onChange={(date) => {
                         onDateChange?.(date ? date.format('YYYY-MM-DD') : null)
-                        setShowDatePicker(false)
+                        // setShowDatePicker(false)
                       }}
                       allowClear
                       placeholder="选择日期"

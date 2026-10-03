@@ -134,11 +134,11 @@ const pathSlice = createSlice({
   initialState,
   reducers: {
     // 创建文件/文件夹
-    createFile(state, action: PayloadAction<{ name: string; type: 'file' | 'folder'; parentId: string | null; content?: string; fileType?: VFile['fileType'] }>) {
-      const { name, type, parentId, content, fileType } = action.payload
+    createFile(state, action: PayloadAction<{ id?: string; name: string; type: 'file' | 'folder'; parentId: string | null; content?: string; fileType?: VFile['fileType'] }>) {
+      const { id, name, type, parentId, content, fileType } = action.payload
       const siblings = state.files.filter(f => f.parentId === parentId)
       const file: VFile = {
-        id: crypto.randomUUID(),
+        id: id ?? crypto.randomUUID(),
         name,
         type,
         parentId,

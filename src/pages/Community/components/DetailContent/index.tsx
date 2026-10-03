@@ -326,7 +326,7 @@ const DetailContent: React.FC = () => {
     const next = [...highlightsRef.current, newHighlight]
     highlightsRef.current = next
     setHighlights(next)
-    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+    saveHighlightsAPI(parseInt(id!), next).catch(() => { })
   }, [id])
 
   // 编辑已有高亮（换颜色 / 写想法）并立即保存
@@ -335,7 +335,7 @@ const DetailContent: React.FC = () => {
     highlightsRef.current = next
     setHighlights(next)
     setActivePopover(null)
-    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+    saveHighlightsAPI(parseInt(id!), next).catch(() => { })
   }, [id])
 
   // 删除高亮并立即保存
@@ -344,7 +344,7 @@ const DetailContent: React.FC = () => {
     highlightsRef.current = next
     setHighlights(next)
     setActivePopover(null)
-    saveHighlightsAPI(parseInt(id!), next).catch(() => {})
+    saveHighlightsAPI(parseInt(id!), next).catch(() => { })
   }, [id])
 
   // 添加引用到学习规划（从选区工具条调用）
@@ -380,7 +380,7 @@ const DetailContent: React.FC = () => {
         setHighlights(res.data)
         highlightsRef.current = res.data
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [id])
 
   // 高亮数据或正文变化时，重新渲染 DOM 中的 <mark>

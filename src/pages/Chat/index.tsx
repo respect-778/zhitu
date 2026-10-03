@@ -15,7 +15,7 @@ import { getStore, setStore } from "@/utils/store";
 import TextType from "@/components/TextType/TextType";
 
 
-type TimeRange = '今天' | '昨天' | '7天内' | '30天内';
+type TimeRange = '今天' | '昨天' | '7天内' | '30天内' | '30天外';
 type ChatStreamState = {
   isStreaming: boolean
   content: string
@@ -30,7 +30,7 @@ type PendingFirstMessage = {
 }
 
 const Chat: React.FC = () => {
-  const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内']
+  const days: TimeRange[] = ['今天', '昨天', '7天内', '30天内', '30天外']
   const { id } = useParams() // 获取动态路由 id
   const navigate = useNavigate() // 路由导航
   const [modeFa, setModeFa] = useState(0) // 是否选中思考模型，默认 0 为不选择

@@ -208,6 +208,14 @@ export const getChatMessageAPI = (session: ChatSessionKey) => {
   })
 }
 
+// 删除单条 AI 聊天消息
+export const deleteChatMessageAPI = (messageId: number) => {
+  return httpInstance({
+    url: `/chat/message/${messageId}`,
+    method: 'delete'
+  })
+}
+
 // 根据 文章id 查找对应的聊天记录
 export const getSummaryMessageAPI = (article_id: number) => {
   return httpInstance({
