@@ -3,6 +3,9 @@
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  background: var(--bg-color);
+  color: var(--text-color);
+  color-scheme: var(--theme-color-scheme);
 }
 
 .body {
@@ -32,14 +35,11 @@
   flex-shrink: 0;
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
+  background: var(--bg-secondary);
 }
 
 .preview {
   flex: 1;
   overflow-y: auto;
-  background: #e8e8e8;
-
-  :global(.dark) & {
-    background: #111;
-  }
+  background: var(--bg-secondary);
 }

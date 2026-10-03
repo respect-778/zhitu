@@ -3,6 +3,7 @@ import userReducer from "./modules/userStore"
 import communityReducer from "./modules/communityStore"
 import resumeReducer from "./modules/resumeStore"
 import pathReducer from "./modules/pathStore"
+import themeReducer from "./modules/themeStore"
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     community: communityReducer,
     resume: resumeReducer,
     path: pathReducer,
+    theme: themeReducer,
   }
 })
 

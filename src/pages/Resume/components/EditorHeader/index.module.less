@@ -31,8 +31,8 @@
   white-space: nowrap;
 
   &:hover {
-    border-color: var(--primary-color, #1677ff);
-    color: var(--primary-color, #1677ff);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
   }
 }
 
@@ -49,8 +49,7 @@
   transition: background 0.15s;
 
   &:hover, &:focus {
-    background: rgba(0, 0, 0, 0.05);
-    :global(.dark) & { background: rgba(255, 255, 255, 0.08); }
+    background: var(--theme-color-hover);
   }
 }
 

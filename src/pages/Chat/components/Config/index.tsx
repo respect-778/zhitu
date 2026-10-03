@@ -37,14 +37,14 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, con
         :
         <div className={styles.aiConfig}>
           <div className={`${styles.aiDetail} ${selectedAI.name === configuredAI ? styles.active : ''}`}>
-            <div style={{ padding: '10px', background: '#dddddd69', borderRadius: '10px', lineHeight: '10px' }}><img style={{ height: '25px' }} src={`${selectedAI.img}`} alt="ai" /></div>
+            <div className={styles.imgContainer}><img className={styles.img} src={`${selectedAI.img}`} alt="ai" /></div>
             <div>
               <div style={{ fontSize: '16px', fontWeight: '700' }}>{selectedAI.name}</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <div style={{ color: '#6099f7', cursor: 'pointer' }} onClick={() => setSelectedAI({ name: '', img: '' })}>更换提供商</div>
-                <div style={{ height: '12px', border: '1px solid #b5b4b4' }}></div>
+                <div className={styles.providerLink} onClick={() => setSelectedAI({ name: '', img: '' })}>更换提供商</div>
+                <div className={styles.divider}></div>
                 {selectedAI.docUrl && (
-                  <a href={selectedAI.docUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#6099f7', cursor: 'pointer', textDecoration: 'none' }}>
+                  <a href={selectedAI.docUrl} target="_blank" rel="noopener noreferrer" className={styles.providerLink}>
                     查看文档 <LinkOutlined />
                   </a>
                 )}
@@ -58,7 +58,7 @@ const Config = ({ aiProviders, selectedAI, setSelectedAI, apiKey, setApiKey, con
                 <Input.Password value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder='sk-ant-api01-...' style={{ padding: '10px' }} />
               </Form.Item>
             </Form>
-            <div style={{ fontSize: '12px', fontWeight: '350' }}>您的 API 密钥存储在本地机器上</div>
+            <div className={styles.hint}>您的 API 密钥存储在本地机器上</div>
           </div>
         </div>
       }

@@ -273,9 +273,13 @@ const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }
       width = 0.5
     }
 
+    const { x: sourceX, y: sourceY } = l.source
+    const { x: targetX, y: targetY } = l.target
+    // 力学布局初始化期间节点坐标尚未确定，先跳过这条连线。
+    if (sourceX === undefined || sourceY === undefined || targetX === undefined || targetY === undefined) return
     ctx.beginPath()
-    ctx.moveTo(l.source.x, l.source.y)
-    ctx.lineTo(l.target.x, l.target.y)
+    ctx.moveTo(sourceX, sourceY)
+    ctx.lineTo(targetX, targetY)
     ctx.strokeStyle = color
     ctx.lineWidth = width / globalScale
     ctx.stroke()
