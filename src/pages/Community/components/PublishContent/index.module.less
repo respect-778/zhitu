@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .header {
@@ -24,7 +25,7 @@
 
     .abstractBtn {
       padding: 8px 16px;
-      border: 1px solid #00000030;
+      border: 1px solid var(--border-color);
       border-radius: 5px;
       box-sizing: border-box;
       color: #fff;
@@ -39,31 +40,31 @@
 
     .imgBtn {
       padding: 8px 16px;
-      border: 1px solid #00000030;
+      border: 1px solid var(--border-color);
       border-radius: 5px;
       box-sizing: border-box;
-      color: #00000090;
+      color: var(--text-color);
       cursor: pointer;
       transition: all 0.3s ease 0s;
 
       &:hover {
-        border: 1px solid #00000095;
-        color: #000000;
+        border-color: var(--accent-color);
+        background: var(--theme-color-hover);
       }
     }
 
     .saveDraftBtn {
       padding: 8px 16px;
-      border: 1px solid #00000030;
+      border: 1px solid var(--border-color);
       border-radius: 5px;
       box-sizing: border-box;
-      color: #00000090;
+      color: var(--text-color);
       cursor: pointer;
       transition: all 0.3s ease 0s;
 
       &:hover {
-        border: 1px solid #00000095;
-        color: #000000;
+        border-color: var(--accent-color);
+        background: var(--theme-color-hover);
       }
     }
 
@@ -134,19 +135,19 @@
   height: 100px;
   padding: 20px 60px 36px;
   border: none;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid var(--border-color);
   outline: none;
   resize: none;
   overflow: hidden;
   box-sizing: border-box;
   font-size: 20px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-color);
   font-family: inherit;
   background: transparent;
 
   &::placeholder {
-    color: #c0c0c0;
+    color: var(--text-secondary);
     font-weight: 500;
   }
 }
@@ -156,14 +157,26 @@
   right: 22px;
   bottom: 10px;
   font-size: 13px;
-  color: #00000090;
+  color: var(--text-secondary);
 }
 
 .center :global(.bytemd) {
-  width: calc(100vw);
+  width: 100%;
   height: calc(100vh - 60px);
 }
 
 .center :global(.bytemd-editor) {
   padding-top: 100px;
+}
+
+.abstractInput {
+  width: 250px;
+  height: 80px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background: var(--bg-secondary);
+  color: var(--text-color);
+  outline-color: var(--accent-color);
+
+  &::placeholder { color: var(--text-secondary); }
 }

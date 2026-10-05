@@ -13,7 +13,7 @@
   transition: all 0.2s;
 
   &:hover {
-    border-color: var(--primary-color, #1677ff);
+    border-color: var(--accent-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
@@ -21,14 +21,11 @@
 
 .preview {
   height: 120px;
-  background: #f0f0f0;
+  background: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
 
-  :global(.dark) & {
-    background: #1a1a1a;
-  }
 }
 
 .previewLabel {

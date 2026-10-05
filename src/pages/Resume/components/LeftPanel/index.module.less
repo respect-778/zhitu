@@ -26,11 +26,7 @@
   background: var(--bg-color);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.03);
-  }
-
-  :global(.dark) &:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--theme-color-hover);
   }
 }
 
@@ -60,20 +56,12 @@
   transition: background 0.15s;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  :global(.dark) &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--theme-color-hover);
   }
 
   &.active {
-    background: #ECF2FB;
-    color: var(--primary-color, #1677ff);
-
-    :global(.dark) & {
-      background: #111b26;
-    }
+    background: var(--active-bg);
+    color: var(--accent-color);
   }
 
   &.disabled {
@@ -113,7 +101,7 @@
   transition: color 0.15s;
 
   &:hover {
-    color: var(--primary-color, #1677ff);
+    color: var(--accent-color);
   }
 
   &:active {
@@ -134,7 +122,7 @@
   transition: color 0.15s;
 
   &:hover {
-    color: var(--primary-color, #1677ff);
+    color: var(--accent-color);
   }
 }
 
@@ -180,9 +168,9 @@
   transition: all 0.2s;
 
   &:hover {
-    color: var(--primary-color, #1677ff);
-    border-color: var(--primary-color, #1677ff);
-    background: rgba(22, 119, 255, 0.04);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    background: var(--theme-color-hover);
   }
 }
 
@@ -202,11 +190,7 @@
   transition: background 0.15s;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  :global(.dark) &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--theme-color-hover);
   }
 }
 
@@ -278,7 +262,7 @@
 
   input[type='range'] {
     flex: 1;
-    accent-color: var(--primary-color, #1677ff);
+    accent-color: var(--accent-color);
   }
 
   span {

@@ -6,6 +6,7 @@ import { Editor } from "@bytemd/react"
 import type { BytemdLocale } from "bytemd"
 import type { Image as MdastImage } from "mdast"
 import styles from "./index.module.less"
+import '@/styles/markdown.less'
 import { useBeforeUnload, useBlocker, useNavigate } from "react-router"
 import { addCommunityAPI, articleAbstractAPI, articleKeywordsAPI, uploadImageAPI } from "@/api/community"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -281,7 +282,7 @@ const PublishContent = () => {
   // 文章摘要
   const abstractPreview = (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-      <textarea onChange={handleChangeAbstract} value={abstractValue} style={{ width: '250px', height: '80px', border: '1px solid #b4b3b3', borderRadius: '5px', outline: 'none' }} placeholder="摘要：会在内容广场中展示，帮助读者快速了解内容"></textarea>
+      <textarea className={styles.abstractInput} onChange={handleChangeAbstract} value={abstractValue} placeholder="摘要：会在内容广场中展示，帮助读者快速了解内容"></textarea>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Button loading={isAbstractLoading} onClick={hanldeAbstract} style={{ borderRadius: '5px', padding: '5px 10px', fontSize: '13px', cursor: 'pointer' }}><SignatureOutlined /> AI提取摘要</Button>
         <div>{abstractValue.length} / 256</div>
@@ -527,7 +528,7 @@ const PublishContent = () => {
         </div>
       </div>
 
-      <div className={styles.center}>
+      <div className={`${styles.center} community-markdown`}>
         <div className={titleOverlayClassName}>
           <textarea
             className={styles.centerTitle}
