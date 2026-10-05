@@ -25,14 +25,14 @@
     transition: border 0.2s ease-in-out 0s;
     transition: box-shadow 0.2s ease-in-out 0s;
 
-    &:hover {
-      border: 1px solid #b8bdc3;
-      box-shadow: 1px 3px 5px rgba(205, 204, 204, 0.448);
-    }
-
     [data-theme='dark'] & {
       border: 1px solid #2e3c50;
       box-shadow: none;
+    }
+
+    &:hover {
+      border: 1px solid var(--community-card-hover-border-color);
+      box-shadow: 1px 3px 5px var(--community-card-hover-box-shadow-color);
     }
   }
 

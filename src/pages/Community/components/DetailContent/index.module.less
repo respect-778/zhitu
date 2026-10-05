@@ -48,11 +48,18 @@
   }
 }
 
-.loadingContainer,
+.loadingContainer {
+  width: min(800px, 100%);
+  max-height: 100%;
+  padding: 32px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 16px;
+}
+
 .errorContainer {
-  max-width: 800px;
-  margin: 100px auto;
-  padding: 0 20px;
+  box-sizing: border-box;
+  padding: 100px 20px;
   text-align: center;
   background-color: var(--bg-color);
   min-height: 100vh;
@@ -170,7 +177,7 @@
           gap: 5px;
 
           .signature {
-            color: #555666;
+            color: var(--text-secondary);
             font-size: 13px;
           }
         }
@@ -181,7 +188,7 @@
       display: flex;
       justify-content: space-around;
       padding: 10px 15px;
-      background: #FAFAFA;
+      background: var(--bg-secondary);
 
       .centerContent {
         display: flex;
@@ -192,13 +199,13 @@
         gap: 10px;
 
         .centerCount {
-          color: #222226;
+          color: var(--text-color);
           font-size: 15px;
           font-weight: 400;
         }
 
         .centerKey {
-          color: #555666;
+          color: var(--text-secondary);
           font-size: 13px;
           font-weight: 400;
         }
@@ -229,13 +236,14 @@
 
       .messageBtn {
         padding: 2px 45px;
-        color: #555666;
-        border: 1px solid #ccccd8;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
         border-radius: 30px;
         cursor: pointer;
 
         &:hover {
-          border: 1px solid #8f8f97;
+          border-color: var(--accent-color);
+          background: var(--theme-color-hover);
         }
       }
     }
@@ -261,7 +269,7 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: #3d3d3d;
+    color: var(--text-color);
     letter-spacing: 0.04em;
     margin: 2px 4px 8px;
   }
@@ -341,14 +349,13 @@
   padding: 6px 8px 6px 30px;
   font-size: 13px;
   font-weight: 400;
-  color: #68707d;
+  color: var(--text-secondary);
 }
 
 // 高亮色跟随全局主题色。
 .tocActive {
-  color: var(--primary-color) !important;
-  background-color: rgba(57, 110, 255, 0.1);
-  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--accent-color) !important;
+  background-color: var(--active-bg);
 }
 
 @media (max-width: 1360px) {
@@ -381,10 +388,10 @@
 
       .label {
         font-size: 14px;
-        color: #767575;
+        color: var(--text-secondary);
         padding: 4px 5px;
         border-radius: 5px;
-        background: #F2F2F2;
+        background: var(--bg-secondary);
       }
     }
   }
@@ -397,13 +404,13 @@
     padding: 8px 0px;
     border-radius: 8px;
     text-align: center;
-    background: #3e37c6;
-    box-shadow: 0 4px 6px 0 #bedbff;
+    background: var(--primary-color);
+    box-shadow: var(--shadow-sm);
     transition: background 0.3s ease 0s;
     cursor: pointer;
 
     &:hover {
-      background: #352FB0;
+      background: var(--primary-color-hover);
     }
   }
 }
@@ -426,7 +433,7 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: #3d3d3d;
+    color: var(--text-color);
     letter-spacing: 0.04em;
     margin: 2px 4px 8px;
   }
@@ -458,10 +465,10 @@
         margin-bottom: 12px;
         cursor: pointer;
         word-wrap: break-word;
-        color: #555666;
+        color: var(--text-secondary);
 
         &:hover {
-          color: var(--primary-color);
+          color: var(--accent-color);
         }
       }
     }
@@ -499,7 +506,7 @@
     }
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-color);
     }
 
     &.active {
@@ -525,12 +532,23 @@
   z-index: 999;
   cursor: pointer;
   font-size: 40px;
-  color: #989AA9;
+  color: var(--text-secondary);
   transition: all 0.3s ease;
   transition-delay: 0s;
 
   &:hover {
-    color: #6c6c6c;
+    color: var(--accent-color);
     transform: translateY(-1px);
   }
+}
+
+.aiHint {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.viewIcon {
+  margin-left: 15px;
+  margin-right: 5px;
+  color: var(--text-secondary);
 }

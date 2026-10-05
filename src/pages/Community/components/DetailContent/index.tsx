@@ -6,6 +6,8 @@ import type { IContent, IContentDetail } from '@/types/community'
 import type { Highlight } from '@/types/highlight'
 import { formatDateTime } from '@/utils/formatDateTime'
 import styles from './index.module.less'
+import '@/styles/markdown.less'
+import Loading from '@/components/Loading'
 import { getCommunityByIdAPI, likeCommunityAPI, collectedCommunityAPI, getHotCommunityListAPI, pageviewsCommunityAPI, followCommunityAPI } from '@/api/community'
 import { getHighlightsAPI, saveHighlightsAPI, addCitationAPI } from '@/api/highlight'
 import { applyHighlights } from '@/utils/highlightRenderer'
@@ -571,9 +573,11 @@ const DetailContent: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <Skeleton active avatar paragraph={{ rows: 10 }} />
-      </div>
+      <Loading>
+        <div className={styles.loadingContainer}>
+          <Skeleton active avatar paragraph={{ rows: 10 }} />
+        </div>
+      </Loading>
     )
   }
 
@@ -610,7 +614,7 @@ const DetailContent: React.FC = () => {
           </header>
 
           {/* 文章正文 */}
-          <div className={styles.markdownBody} ref={articleRef}>
+          <div className={`${styles.markdownBody} community-markdown`} ref={articleRef}>
             <Viewer
               value={detail.content}
               plugins={markdownPlugins}
@@ -632,7 +636,7 @@ const DetailContent: React.FC = () => {
               <div style={{ fontSize: '18px', fontWeight: '550' }}>{detail.name}</div>
               <div className={styles.signatureCon}>
                 <div className={styles.signature}>签名:</div>
-                <div style={{ fontSize: '13px', color: '#555666' }}>吾日三省吾身，吾没有错</div>
+                <div className={styles.signature}>吾日三省吾身，吾没有错</div>
               </div>
             </div>
           </div>
@@ -696,7 +700,7 @@ const DetailContent: React.FC = () => {
         <div className={styles.aiHelperContent}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ fontSize: '20px', fontWeight: '600' }}>核心速览</div>
-            <span style={{ fontSize: '13px', color: '#A1A1A1' }}>文章太长没时间？AI 3秒提炼核心干货，省时80%</span>
+            <span className={styles.aiHint}>文章太长没时间？AI 3秒提炼核心干货，省时80%</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '35px' }}>
             <div className={styles.labelContainer}>
@@ -716,7 +720,7 @@ const DetailContent: React.FC = () => {
             return (
               <div className={styles.hotArticleFrame} key={item.id}>
                 <div className={styles.hotArticleTitle} onClick={() => window.open(`/community/${item.id}`)}>
-                  {item.title} <span style={{ marginLeft: '15px', marginRight: '5px', color: '#a5a5a5' }}><EyeFilled /></span><span>{item.Pageviews}</span>
+                  {item.title} <span className={styles.viewIcon}><EyeFilled /></span><span>{item.Pageviews}</span>
                 </div>
               </div>
             )

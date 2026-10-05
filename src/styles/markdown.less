@@ -1,0 +1,114 @@
+// 仅用于社区发布/阅读，简历纸张和其他 Markdown 消费方保持自己的样式。
+.community-markdown {
+  color: var(--text-color);
+  color-scheme: var(--theme-color-scheme);
+
+  .markdown-body {
+    // 覆盖 GitHub 样式的系统主题变量，使用网站实际选择的主题。
+    --fgColor-default: var(--text-color);
+    --fgColor-muted: var(--text-secondary);
+    --fgColor-accent: var(--accent-color);
+    --bgColor-default: var(--bg-color);
+    --bgColor-muted: var(--bg-secondary);
+    --bgColor-neutral-muted: var(--theme-color-hover);
+    --bgColor-attention-muted: var(--active-bg);
+    --borderColor-default: var(--border-color);
+    --borderColor-muted: var(--border-color);
+    --borderColor-neutral-muted: var(--border-color);
+    --borderColor-accent-emphasis: var(--accent-color);
+    color-scheme: var(--theme-color-scheme);
+    color: var(--text-color);
+    background: var(--bg-color);
+  }
+
+  // 用户划线采用固定浅色底，文字保留深色，确保暗色阅读时仍可辨识。
+  .markdown-body mark[data-highlight-id] { color: #1d1d1f; }
+
+  .bytemd,
+  .bytemd-toolbar,
+  .bytemd-status,
+  .bytemd-sidebar,
+  .bytemd-split .bytemd-preview {
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
+
+  .bytemd,
+  .bytemd-editor,
+  .bytemd-preview,
+  .bytemd-sidebar,
+  .CodeMirror {
+    background: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .bytemd-toolbar,
+  .bytemd-status,
+  .CodeMirror-gutters,
+  .CodeMirror-scrollbar-filler,
+  .CodeMirror-gutter-filler {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+  }
+
+  .CodeMirror-linenumber,
+  .bytemd-sidebar ul,
+  .bytemd-editor .CodeMirror pre.CodeMirror-placeholder {
+    color: var(--text-secondary);
+  }
+
+  .CodeMirror-cursor { border-left-color: var(--text-color); }
+  .CodeMirror-selected,
+  .CodeMirror-focused .CodeMirror-selected { background: var(--active-bg); }
+
+  .bytemd-toolbar-icon:hover,
+  .bytemd-toc-active { background: var(--theme-color-hover); }
+
+  .bytemd-toolbar-icon-active,
+  .bytemd-toolbar-tab-active,
+  .bytemd-sidebar-close:hover,
+  .bytemd-status-right span:hover,
+  .bytemd-toc-active { color: var(--accent-color); }
+}
+
+html[data-theme='dark'] .community-markdown {
+  // 复用已安装的高亮主题，同时限制作用域，避免把简历代码块变成暗色。
+  @import (less) 'highlight.js/styles/github-dark.css';
+
+  .hljs { background: var(--bg-secondary); }
+  .CodeMirror .cm-header,
+  .CodeMirror .cm-def,
+  .CodeMirror .cm-attribute,
+  .CodeMirror .cm-link,
+  .CodeMirror .cm-variable-2 { color: #85B2E5; }
+  .CodeMirror .cm-quote,
+  .CodeMirror .cm-string,
+  .CodeMirror .cm-string-2,
+  .CodeMirror .cm-tag { color: #a5d6a7; }
+  .CodeMirror .cm-keyword,
+  .CodeMirror .cm-builtin,
+  .CodeMirror .cm-atom { color: #c4a7e7; }
+  .CodeMirror .cm-number,
+  .CodeMirror .cm-variable-3,
+  .CodeMirror .cm-type,
+  .CodeMirror .cm-bracket { color: #f6c177; }
+  .CodeMirror .cm-comment,
+  .CodeMirror .cm-meta,
+  .CodeMirror .cm-qualifier,
+  .CodeMirror .cm-hr { color: #94a3b8; }
+  .CodeMirror-activeline-background { background: var(--active-bg); }
+}
+
+// ByteMD 的菜单浮层挂载在 body；只命中包含 ByteMD 菜单的浮层。
+.tippy-box[data-theme~='light-border']:has(.bytemd-dropdown) {
+  background: var(--bg-secondary);
+  color: var(--text-color);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+
+  .bytemd-dropdown-title {
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  .bytemd-dropdown-item:hover { background: var(--theme-color-hover); }
+}
