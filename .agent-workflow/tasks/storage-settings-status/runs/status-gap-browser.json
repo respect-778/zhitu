@@ -1,0 +1,50 @@
+{
+  "checks": [
+    {
+      "label": "1440px success",
+      "statusGap": 16,
+      "countGap": 16,
+      "textAlign": "right",
+      "rightEdge": 1428,
+      "viewport": 1440
+    },
+    {
+      "label": "1440px pending",
+      "statusGap": 16,
+      "countGap": 16,
+      "textAlign": "right",
+      "rightEdge": 1428,
+      "viewport": 1440
+    },
+    {
+      "label": "1440px saved after switch",
+      "statusGap": 16,
+      "countGap": 16,
+      "textAlign": "right",
+      "rightEdge": 1428,
+      "viewport": 1440
+    },
+    {
+      "label": "1024px success",
+      "statusGap": 16,
+      "countGap": 16,
+      "textAlign": "right",
+      "rightEdge": 1012,
+      "viewport": 1024
+    },
+    {
+      "label": "1024px pending",
+      "statusGap": 16,
+      "countGap": 16,
+      "textAlign": "right",
+      "rightEdge": 1012,
+      "viewport": 1024
+    }
+  ],
+  "workspacePuts": 2,
+  "finalActiveTab": "note-a",
+  "noteContentUnchanged": true,
+  "browserErrors": [],
+  "backend": "in-memory mocked responses",
+  "localStorage": "real Chromium OPFS; picker mocked"
+}

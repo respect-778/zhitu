@@ -1,6 +1,6 @@
 import type React from 'react'
 import { useEffect, useMemo, useCallback, useRef, useState } from 'react'
-import { message } from 'antd'
+import { Alert, Button, message } from 'antd'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   loadPathWorkspace,
@@ -10,6 +10,8 @@ import {
   toggleFolder, collapseAllFolders,
   setSidebarPanel, toggleSidebar, sortFiles,
   flushSync,
+  workspaceSaveQueue,
+  recoverPathWorkspace,
 } from '@/store/modules/pathStore'
 import type { SidebarPanel } from '@/types/path'
 import ActivityBar from './components/ActivityBar'
@@ -17,6 +19,7 @@ import Sidebar from './components/Sidebar'
 import TabBar from './components/TabBar'
 import EditorArea from './components/EditorArea'
 import StatusBar from './components/StatusBar'
+import PersonalSaveStatus from '@/components/PersonalStorage/PersonalSaveStatus'
 import { getMentor } from './data/mentors'
 import QuickSwitcher from './components/QuickSwitcher'
 import styles from './index.module.less'
@@ -29,7 +32,7 @@ const Path: React.FC = () => {
   const {
     files, openTabs, activeTabId,
     sidebarPanel, sidebarVisible, expandedFolderIds,
-    mentorId,
+    mentorId, revision, syncStatus, syncError,
   } = useAppSelector(state => state.path)
 
   // 标签页前进/后退导航历史
@@ -39,11 +42,29 @@ const Path: React.FC = () => {
   const [graphOpen, setGraphOpen] = useState(false)
   const [graphActive, setGraphActive] = useState(false)
   const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false)
+  const [recovering, setRecovering] = useState(false)
   const isNavAction = useRef(false)
 
   // 初始化：加载用户工作区数据
   useEffect(() => {
     if (userId) dispatch(loadPathWorkspace(userId))
+  }, [dispatch, userId])
+
+  useEffect(() => {
+    const refresh = () => {
+      if (userId && document.visibilityState === 'visible') void dispatch(loadPathWorkspace(userId))
+    }
+    const handleCitation = (event: Event) => {
+      if ((event as CustomEvent<{ userId: string }>).detail.userId === userId) refresh()
+    }
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+    window.addEventListener('zhitu-workspace-updated', handleCitation)
+    return () => {
+      window.removeEventListener('focus', refresh)
+      document.removeEventListener('visibilitychange', refresh)
+      window.removeEventListener('zhitu-workspace-updated', handleCitation)
+    }
   }, [dispatch, userId])
 
   // 监听 activeTabId 变化，维护导航历史栈
@@ -203,7 +224,7 @@ const Path: React.FC = () => {
 
   useEffect(() => {
     // 定义 beforeunload 的回调
-    const handler = () => flushSync()
+    const handler = () => { void flushSync(true) }
 
     // 注册监听：：浏览器刷新、关标签页、输入新 URL 时触发
     window.addEventListener('beforeunload', handler)
@@ -212,13 +233,38 @@ const Path: React.FC = () => {
       // 浏览器原生事件，SPA 路由跳转不会触发
       window.removeEventListener('beforeunload', handler)
 
-      flushSync() // SPA 路由跳转时处理，原生事件是不会处理的
+      void flushSync()
     }
   }, [])
 
   return (
     <div className={styles.container}>
-      <div className={styles.workspace}>
+      {(syncStatus === 'error' || syncStatus === 'conflict') && (
+        <Alert
+          type="warning"
+          showIcon
+          title={syncError || '本地修改尚未同步'}
+          action={syncStatus === 'conflict' ? (
+            <Button size="small" loading={recovering} onClick={async () => {
+              setRecovering(true)
+              try {
+                await dispatch(recoverPathWorkspace(userId)).unwrap()
+                message.success('已保留本地笔记副本并更新工作区')
+              } catch {
+                message.error('更新失败，本地修改仍保留')
+              } finally {
+                setRecovering(false)
+              }
+            }}>保留副本并更新</Button>
+          ) : (
+            <Button size="small" onClick={() => {
+              if (revision === null || !workspaceSaveQueue.peek(userId)?.pending) void dispatch(loadPathWorkspace(userId))
+              else void flushSync()
+            }}>重试同步</Button>
+          )}
+        />
+      )}
+      <div className={styles.workspace} style={recovering ? { pointerEvents: 'none' } : undefined}>
         <ActivityBar activePanel={sidebarPanel} isClose={isClose} showingGraph={graphOpen} onPanelChange={handlePanelChange} onToggleSidebar={handleToggleSidebar} onShowGraph={() => { if (graphOpen) { setGraphOpen(false); setGraphActive(false) } else { setGraphOpen(true); setGraphActive(true) } }} />
 
         <div className={`${styles.sidebarWrap} ${!sidebarVisible ? styles.sidebarCollapsed : ''}`}>
@@ -275,6 +321,7 @@ const Path: React.FC = () => {
         mentorName={mentor?.nameZh}
         fileCount={fileCount}
         wordCount={wordCount}
+        saveStatus={<PersonalSaveStatus kind="workspace" />}
       />
 
       <QuickSwitcher

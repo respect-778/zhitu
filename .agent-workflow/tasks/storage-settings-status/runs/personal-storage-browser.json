@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "scenarios": [
+    "legacy cache migrated and marked complete only after server acknowledgement",
+    "editing followed immediately by SPA navigation flushes the latest draft",
+    "one directory binding writes real resume JSON and learning workspace JSON",
+    "learning editor changes produce real Markdown through the same persisted directory handle",
+    "clearing browser cache restores resume from MySQL and directory handle from IndexedDB",
+    "picker cancellation retains binding; revoked permissions do not block cloud and explicit reauthorization resumes backup",
+    "a real stale revision returns 409 and visible recovery preserves both remote and local versions",
+    "real local writes with a failed server save never display green success",
+    "manual computer-file changes survive and platform writes a separate sibling copy",
+    "the inline settings panel fits a 1024px viewport and both resume views omit directory buttons"
+  ],
+  "pageErrors": [],
+  "nativePicker": "simulated",
+  "filesystem": "real Chromium OPFS directory and streams",
+  "database": "isolated real MySQL"
+}

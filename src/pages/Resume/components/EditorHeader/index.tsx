@@ -1,10 +1,10 @@
 import type React from 'react'
-import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { ArrowLeft, Download } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateResumeTitle } from '@/store/modules/resumeStore'
 import styles from './index.module.less'
+import ResumeSaveStatus from '@/components/PersonalStorage/ResumeSaveStatus'
 
 interface Props {
   onExport: () => void
@@ -16,12 +16,12 @@ const EditorHeader: React.FC<Props> = ({ onExport, exporting }) => {
   const dispatch = useAppDispatch()
   const activeResumeId = useAppSelector(s => s.resume.activeResumeId)
   const resume = useAppSelector(s => s.resume.resumes.find(r => r.id === activeResumeId))
-  const [title, setTitle] = useState(resume?.title ?? '')
 
   if (!resume) return null
 
   const handleTitleBlur = () => {
-    if (title.trim() && title !== resume.title) dispatch(updateResumeTitle(title.trim()))
+    const title = resume.title.trim() || '我的简历'
+    if (title !== resume.title) dispatch(updateResumeTitle(title))
   }
 
   return (
@@ -32,13 +32,15 @@ const EditorHeader: React.FC<Props> = ({ onExport, exporting }) => {
         </button>
         <input
           className={styles.titleInput}
-          value={title}
-          onChange={e => setTitle(e.target.value)}
+          aria-label="简历名称"
+          value={resume.title}
+          onChange={e => dispatch(updateResumeTitle(e.target.value))}
           onBlur={handleTitleBlur}
           onKeyDown={e => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
         />
       </div>
       <div className={styles.right}>
+        <ResumeSaveStatus />
         <button className={styles.exportBtn} onClick={onExport} disabled={exporting}>
           <Download size={14} /> {exporting ? '导出中...' : '导出 PDF'}
         </button>

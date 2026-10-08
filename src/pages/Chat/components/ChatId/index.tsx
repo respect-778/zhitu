@@ -312,10 +312,14 @@ const ChatId = () => {
 
   // 引用
   const handleQuote = async (message: IChatMessage, index: number) => {
+    if (!message.id || message.id <= 0 || currentStream.isStreaming) {
+      messageApi.info('请等待回复保存完成后再引用')
+      return
+    }
     const userMessage = currentMessages.slice(0, index).reverse().find(item => item.role === 'user')
 
     try {
-      await addCitationAPI({ text: message.content, question: userMessage?.content, sourceId: sessionUuid, sourceTitle: currentSessionTitle, sourceType: 'chat' })
+      await addCitationAPI({ text: message.content, question: userMessage?.content, messageId: message.id, sourceId: sessionUuid, sourceTitle: currentSessionTitle, sourceType: 'chat' })
       messageApi.success('引用成功')
     } catch (error) {
       messageApi.error('引用失败')

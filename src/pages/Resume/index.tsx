@@ -10,6 +10,7 @@ import { TEMPLATES, getTemplateComponent } from './components/templates'
 import { DEFAULT_RESUME_DATA } from '@/types/resume'
 import useCarouselControls from '@/hooks/useCarouselControls'
 import styles from './index.module.less'
+import ResumeSaveStatus from '@/components/PersonalStorage/ResumeSaveStatus'
 
 const A4_WIDTH = 794
 const BLUE_AVATAR_TEMPLATES = new Set(['minimalist', 'classic', 'modern', 'editorial'])
@@ -180,6 +181,7 @@ const Resume: React.FC = () => {
   const userId = useAppSelector(state => state.user.userId)
   const resumes = useAppSelector(state => state.resume.resumes)
   const resumeStorageUserId = useAppSelector(state => state.resume.storageUserId)
+  const loaded = useAppSelector(state => state.resume.loaded)
   const currentUserResumes = resumeStorageUserId === userId ? resumes : []
 
   const [newTitle, setNewTitle] = useState('')
@@ -205,7 +207,7 @@ const Resume: React.FC = () => {
   }
 
   const handleCreate = () => {
-    if (!userId || resumeStorageUserId !== userId) return message.warning('用户信息加载中，请稍后再试')
+    if (!userId || resumeStorageUserId !== userId || !loaded) return message.warning('用户信息加载中，请稍后再试')
     if (!newTitle.trim()) return message.warning('请输入简历标题')
     const id = crypto.randomUUID()
     dispatch(createResume({ id, title: newTitle.trim(), templateId: selectedTemplate, prefill: prefillData }))
@@ -263,7 +265,7 @@ const Resume: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>我的简历</h2>
-            <span className={styles.sectionSub}>开始编写你的简历</span>
+            <ResumeSaveStatus />
           </div>
           <div className={styles.carouselShell}>
             {resumeCarousel.canScrollLeft && (

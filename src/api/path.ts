@@ -1,4 +1,5 @@
 import httpInstance from '@/utils/http'
+import type { SaveSnapshot } from '@/utils/workspaceSaveQueue'
 
 /** 后端存储的工作区数据结构 */
 export interface WorkspaceData {
@@ -11,11 +12,14 @@ export interface WorkspaceData {
 }
 
 /** 获取用户工作区数据，新用户返回 { data: null } */
-export const getWorkspaceAPI = (): Promise<{ data: WorkspaceData | null }> => {
+export const getWorkspaceAPI = (): Promise<SaveSnapshot<WorkspaceData>> => {
   return httpInstance({ url: '/growth/workspace', method: 'get' })
 }
 
 /** 保存工作区数据到后端（前端 debounce 1.5s 后调用） */
-export const saveWorkspaceAPI = (data: WorkspaceData): Promise<{ message: string }> => {
-  return httpInstance({ url: '/growth/workspace', method: 'put', data: { data } })
+export const saveWorkspaceAPI = (data: WorkspaceData, revision: number, keepalive = false): Promise<SaveSnapshot<WorkspaceData>> => {
+  return httpInstance({
+    url: '/growth/workspace', method: 'put', data: { data, revision },
+    ...(keepalive ? { adapter: 'fetch', fetchOptions: { keepalive: true } } : {}),
+  })
 }

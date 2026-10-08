@@ -4,13 +4,14 @@ import {
   SearchOutlined,
   AimOutlined,
   UserOutlined,
-  SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ShareAltOutlined,
+  SettingOutlined,
 } from '@ant-design/icons'
 import type { SidebarPanel } from '@/types/path'
 import styles from './index.module.less'
+import { useNavigate } from 'react-router'
 
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const ActivityBar: React.FC<Props> = ({ activePanel, isClose, showingGraph, onPanelChange, onToggleSidebar, onShowGraph }) => {
+  const navigate = useNavigate()
   const panels: { key: SidebarPanel; icon: React.ReactNode; title: string }[] = [
     { key: 'close', icon: isClose ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />, title: isClose ? '展开侧栏' : '收起侧栏' },
     { key: 'files', icon: <FileOutlined />, title: '文件浏览器' },
@@ -53,9 +55,7 @@ const ActivityBar: React.FC<Props> = ({ activePanel, isClose, showingGraph, onPa
         </button>
       </div>
       <div className={styles.bottomIcons}>
-        <button className={styles.iconBtn} title="设置">
-          <SettingOutlined />
-        </button>
+        <button title="路径配置" aria-label="路径配置" className={styles.iconBtn} onClick={() => navigate('/setting#personal-directory')}><SettingOutlined /></button>
       </div>
     </div>
   )

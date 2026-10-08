@@ -674,8 +674,9 @@ const DetailContent: React.FC = () => {
       </aside>
 
       {/* 悬浮 目录 */}
-      {tocItems.length > 0 &&
-        <aside className={styles.tocbotContainer}>
+
+      <aside className={styles.tocbotContainer}>
+        {tocItems.length > 0 ?
           <nav className={styles.tocbotContent} ref={tocbotRef} aria-label="文章目录">
             {tocItems.map(item => (
               <button
@@ -691,8 +692,13 @@ const DetailContent: React.FC = () => {
               </button>
             ))}
           </nav>
-        </aside>
-      }
+          :
+          <nav className={styles.tocbotNull}>
+            无目录结构
+          </nav>
+        }
+      </aside>
+
 
       {/* 悬浮 ai agent 助手 */}
       <aside className={styles.aiHelperContainer}>

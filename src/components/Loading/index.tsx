@@ -7,7 +7,9 @@ import styles from './index.module.less'
 let activeLoaders = 0
 let hadScrollLock = false
 
-const Loading = ({ children }: PropsWithChildren) => {
+type LoadingProps = PropsWithChildren<{ withHeader?: boolean }>
+
+const Loading = ({ children, withHeader = false }: LoadingProps) => {
   useLayoutEffect(() => {
     if (activeLoaders++ === 0) {
       hadScrollLock = document.documentElement.classList.contains('page-loading')
@@ -21,7 +23,7 @@ const Loading = ({ children }: PropsWithChildren) => {
   }, [])
 
   return createPortal(
-    <div className={styles.loading} role="status" aria-label="正在加载">
+    <div className={`${styles.loading}${withHeader ? ` ${styles.withHeader}` : ''}`} role="status" aria-label="正在加载">
       {children ?? <LoadingOutlined spin />}
     </div>,
     document.body,

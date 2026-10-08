@@ -1,0 +1,31 @@
+{
+  "taskId": "first-citation-initialization",
+  "date": "2026-10-07",
+  "status": "passed",
+  "summary": "首次引用自动初始化、目录补建与既有引用完整性回归通过",
+  "branch": "codex/workspace-citation-integrity",
+  "proofPaths": [
+    "../backend/src/services/growthWorkspaceService.ts",
+    "../backend/tests/workspace-integrity.test.cjs",
+    "tests/first-citation-ui.py",
+    ".agent-workflow/tasks/first-citation-initialization/verification.md",
+    ".agent-workflow/tasks/first-citation-initialization/runs/first-reference-planner.png"
+  ],
+  "checks": [
+    { "name": "isolated MySQL and real-page integration", "command": "RUN_FIRST_CITATION_UI=1 node --test tests/workspace-integrity.test.cjs", "passed": 23, "failed": 0, "includesParentTest": true },
+    { "name": "workspace save queue", "command": "node --test tests/workspace-save-queue.test.cjs", "passed": 5, "failed": 0 },
+    { "name": "backend build", "command": "npm run build", "exitCode": 0 },
+    { "name": "frontend build", "command": "NODE_OPTIONS=--max-old-space-size=1024 npm run build", "exitCode": 0 },
+    { "name": "frontend whitespace check", "command": "git diff --check", "exitCode": 0 },
+    { "name": "temporary database cleanup", "result": "removed; original business table row counts unchanged" }
+  ],
+  "ui": {
+    "growthApi": "real controllers and services with isolated MySQL",
+    "otherApi": "fixed test data",
+    "citationStatuses": [200, 200, 200],
+    "pageErrors": [],
+    "flows": ["first collection before planner visit", "open server-created reference", "reload recovery", "same-source append and duplicate suppression"]
+  },
+  "delivery": { "committed": false, "pushed": false, "deployed": false },
+  "limitations": ["backend is outside the frontend Git repository", "resume server persistence and computer-folder persistence remain out of scope"]
+}

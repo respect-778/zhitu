@@ -13,8 +13,10 @@ export const saveHighlightsAPI = (postId: number, highlights: Highlight[]): Prom
 }
 
 // 添加引用到学习规划
-export const addCitationAPI = (data: { text: string; question?: string; sourceId: string | number; sourceTitle: string; sourceType?: 'chat' | 'community' }): Promise<{ data: { fileId: string } }> => {
-  return httpInstance({ url: '/growth/cite', method: 'post', data })
+export const addCitationAPI = async (data: { text: string; question?: string; messageId?: number; sourceId: string | number; sourceTitle: string; sourceType?: 'chat' | 'community' }): Promise<{ data: { fileId: string; duplicate: boolean }; revision: number }> => {
+  const response = await httpInstance({ url: '/growth/cite', method: 'post', data }) as unknown as { data: { fileId: string; duplicate: boolean }; revision: number }
+  window.dispatchEvent(new CustomEvent('zhitu-workspace-updated', { detail: { userId: String(getStore('userId') || '') } }))
+  return response
 }
 
 // 页面卸载时用 fetch + keepalive 同步保存

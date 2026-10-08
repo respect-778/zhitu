@@ -2,6 +2,13 @@ import { useRef, useState, useEffect } from 'react';
 import Matter from 'matter-js';
 import './FallingText.css';
 
+type MatterMouseWithHandlers = Matter.Mouse & {
+  mousemove: EventListener;
+  mousedown: EventListener;
+  mouseup: EventListener;
+  mousewheel: EventListener;
+};
+
 interface FallingTextProps {
   text?: string;
   highlightWords?: string[];
@@ -68,9 +75,13 @@ const FallingText: React.FC<FallingTextProps> = ({
 
     const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } = Matter;
 
-    if (!containerRef.current || !canvasContainerRef.current || !textRef.current) return;
+    const containerElement = containerRef.current;
+    const canvasElement = canvasContainerRef.current;
+    const textElement = textRef.current;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
+    if (!containerElement || !canvasElement || !textElement) return;
+
+    const containerRect = containerElement.getBoundingClientRect();
     const width = containerRect.width;
     const height = containerRect.height;
 
@@ -82,7 +93,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     engine.world.gravity.y = gravity;
 
     const render = Render.create({
-      element: canvasContainerRef.current,
+      element: canvasElement,
       engine,
       options: {
         width,
@@ -101,7 +112,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
-    const wordSpans = textRef.current.querySelectorAll<HTMLSpanElement>('.word');
+    const wordSpans = textElement.querySelectorAll<HTMLSpanElement>('.word');
     const wordBodies = Array.from(wordSpans).map(elem => {
       const rect = elem.getBoundingClientRect();
 
@@ -130,7 +141,10 @@ const FallingText: React.FC<FallingTextProps> = ({
       elem.style.transform = 'none';
     });
 
-    const mouse = Mouse.create(containerRef.current);
+    const mouse = Mouse.create(containerElement) as MatterMouseWithHandlers;
+    // Matter.js 的 Mouse.create 会自动监听 wheel，并在处理函数中 preventDefault。
+    // 这里保留拖拽所需的鼠标/触摸事件，只移除滚轮监听，让页面继续正常滚动。
+    containerElement.removeEventListener('wheel', mouse.mousewheel);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: {
@@ -146,6 +160,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     Runner.run(runner, engine);
     Render.run(render);
 
+    let animationFrameId = 0;
     const updateLoop = () => {
       wordBodies.forEach(({ body, elem }) => {
         const { x, y } = body.position;
@@ -154,15 +169,24 @@ const FallingText: React.FC<FallingTextProps> = ({
         elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
       });
       Matter.Engine.update(engine);
-      requestAnimationFrame(updateLoop);
+      animationFrameId = requestAnimationFrame(updateLoop);
     };
     updateLoop();
 
     return () => {
       Render.stop(render);
       Runner.stop(runner);
-      if (render.canvas && canvasContainerRef.current) {
-        canvasContainerRef.current.removeChild(render.canvas);
+      cancelAnimationFrame(animationFrameId);
+      containerElement.removeEventListener('mousemove', mouse.mousemove);
+      containerElement.removeEventListener('mousedown', mouse.mousedown);
+      containerElement.removeEventListener('mouseup', mouse.mouseup);
+      containerElement.removeEventListener('wheel', mouse.mousewheel);
+      containerElement.removeEventListener('touchmove', mouse.mousemove);
+      containerElement.removeEventListener('touchstart', mouse.mousedown);
+      containerElement.removeEventListener('touchend', mouse.mouseup);
+      Matter.Mouse.clearSourceEvents(mouse);
+      if (render.canvas && canvasElement) {
+        canvasElement.removeChild(render.canvas);
       }
       World.clear(engine.world, false);
       Engine.clear(engine);

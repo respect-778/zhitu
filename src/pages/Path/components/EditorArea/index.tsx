@@ -417,7 +417,7 @@ const InlineTitle: React.FC<{
 const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, onRenameFile, onSelectFile, canGoBack, canGoForward, onNavBack, onNavForward, onCreateFile }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const vditorRef = useRef<Vditor | null>(null)
-  const fileIdRef = useRef<string | null>(null)
+  const latestContentRef = useRef(file?.content ?? '')
 
   useEffect(() => {
     if (!editorRef.current || !file) {
@@ -425,7 +425,14 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
       return
     }
     vditorRef.current?.destroy(); vditorRef.current = null
-    fileIdRef.current = file.id
+    let disposed = false
+    const captureContent = (value: string) => {
+      if (!disposed && value !== latestContentRef.current) onContentChange(file.id, value)
+    }
+    const captureInput = () => {
+      const ir = vd.vditor?.ir
+      if (!disposed && vd.vditor?.lute && ir && !ir.composingLock) captureContent(vd.getValue())
+    }
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const vd = new Vditor(editorRef.current, {
       mode: 'ir', value: file.content ?? '', height: '100%', toolbar: [],
@@ -437,11 +444,39 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
         hljs: { style: isDark ? 'native' : 'github', lineNumber: true },
         markdown: { codeBlockPreview: false, mathBlockPreview: false },
       },
-      input: (value) => { if (fileIdRef.current) onContentChange(fileIdRef.current, value) },
+      input: captureContent,
+      after: () => {
+        if (disposed) { vd.destroy(); return }
+        const editor = vditorRef.current
+        if (editor?.vditor?.lute && editor.vditor.ir?.element && editor.getValue() !== latestContentRef.current) {
+          editor.setValue(latestContentRef.current, true)
+        }
+        // Vditor 的 input 回调有延迟；及时记录输入，避免快速切换时遗漏最后一次编辑。
+        vd.vditor.ir?.element.addEventListener('input', captureInput)
+        vd.vditor.ir?.element.addEventListener('compositionend', captureInput)
+      },
     })
     vditorRef.current = vd
-    return () => { vd.destroy(); vditorRef.current = null }
+    return () => {
+      if (vd.vditor?.lute) captureContent(vd.getValue())
+      disposed = true
+      if (vd.vditor) {
+        vd.vditor.ir?.element.removeEventListener('input', captureInput)
+        vd.vditor.ir?.element.removeEventListener('compositionend', captureInput)
+        clearTimeout(vd.vditor.ir?.processTimeoutId)
+        vd.destroy()
+      }
+      vditorRef.current = null
+    }
   }, [file?.id])
+
+  useEffect(() => {
+    latestContentRef.current = file?.content ?? ''
+    const editor = vditorRef.current
+    if (editor?.vditor?.lute && editor.vditor.ir?.element && editor.getValue() !== (file?.content ?? '')) {
+      editor.setValue(file?.content ?? '', true)
+    }
+  }, [file?.content])
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
