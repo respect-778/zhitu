@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createListenerMiddleware, isAnyOf, type PayloadAction } from '@reduxjs/toolkit'
 import type { VFile, GrowthPlan, SidebarPanel } from '@/types/path'
 import { getWorkspaceAPI, saveWorkspaceAPI, type WorkspaceData } from '@/api/path'
 import { getStore } from '@/utils/store'
+import { WorkspaceSaveQueue, type SaveState, type SaveSnapshot, type WorkspaceSyncStatus } from '@/utils/workspaceSaveQueue'
 
 interface PathState {
   files: VFile[]
@@ -13,6 +14,9 @@ interface PathState {
   activePlan: GrowthPlan | null
   mentorId: string | null
   storageUserId: string
+  revision: number | null
+  syncStatus: WorkspaceSyncStatus
+  syncError: string
 }
 
 const STORAGE_KEY_PREFIX = 'zhitu_path'
@@ -44,72 +48,62 @@ const initialState: PathState = {
   activeTabId: null,
   sidebarPanel: 'files',
   sidebarVisible: true,
-  expandedFolderIds: ['folder-plan', 'folder-notes'],
+  expandedFolderIds: ['folder-notes'],
   activePlan: null,
   mentorId: null,
   storageUserId: '',
+  revision: null,
+  syncStatus: 'loading',
+  syncError: '',
 }
 
 // debounce 同步到后端：即时写 localStorage，延迟 1.5s 发 PUT 请求
 // 高频操作（如编辑器输入）不会每次都打后端，只会在停顿后同步一次
 
-let pendingJson: string | null = null // 用于记住待发送的请求
+const clientId = sessionStorage.getItem('zhitu_path_client') || crypto.randomUUID()
+sessionStorage.setItem('zhitu_path_client', clientId)
+const getDraftKey = (userId: string) => `zhitu_path_draft_${userId}_${clientId}`
+type Draft = { data: WorkspaceData; revision: number | null }
+let onSyncState: ((userId: string, state: SaveState<WorkspaceData>) => void) | undefined
 
-let syncTimer: ReturnType<typeof setTimeout> | null = null
+const readDraft = (userId: string): Draft | undefined => {
+  try {
+    const raw = localStorage.getItem(getDraftKey(userId))
+    return raw ? JSON.parse(raw) : undefined
+  } catch {
+    return undefined
+  }
+}
 
-const syncToBackend = (state: PathState) => {
-  if (!state.storageUserId) return
-  const data: WorkspaceData = {
+export const workspaceSaveQueue = new WorkspaceSaveQueue<WorkspaceData>(
+  async (userId, data, revision, keepalive) => {
+    if (String(getStore('userId') || '') !== userId) throw new Error('当前账号已切换')
+    return saveWorkspaceAPI(data, revision, keepalive)
+  },
+  (userId, state) => {
+    if (state.pending) {
+      localStorage.setItem(getDraftKey(userId), JSON.stringify({ data: state.pending, revision: state.revision }))
+    } else {
+      localStorage.removeItem(getDraftKey(userId))
+    }
+    if (state.savedData) localStorage.setItem(getStorageKey(userId), JSON.stringify(state.savedData))
+    onSyncState?.(userId, state)
+  },
+)
+
+export const bindPathSync = (callback: NonNullable<typeof onSyncState>) => { onSyncState = callback }
+
+const toWorkspaceData = (state: PathState): WorkspaceData => JSON.parse(JSON.stringify({
     files: state.files,
     openTabs: state.openTabs,
     activeTabId: state.activeTabId,
     expandedFolderIds: state.expandedFolderIds,
     activePlan: state.activePlan,
     mentorId: state.mentorId,
-  }
-  // Immer draft proxy 在 reducer 结束后会被 revoked，
-  // 必须在此时序列化，setTimeout 回调中才能安全使用
-  const json = JSON.stringify(data)
-  localStorage.setItem(getStorageKey(state.storageUserId), json)
-
-  pendingJson = json // 记录需要发送的请求
-
-  if (syncTimer) clearTimeout(syncTimer)
-  syncTimer = setTimeout(() => {
-    saveWorkspaceAPI(JSON.parse(json))
-      .then(() => { pendingJson = null }) // 发送成功清空
-      .catch((err) => {
-        console.error('[PathStore] 同步到后端失败:', err?.response?.status, err?.message)
-      })
-  }, 1500)
-}
+  }))
 
 // 立即触发文件和文件内容的同步
-export const flushSync = () => {
-  // 没有待发送请求时，直接返回
-  if (pendingJson === null) return
-
-  // 取消 debounce 定时器，这里立即发送请求
-  if (syncTimer) {
-    clearTimeout(syncTimer)
-    syncTimer = null
-  }
-
-  const token = getStore('token')
-  const baseURL = import.meta.env.VITE_BASE_URL
-
-  fetch(`${baseURL}/growth/workspace`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ data: JSON.parse(pendingJson) }),
-    keepalive: true,
-  }).catch(() => { })
-
-  pendingJson = null
-}
+export const flushSync = (keepalive = false) => workspaceSaveQueue.flush(String(getStore('userId') || ''), keepalive)
 
 /**
  * 加载用户工作区（async thunk）
@@ -119,20 +113,65 @@ export const loadPathWorkspace = createAsyncThunk(
   'path/loadWorkspace',
   async (userId: string) => {
     const uid = userId.trim()
-    if (!uid) return { userId: uid, data: null as WorkspaceData | null }
+    if (!uid) return { userId: uid, snapshot: { data: null, revision: 0 } as SaveSnapshot<WorkspaceData>, offline: false, draft: undefined as Draft | undefined }
     try {
       const res = await getWorkspaceAPI()
-      return { userId: uid, data: res.data }
+      if (!Number.isSafeInteger(res.revision)) throw new Error('后端尚未支持工作区版本，请重启更新后的后端')
+      return { userId: uid, snapshot: res, offline: false, draft: readDraft(uid) }
     } catch {
-      return { userId: uid, data: null }
+      const saved = loadFromStorage(uid)
+      return { userId: uid, snapshot: { data: saved.files ? saved as WorkspaceData : null, revision: 0 }, offline: true, draft: readDraft(uid) }
     }
   }
 )
+
+export const recoverPathWorkspace = createAsyncThunk('path/recoverWorkspace', async (userId: string) => {
+  await workspaceSaveQueue.flush(userId)
+  const snapshot = await getWorkspaceAPI()
+  const draft = workspaceSaveQueue.peek(userId)?.pending || readDraft(userId)?.data
+  if (!Number.isSafeInteger(snapshot.revision)) throw new Error('后端尚未支持工作区版本')
+  const data: WorkspaceData = snapshot.data ? structuredClone(snapshot.data) : {
+    files: structuredClone(DEFAULT_FILES), openTabs: [], activeTabId: null, expandedFolderIds: ['folder-notes'], activePlan: null, mentorId: null,
+  }
+  if (draft) {
+    localStorage.setItem(`zhitu_path_recovery_${userId}_${Date.now()}`, JSON.stringify(draft))
+    const files = data.files as VFile[]
+    for (const file of draft.files as VFile[]) {
+      if (file.type !== 'file') continue
+      const existing = files.find(candidate => candidate.id === file.id)
+      if (existing && existing.content === file.content && existing.name === file.name) continue
+      const id = crypto.randomUUID()
+      files.push({
+        id, name: `${file.name}（本地副本）`, type: 'file', content: file.content, fileType: 'note',
+        parentId: files.some(candidate => candidate.id === file.parentId && candidate.type === 'folder') ? file.parentId : null,
+        order: files.length, metadata: { createdAt: now(), updatedAt: now(), tags: file.metadata?.tags || [] },
+      })
+      if (draft.activeTabId === file.id) { data.activeTabId = id; data.openTabs.push(id) }
+    }
+  }
+  return { userId, snapshot, data }
+})
+
+const applyWorkspace = (state: PathState, data: WorkspaceData) => {
+  state.files = data.files as VFile[]
+  state.openTabs = data.openTabs ?? []
+  state.activeTabId = data.activeTabId ?? null
+  const folderIds = new Set(state.files.filter(file => file.type === 'folder').map(file => file.id))
+  state.expandedFolderIds = (data.expandedFolderIds ?? []).filter(id => folderIds.has(id))
+  state.activePlan = data.activePlan as GrowthPlan ?? null
+  state.mentorId = data.mentorId ?? null
+}
 
 const pathSlice = createSlice({
   name: 'path',
   initialState,
   reducers: {
+    setSyncState(state, action: PayloadAction<{ userId: string; sync: SaveState<WorkspaceData> }>) {
+      if (state.storageUserId !== action.payload.userId) return
+      state.revision = action.payload.sync.revision
+      state.syncStatus = action.payload.sync.status
+      state.syncError = action.payload.sync.message
+    },
     // 创建文件/文件夹
     createFile(state, action: PayloadAction<{ id?: string; name: string; type: 'file' | 'folder'; parentId: string | null; content?: string; fileType?: VFile['fileType'] }>) {
       const { id, name, type, parentId, content, fileType } = action.payload
@@ -156,7 +195,6 @@ const pathSlice = createSlice({
         const idx = state.expandedFolderIds.indexOf(parentId)
         if (idx === -1) state.expandedFolderIds.push(parentId)
       }
-      syncToBackend(state)
     },
 
     // 删除文件/文件夹
@@ -172,7 +210,6 @@ const pathSlice = createSlice({
         state.activeTabId = state.openTabs[0] ?? null
       }
       state.expandedFolderIds = state.expandedFolderIds.filter(id => !ids.has(id))
-      syncToBackend(state)
     },
 
     // 重命名文件
@@ -182,7 +219,6 @@ const pathSlice = createSlice({
         file.name = action.payload.name
         if (file.metadata) file.metadata.updatedAt = now()
       }
-      syncToBackend(state)
     },
 
     // 更新文件内容
@@ -192,7 +228,6 @@ const pathSlice = createSlice({
         file.content = action.payload.content
         if (file.metadata) file.metadata.updatedAt = now()
       }
-      syncToBackend(state)
     },
 
     // 打开文件
@@ -201,7 +236,6 @@ const pathSlice = createSlice({
         state.openTabs.push(action.payload)
       }
       state.activeTabId = action.payload
-      syncToBackend(state)
     },
 
     // 关闭文件
@@ -212,13 +246,16 @@ const pathSlice = createSlice({
       if (state.activeTabId === action.payload) {
         state.activeTabId = state.openTabs[Math.min(idx, state.openTabs.length - 1)] ?? null
       }
-      syncToBackend(state)
+    },
+
+    closeAllTabs(state) {
+      state.openTabs = []
+      state.activeTabId = null
     },
 
     // 激活文件
     setActiveTab(state, action: PayloadAction<string>) {
       state.activeTabId = action.payload
-      syncToBackend(state)
     },
 
     // 切换文件夹
@@ -226,26 +263,30 @@ const pathSlice = createSlice({
       const idx = state.expandedFolderIds.indexOf(action.payload)
       if (idx === -1) state.expandedFolderIds.push(action.payload)
       else state.expandedFolderIds.splice(idx, 1)
-      syncToBackend(state)
     },
 
     // 折叠所有文件
     collapseAllFolders(state) {
       state.expandedFolderIds = []
-      syncToBackend(state)
+    },
+
+    expandAllFolders(state) {
+      state.expandedFolderIds = state.files.filter(file => file.type === 'folder').map(file => file.id)
     },
 
     // 切换侧边栏
     setSidebarPanel(state, action: PayloadAction<SidebarPanel>) {
       state.sidebarPanel = action.payload
       if (!state.sidebarVisible) state.sidebarVisible = true
-      syncToBackend(state)
     },
 
     // 切换侧边栏
     toggleSidebar(state) {
       state.sidebarVisible = !state.sidebarVisible
-      syncToBackend(state)
+    },
+
+    setSidebarVisible(state, action: PayloadAction<boolean>) {
+      state.sidebarVisible = action.payload
     },
 
     // 移动文件
@@ -255,7 +296,6 @@ const pathSlice = createSlice({
         file.parentId = action.payload.newParentId
         if (file.metadata) file.metadata.updatedAt = now()
       }
-      syncToBackend(state)
     },
 
     // 批量删除
@@ -272,7 +312,6 @@ const pathSlice = createSlice({
         state.activeTabId = state.openTabs[0] ?? null
       }
       state.expandedFolderIds = state.expandedFolderIds.filter(id => !allIds.has(id))
-      syncToBackend(state)
     },
 
     // 批量创建（用于粘贴）
@@ -289,7 +328,6 @@ const pathSlice = createSlice({
           metadata: { createdAt: ts, updatedAt: ts, tags: [] },
         })
       }
-      syncToBackend(state)
     },
 
     // 排序
@@ -313,42 +351,38 @@ const pathSlice = createSlice({
         list.sort(comparator)
         list.forEach((f, i) => { f.order = i })
       }
-      syncToBackend(state)
     },
   },
 
   // 异步处理
   extraReducers: (builder) => {
+    builder.addCase(loadPathWorkspace.pending, (state, action) => {
+      if (state.storageUserId !== action.meta.arg) {
+        Object.assign(state, structuredClone(initialState), { storageUserId: action.meta.arg })
+      }
+    })
     builder.addCase(loadPathWorkspace.fulfilled, (state, action) => {
-      const { userId, data } = action.payload
-      state.storageUserId = userId
-      if (!userId) return
-
-      // 优先使用后端数据
-      if (data && (data.files as VFile[])?.length) {
-        state.files = data.files as VFile[]
-        state.openTabs = data.openTabs ?? []
-        state.activeTabId = data.activeTabId ?? null
-        state.expandedFolderIds = data.expandedFolderIds ?? []
-        state.activePlan = (data.activePlan as GrowthPlan) ?? null
-        state.mentorId = data.mentorId ?? null
-        // 同步写入 localStorage 作为离线缓存
-        localStorage.setItem(getStorageKey(userId), JSON.stringify(data))
-        return
+      const { userId, snapshot, draft, offline } = action.payload
+      if (!userId || state.storageUserId !== userId) return
+      const queued = workspaceSaveQueue.peek(userId)
+      const data = queued?.pending || draft?.data ||
+        (queued?.revision !== null && queued?.revision !== undefined && queued.revision > snapshot.revision ? queued.savedData : snapshot.data)
+      if (data) applyWorkspace(state, data)
+      else {
+        const saved = loadFromStorage(userId)
+        if (saved.files) applyWorkspace(state, saved as WorkspaceData)
       }
-
-      // 后端无数据时 fallback 到 localStorage（兼容旧数据迁移）
-      const saved = loadFromStorage(userId)
-      if (saved.files?.length) {
-        state.files = saved.files
-        state.openTabs = saved.openTabs ?? []
-        state.activeTabId = saved.activeTabId ?? null
-        state.expandedFolderIds = saved.expandedFolderIds ?? []
-        state.activePlan = saved.activePlan ?? null
-        state.mentorId = saved.mentorId ?? null
-      }
-      // 首次加载（后端无数据）时，将当前状态同步到后端
-      syncToBackend(state)
+      state.revision = queued?.revision ?? (offline ? null : snapshot.revision)
+      state.syncStatus = offline ? 'error' : 'saved'
+      state.syncError = offline ? '无法读取服务器数据，本地修改已保留，请重试加载' : ''
+    })
+    builder.addCase(recoverPathWorkspace.fulfilled, (state, action) => {
+      if (state.storageUserId !== action.payload.userId) return
+      applyWorkspace(state, action.payload.data)
+      state.revision = action.payload.snapshot.revision
+    })
+    builder.addCase(recoverPathWorkspace.rejected, (state) => {
+      state.syncError = '更新失败，本地修改仍保留，请稍后重试'
     })
   },
 })
@@ -356,9 +390,41 @@ const pathSlice = createSlice({
 export const {
   createFile, deleteFile, renameFile, updateFileContent, moveFile,
   batchDeleteFiles, batchCreateFiles, sortFiles,
-  openTab, closeTab, setActiveTab,
-  toggleFolder, collapseAllFolders,
-  setSidebarPanel, toggleSidebar,
+  openTab, closeTab, closeAllTabs, setActiveTab,
+  toggleFolder, collapseAllFolders, expandAllFolders,
+  setSidebarPanel, setSidebarVisible, toggleSidebar,
+  setSyncState,
 } = pathSlice.actions
+
+export const pathSyncListener = createListenerMiddleware()
+pathSyncListener.startListening({
+  matcher: isAnyOf(createFile, deleteFile, renameFile, updateFileContent, moveFile, batchDeleteFiles, batchCreateFiles, sortFiles, openTab, closeTab, closeAllTabs, setActiveTab, toggleFolder, collapseAllFolders, expandAllFolders),
+  effect: (_action, api) => {
+    const state = (api.getState() as { path: PathState }).path
+    if (state.storageUserId) workspaceSaveQueue.enqueue(state.storageUserId, toWorkspaceData(state), state.revision)
+  },
+})
+pathSyncListener.startListening({
+  actionCreator: loadPathWorkspace.fulfilled,
+  effect: (action, api) => {
+    const { userId, snapshot, offline, draft } = action.payload
+    const state = (api.getState() as { path: PathState }).path
+    if (!userId || state.storageUserId !== userId) return
+    if (offline) return
+    workspaceSaveQueue.initialize(userId, snapshot, draft)
+    if (!snapshot.data && !draft && !workspaceSaveQueue.peek(userId)?.pending) {
+      workspaceSaveQueue.enqueue(userId, toWorkspaceData(state), snapshot.revision)
+    }
+  },
+})
+pathSyncListener.startListening({
+  actionCreator: recoverPathWorkspace.fulfilled,
+  effect: (action, api) => {
+    const state = (api.getState() as { path: PathState }).path
+    if (state.storageUserId !== action.payload.userId) return
+    workspaceSaveQueue.replaceBaseline(action.payload.userId, action.payload.snapshot)
+    workspaceSaveQueue.enqueue(action.payload.userId, action.payload.data, action.payload.snapshot.revision)
+  },
+})
 
 export default pathSlice.reducer

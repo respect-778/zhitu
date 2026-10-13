@@ -1,3 +1,19 @@
+.themeMenu:global(.ant-dropdown-menu) {
+  // 高亮保留中性灰底，文字跟随主题；暗黑模式使用较暗的灰色背景。
+  --theme-menu-selected-bg: #f0f0f0;
+
+  :global([data-theme="dark"]) & {
+    --theme-menu-selected-bg: rgba(255, 255, 255, 0.12);
+  }
+
+  :global(.ant-dropdown-menu-item.ant-dropdown-menu-item-selected),
+  :global(.ant-dropdown-menu-item.ant-dropdown-menu-item-selected:hover),
+  :global(.ant-dropdown-menu-item.ant-dropdown-menu-item-selected.ant-dropdown-menu-item-active) {
+    color: var(--accent-color);
+    background-color: var(--theme-menu-selected-bg);
+  }
+}
+
 .switch {
   font-size: 14px;
   padding: 6px 8px;

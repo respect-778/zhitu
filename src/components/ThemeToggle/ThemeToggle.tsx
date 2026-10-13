@@ -16,7 +16,7 @@ const ThemeToggle = () => {
 
   return (
     <Dropdown
-      menu={{ items, selectable: true, selectedKeys: [mode], onClick: ({ key }) => dispatch(setThemeMode(key as ThemeMode)) }}
+      menu={{ className: styles.themeMenu, items, selectable: true, selectedKeys: [mode], onClick: ({ key }) => dispatch(setThemeMode(key as ThemeMode)) }}
       trigger={['click']}
       placement="bottom"
     >

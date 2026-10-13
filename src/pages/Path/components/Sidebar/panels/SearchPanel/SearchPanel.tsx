@@ -140,7 +140,7 @@ const SearchPanel: React.FC<Props> = ({ files, onSelectFile }) => {
     <div className={styles.panel}>
       <div className={styles.header}>
         <SearchOutlined className={styles.headerIcon} />
-        <span>当前计划</span>
+        <span>搜索</span>
       </div>
 
       <div className={styles.searchBar}>

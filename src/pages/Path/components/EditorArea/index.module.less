@@ -41,7 +41,10 @@
   font-size: 12px;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
-  min-height: 30px;
+  height: 39px;
+  min-height: 39px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .navButtons {
@@ -64,25 +67,110 @@
   border-radius: 4px;
   transition: all 0.15s;
 
-  &:hover:not(.disabled) {
+  &:hover:not(:disabled) {
     color: var(--text-color);
     background: var(--theme-color-hover);
   }
 
-  &.disabled {
+  &:disabled {
     opacity: 0.3;
     cursor: default;
   }
 }
 
 .breadcrumbPath {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 4px;
+
+  span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .breadcrumbIcon {
+  flex-shrink: 0;
   font-size: 12px;
+}
+
+.modeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover { background: var(--theme-color-hover); color: var(--text-color); }
+}
+
+.editingView {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.quoteStyle() {
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-color);
+
+  > :first-child { margin-top: 0; }
+  > :last-child { margin-bottom: 0; }
+}
+
+.readingView {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px max(24px, calc((100% - 800px) / 2));
+  color: var(--text-color);
+
+  :global(.markdown-body) {
+    color: var(--text-color);
+    background: transparent;
+    font-size: 15px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+
+  :global(.markdown-body pre), :global(.markdown-body code) { background: var(--bg-secondary); }
+  :global(.markdown-body pre code) { color: var(--text-color); background: transparent; }
+  :global(.markdown-body blockquote) { .quoteStyle(); }
+  :global(.markdown-body a) { color: var(--accent-color); }
+  :global(.markdown-body table) { max-width: 100%; overflow: auto; }
+  :global(.markdown-body tr) { background: transparent; }
+
+  :global([data-theme='dark']) & {
+    :global(.hljs-keyword), :global(.hljs-doctag), :global(.hljs-literal) { color: #ff7b72; }
+    :global(.hljs-string), :global(.hljs-regexp), :global(.hljs-meta .hljs-string) { color: #a5d6ff; }
+    :global(.hljs-number), :global(.hljs-attr), :global(.hljs-variable) { color: #79c0ff; }
+    :global(.hljs-title) { color: #d2a8ff; }
+    :global(.hljs-comment), :global(.hljs-quote) { color: #8b949e; }
+    :global(.hljs-built_in), :global(.hljs-symbol) { color: #ffa657; }
+  }
+}
+
+.readingTitle {
+  margin: 0 0 20px;
+  font-size: 28px;
+  line-height: 1.4;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .editorContent {
@@ -172,7 +260,7 @@
       background: var(--bg-color) !important;
     }
 
-    .vditor-ir {
+    .vditor-ir, .vditor-sv {
       font-size: 15px !important;
       line-height: 1.8 !important;
       background: var(--bg-color) !important;
@@ -182,6 +270,16 @@
     .vditor-reset {
       color: var(--text-color) !important;
       background: var(--bg-color) !important;
+    }
+
+    // Vditor may initialize while hidden in reading/graph mode; its measured
+    // inline padding then stays stale. Let the container size the IR column.
+    .vditor-ir .vditor-reset, .vditor-sv {
+      padding-inline: max(35px, calc((100% - 800px) / 2)) !important;
+
+      @media (max-width: 520px) {
+        padding-inline: max(10px, calc((100% - 800px) / 2)) !important;
+      }
     }
 
     .vditor-reset h1,
@@ -195,8 +293,7 @@
     }
 
     .vditor-reset blockquote {
-      border-left-color: var(--primary-color) !important;
-      color: var(--text-secondary) !important;
+      .quoteStyle();
     }
 
     .vditor-reset a {
@@ -222,6 +319,45 @@
 
     .vditor-toolbar {
       display: none !important;
+    }
+
+    li[data-path-list-source] {
+      list-style-type: none;
+    }
+
+    [data-path-list-marker] {
+      color: var(--text-secondary);
+      white-space: pre;
+      cursor: text;
+    }
+
+    blockquote[data-path-quote-source] {
+      position: relative;
+    }
+
+    [data-path-quote-marker] {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 16px;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.8;
+      text-align: center;
+      cursor: text;
+    }
+
+    // The native span already participates in Markdown serialization. Display
+    // it as real editable text instead of the native CSS closing decoration.
+    [data-type='code-block'].vditor-ir__node--expand {
+      &::after { content: none !important; }
+
+      > [data-type='code-block-close-marker'] {
+        display: block !important;
+        color: var(--text-secondary);
+        white-space: pre;
+        cursor: text;
+      }
     }
 
     .vditor-content {

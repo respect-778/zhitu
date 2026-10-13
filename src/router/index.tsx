@@ -46,20 +46,20 @@ const router = createBrowserRouter([
       },
       {
         path: '/path',
-        element: <Suspense fallback={<Loading />}><Path /></Suspense>
+        element: <Suspense fallback={<Loading withHeader />}><Path /></Suspense>
       },
       {
         path: '/community',
-        element: <Suspense fallback={<Loading />}><Community /></Suspense>
+        element: <Suspense fallback={<Loading withHeader />}><Community /></Suspense>
       },
       {
         path: '/chat',
-        element: <Suspense fallback={<Loading />}><Chat /></Suspense>,
+        element: <Suspense fallback={<Loading withHeader />}><Chat /></Suspense>,
         children: [
           // 三级路由
           {
             path: '/chat/:id',
-            element: <Suspense fallback={<Loading />}><ChatId /></Suspense>
+            element: <Suspense fallback={<Loading withHeader />}><ChatId /></Suspense>
           }
         ]
       },
@@ -69,11 +69,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/user/:id',
-        element: <Suspense fallback={<Loading />}><UserProfilePage /></Suspense>
+        element: <Suspense fallback={<Loading withHeader />}><UserProfilePage /></Suspense>
       },
       {
         path: '/resume',
-        element: <Suspense fallback={<Loading />}><Resume /></Suspense>
+        element: <Suspense fallback={<Loading withHeader />}><Resume /></Suspense>
       },
     ]
   },

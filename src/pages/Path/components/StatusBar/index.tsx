@@ -7,10 +7,11 @@ interface Props {
   dayProgress?: string
   fileCount: number
   wordCount: number
+  saveStatus?: React.ReactNode
 }
 
 /** 底部状态栏 — 左侧显示导师名称和进度，右侧显示笔记数和字数 */
-const StatusBar: React.FC<Props> = ({ mentorName, dayProgress, fileCount, wordCount }) => {
+const StatusBar: React.FC<Props> = ({ mentorName, dayProgress, fileCount, wordCount, saveStatus }) => {
   return (
     <div className={styles.statusBar}>
       <div className={styles.left}>
@@ -27,6 +28,7 @@ const StatusBar: React.FC<Props> = ({ mentorName, dayProgress, fileCount, wordCo
         )}
       </div>
       <div className={styles.right}>
+        {saveStatus && <span className={`${styles.item} ${styles.saveStatus}`}>{saveStatus}</span>}
         <span className={styles.item}>
           <FileTextOutlined className={styles.itemIcon} />
           {fileCount} 篇笔记

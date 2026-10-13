@@ -70,7 +70,7 @@ export interface MentorPersona {
 }
 
 /** 侧栏面板类型 */
-export type SidebarPanel = 'close' | 'files' | 'search' | 'plan' | 'mentor'
+export type SidebarPanel = 'files' | 'search' | 'mentor'
 
 /** 关系图谱节点 */
 export interface GraphNode {

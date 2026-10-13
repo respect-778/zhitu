@@ -4,6 +4,7 @@ import {
   FolderAddOutlined,
   SortAscendingOutlined,
   MinusSquareOutlined,
+  PlusSquareOutlined,
   FolderOutlined,
   FolderOpenOutlined,
   FileTextOutlined,
@@ -15,7 +16,6 @@ import {
 } from '@ant-design/icons'
 import { Dropdown, Input, Modal, message } from 'antd'
 import type { VFile, SidebarPanel } from '@/types/path'
-import PlanPanel from './panels/PlanPanel/PlanPanel'
 import MentorPanel from './panels/MentorPanel/MentorPanel'
 import SearchPanel from './panels/SearchPanel/SearchPanel'
 import styles from './index.module.less'
@@ -39,6 +39,7 @@ interface Props {
   }>) => void
   onImportFiles: (files: FileList) => void
   onImportFolder: (files: FileList) => void
+  onExpandAll: () => void
   onCollapseAll: () => void
   onSort: (by: 'name' | 'created' | 'updated') => void
 }
@@ -239,7 +240,7 @@ const FileTreePanel: React.FC<Omit<Props, 'activePanel' | 'mentorId'>> = ({
   files, expandedIds, activeFileId,
   onToggleFolder, onSelectFile, onCreateFile, onDeleteFile, onRenameFile,
   onMoveFile, onBatchDeleteFiles, onBatchCreateFiles,
-  onImportFiles, onImportFolder, onCollapseAll, onSort,
+  onImportFiles, onImportFolder, onExpandAll, onCollapseAll, onSort,
 }) => {
   const [renamingId, setRenamingId] = useState<string | null>(null)
   const [renameValue, setRenameValue] = useState('')
@@ -251,6 +252,8 @@ const FileTreePanel: React.FC<Omit<Props, 'activePanel' | 'mentorId'>> = ({
   const [multiMenuOpen, setMultiMenuOpen] = useState(false)
 
   const rootNodes = buildTree(files, null)
+  const folderIds = useMemo(() => files.filter(file => file.type === 'folder').map(file => file.id), [files])
+  const allFoldersExpanded = folderIds.length > 0 && folderIds.every(id => expandedIds.includes(id))
 
   const flatList = useMemo(
     () => flattenVisibleTree(files, expandedIds),
@@ -524,29 +527,37 @@ const FileTreePanel: React.FC<Omit<Props, 'activePanel' | 'mentorId'>> = ({
 
   return (
     <>
-      <div className={styles.toolbar}>
-        <button className={styles.toolBtn} title="新建笔记" onClick={() => onCreateFile(null, 'file')}>
-          <EditOutlined />
-        </button>
-        <button className={styles.toolBtn} title="新建文件夹" onClick={() => onCreateFile(null, 'folder')}>
-          <FolderAddOutlined />
-        </button>
-        <Dropdown menu={{ items: importMenuItems, onClick: ({ key }) => handleImportClick(key as 'files' | 'folder') }} trigger={['click']}>
-          <button className={styles.toolBtn} title="导入">
-            <ImportOutlined />
+      <div className={styles.toolbar} data-testid="file-toolbar">
+        <div className={styles.toolbarActions} data-testid="file-toolbar-actions">
+          <button className={styles.toolBtn} title="新建笔记" aria-label="新建笔记" onClick={() => onCreateFile(null, 'file')}>
+            <EditOutlined />
           </button>
-        </Dropdown>
-        <Dropdown menu={{ items: sortMenuItems, onClick: ({ key }) => onSort(key as 'name' | 'created' | 'updated') }} trigger={['click']}>
-          <button className={styles.toolBtn} title="排序">
-            <SortAscendingOutlined />
+          <button className={styles.toolBtn} title="新建文件夹" aria-label="新建文件夹" onClick={() => onCreateFile(null, 'folder')}>
+            <FolderAddOutlined />
           </button>
-        </Dropdown>
-        <button className={styles.toolBtn} title="折叠全部" onClick={onCollapseAll}>
-          <MinusSquareOutlined />
-        </button>
+          <Dropdown menu={{ items: importMenuItems, onClick: ({ key }) => handleImportClick(key as 'files' | 'folder') }} trigger={['click']}>
+            <button className={styles.toolBtn} title="导入" aria-label="导入">
+              <ImportOutlined />
+            </button>
+          </Dropdown>
+          <Dropdown menu={{ items: sortMenuItems, onClick: ({ key }) => onSort(key as 'name' | 'created' | 'updated') }} trigger={['click']}>
+            <button className={styles.toolBtn} title="排序" aria-label="排序">
+              <SortAscendingOutlined />
+            </button>
+          </Dropdown>
+          <button
+            className={styles.toolBtn}
+            title={allFoldersExpanded ? '全部折叠' : '全部展开'}
+            aria-label={allFoldersExpanded ? '全部折叠' : '全部展开'}
+            onClick={allFoldersExpanded ? onCollapseAll : onExpandAll}
+          >
+            {allFoldersExpanded ? <MinusSquareOutlined /> : <PlusSquareOutlined />}
+          </button>
+        </div>
       </div>
       <div
         className={`${styles.fileTree} ${dropTargetId === '__root__' ? styles.dropTargetRoot : ''}`}
+        data-testid="file-tree"
         onDragOver={handleRootDragOver}
         onDrop={handleRootDrop}
         onDragLeave={() => { if (dropTargetId === '__root__') setDropTargetId(null) }}
@@ -619,9 +630,8 @@ const Sidebar: React.FC<Props> = (props) => {
   const { activePanel, files, mentorId, onSelectFile } = props
 
   return (
-    <div className={styles.sidebar}>
+    <div className={styles.sidebar} data-testid="path-sidebar">
       {activePanel === 'files' && <FileTreePanel {...props} />}
-      {activePanel === 'plan' && <PlanPanel />}
       {activePanel === 'mentor' && <MentorPanel mentorId={mentorId} />}
       {activePanel === 'search' && <SearchPanel files={files} onSelectFile={onSelectFile} />}
     </div>

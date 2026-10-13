@@ -8,6 +8,7 @@ import LeftPanel from '../LeftPanel'
 import EditPanel from '../EditPanel'
 import PreviewPanel from '../PreviewPanel'
 import styles from './index.module.less'
+import ResumeSaveStatus from '@/components/PersonalStorage/ResumeSaveStatus'
 
 const Workbench: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -16,6 +17,7 @@ const Workbench: React.FC = () => {
   const userId = useAppSelector(s => s.user.userId)
   const resumes = useAppSelector(s => s.resume.resumes)
   const resumeStorageUserId = useAppSelector(s => s.resume.storageUserId)
+  const loaded = useAppSelector(s => s.resume.loaded)
   const resume = resumeStorageUserId === userId ? resumes.find(r => r.id === id) : undefined
   const previewRef = useRef<HTMLDivElement>(null)
   const [exporting, setExporting] = useState(false)
@@ -30,10 +32,10 @@ const Workbench: React.FC = () => {
   // 当前用户没有这份简历时，回到简历列表页。
   useEffect(() => {
     if (!id) return
-    if (!userId || resumeStorageUserId !== userId) return
+    if (!userId || resumeStorageUserId !== userId || !loaded) return
     if (!resume) { navigate('/resume'); return }
     dispatch(setActiveResume(id))
-  }, [id, userId, resumeStorageUserId, resume, dispatch, navigate])
+  }, [id, userId, resumeStorageUserId, loaded, resume, dispatch, navigate])
 
   const handleExport = async () => {
     if (!previewRef.current) return
@@ -52,7 +54,7 @@ const Workbench: React.FC = () => {
     }
   }
 
-  if (!resume) return null
+  if (!resume) return <ResumeSaveStatus />
 
   return (
     <div className={styles.workbench}>

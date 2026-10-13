@@ -2,8 +2,12 @@ import React, { useRef, useEffect, useMemo, useCallback, useState, memo } from '
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import ForceGraph2D from 'react-force-graph-2d'
-import { FileTextOutlined, LeftOutlined, RightOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { Viewer } from '@bytemd/react'
+import { markdownPlugins } from '@/utils/markdown'
 import type { VFile, GraphNode, GraphLink } from '@/types/path'
+import DocumentToolbar from './DocumentToolbar'
+import { revealMarkdownLink, getEditorSelection, restoreEditorSelection, canCancelMarkdownFormat, cancelMarkdownFormat, switchMarkdownMode } from './markdownEditing'
+import { installMarkdownInteractions } from './markdownInteractions'
 import styles from './index.module.less'
 
 interface Props {
@@ -417,7 +421,61 @@ const InlineTitle: React.FC<{
 const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, onRenameFile, onSelectFile, canGoBack, canGoForward, onNavBack, onNavForward, onCreateFile }) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const vditorRef = useRef<Vditor | null>(null)
-  const fileIdRef = useRef<string | null>(null)
+  const selectionRef = useRef<Range | null>(null)
+  const editingModeRef = useRef<'ir' | 'sv'>('ir')
+  const latestContentRef = useRef(file?.content ?? '')
+  const [reading, setReading] = useState(false)
+  const [sourceMode, setSourceMode] = useState(false)
+  const [canCancelFormat, setCanCancelFormat] = useState(false)
+  const [canInsertAfter, setCanInsertAfter] = useState(false)
+  const fileId = file?.id
+  const fileContent = file?.content ?? ''
+
+  const toggleReading = () => {
+    const editor = vditorRef.current
+    if (!reading && file && editor?.vditor?.lute) {
+      // Reading can be opened before Vditor's debounced undo snapshot runs.
+      editor.vditor.undo?.addToUndoStack(editor.vditor)
+      const content = editor.getValue()
+      if (content !== latestContentRef.current) {
+        latestContentRef.current = content
+        onContentChange(file.id, content)
+      }
+      editor.blur()
+    }
+    setReading(value => !value)
+  }
+
+  const prepareEditorActions = () => {
+    const editor = vditorRef.current
+    const range = editor?.vditor?.lute ? getEditorSelection(editor) : null
+    selectionRef.current = range
+    setCanCancelFormat(!!editor && canCancelMarkdownFormat(editor, range))
+    setCanInsertAfter(!!range && editor?.getCurrentMode() === 'ir')
+  }
+
+  const handleEditorAction = (action: string) => {
+    const editor = vditorRef.current
+    if (!editor?.vditor?.lute || !file) return
+    if (action !== 'source') editor.vditor.undo?.addToUndoStack(editor.vditor)
+    if (action === 'source') {
+      const mode = editor.getCurrentMode() === 'sv' ? 'ir' : 'sv'
+      switchMarkdownMode(editor, mode)
+      editingModeRef.current = mode
+      setSourceMode(mode === 'sv')
+    } else if (action === 'cancel-format') {
+      cancelMarkdownFormat(editor, selectionRef.current)
+    } else if (action === 'insert-after' && restoreEditorSelection(editor, selectionRef.current)) {
+      editor.insertEmptyBlock('afterend')
+    }
+    if (action !== 'source') editor.vditor.undo?.addToUndoStack(editor.vditor)
+    const content = editor.getValue()
+    if (content !== latestContentRef.current) {
+      latestContentRef.current = content
+      onContentChange(file.id, content)
+    }
+    selectionRef.current = null
+  }
 
   useEffect(() => {
     if (!editorRef.current || !file) {
@@ -425,23 +483,83 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
       return
     }
     vditorRef.current?.destroy(); vditorRef.current = null
-    fileIdRef.current = file.id
+    let disposed = false
+    let removeInteractions: (() => void) | undefined
+    const captureContent = (value: string) => {
+      const content = value
+      if (!disposed && content !== latestContentRef.current) {
+        latestContentRef.current = content
+        onContentChange(file.id, content)
+      }
+    }
+    const captureInput = () => {
+      const current = vd.vditor?.[vd.getCurrentMode()]
+      if (!disposed && vd.vditor?.lute && current && !current.composingLock) captureContent(vd.getValue())
+    }
+    const editorHost = editorRef.current
+    const captureMode = () => {
+      if (disposed || !vd.vditor?.lute) return
+      const mode = vd.getCurrentMode() === 'sv' ? 'sv' : 'ir'
+      editingModeRef.current = mode
+      setSourceMode(mode === 'sv')
+      // Native Enter/Backspace/undo mutate the DOM without an input event.
+      // Capture after Vditor's handler, before React can replay older props.
+      captureInput()
+    }
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const vd = new Vditor(editorRef.current, {
-      mode: 'ir', value: file.content ?? '', height: '100%', toolbar: [],
+      mode: editingModeRef.current, value: file.content ?? '', height: '100%',
+      // Keep native commands and shortcuts registered; DocumentToolbar owns their UI.
+      toolbar: ['headings', 'bold', 'italic', 'strike', 'link', 'list', 'ordered-list', 'check', 'quote', 'code', 'inline-code', 'insert-before', 'insert-after', 'edit-mode'],
       outline: { enable: false, position: 'right' }, counter: { enable: false },
       cache: { enable: false }, placeholder: '开始输入...',
+      link: { isOpen: false, click: revealMarkdownLink },
       theme: isDark ? 'dark' : 'classic',
       preview: {
+        mode: 'editor',
         theme: { current: isDark ? 'dark' : 'light' },
         hljs: { style: isDark ? 'native' : 'github', lineNumber: true },
         markdown: { codeBlockPreview: false, mathBlockPreview: false },
       },
-      input: (value) => { if (fileIdRef.current) onContentChange(fileIdRef.current, value) },
+      input: captureContent,
+      after: () => {
+        if (disposed) { vd.destroy(); return }
+        const editor = vditorRef.current
+        if (editor?.vditor?.lute && editor.vditor.ir?.element && editor.getValue() !== latestContentRef.current) {
+          editor.setValue(latestContentRef.current, true)
+        }
+        if (editor?.vditor.ir?.element) removeInteractions = installMarkdownInteractions(editor, captureContent)
+        // Vditor 的 input 回调有延迟；及时记录输入，避免快速切换时遗漏最后一次编辑。
+        editorHost.addEventListener('input', captureInput)
+        editorHost.addEventListener('compositionend', captureInput)
+        editorHost.addEventListener('keydown', captureMode)
+      },
     })
     vditorRef.current = vd
-    return () => { vd.destroy(); vditorRef.current = null }
+    return () => {
+      if (vd.vditor?.lute) captureContent(vd.getValue())
+      disposed = true
+      selectionRef.current = null
+      removeInteractions?.()
+      if (vd.vditor) {
+        editorHost.removeEventListener('input', captureInput)
+        editorHost.removeEventListener('compositionend', captureInput)
+        editorHost.removeEventListener('keydown', captureMode)
+        clearTimeout(vd.vditor.ir?.processTimeoutId)
+        clearTimeout(vd.vditor.sv?.processTimeoutId)
+        vd.destroy()
+      }
+      vditorRef.current = null
+    }
   }, [file?.id])
+
+  useEffect(() => {
+    latestContentRef.current = fileContent
+    const editor = vditorRef.current
+    if (editor?.vditor?.lute && editor.getValue() !== fileContent) {
+      editor.setValue(fileContent, true)
+    }
+  }, [fileId, fileContent, onContentChange])
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -455,18 +573,9 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
 
   return (
     <>
+      <DocumentToolbar file={file} files={files} showGraph={showGraph} reading={reading} sourceMode={sourceMode} canCancelFormat={canCancelFormat} canInsertAfter={canInsertAfter} onPrepareEditorActions={prepareEditorActions} onEditorAction={handleEditorAction} canGoBack={canGoBack} canGoForward={canGoForward} onNavBack={onNavBack} onNavForward={onNavForward} onToggleReading={toggleReading} />
       {showGraph && (
         <div className={styles.editor}>
-          <div className={styles.breadcrumb}>
-            <div className={styles.navButtons}>
-              <button className={`${styles.navBtn} ${!canGoBack ? styles.disabled : ''}`} onClick={onNavBack} disabled={!canGoBack}><LeftOutlined /></button>
-              <button className={`${styles.navBtn} ${!canGoForward ? styles.disabled : ''}`} onClick={onNavForward} disabled={!canGoForward}><RightOutlined /></button>
-            </div>
-            <div className={styles.breadcrumbPath}>
-              <ShareAltOutlined className={styles.breadcrumbIcon} />
-              <span>关系图谱</span>
-            </div>
-          </div>
           <div className={styles.editorContent}>
             <GraphView files={files} onSelectFile={onSelectFile} />
           </div>
@@ -482,19 +591,17 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
           </div>
         ) : (
           <div className={styles.editor}>
-            <div className={styles.breadcrumb}>
-              <div className={styles.navButtons}>
-                <button className={`${styles.navBtn} ${!canGoBack ? styles.disabled : ''}`} onClick={onNavBack} disabled={!canGoBack}><LeftOutlined /></button>
-                <button className={`${styles.navBtn} ${!canGoForward ? styles.disabled : ''}`} onClick={onNavForward} disabled={!canGoForward}><RightOutlined /></button>
+            {reading && (
+              <div className={styles.readingView} data-testid="path-reading-view">
+                <h1 className={styles.readingTitle}>{file.name}</h1>
+                <Viewer value={file.content ?? ''} plugins={markdownPlugins} />
               </div>
-              <div className={styles.breadcrumbPath}>
-                <FileTextOutlined className={styles.breadcrumbIcon} />
-                <span>{file.name}</span>
+            )}
+            <div className={styles.editingView} style={{ display: reading ? 'none' : 'flex' }}>
+              <InlineTitle file={file} onRename={onRenameFile} onConfirm={() => vditorRef.current?.focus()} />
+              <div className={styles.editorContent}>
+                <div ref={editorRef} className={styles.vditorContainer} />
               </div>
-            </div>
-            <InlineTitle file={file} onRename={onRenameFile} onConfirm={() => vditorRef.current?.focus()} />
-            <div className={styles.editorContent}>
-              <div ref={editorRef} className={styles.vditorContainer} />
             </div>
           </div>
         )}

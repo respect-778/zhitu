@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons'
-import { Input, Select, DatePicker, message, Modal, Button } from 'antd'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined, FormOutlined, LeftOutlined, FolderOpenOutlined } from '@ant-design/icons'
+import { Input, Select, DatePicker, message, Modal, Button, Space, Alert, Typography } from 'antd'
 import styles from './index.module.less'
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 import { getUserInfo } from '@/store/modules/userStore'
@@ -11,12 +11,22 @@ import Config from '@/pages/Chat/components/Config'
 import type { IProvider } from '@/types/chat'
 import { getAiModelAPI, uploadAiModelAPI } from '@/api/chat'
 import { getStore, setStore } from '@/utils/store'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
+import { loadUserResumes } from '@/store/modules/resumeStore'
+import { loadPathWorkspace } from '@/store/modules/pathStore'
+import { personalDirectory } from '@/utils/personalDirectory'
+
+const directoryPhaseLabels = {
+  unconfigured: '尚未选择目录', checking: '正在恢复目录授权', permission: '目录需要重新授权',
+  pending: '等待保存本地副本', writing: '正在保存本地副本', saved: '本地副本已保存',
+  conflict: '原文件已保留，已另存平台副本', error: '本地副本保存失败',
+}
 
 // 标签页列表
 const tabList = [
-  { key: '1', tab: '账户与身份', icon: <UserOutlined /> },
-  { key: '2', tab: '个人密钥', icon: <KeyOutlined /> }
+  { key: 'account', tab: '账户与身份', icon: <UserOutlined /> },
+  { key: 'personal-key', tab: '个人密钥', icon: <KeyOutlined /> },
+  { key: 'personal-directory', tab: '路径配置', icon: <FolderOpenOutlined /> }
 ]
 
 // 性别映射
@@ -88,9 +98,27 @@ const InfoRow = ({ icon, label, value }: { icon: React.ReactNode; label: string;
 
 const Setting = ({ className }: { className?: string }) => {
   const navigate = useNavigate()
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+  }, [hash])
 
   const userInfo = useAppSelector(state => state.user.userInfo)
   const dispatch = useAppDispatch()
+  const uid = useAppSelector(state => state.user.userId)
+  const resume = useAppSelector(state => state.resume)
+  const path = useAppSelector(state => state.path)
+  const directoryStatus = useSyncExternalStore(personalDirectory.subscribe, personalDirectory.getStatus)
+
+  useEffect(() => {
+    if (!uid) return
+    if (resume.storageUserId !== uid || !resume.loaded) void dispatch(loadUserResumes(uid))
+    if (path.storageUserId !== uid) void dispatch(loadPathWorkspace(uid))
+  }, [uid, resume.storageUserId, resume.loaded, path.storageUserId, dispatch])
+
+  const handleDirectoryDisconnect = () => {
+    void personalDirectory.disconnect().catch(() => message.error('解除绑定失败，请重试'))
+  }
 
   const [isEditing, setIsEditing] = useState(false) // 是否处于编辑状态
   const [isOpenConfig, setIsOpenConfig] = useState(false) // 是否打开API Key配置弹窗
@@ -208,7 +236,7 @@ const Setting = ({ className }: { className?: string }) => {
       <div className={styles.page}>
         <div className={styles.left}>
           <div className={styles.backBar}>
-            <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <button aria-label="返回" className={styles.backBtn} onClick={() => navigate(-1)}>
               <LeftOutlined /> 返回
             </button>
           </div>
@@ -219,18 +247,20 @@ const Setting = ({ className }: { className?: string }) => {
           <div className={styles.line}></div>
           <div className={styles.tabList}>
             {tabList.map(item => (
-              <div key={item.key} className={styles.item}>
+              <button key={item.key} aria-label={item.tab} className={styles.item} onClick={() => {
+                navigate(`/setting#${item.key}`, { replace: true })
+              }}>
                 <div className={styles.title}>
                   <div>{item.icon}</div>
                   <div>{item.tab}</div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
         <div className={styles.right}>
           <div className={styles.content}>
-            <div className={styles.title} style={{ fontSize: '15px' }}>
+            <div id="account" className={styles.title} style={{ fontSize: '15px' }}>
               <div><UserOutlined /></div>
               <div>账号与身份</div>
             </div>
@@ -407,11 +437,11 @@ const Setting = ({ className }: { className?: string }) => {
 
             <div className={styles.line}></div>
 
-            <div className={styles.title} style={{ fontSize: '15px' }}>
+            {/* 个人密钥 区域 */}
+            <div id="personal-key" className={styles.title} style={{ fontSize: '15px' }}>
               <div><KeyOutlined /></div>
               <div>个人密钥</div>
             </div>
-            {/* API Key 区域 */}
             <div className={styles.contentContainer}>
               <div className={styles.keyTop}>
                 <div className={styles.contentTitle}>API Key</div>
@@ -424,6 +454,47 @@ const Setting = ({ className }: { className?: string }) => {
             </div>
 
             <div className={styles.line}></div>
+
+            {/* 路径配置 区域 */}
+            <section id="personal-directory" aria-label="路径配置" className={styles.content}>
+              <div className={styles.title} style={{ fontSize: '15px' }}><FolderOpenOutlined /> 路径配置</div>
+              {/* 个人资料文件夹配置紧接 API Key 区域，与其他设置共用卡片样式。 */}
+              <div className={styles.contentContainer}>
+                <div>
+                  <div className={styles.contentTitle}>个人资料文件夹</div>
+                  <div className={styles.contentSubtitle}>学习规划和简历共用此文件夹，编辑后自动保存本地副本。</div>
+                </div>
+                <div className={styles.directoryLocation}>
+                  <span>所选文件夹</span>
+                  <strong data-testid="personal-directory-name">{directoryStatus.name || '未选择'}</strong>
+                  {directoryStatus.name && <>
+                    <span>学习规划保存位置</span>
+                    <code>{directoryStatus.name}/KNOWVIA/user-{uid}/学习规划/</code>
+                    <span>简历保存位置</span>
+                    <code>{directoryStatus.name}/KNOWVIA/user-{uid}/简历/</code>
+                  </>}
+                </div>
+                <Typography.Paragraph role="status" className={styles.directoryText}>
+                  状态：{directoryStatus.supported ? directoryPhaseLabels[directoryStatus.phase] : '当前浏览器不支持目录自动保存'}
+                </Typography.Paragraph>
+                {directoryStatus.message && <Alert type="warning" showIcon title={directoryStatus.message} />}
+                {!directoryStatus.supported && <Alert type="info" title="请在支持目录选择的 Chrome 或 Edge 中使用；服务器保存仍可正常使用。" />}
+                <Space wrap>
+                  <Button
+                    aria-label={directoryStatus.name ? '更换电脑目录' : '选择电脑目录'}
+                    icon={<FolderOpenOutlined />}
+                    className={styles.directoryChoose}
+                    disabled={!uid || !directoryStatus.supported}
+                    onClick={() => { void personalDirectory.choose() }}
+                  >{directoryStatus.name ? '更换电脑目录' : '选择电脑目录'}</Button>
+                  {directoryStatus.name && <>
+                    <Button onClick={() => { void personalDirectory.authorize() }}>重新授权</Button>
+                    <Button onClick={() => { void personalDirectory.flush() }}>立即保存副本</Button>
+                    <Button onClick={handleDirectoryDisconnect}>解除目录绑定</Button>
+                  </>}
+                </Space>
+              </div>
+            </section>
           </div>
         </div>
       </div>

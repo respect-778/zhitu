@@ -1,22 +1,27 @@
 import type React from 'react'
 import { useEffect, useMemo, useCallback, useRef, useState } from 'react'
-import { message } from 'antd'
+import { Alert, Button, message } from 'antd'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   loadPathWorkspace,
   createFile, deleteFile, renameFile, updateFileContent,
   moveFile, batchDeleteFiles, batchCreateFiles,
-  openTab, closeTab, setActiveTab,
-  toggleFolder, collapseAllFolders,
-  setSidebarPanel, toggleSidebar, sortFiles,
+  openTab, closeTab, closeAllTabs, setActiveTab,
+  toggleFolder, collapseAllFolders, expandAllFolders,
+  setSidebarPanel, setSidebarVisible, toggleSidebar, sortFiles,
   flushSync,
+  workspaceSaveQueue,
+  recoverPathWorkspace,
 } from '@/store/modules/pathStore'
 import type { SidebarPanel } from '@/types/path'
 import ActivityBar from './components/ActivityBar'
+import WorkspaceHeader from './components/WorkspaceHeader'
 import Sidebar from './components/Sidebar'
+import ResizableSidebar, { DEFAULT_SIDEBAR_WIDTH } from './components/ResizableSidebar'
 import TabBar from './components/TabBar'
 import EditorArea from './components/EditorArea'
 import StatusBar from './components/StatusBar'
+import PersonalSaveStatus from '@/components/PersonalStorage/PersonalSaveStatus'
 import { getMentor } from './data/mentors'
 import QuickSwitcher from './components/QuickSwitcher'
 import styles from './index.module.less'
@@ -29,21 +34,46 @@ const Path: React.FC = () => {
   const {
     files, openTabs, activeTabId,
     sidebarPanel, sidebarVisible, expandedFolderIds,
-    mentorId,
+    mentorId, revision, syncStatus, syncError,
   } = useAppSelector(state => state.path)
 
   // 标签页前进/后退导航历史
   const [navHistory, setNavHistory] = useState<string[]>([])
   const [navIndex, setNavIndex] = useState(-1)
-  const [isClose, setIsClose] = useState(false)
   const [graphOpen, setGraphOpen] = useState(false)
   const [graphActive, setGraphActive] = useState(false)
   const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false)
+  const [recovering, setRecovering] = useState(false)
+  const [restoredUserId, setRestoredUserId] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const isNavAction = useRef(false)
 
   // 初始化：加载用户工作区数据
   useEffect(() => {
-    if (userId) dispatch(loadPathWorkspace(userId))
+    let disposed = false
+    if (userId) {
+      void dispatch(loadPathWorkspace(userId)).then(() => {
+        if (!disposed) setRestoredUserId(userId)
+      })
+    }
+    return () => { disposed = true }
+  }, [dispatch, userId])
+
+  useEffect(() => {
+    const refresh = () => {
+      if (userId && document.visibilityState === 'visible') void dispatch(loadPathWorkspace(userId))
+    }
+    const handleCitation = (event: Event) => {
+      if ((event as CustomEvent<{ userId: string }>).detail.userId === userId) refresh()
+    }
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+    window.addEventListener('zhitu-workspace-updated', handleCitation)
+    return () => {
+      window.removeEventListener('focus', refresh)
+      document.removeEventListener('visibilitychange', refresh)
+      window.removeEventListener('zhitu-workspace-updated', handleCitation)
+    }
   }, [dispatch, userId])
 
   // 监听 activeTabId 变化，维护导航历史栈
@@ -88,8 +118,16 @@ const Path: React.FC = () => {
   // 切换侧栏显示/隐藏
   const handleToggleSidebar = useCallback(() => {
     dispatch(toggleSidebar())
-    setIsClose(!isClose)
-  }, [isClose, dispatch])
+  }, [dispatch])
+
+  const handleSidebarVisibilityChange = useCallback((visible: boolean) => {
+    dispatch(setSidebarVisible(visible))
+  }, [dispatch])
+
+  const handleSidebarWidthChange = useCallback((width: number) => {
+    // ResizeObserver runs before paint; update layout directly to avoid a React-frame delay.
+    containerRef.current?.style.setProperty('--path-sidebar-width', `${width}px`)
+  }, [])
 
   // 导航后退
   const handleNavBack = useCallback(() => {
@@ -116,12 +154,23 @@ const Path: React.FC = () => {
 
   // 选中文件 → 打开标签页
   const handleSelectFile = useCallback((id: string) => {
+    setGraphActive(false)
     dispatch(openTab(id))
+  }, [dispatch])
+
+  const handleCloseAllTabs = useCallback(() => {
+    dispatch(closeAllTabs())
+    setGraphOpen(false)
+    setGraphActive(false)
+    setNavHistory([])
+    setNavIndex(-1)
+    isNavAction.current = false
   }, [dispatch])
 
   // 新建文件或文件夹
   const handleCreateFile = useCallback((parentId: string | null, type: 'file' | 'folder') => {
     const name = type === 'folder' ? '新建文件夹' : '未命名笔记'
+    setGraphActive(false)
     dispatch(createFile({ name, type, parentId }))
   }, [dispatch])
 
@@ -203,7 +252,7 @@ const Path: React.FC = () => {
 
   useEffect(() => {
     // 定义 beforeunload 的回调
-    const handler = () => flushSync()
+    const handler = () => { void flushSync(true) }
 
     // 注册监听：：浏览器刷新、关标签页、输入新 URL 时触发
     window.addEventListener('beforeunload', handler)
@@ -212,16 +261,70 @@ const Path: React.FC = () => {
       // 浏览器原生事件，SPA 路由跳转不会触发
       window.removeEventListener('beforeunload', handler)
 
-      flushSync() // SPA 路由跳转时处理，原生事件是不会处理的
+      void flushSync()
     }
   }, [])
 
   return (
-    <div className={styles.container}>
-      <div className={styles.workspace}>
-        <ActivityBar activePanel={sidebarPanel} isClose={isClose} showingGraph={graphOpen} onPanelChange={handlePanelChange} onToggleSidebar={handleToggleSidebar} onShowGraph={() => { if (graphOpen) { setGraphOpen(false); setGraphActive(false) } else { setGraphOpen(true); setGraphActive(true) } }} />
+    <div ref={containerRef} className={styles.container}>
+      {(syncStatus === 'error' || syncStatus === 'conflict') && (
+        <Alert
+          type="warning"
+          showIcon
+          title={syncError || '本地修改尚未同步'}
+          action={syncStatus === 'conflict' ? (
+            <Button size="small" loading={recovering} onClick={async () => {
+              setRecovering(true)
+              try {
+                await dispatch(recoverPathWorkspace(userId)).unwrap()
+                message.success('已保留本地笔记副本并更新工作区')
+              } catch {
+                message.error('更新失败，本地修改仍保留')
+              } finally {
+                setRecovering(false)
+              }
+            }}>保留副本并更新</Button>
+          ) : (
+            <Button size="small" onClick={() => {
+              if (revision === null || !workspaceSaveQueue.peek(userId)?.pending) void dispatch(loadPathWorkspace(userId))
+              else void flushSync()
+            }}>重试同步</Button>
+          )}
+        />
+      )}
+      <div className={styles.topRow}>
+        <div className={`${styles.topSidebar} ${sidebarVisible ? '' : styles.sidebarCollapsed}`} style={{ width: `max(148px, calc(46px + var(--path-sidebar-width, ${DEFAULT_SIDEBAR_WIDTH}px)))` }}>
+          <WorkspaceHeader
+            activePanel={sidebarPanel}
+            sidebarVisible={sidebarVisible}
+            onPanelChange={handlePanelChange}
+            onToggleSidebar={handleToggleSidebar}
+          />
+        </div>
+        <TabBar
+          tabs={tabFiles}
+          activeTabId={activeTabId}
+          showGraph={graphOpen}
+          graphActive={graphActive}
+          restoring={restoredUserId !== userId}
+          onSelect={handleSelectFile}
+          onClose={(id) => dispatch(closeTab(id))}
+          onCloseGraph={() => { setGraphOpen(false); setGraphActive(false) }}
+          onCloseAll={handleCloseAllTabs}
+          onSelectGraph={() => setGraphActive(true)}
+          onNew={() => handleCreateFile(null, 'file')}
+        />
+      </div>
+      <div className={styles.workspace} style={recovering ? { pointerEvents: 'none' } : undefined}>
+        <ActivityBar
+          onShowMentor={() => handlePanelChange('mentor')}
+          onShowGraph={() => {
+            setGraphOpen(true)
+            setGraphActive(true)
+          }}
+        />
 
-        <div className={`${styles.sidebarWrap} ${!sidebarVisible ? styles.sidebarCollapsed : ''}`}>
+        <ResizableSidebar visible={sidebarVisible} onVisibilityChange={handleSidebarVisibilityChange} onWidthChange={handleSidebarWidthChange}>
           <Sidebar
             files={files}
             expandedIds={expandedFolderIds}
@@ -238,30 +341,20 @@ const Path: React.FC = () => {
             onBatchCreateFiles={(items) => dispatch(batchCreateFiles(items))}
             onImportFiles={handleImportFiles}
             onImportFolder={handleImportFolder}
+            onExpandAll={() => dispatch(expandAllFolders())}
             onCollapseAll={() => dispatch(collapseAllFolders())}
             onSort={handleSort}
           />
-        </div>
+        </ResizableSidebar>
 
-        <div className={styles.mainArea}>
-          <TabBar
-            tabs={tabFiles}
-            activeTabId={activeTabId}
-            showGraph={graphOpen}
-            graphActive={graphActive}
-            onSelect={(id) => { setGraphActive(false); dispatch(setActiveTab(id)) }}
-            onClose={(id) => dispatch(closeTab(id))}
-            onCloseGraph={() => { setGraphOpen(false); setGraphActive(false) }}
-            onSelectGraph={() => setGraphActive(true)}
-            onNew={() => handleCreateFile(null, 'file')}
-          />
+        <div className={styles.mainArea} data-testid="path-main-area">
           <EditorArea
             file={activeFile}
             files={files}
             showGraph={graphActive}
             onContentChange={handleContentChange}
             onRenameFile={handleRenameFile}
-            onSelectFile={(id) => { setGraphActive(false); handleSelectFile(id) }}
+            onSelectFile={handleSelectFile}
             canGoBack={canGoBack}
             canGoForward={canGoForward}
             onNavBack={handleNavBack}
@@ -275,12 +368,13 @@ const Path: React.FC = () => {
         mentorName={mentor?.nameZh}
         fileCount={fileCount}
         wordCount={wordCount}
+        saveStatus={<PersonalSaveStatus kind="workspace" />}
       />
 
       <QuickSwitcher
         visible={quickSwitcherOpen}
         files={files}
-        onSelect={(id) => { setGraphActive(false); handleSelectFile(id) }}
+        onSelect={handleSelectFile}
         onClose={() => setQuickSwitcherOpen(false)}
         onCreate={() => handleCreateFile(null, 'file')}
       />
