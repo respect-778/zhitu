@@ -1,64 +1,26 @@
 import type React from 'react'
 import {
-  FileOutlined,
-  SearchOutlined,
-  AimOutlined,
   UserOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   ShareAltOutlined,
-  SettingOutlined,
 } from '@ant-design/icons'
-import type { SidebarPanel } from '@/types/path'
 import styles from './index.module.less'
-import { useNavigate } from 'react-router'
-
 
 interface Props {
-  activePanel: SidebarPanel
-  isClose: boolean
-  showingGraph: boolean
-  onPanelChange: (panel: SidebarPanel) => void
-  onToggleSidebar: () => void
+  onShowMentor: () => void
   onShowGraph: () => void
 }
 
-const ActivityBar: React.FC<Props> = ({ activePanel, isClose, showingGraph, onPanelChange, onToggleSidebar, onShowGraph }) => {
-  const navigate = useNavigate()
-  const panels: { key: SidebarPanel; icon: React.ReactNode; title: string }[] = [
-    { key: 'close', icon: isClose ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />, title: isClose ? '展开侧栏' : '收起侧栏' },
-    { key: 'files', icon: <FileOutlined />, title: '文件浏览器' },
-    { key: 'search', icon: <SearchOutlined />, title: '搜索' },
-    { key: 'plan', icon: <AimOutlined />, title: '我的计划' },
-    { key: 'mentor', icon: <UserOutlined />, title: '导师' },
-  ]
-
-  return (
-    <div className={styles.activityBar}>
-      <div className={styles.topIcons}>
-        {panels.map(p => (
-          <button
-            key={p.key}
-            className={`${styles.iconBtn} ${activePanel === p.key ? styles.active : ''}`}
-            onClick={p.key === 'close' ? onToggleSidebar : () => onPanelChange(p.key)}
-            title={p.title}
-          >
-            {p.icon}
-          </button>
-        ))}
-        <button
-          className={`${styles.iconBtn} ${showingGraph ? styles.active : ''}`}
-          onClick={onShowGraph}
-          title="关系图谱"
-        >
-          <ShareAltOutlined />
-        </button>
-      </div>
-      <div className={styles.bottomIcons}>
-        <button title="路径配置" aria-label="路径配置" className={styles.iconBtn} onClick={() => navigate('/setting#personal-directory')}><SettingOutlined /></button>
-      </div>
+const ActivityBar: React.FC<Props> = ({ onShowMentor, onShowGraph }) => (
+  <div className={styles.activityBar} data-testid="path-activity-bar">
+    <div className={styles.topIcons}>
+      <button type="button" className={styles.iconBtn} onClick={onShowMentor} title="导师" aria-label="导师">
+        <UserOutlined />
+      </button>
+      <button type="button" className={styles.iconBtn} onClick={onShowGraph} title="知识图谱" aria-label="知识图谱">
+        <ShareAltOutlined />
+      </button>
     </div>
-  )
-}
+  </div>
+)
 
 export default ActivityBar

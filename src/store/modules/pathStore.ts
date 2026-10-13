@@ -48,7 +48,7 @@ const initialState: PathState = {
   activeTabId: null,
   sidebarPanel: 'files',
   sidebarVisible: true,
-  expandedFolderIds: ['folder-plan', 'folder-notes'],
+  expandedFolderIds: ['folder-notes'],
   activePlan: null,
   mentorId: null,
   storageUserId: '',
@@ -156,7 +156,8 @@ const applyWorkspace = (state: PathState, data: WorkspaceData) => {
   state.files = data.files as VFile[]
   state.openTabs = data.openTabs ?? []
   state.activeTabId = data.activeTabId ?? null
-  state.expandedFolderIds = data.expandedFolderIds ?? []
+  const folderIds = new Set(state.files.filter(file => file.type === 'folder').map(file => file.id))
+  state.expandedFolderIds = (data.expandedFolderIds ?? []).filter(id => folderIds.has(id))
   state.activePlan = data.activePlan as GrowthPlan ?? null
   state.mentorId = data.mentorId ?? null
 }
@@ -247,6 +248,11 @@ const pathSlice = createSlice({
       }
     },
 
+    closeAllTabs(state) {
+      state.openTabs = []
+      state.activeTabId = null
+    },
+
     // 激活文件
     setActiveTab(state, action: PayloadAction<string>) {
       state.activeTabId = action.payload
@@ -264,6 +270,10 @@ const pathSlice = createSlice({
       state.expandedFolderIds = []
     },
 
+    expandAllFolders(state) {
+      state.expandedFolderIds = state.files.filter(file => file.type === 'folder').map(file => file.id)
+    },
+
     // 切换侧边栏
     setSidebarPanel(state, action: PayloadAction<SidebarPanel>) {
       state.sidebarPanel = action.payload
@@ -273,6 +283,10 @@ const pathSlice = createSlice({
     // 切换侧边栏
     toggleSidebar(state) {
       state.sidebarVisible = !state.sidebarVisible
+    },
+
+    setSidebarVisible(state, action: PayloadAction<boolean>) {
+      state.sidebarVisible = action.payload
     },
 
     // 移动文件
@@ -376,15 +390,15 @@ const pathSlice = createSlice({
 export const {
   createFile, deleteFile, renameFile, updateFileContent, moveFile,
   batchDeleteFiles, batchCreateFiles, sortFiles,
-  openTab, closeTab, setActiveTab,
-  toggleFolder, collapseAllFolders,
-  setSidebarPanel, toggleSidebar,
+  openTab, closeTab, closeAllTabs, setActiveTab,
+  toggleFolder, collapseAllFolders, expandAllFolders,
+  setSidebarPanel, setSidebarVisible, toggleSidebar,
   setSyncState,
 } = pathSlice.actions
 
 export const pathSyncListener = createListenerMiddleware()
 pathSyncListener.startListening({
-  matcher: isAnyOf(createFile, deleteFile, renameFile, updateFileContent, moveFile, batchDeleteFiles, batchCreateFiles, sortFiles, openTab, closeTab, setActiveTab, toggleFolder, collapseAllFolders),
+  matcher: isAnyOf(createFile, deleteFile, renameFile, updateFileContent, moveFile, batchDeleteFiles, batchCreateFiles, sortFiles, openTab, closeTab, closeAllTabs, setActiveTab, toggleFolder, collapseAllFolders, expandAllFolders),
   effect: (_action, api) => {
     const state = (api.getState() as { path: PathState }).path
     if (state.storageUserId) workspaceSaveQueue.enqueue(state.storageUserId, toWorkspaceData(state), state.revision)

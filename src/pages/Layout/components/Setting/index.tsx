@@ -100,7 +100,7 @@ const Setting = ({ className }: { className?: string }) => {
   const navigate = useNavigate()
   const { hash } = useLocation()
   useEffect(() => {
-    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
   }, [hash])
 
   const userInfo = useAppSelector(state => state.user.userInfo)
@@ -249,7 +249,6 @@ const Setting = ({ className }: { className?: string }) => {
             {tabList.map(item => (
               <button key={item.key} aria-label={item.tab} className={styles.item} onClick={() => {
                 navigate(`/setting#${item.key}`, { replace: true })
-                document.getElementById(item.key)?.scrollIntoView({ behavior: 'smooth' })
               }}>
                 <div className={styles.title}>
                   <div>{item.icon}</div>

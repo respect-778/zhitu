@@ -1,41 +1,49 @@
 .tabBar {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  box-sizing: border-box;
+  flex-shrink: 0;
   display: flex;
   align-items: stretch;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
-  min-height: 38px;
   user-select: none;
 }
 
 .tabs {
   display: flex;
   align-items: stretch;
-  flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  &::-webkit-scrollbar {
-    height: 0;
-  }
+  flex: 0 1 auto;
+  min-width: 0;
+  width: calc(var(--path-tab-width, 200px) * var(--path-tab-count, 0));
+  max-width: calc(100% - 64px);
+  overflow: hidden;
 }
 
 .tab {
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 0 8px 0 12px;
-  min-width: 80px;
-  max-width: 180px;
+  width: var(--path-tab-width, 200px);
+  min-width: 0;
+  overflow: hidden;
   cursor: pointer;
   border-right: 1px solid var(--border-color);
   transition: background 0.1s ease;
   background: transparent;
 
-  &:hover {
+  &:hover, &:focus-within {
     background: var(--theme-color-hover);
 
     .tabClose {
       opacity: 1;
+      pointer-events: auto;
     }
+
+    .tabName { margin-right: min(24px, 38%); }
   }
 
   &.active {
@@ -44,12 +52,30 @@
 
     .tabName {
       color: var(--text-color);
+      margin-right: min(24px, 38%);
     }
 
     .tabClose {
       opacity: 1;
+      pointer-events: auto;
     }
   }
+}
+
+.tabLabel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0 min(8px, 4%) 0 min(12px, 6%);
+}
+
+.graphIcon {
+  font-size: 11px;
+  margin-right: 5px;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 
 .tabName {
@@ -64,10 +90,14 @@
 }
 
 .tabClose {
+  box-sizing: border-box;
+  padding: 0;
+  position: absolute;
+  right: min(8px, 4%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
+  width: min(18px, 30%);
   height: 18px;
   border: none;
   background: transparent;
@@ -76,9 +106,9 @@
   cursor: pointer;
   border-radius: 3px;
   opacity: 0;
+  pointer-events: none;
   transition: all 0.1s ease;
   flex-shrink: 0;
-  margin-left: 6px;
 
   &:hover {
     background: var(--theme-color-hover);
@@ -86,12 +116,13 @@
   }
 }
 
-.newTabBtn {
+.tabAction {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   min-width: 32px;
+  flex: 0 0 32px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
@@ -99,8 +130,28 @@
   cursor: pointer;
   transition: all 0.15s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     color: var(--text-color);
     background: var(--theme-color-hover);
+  }
+
+}
+
+.tabMenu { margin-left: auto; }
+
+.tabBar[data-motion='ready'] {
+  .tabs { transition: width 200ms ease; }
+  .tab { transition: width 200ms ease, background 0.1s ease; }
+  .tab[data-entering='true'] { animation: tabEnter 200ms ease; }
+}
+
+@keyframes tabEnter {
+  from { width: 0; }
+  to { width: var(--path-tab-width, 200px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabBar[data-motion='ready'] {
+    .tabs, .tab, .tab[data-entering='true'] { transition: none; animation: none; }
   }
 }

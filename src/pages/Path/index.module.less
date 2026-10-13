@@ -6,23 +6,26 @@
   background: var(--bg-color);
 }
 
+.topRow {
+  display: flex;
+  height: 42px;
+  flex-shrink: 0;
+  min-width: 0;
+  background: var(--bg-secondary);
+}
+
+.topSidebar {
+  flex-shrink: 0;
+  min-width: 0;
+  border-right: 1px solid var(--border-color);
+
+  &.sidebarCollapsed { border-right: 0; }
+}
+
 .workspace {
   display: flex;
   flex: 1;
   min-height: 0;
-}
-
-.sidebarWrap {
-  width: 240px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-right: 1px solid var(--border-color);
-  transition: width 0.2s ease;
-
-  &.sidebarCollapsed {
-    width: 0;
-    border-right: none;
-  }
 }
 
 .mainArea {

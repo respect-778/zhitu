@@ -13,3 +13,13 @@
 - resumeStore 复用 WorkspaceSaveQueue，旧缓存只在迁移标记缺失时参与首次迁移；同 ID 不同内容另存恢复副本。保存确认前保留每用户、每页面草稿；迟到加载响应以队列已接受的版本回填。
 - 共用目录配置界面和样式直接归属 src/pages/Layout/components/Setting/，位于 API Key 卡片下方；src/components/PersonalStorage/ 只提供学习规划和简历共用的保存状态提示。File System Access 读写句柄按账号放入 IndexedDB。personalDirectory 串行输出 KNOWVIA/user-账号/学习规划/workspace.json、Markdown 及 简历/resumes.json、单份 JSON；手工修改文件保留原件另存平台副本，不自动反向上传或删除历史文件。
 - 云端与目录保存独立；目录权限须由点击显式恢复，后台不得弹窗。账号/目录变化停止后续旧任务写入；本地集合标注云端版本及确认状态。测试记录在 tasks/personal-storage/，原生选择框模拟、真实 OPFS 写入，不代表已对用户 Windows 目录完成验收。
+- 学习规划顶部文件/搜索和左侧导师只切换侧栏面板；右侧知识图谱独立激活，重复点入口保持显示，实际选择文件才退出图谱。ResizableSidebar 归属 Path，侧栏宽度只在当前页面保存，展开/折叠共用 Redux sidebarVisible；拖动及窗口缩小限制主区空间，不触发工作区内容保存。
+- ResizableSidebar 默认宽度为共享常量 300px，开合使用 200ms ease 宽度过渡；拖动与 reduced-motion 禁用过渡，max-width 立即限制可用空间。ResizeObserver 在绘制前报告实际宽度，Path 直接更新容器 CSS 变量同步顶部标签边界，避免逐帧 React 状态造成延迟；动画期间开始拖动以实际宽度为起点。
+- Path 的 TabBar 与 WorkspaceHeader 共享第一行；DocumentToolbar 与侧栏文件操作共享第二行。EditorArea 使用 Vditor IR 编辑、ByteMD Viewer 阅读，切到阅读不销毁 Vditor。结构块源码 textarea 已移除；引用/列表/表格直接使用原生编辑。输入/compositionend 和原生 keydown 完成后同步回传正文，防止撤销/回车等无 input 事件的变更被旧 props 覆盖；阅读前与菜单操作两侧同步记录撤销，保存仍走原 pathStore 队列。
+- DocumentToolbar 的编辑操作菜单复用隐藏但已注册的 Vditor 原生工具命令：保存光标后取消当前格式、在当前块后插入普通段落、切换 IR/SV 源码模式。源码模式仍使用同一 Vditor，当前页面内跨文件保留，不新增持久化字段；源代码围栏可在原生 SV 中退格删除，点击结构块不产生输入框。引用/列表空行回车退出，代码块正文回车保留空行；开头 Backspace 可取消代码块/引用而保留文字。
+- markdownInteractions.ts 为 Vditor 3.11.2 IR 添加项目层交互：空段落键入 `- ` 立即建列表，活动无序列表项显露可删除的真实前缀，移除格式仅拆出当前项并保留相邻和嵌套正文。点击引用显露真实 `>`，标记定位到当前点击的子块旁，删除标记仅解除当前引用层并保留文字、内联格式、列表、代码与嵌套引用。Lute 的 IR 解析/序列化在实例上过滤列表和引用显示前缀，避免存入重复标记；卸载恢复原方法，SV/任务/有序列表保留原生操作。原生结束围栏 span 改为真正可点击的文本；正文末尾 Down 到围栏，围栏 Enter 在块后继续输入，围栏 Backspace/Delete 取消代码格式保留全文。自定义操作前后写原生撤销栈并同步回传正文；空列表退出显式定位普通段落，防止键入跑回第一项。
+- EditorArea 编辑和阅读引用共用 LESS mixin：主题中性色背景、10px 16px 留白、4px 圆角、正文颜色、无外框或竖线；IR 与 SV 共用容器百分比正文边距，模式和文件切换仍保持居中。
+- EditorArea 的 IR 正文使用容器百分比 CSS 边距保持最多 800px 的居中列（桌面最小左右 35px，520px 以下最小 10px），覆盖 Vditor 初始化时写入的测量边距。阅读或图谱隐藏期间切换文件不会使正文展开，拖动侧栏与窗口缩放也无需额外 resize 事件或重建编辑器。
+- Path 顶部左侧导航保留与 TabBar 同高同色的 1px 底边框，两者 42px 高均采用 border-box，避免边框溢出后被下一行覆盖；文件工具栏无底部边框，文件操作行固定 39px。ResizableSidebar 的可见竖线位于 6px 命中区右端，对齐顶部左段右边框；折叠时隐藏普通态竖线与顶部右边框，保留拖动/键盘焦点提示。
+- TabBar 使用 ResizeObserver 按实际栏宽减去 64px 操作区后均分文件及图谱标签宽度，上限 200px；宽度和新标签进入采用 200ms ease，reduced-motion 禁用动画，不设滚动条。`+` 跟随标签，AntD 下拉箭头用 margin-left:auto 固定在最右侧，菜单中“全部关闭”才触发关闭。pathStore.closeAllTabs 原子清空 openTabs/activeTabId 并通过既有 listener 保存；Path 另清空图谱与导航历史，文件及编辑内容保留。
+- Path 用本次 loadPathWorkspace 完成的账号标识传递 TabBar.restoring，卸载后忽略迟到完成回调。TabBar 恢复期禁用宽度/入场动画，实测并提交布局后启用 data-motion；用本实例已见 DOM 标签集合只对后续新插入标签设置 data-entering。首次加载、路由返回和异步恢复均直接显示，页面内新增/关闭与调宽才使用过渡；reduced-motion 同时覆盖新标签的高优先级动画样式。

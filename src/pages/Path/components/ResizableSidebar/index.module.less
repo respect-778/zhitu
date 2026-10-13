@@ -1,0 +1,49 @@
+.panel {
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  transition: width 200ms ease;
+
+  &.dragging { transition: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.separator {
+  position: relative;
+  width: 6px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  touch-action: none;
+  background: var(--bg-secondary);
+  outline: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background: var(--border-color);
+  }
+
+  &:hover::after,
+  &:focus-visible::after,
+  &.dragging::after {
+    width: 3px;
+    background: var(--accent-color);
+  }
+
+  &[data-collapsed='true']::after {
+    background: transparent;
+  }
+
+  &[data-collapsed='true']:hover::after,
+  &[data-collapsed='true']:focus-visible::after,
+  &[data-collapsed='true'].dragging::after {
+    background: var(--accent-color);
+  }
+}

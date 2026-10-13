@@ -6,16 +6,18 @@ import {
   loadPathWorkspace,
   createFile, deleteFile, renameFile, updateFileContent,
   moveFile, batchDeleteFiles, batchCreateFiles,
-  openTab, closeTab, setActiveTab,
-  toggleFolder, collapseAllFolders,
-  setSidebarPanel, toggleSidebar, sortFiles,
+  openTab, closeTab, closeAllTabs, setActiveTab,
+  toggleFolder, collapseAllFolders, expandAllFolders,
+  setSidebarPanel, setSidebarVisible, toggleSidebar, sortFiles,
   flushSync,
   workspaceSaveQueue,
   recoverPathWorkspace,
 } from '@/store/modules/pathStore'
 import type { SidebarPanel } from '@/types/path'
 import ActivityBar from './components/ActivityBar'
+import WorkspaceHeader from './components/WorkspaceHeader'
 import Sidebar from './components/Sidebar'
+import ResizableSidebar, { DEFAULT_SIDEBAR_WIDTH } from './components/ResizableSidebar'
 import TabBar from './components/TabBar'
 import EditorArea from './components/EditorArea'
 import StatusBar from './components/StatusBar'
@@ -38,16 +40,23 @@ const Path: React.FC = () => {
   // 标签页前进/后退导航历史
   const [navHistory, setNavHistory] = useState<string[]>([])
   const [navIndex, setNavIndex] = useState(-1)
-  const [isClose, setIsClose] = useState(false)
   const [graphOpen, setGraphOpen] = useState(false)
   const [graphActive, setGraphActive] = useState(false)
   const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false)
   const [recovering, setRecovering] = useState(false)
+  const [restoredUserId, setRestoredUserId] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const isNavAction = useRef(false)
 
   // 初始化：加载用户工作区数据
   useEffect(() => {
-    if (userId) dispatch(loadPathWorkspace(userId))
+    let disposed = false
+    if (userId) {
+      void dispatch(loadPathWorkspace(userId)).then(() => {
+        if (!disposed) setRestoredUserId(userId)
+      })
+    }
+    return () => { disposed = true }
   }, [dispatch, userId])
 
   useEffect(() => {
@@ -109,8 +118,16 @@ const Path: React.FC = () => {
   // 切换侧栏显示/隐藏
   const handleToggleSidebar = useCallback(() => {
     dispatch(toggleSidebar())
-    setIsClose(!isClose)
-  }, [isClose, dispatch])
+  }, [dispatch])
+
+  const handleSidebarVisibilityChange = useCallback((visible: boolean) => {
+    dispatch(setSidebarVisible(visible))
+  }, [dispatch])
+
+  const handleSidebarWidthChange = useCallback((width: number) => {
+    // ResizeObserver runs before paint; update layout directly to avoid a React-frame delay.
+    containerRef.current?.style.setProperty('--path-sidebar-width', `${width}px`)
+  }, [])
 
   // 导航后退
   const handleNavBack = useCallback(() => {
@@ -137,12 +154,23 @@ const Path: React.FC = () => {
 
   // 选中文件 → 打开标签页
   const handleSelectFile = useCallback((id: string) => {
+    setGraphActive(false)
     dispatch(openTab(id))
+  }, [dispatch])
+
+  const handleCloseAllTabs = useCallback(() => {
+    dispatch(closeAllTabs())
+    setGraphOpen(false)
+    setGraphActive(false)
+    setNavHistory([])
+    setNavIndex(-1)
+    isNavAction.current = false
   }, [dispatch])
 
   // 新建文件或文件夹
   const handleCreateFile = useCallback((parentId: string | null, type: 'file' | 'folder') => {
     const name = type === 'folder' ? '新建文件夹' : '未命名笔记'
+    setGraphActive(false)
     dispatch(createFile({ name, type, parentId }))
   }, [dispatch])
 
@@ -238,7 +266,7 @@ const Path: React.FC = () => {
   }, [])
 
   return (
-    <div className={styles.container}>
+    <div ref={containerRef} className={styles.container}>
       {(syncStatus === 'error' || syncStatus === 'conflict') && (
         <Alert
           type="warning"
@@ -264,10 +292,39 @@ const Path: React.FC = () => {
           )}
         />
       )}
+      <div className={styles.topRow}>
+        <div className={`${styles.topSidebar} ${sidebarVisible ? '' : styles.sidebarCollapsed}`} style={{ width: `max(148px, calc(46px + var(--path-sidebar-width, ${DEFAULT_SIDEBAR_WIDTH}px)))` }}>
+          <WorkspaceHeader
+            activePanel={sidebarPanel}
+            sidebarVisible={sidebarVisible}
+            onPanelChange={handlePanelChange}
+            onToggleSidebar={handleToggleSidebar}
+          />
+        </div>
+        <TabBar
+          tabs={tabFiles}
+          activeTabId={activeTabId}
+          showGraph={graphOpen}
+          graphActive={graphActive}
+          restoring={restoredUserId !== userId}
+          onSelect={handleSelectFile}
+          onClose={(id) => dispatch(closeTab(id))}
+          onCloseGraph={() => { setGraphOpen(false); setGraphActive(false) }}
+          onCloseAll={handleCloseAllTabs}
+          onSelectGraph={() => setGraphActive(true)}
+          onNew={() => handleCreateFile(null, 'file')}
+        />
+      </div>
       <div className={styles.workspace} style={recovering ? { pointerEvents: 'none' } : undefined}>
-        <ActivityBar activePanel={sidebarPanel} isClose={isClose} showingGraph={graphOpen} onPanelChange={handlePanelChange} onToggleSidebar={handleToggleSidebar} onShowGraph={() => { if (graphOpen) { setGraphOpen(false); setGraphActive(false) } else { setGraphOpen(true); setGraphActive(true) } }} />
+        <ActivityBar
+          onShowMentor={() => handlePanelChange('mentor')}
+          onShowGraph={() => {
+            setGraphOpen(true)
+            setGraphActive(true)
+          }}
+        />
 
-        <div className={`${styles.sidebarWrap} ${!sidebarVisible ? styles.sidebarCollapsed : ''}`}>
+        <ResizableSidebar visible={sidebarVisible} onVisibilityChange={handleSidebarVisibilityChange} onWidthChange={handleSidebarWidthChange}>
           <Sidebar
             files={files}
             expandedIds={expandedFolderIds}
@@ -284,30 +341,20 @@ const Path: React.FC = () => {
             onBatchCreateFiles={(items) => dispatch(batchCreateFiles(items))}
             onImportFiles={handleImportFiles}
             onImportFolder={handleImportFolder}
+            onExpandAll={() => dispatch(expandAllFolders())}
             onCollapseAll={() => dispatch(collapseAllFolders())}
             onSort={handleSort}
           />
-        </div>
+        </ResizableSidebar>
 
-        <div className={styles.mainArea}>
-          <TabBar
-            tabs={tabFiles}
-            activeTabId={activeTabId}
-            showGraph={graphOpen}
-            graphActive={graphActive}
-            onSelect={(id) => { setGraphActive(false); dispatch(setActiveTab(id)) }}
-            onClose={(id) => dispatch(closeTab(id))}
-            onCloseGraph={() => { setGraphOpen(false); setGraphActive(false) }}
-            onSelectGraph={() => setGraphActive(true)}
-            onNew={() => handleCreateFile(null, 'file')}
-          />
+        <div className={styles.mainArea} data-testid="path-main-area">
           <EditorArea
             file={activeFile}
             files={files}
             showGraph={graphActive}
             onContentChange={handleContentChange}
             onRenameFile={handleRenameFile}
-            onSelectFile={(id) => { setGraphActive(false); handleSelectFile(id) }}
+            onSelectFile={handleSelectFile}
             canGoBack={canGoBack}
             canGoForward={canGoForward}
             onNavBack={handleNavBack}
@@ -327,7 +374,7 @@ const Path: React.FC = () => {
       <QuickSwitcher
         visible={quickSwitcherOpen}
         files={files}
-        onSelect={(id) => { setGraphActive(false); handleSelectFile(id) }}
+        onSelect={handleSelectFile}
         onClose={() => setQuickSwitcherOpen(false)}
         onCreate={() => handleCreateFile(null, 'file')}
       />
