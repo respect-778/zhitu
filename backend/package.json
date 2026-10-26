@@ -1,0 +1,54 @@
+{
+  "name": "zhitu-backend",
+  "version": "1.0.0",
+  "description": "知途后端系统 - MVC 架构 + RESTful API",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "db:init": "mysql -u root -p zhitu < database/init.sql",
+    "db:seed": "mysql -u root -p zhitu < database/seed.sql",
+    "abstract:backfill": "ts-node src/scripts/generatePostAbstracts.ts",
+    "keywords:backfill": "ts-node src/scripts/generatePostKeywords.ts"
+  },
+  "keywords": [
+    "express",
+    "typescript",
+    "mvc",
+    "restful",
+    "mysql"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/core": "^0.3.0",
+    "@langchain/openai": "^0.3.0",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.3",
+    "langchain": "^0.3.0",
+    "markdown-it": "^15.0.2",
+    "multer": "^2.0.0",
+    "mysql2": "^3.6.5",
+    "redis": "^4.7.1",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/markdown-it": "^14.2.0",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^20.10.4",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
+}
