@@ -1,0 +1,25 @@
+{
+  "checks": [
+    "Documents: preview and existing account files reused",
+    "KNOWVIA: preview and existing account files reused",
+    "user-2: preview and existing account files reused",
+    "Documents: preview and existing account files reused",
+    "refresh restores the account-level IndexedDB binding without nesting",
+    "cancel keeps the previous account-level binding",
+    "foreign-account selection is rejected before rebinding or writing",
+    "manual edits survive entry-level changes; platform copy stays in the existing folder",
+    "rechecking cannot hide a real difference; cancelling recovery preserves the file",
+    "confirmed recovery preserves the original, restores canonical backup and clears the warning",
+    "warning stays resolved after refreshing and restoring the directory binding"
+  ],
+  "files": [
+    "KNOWVIA/user-2/学习规划/.knowvia-manifest.json",
+    "KNOWVIA/user-2/学习规划/workspace--平台副本.json",
+    "KNOWVIA/user-2/学习规划/workspace--电脑原件-dff92a610404.json",
+    "KNOWVIA/user-2/学习规划/workspace.json",
+    "KNOWVIA/user-2/学习规划/测试笔记--edb465624291e405.md",
+    "KNOWVIA/user-2/简历/.knowvia-manifest.json",
+    "KNOWVIA/user-2/简历/resumes.json"
+  ],
+  "pageErrors": []
+}

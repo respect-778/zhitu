@@ -1,5 +1,5 @@
 import { directoryHandleStore, type PersonalDirectoryHandle } from './directoryHandleStore'
-import { buildBackupPlan, contentHash, type BackupKind, type BackupSnapshot } from './personalDirectoryPlan'
+import { backupRootSegments, buildBackupPlan, contentHash, DirectoryLocationError, type BackupKind, type BackupSnapshot } from './personalDirectoryPlan'
 
 type DirectoryPhase = 'unconfigured' | 'checking' | 'permission' | 'pending' | 'writing' | 'saved' | 'conflict' | 'error'
 export interface ModuleDirectoryStatus { saved: boolean; confirmed: boolean; revision: number | null; conflict: boolean }
@@ -12,6 +12,7 @@ interface HandleStore {
   put(uid: string, handle: PersonalDirectoryHandle): Promise<void>
   remove(uid: string): Promise<void>
 }
+class BackupResolutionError extends Error {}
 
 async function directoryAt(root: FileSystemDirectoryHandle, path: string[]) {
   let folder = root
@@ -24,16 +25,21 @@ async function readText(folder: FileSystemDirectoryHandle, name: string): Promis
     throw error
   }
 }
-async function writeText(folder: FileSystemDirectoryHandle, name: string, content: string) {
+async function writeText(folder: FileSystemDirectoryHandle, name: string, content: string | Blob) {
   const handle = await folder.getFileHandle(name, { create: true })
   const stream = await handle.createWritable()
   try { await stream.write(content); await stream.close() } catch (error) { await stream.abort().catch(() => {}); throw error }
 }
+function sameBytes(a: ArrayBuffer, b: ArrayBuffer): boolean {
+  const other = new Uint8Array(b)
+  return a.byteLength === b.byteLength && new Uint8Array(a).every((byte, index) => byte === other[index])
+}
 
-/** 写单个模块快照；遇到用户改动保留原文件，另存平台副本。绝不删除文件。 */
-export async function writeBackup(root: PersonalDirectoryHandle, uid: string, kind: BackupKind, snapshot: BackupSnapshot, stillCurrent = () => true): Promise<boolean> {
+/** 默认保留有差异的原文件并另存平台副本；显式确认时先保留原件再恢复标准备份。绝不删除文件。 */
+export async function writeBackup(root: PersonalDirectoryHandle, uid: string, kind: BackupKind, snapshot: BackupSnapshot, stillCurrent = () => true, preserveAndResolve = false): Promise<boolean> {
+  const pathOffset = 2 - backupRootSegments(uid, root.name).length
   const plan = await buildBackupPlan(uid, kind, snapshot)
-  const manifestFolder = await directoryAt(root, plan[0].path.slice(0, -1))
+  const manifestFolder = await directoryAt(root, plan[0].path.slice(pathOffset, -1))
   const manifestName = '.knowvia-manifest.json'
   let hashes: Record<string, string> = {}
   try { const text = await readText(manifestFolder, manifestName); hashes = text ? JSON.parse(text).hashes || {} : {} } catch { /* 损坏的清单不会授权覆盖原文件。 */ }
@@ -41,13 +47,38 @@ export async function writeBackup(root: PersonalDirectoryHandle, uid: string, ki
   let conflict = false
   for (const file of plan) {
     if (!stillCurrent()) return conflict
-    const folder = await directoryAt(root, file.path.slice(0, -1))
+    // Disk paths are relative to the chosen level; manifest keys stay canonical
+    // so existing protection hashes survive choosing the same folder differently.
+    const folder = await directoryAt(root, file.path.slice(pathOffset, -1))
     const originalName = file.path.at(-1)!
     let name = originalName
     let key = file.path.join('/')
     let existing = await readText(folder, name)
     const nextHash = await contentHash(file.content)
-    if (existing !== undefined && existing !== file.content && await contentHash(existing) !== hashes[key]) {
+    if (existing !== undefined && existing !== file.content && await contentHash(existing) !== hashes[key] && preserveAndResolve) {
+      const original = existing, originalHash = await contentHash(original)
+      const originalFile = await (await folder.getFileHandle(name)).getFile()
+      if (await originalFile.text() !== original) throw new BackupResolutionError('电脑文件在处理期间再次变化，请重新检查')
+      const originalBytes = await originalFile.arrayBuffer()
+      const dot = name.lastIndexOf('.'), stem = name.slice(0, dot), extension = name.slice(dot)
+      // Never overwrite an older preserved original, even if somebody edited it.
+      let preserved = false
+      for (let suffix = 0; suffix < 100; suffix++) {
+        const copyName = `${stem}--电脑原件-${originalHash.slice(0, 12)}${suffix ? `-${suffix}` : ''}${extension}`
+        const copy = await readText(folder, copyName)
+        if (copy !== undefined && copy !== original) continue
+        if (copy !== undefined && !sameBytes(await (await (await folder.getFileHandle(copyName)).getFile()).arrayBuffer(), originalBytes)) continue
+        if (!stillCurrent()) return true
+        if (copy === undefined) await writeText(folder, copyName, originalFile)
+        if (!sameBytes(await (await (await folder.getFileHandle(copyName)).getFile()).arrayBuffer(), originalBytes)) throw new BackupResolutionError('电脑原件副本未能完整保留，已暂停处理')
+        hashes[[...file.path.slice(0, -1), copyName].join('/')] = originalHash
+        preserved = true
+        break
+      }
+      if (!preserved) throw new BackupResolutionError('无法安全保留电脑原件，请检查目录后重试')
+      if (!stillCurrent()) return true
+      if (!sameBytes(await (await (await folder.getFileHandle(name)).getFile()).arrayBuffer(), originalBytes)) throw new BackupResolutionError('电脑文件在处理期间再次变化，已暂停，请重新检查后再试')
+    } else if (existing !== undefined && existing !== file.content && await contentHash(existing) !== hashes[key]) {
       conflict = true
       const dot = name.lastIndexOf('.')
       name = `${name.slice(0, dot)}--平台副本${name.slice(dot)}`
@@ -114,6 +145,7 @@ export class PersonalDirectory {
     try {
       const handle = await this.handles.get(uid)
       if (epoch !== this.epoch) return
+      if (handle) backupRootSegments(uid, handle.name)
       this.handle = handle
       if (!handle) { this.setStatus({ phase: 'unconfigured' }); return }
       const permission = await handle.queryPermission({ mode: 'readwrite' })
@@ -129,6 +161,7 @@ export class PersonalDirectory {
     try {
       const handle = await this.picker()
       if (epoch !== this.epoch) return
+      backupRootSegments(uid, handle.name)
       if (await handle.queryPermission({ mode: 'readwrite' }) !== 'granted') {
         this.setStatus({ phase: 'permission', message: '请选择允许读写的目录' }); return
       }
@@ -138,7 +171,9 @@ export class PersonalDirectory {
       this.setStatus({ name: handle.name, phase: 'pending', message: '' })
       this.schedule()
     } catch (error) {
-      if (epoch === this.epoch && (error as DOMException).name !== 'AbortError') this.setStatus({ phase: 'error', message: '目录选择失败，服务器保存不受影响' })
+      if (epoch === this.epoch && (error as DOMException).name !== 'AbortError') this.setStatus({
+        phase: 'error', message: error instanceof DirectoryLocationError ? error.message : '目录选择失败，服务器保存不受影响',
+      })
     }
   }
   async authorize() {
@@ -173,7 +208,29 @@ export class PersonalDirectory {
     if (this.timer) clearTimeout(this.timer)
     this.timer = setTimeout(() => { void this.flush() }, this.delay)
   }
-  flush(): Promise<void> {
+  async flush(recheck = false): Promise<void> {
+    if (recheck) {
+      const epoch = this.epoch
+      if (this.running) await this.running
+      if (epoch !== this.epoch) return
+      this.written.clear()
+    }
+    return this.flushPending()
+  }
+
+  /** Explicit user confirmation only; authorization expires after these exact snapshots. */
+  async resolveConflicts(expectedStatus = this.status): Promise<void> {
+    const epoch = this.epoch
+    if (this.running) await this.running
+    if (epoch !== this.epoch || !this.handle || expectedStatus !== this.status) throw new Error('数据或目录已变化，请重新检查并确认')
+    const approved = new Map([...this.snapshots].map(([kind, job]) => [kind, job.signature]))
+    this.written.clear()
+    await this.flushPending(approved)
+    if (epoch !== this.epoch) throw new Error('目录或账号已变化，请重新检查')
+    if (this.status.phase !== 'saved') throw new Error(this.status.message || '本地差异尚未处理完成，请重新检查')
+  }
+
+  private flushPending(approved?: Map<BackupKind, string>): Promise<void> {
     if (this.timer) clearTimeout(this.timer)
     if (this.running) return this.running
     if (!this.handle || !this.uid) return Promise.resolve()
@@ -189,13 +246,13 @@ export class PersonalDirectory {
         if (!pending) break
         const [kind, job] = pending
         this.setStatus({ phase: 'writing', message: '' })
-        const conflict = await writeBackup(handle, uid, kind, job.snapshot, current)
+        const conflict = await writeBackup(handle, uid, kind, job.snapshot, current, approved?.get(kind) === job.signature)
         if (current()) { this.written.set(kind, job.signature); this.conflicts.set(kind, conflict) }
       }
       const conflict = [...this.conflicts.values()].some(Boolean)
-      if (current()) this.setStatus({ phase: conflict ? 'conflict' : 'saved', message: conflict ? '发现电脑文件被手工修改，已保留原文件并另存平台副本' : '', lastSavedAt: new Date().toLocaleTimeString() })
+      if (current()) this.setStatus({ phase: conflict ? 'conflict' : 'saved', message: conflict ? '本地文件与备份记录不一致，已保留原文件并另存平台副本。可点击“处理本地差异”恢复正常备份。' : '', lastSavedAt: new Date().toLocaleTimeString() })
     })().catch(error => {
-      if (current()) this.setStatus({ phase: (error as DOMException).name === 'NotAllowedError' ? 'permission' : 'error', message: '本地副本保存失败，服务器保存不受影响，可重新尝试' })
+      if (current()) this.setStatus({ phase: (error as DOMException).name === 'NotAllowedError' ? 'permission' : 'error', message: error instanceof BackupResolutionError ? error.message : '本地副本保存失败，服务器保存不受影响，可重新尝试' })
     }).finally(() => {
       this.running = undefined
       // 绑定变更期间的新快照要在旧任务结束后接着写。

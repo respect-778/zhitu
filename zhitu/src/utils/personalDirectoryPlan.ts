@@ -2,6 +2,17 @@ export type BackupKind = 'workspace' | 'resumes'
 export interface BackupSnapshot { data: unknown; revision: number | null; confirmed: boolean }
 export interface BackupFile { path: string[]; content: string }
 
+export class DirectoryLocationError extends Error {}
+
+/** Segments below the selected handle; keep the account boundary at every entry level. */
+export function backupRootSegments(uid: string, selectedName = ''): string[] {
+  if (!/^\d+$/.test(uid)) throw new DirectoryLocationError('账号编号无效，无法创建个人目录')
+  const account = `user-${uid}`, name = selectedName.toLowerCase()
+  if (name === account) return []
+  if (/^user-\d+$/.test(name)) throw new DirectoryLocationError(`所选文件夹属于其他账号，请选择 KNOWVIA 或当前账号的 ${account} 文件夹`)
+  return name === 'knowvia' ? [account] : ['KNOWVIA', account]
+}
+
 export const contentHash = async (text: string) => {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
   return Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('')
@@ -15,8 +26,7 @@ export function safeFileName(value: string): string {
 const namedId = async (name: string, id: string) => `${safeFileName(name)}--${(await contentHash(id)).slice(0, 16)}`
 
 export async function buildBackupPlan(uid: string, kind: BackupKind, snapshot: BackupSnapshot): Promise<BackupFile[]> {
-  if (!/^\d+$/.test(uid)) throw new Error('账号编号无效，无法创建个人目录')
-  const root = ['KNOWVIA', `user-${uid}`, kind === 'workspace' ? '学习规划' : '简历']
+  const root = [...backupRootSegments(uid), kind === 'workspace' ? '学习规划' : '简历']
   const envelope = (data: unknown) => JSON.stringify({ schemaVersion: 1, userId: uid, kind, cloudRevision: snapshot.revision, cloudConfirmed: snapshot.confirmed, data }, null, 2)
   const files: BackupFile[] = [{ path: [...root, kind === 'workspace' ? 'workspace.json' : 'resumes.json'], content: envelope(snapshot.data) }]
   if (kind === 'resumes') {

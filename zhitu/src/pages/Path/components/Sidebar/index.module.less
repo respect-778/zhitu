@@ -5,6 +5,15 @@
   background: var(--bg-secondary);
   overflow: hidden;
   user-select: none;
+  container-type: inline-size;
+}
+
+.preservedPanel {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+
+  &[hidden] { display: none; }
 }
 
 .toolbar {
@@ -49,7 +58,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px 0;
-  transition: outline 0.15s ease;
+  position: relative;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -60,12 +69,38 @@
     border-radius: 3px;
   }
 
-  &.dropTargetRoot {
-    background: rgba(46, 89, 149, 0.04);
-    outline: 2px dashed rgba(46, 89, 149, 0.4);
-    outline-offset: -2px;
-    border-radius: 4px;
+  &.dragSession {
+    user-select: none;
+    cursor: grabbing;
   }
+}
+
+.rootDropZone {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  margin: 0 8px 4px;
+  border: 1px dashed var(--wiki-border-subtle, var(--border-color));
+  border-radius: 6px;
+  background: var(--wiki-surface-muted, var(--bg-color-secondary));
+  color: var(--wiki-text-secondary, var(--text-secondary));
+  font-size: 12px;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.rootDropZoneActive {
+  border-color: var(--wiki-accent, #2e5995);
+  background: color-mix(in srgb, var(--wiki-accent, #2e5995) 12%, transparent);
+  color: var(--wiki-text, var(--text-color));
+}
+
+.rootDropZoneInvalid {
+  border-color: var(--wiki-danger, #b42318);
+  color: var(--wiki-danger, #b42318);
 }
 
 .treeNode {
@@ -98,11 +133,68 @@
   }
 
   &.dropTarget {
-    background: rgba(46, 89, 149, 0.15);
-    outline: 2px dashed rgba(46, 89, 149, 0.5);
-    outline-offset: -2px;
+    background: color-mix(in srgb, var(--wiki-accent, #2e5995) 12%, transparent);
+    outline: 1px solid var(--wiki-accent, #2e5995);
+    outline-offset: -1px;
     border-radius: 4px;
   }
+
+  &.invalidDropTarget {
+    background: color-mix(in srgb, var(--wiki-danger, #b42318) 8%, transparent);
+    outline: 1px solid var(--wiki-danger, #b42318);
+    outline-offset: -1px;
+    border-radius: 4px;
+  }
+}
+
+.dragOverlay {
+  position: fixed;
+  z-index: 1300;
+  width: max-content;
+  max-width: 280px;
+  padding: 8px 10px;
+  pointer-events: none;
+  border-radius: 6px;
+  background: #26313f;
+  color: #f8fafc;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);
+}
+
+.dragOverlayInvalid {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--wiki-danger, #ff9b91) 75%, transparent), 0 8px 24px rgba(15, 23, 42, 0.24);
+}
+
+.dragOverlayTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  strong {
+    flex: 0 0 auto;
+    font-size: 11px;
+  }
+}
+
+.dragOverlayTarget {
+  margin-top: 3px;
+  overflow: hidden;
+  color: #cbd5e1;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global([data-theme='dark']) .dragOverlay {
+  background: #334155;
 }
 
 .arrow {

@@ -9,7 +9,7 @@ export function personalSaveNotice(directory: DirectoryStatus, kind: BackupKind,
   if (cloudStatus === 'conflict') return notice('版本冲突，修改已保留', 'warning')
   if (cloudStatus === 'loading') return notice('正在加载', 'muted')
   if (!directory.supported) return notice('当前浏览器不支持本地自动保存', 'muted')
-  if (!directory.name) return notice('未配置本地文件夹', 'muted')
+  if (!directory.name) return notice('未配置本地文件夹', 'warning')
   if (directory.phase === 'permission') return notice('本地文件夹需要重新授权', 'warning')
   if (directory.phase === 'error') return notice('本地文件夹保存失败', 'warning')
   const module = directory.modules[kind]

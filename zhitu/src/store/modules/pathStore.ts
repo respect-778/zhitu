@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, createListenerMiddleware, isAnyOf, type PayloadAction } from '@reduxjs/toolkit'
-import type { VFile, GrowthPlan, SidebarPanel } from '@/types/path'
+import type { VFile, GrowthPlan, SidebarPanel, AgentPermission, WikiLinkBinding } from '@/types/path'
 import { getWorkspaceAPI, saveWorkspaceAPI, type WorkspaceData } from '@/api/path'
 import { getStore } from '@/utils/store'
 import { WorkspaceSaveQueue, type SaveState, type SaveSnapshot, type WorkspaceSyncStatus } from '@/utils/workspaceSaveQueue'
+import { buildWikiLinkBindings, reconcileFileWikiLinkBindings } from '@/pages/Path/utils/wikiLinks'
 
 interface PathState {
   files: VFile[]
@@ -17,6 +18,9 @@ interface PathState {
   revision: number | null
   syncStatus: WorkspaceSyncStatus
   syncError: string
+  wikiTemplateVersion: number | null
+  wikiInitializedAt: string | null
+  linkBindings: WikiLinkBinding[]
 }
 
 const STORAGE_KEY_PREFIX = 'zhitu_path'
@@ -33,13 +37,29 @@ const loadFromStorage = (userId: string): Partial<PathState> => {
 
 const now = () => new Date().toISOString()
 
-// 初始文件
+const bootstrapMeta = () => ({ createdAt: now(), updatedAt: now(), tags: [] })
+
+const bootstrapFolder = (id: string, name: string, parentId: string | null, order: number): VFile => ({
+  id, name, type: 'folder', parentId, order,
+  createdByKind: 'bootstrap', agentPermission: 'manage', metadata: bootstrapMeta(),
+})
+
+const bootstrapNote = (id: string, name: string, parentId: string, order: number, content: string): VFile => ({
+  id, name, type: 'file', parentId, order, content, fileType: 'note',
+  createdByKind: 'bootstrap', agentPermission: 'manage', metadata: bootstrapMeta(),
+})
+
+// 新工作区初始 Wiki：四个目录、五个文件。已有工作区不会通过此常量补建。
 const DEFAULT_FILES: VFile[] = [
-  { id: 'folder-plan', name: '我的规划', type: 'folder', parentId: null, order: 0 },
-  { id: 'folder-notes', name: '学习笔记', type: 'folder', parentId: null, order: 1 },
-  { id: 'folder-cite', name: '引用收藏', type: 'folder', parentId: null, order: 2 },
-  { id: 'folder-summary', name: '周总结', type: 'folder', parentId: null, order: 3 },
-  { id: 'folder-archive', name: '成长档案', type: 'folder', parentId: null, order: 4 },
+  bootstrapFolder('wiki-sources', '资料库', null, 0),
+  bootstrapFolder('wiki-knowledge', '知识库', null, 1),
+  bootstrapFolder('wiki-learning-record', '学习档案', null, 2),
+  bootstrapNote('wiki-learning-overview', '学习概况', 'wiki-learning-record', 0, '# 学习概况\n\n- 目标：尚未设置\n- 已有学习记录：暂无\n\n> 用户自述、实际学习证据与 Agent 建议会分别标注。'),
+  bootstrapFolder('wiki-management', 'Wiki管理', null, 3),
+  bootstrapNote('wiki-index', 'index', 'wiki-management', 0, '# Wiki 导航\n\n- **资料库/**：保存来源条目与说明\n- **知识库/**：沉淀可追溯的主题知识\n- **学习档案/**：记录目标、进展与复盘\n- **Wiki管理/**：保存整理约定、技能目录与维护记录\n\n在正文输入 `[[笔记名]]` 可建立可追踪的知识关联。'),
+  bootstrapNote('wiki-schema', 'schema', 'wiki-management', 1, '# 整理约定\n\n1. 先查找并更新已有页面，确有独立用途时再新建。\n2. 关键结论必须保留出处；有分歧时同时记录。\n3. 权限决定 Agent 能做什么，用户指令决定本次做什么。\n4. 不因保存、收藏或进入页面自动启动模型整理。'),
+  bootstrapNote('wiki-skill', 'skill', 'wiki-management', 2, '# Agent 技能目录\n\n暂无可用技能。\n\n技能条目将记录：skillId、名称、用途、说明入口、版本、所需工具与状态。文档中的名称不会自动安装技能或扩大权限。'),
+  bootstrapNote('wiki-log', 'log', 'wiki-management', 3, `# Wiki 维护记录\n\n- ${now()}：初始化 Wiki 结构（模板 v1）。`),
 ]
 
 const initialState: PathState = {
@@ -48,13 +68,16 @@ const initialState: PathState = {
   activeTabId: null,
   sidebarPanel: 'files',
   sidebarVisible: true,
-  expandedFolderIds: ['folder-notes'],
+  expandedFolderIds: ['wiki-knowledge', 'wiki-learning-record', 'wiki-management'],
   activePlan: null,
   mentorId: null,
   storageUserId: '',
   revision: null,
   syncStatus: 'loading',
   syncError: '',
+  wikiTemplateVersion: 1,
+  wikiInitializedAt: now(),
+  linkBindings: buildWikiLinkBindings(DEFAULT_FILES),
 }
 
 // debounce 同步到后端：即时写 localStorage，延迟 1.5s 发 PUT 请求
@@ -100,6 +123,9 @@ const toWorkspaceData = (state: PathState): WorkspaceData => JSON.parse(JSON.str
     expandedFolderIds: state.expandedFolderIds,
     activePlan: state.activePlan,
     mentorId: state.mentorId,
+    wikiTemplateVersion: state.wikiTemplateVersion,
+    wikiInitializedAt: state.wikiInitializedAt,
+    linkBindings: state.linkBindings,
   }))
 
 // 立即触发文件和文件内容的同步
@@ -131,7 +157,9 @@ export const recoverPathWorkspace = createAsyncThunk('path/recoverWorkspace', as
   const draft = workspaceSaveQueue.peek(userId)?.pending || readDraft(userId)?.data
   if (!Number.isSafeInteger(snapshot.revision)) throw new Error('后端尚未支持工作区版本')
   const data: WorkspaceData = snapshot.data ? structuredClone(snapshot.data) : {
-    files: structuredClone(DEFAULT_FILES), openTabs: [], activeTabId: null, expandedFolderIds: ['folder-notes'], activePlan: null, mentorId: null,
+    files: structuredClone(DEFAULT_FILES), openTabs: [], activeTabId: null, expandedFolderIds: ['wiki-knowledge'], activePlan: null, mentorId: null,
+    wikiTemplateVersion: 1, wikiInitializedAt: now(),
+    linkBindings: buildWikiLinkBindings(DEFAULT_FILES),
   }
   if (draft) {
     localStorage.setItem(`zhitu_path_recovery_${userId}_${Date.now()}`, JSON.stringify(draft))
@@ -145,21 +173,30 @@ export const recoverPathWorkspace = createAsyncThunk('path/recoverWorkspace', as
         id, name: `${file.name}（本地副本）`, type: 'file', content: file.content, fileType: 'note',
         parentId: files.some(candidate => candidate.id === file.parentId && candidate.type === 'folder') ? file.parentId : null,
         order: files.length, metadata: { createdAt: now(), updatedAt: now(), tags: file.metadata?.tags || [] },
+        createdByKind: 'user', agentPermission: 'read',
       })
       if (draft.activeTabId === file.id) { data.activeTabId = id; data.openTabs.push(id) }
     }
   }
+  data.linkBindings = buildWikiLinkBindings(data.files as VFile[], data.linkBindings ?? [])
   return { userId, snapshot, data }
 })
 
 const applyWorkspace = (state: PathState, data: WorkspaceData) => {
-  state.files = data.files as VFile[]
+  state.files = (data.files as VFile[]).map(file => ({
+    ...file,
+    createdByKind: file.createdByKind ?? 'user',
+    agentPermission: file.agentPermission ?? 'read',
+  }))
   state.openTabs = data.openTabs ?? []
   state.activeTabId = data.activeTabId ?? null
   const folderIds = new Set(state.files.filter(file => file.type === 'folder').map(file => file.id))
   state.expandedFolderIds = (data.expandedFolderIds ?? []).filter(id => folderIds.has(id))
   state.activePlan = data.activePlan as GrowthPlan ?? null
   state.mentorId = data.mentorId ?? null
+  state.wikiTemplateVersion = data.wikiTemplateVersion ?? null
+  state.wikiInitializedAt = data.wikiInitializedAt ?? null
+  state.linkBindings = buildWikiLinkBindings(state.files, data.linkBindings ?? [])
 }
 
 const pathSlice = createSlice({
@@ -183,10 +220,13 @@ const pathSlice = createSlice({
         parentId,
         content: content ?? '',
         fileType: fileType ?? 'note',
+        createdByKind: 'user',
+        agentPermission: 'read',
         order: siblings.length,
         metadata: { createdAt: now(), updatedAt: now(), tags: [] },
       }
       state.files.push(file)
+      state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
       if (type === 'file') {
         state.openTabs.push(file.id)
         state.activeTabId = file.id
@@ -205,6 +245,7 @@ const pathSlice = createSlice({
       }
       const ids = new Set(collectIds(action.payload))
       state.files = state.files.filter(f => !ids.has(f.id))
+      state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
       state.openTabs = state.openTabs.filter(id => !ids.has(id))
       if (state.activeTabId && ids.has(state.activeTabId)) {
         state.activeTabId = state.openTabs[0] ?? null
@@ -218,6 +259,7 @@ const pathSlice = createSlice({
       if (file) {
         file.name = action.payload.name
         if (file.metadata) file.metadata.updatedAt = now()
+        state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
       }
     },
 
@@ -227,6 +269,10 @@ const pathSlice = createSlice({
       if (file) {
         file.content = action.payload.content
         if (file.metadata) file.metadata.updatedAt = now()
+        state.linkBindings = [
+          ...state.linkBindings.filter(binding => binding.sourceFileId !== file.id),
+          ...reconcileFileWikiLinkBindings(file, state.files, state.linkBindings),
+        ]
       }
     },
 
@@ -289,13 +335,36 @@ const pathSlice = createSlice({
       state.sidebarVisible = action.payload
     },
 
+    setAgentPermission(state, action: PayloadAction<{ ids: string[]; permission: AgentPermission }>) {
+      const ids = new Set(action.payload.ids)
+      const timestamp = now()
+      for (const file of state.files) {
+        if (!ids.has(file.id)) continue
+        file.agentPermission = action.payload.permission
+        if (file.metadata) file.metadata.updatedAt = timestamp
+      }
+    },
+
     // 移动文件
     moveFile(state, action: PayloadAction<{ id: string; newParentId: string | null }>) {
       const file = state.files.find(f => f.id === action.payload.id)
       if (file) {
         file.parentId = action.payload.newParentId
         if (file.metadata) file.metadata.updatedAt = now()
+        state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
       }
+    },
+
+    // 批量移动必须作为一次工作区变更保存，避免多选拖拽产生中间结构。
+    batchMoveFiles(state, action: PayloadAction<{ ids: string[]; newParentId: string | null }>) {
+      const ids = new Set(action.payload.ids)
+      const timestamp = now()
+      for (const file of state.files) {
+        if (!ids.has(file.id) || file.parentId === action.payload.newParentId) continue
+        file.parentId = action.payload.newParentId
+        if (file.metadata) file.metadata.updatedAt = timestamp
+      }
+      state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
     },
 
     // 批量删除
@@ -307,6 +376,7 @@ const pathSlice = createSlice({
       }
       action.payload.forEach(id => collectIds(id))
       state.files = state.files.filter(f => !allIds.has(f.id))
+      state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
       state.openTabs = state.openTabs.filter(id => !allIds.has(id))
       if (state.activeTabId && allIds.has(state.activeTabId)) {
         state.activeTabId = state.openTabs[0] ?? null
@@ -325,9 +395,12 @@ const pathSlice = createSlice({
           ...item,
           content: item.content ?? '',
           fileType: item.fileType ?? 'note',
+          createdByKind: 'user',
+          agentPermission: 'read',
           metadata: { createdAt: ts, updatedAt: ts, tags: [] },
         })
       }
+      state.linkBindings = buildWikiLinkBindings(state.files, state.linkBindings)
     },
 
     // 排序
@@ -388,17 +461,18 @@ const pathSlice = createSlice({
 })
 
 export const {
-  createFile, deleteFile, renameFile, updateFileContent, moveFile,
+  createFile, deleteFile, renameFile, updateFileContent, moveFile, batchMoveFiles,
   batchDeleteFiles, batchCreateFiles, sortFiles,
   openTab, closeTab, closeAllTabs, setActiveTab,
   toggleFolder, collapseAllFolders, expandAllFolders,
   setSidebarPanel, setSidebarVisible, toggleSidebar,
+  setAgentPermission,
   setSyncState,
 } = pathSlice.actions
 
 export const pathSyncListener = createListenerMiddleware()
 pathSyncListener.startListening({
-  matcher: isAnyOf(createFile, deleteFile, renameFile, updateFileContent, moveFile, batchDeleteFiles, batchCreateFiles, sortFiles, openTab, closeTab, closeAllTabs, setActiveTab, toggleFolder, collapseAllFolders, expandAllFolders),
+  matcher: isAnyOf(createFile, deleteFile, renameFile, updateFileContent, moveFile, batchMoveFiles, batchDeleteFiles, batchCreateFiles, sortFiles, openTab, closeTab, closeAllTabs, setActiveTab, toggleFolder, collapseAllFolders, expandAllFolders, setAgentPermission),
   effect: (_action, api) => {
     const state = (api.getState() as { path: PathState }).path
     if (state.storageUserId) workspaceSaveQueue.enqueue(state.storageUserId, toWorkspaceData(state), state.revision)

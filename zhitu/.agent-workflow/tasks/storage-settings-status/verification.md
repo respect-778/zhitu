@@ -38,3 +38,22 @@
 - 测试初始 Markdown 未带末尾换行时，Vditor 会规范化添加末尾换行；改用编辑器标准格式的验收数据后，切换行为没有正文变化。
 - 本轮 Node 保存回归 21/21 通过、`npm run build` 通过、`git diff --check` 通过。浏览器没有 pageerror。
 - 证据：`runs/status-gap-browser.json`、`runs/status-gap-pending.png`、`runs/status-gap-success.png`。本轮接口为内存模拟，目录选择为模拟、IndexedDB/OPFS 写入为真实 Chromium API；不代表正式 MySQL 或真实 Windows 目录验收。
+
+## 2026-10-24 目录重选验收
+
+- 原失败：`node --test tests/personal-storage.test.cjs` 新增目录重选测试在旧实现下明确失败：`must not create KNOWVIA inside selected KNOWVIA`，原有 12 项通过。
+- 修改后：`node --test tests/personal-storage.test.cjs tests/resume-sync.test.cjs tests/workspace-save-queue.test.cjs`，30/30 通过（含矩阵子测试）。覆盖三种入口及持久化恢复、两模块原路径复用、取消、非法账号、旧清单、人工编辑保护和保存队列。
+- 浏览器：`tests/personal-directory-reuse-ui.py` 的 8 个检查通过；实际 Chromium OPFS/IndexedDB 验证 Documents → KNOWVIA → user-2 → Documents、刷新恢复、取消、拒绝其他账号及人工修改保留。1440/1024px 路径卡片无横向溢出，pageerror 为 0。
+- 构建：进程内 `NODE_OPTIONS=--max-old-space-size=1024 npm run build` 通过，既有大包提示保留。首次未设堆上限的构建在转换阶段退出 1、未给诊断，随后按既有验收方式限制堆内存重跑通过；不将第一次执行计为通过。
+- Lint：目录服务和计划文件零诊断；Setting 保留与 HEAD 相同的两项既有问题（unused error、getAiModel 的 set-state-in-effect），本轮未改 AI 配置逻辑。`git diff --check` 通过。
+- 证据：`runs/directory-reuse-browser.json`、`runs/directory-reuse-1440.png`、`runs/directory-reuse-1024.png`。
+- 目录选择框与授权为模拟，文件及清单写入是真实隔离 OPFS；没有向用户的真实 Windows 目录、正式数据库或 AI 配置写入数据，也没有删除/合并旧嵌套目录。原生系统选目录仍需用户在新版手工确认一次。
+- 改动未提交、未推送。agent-workflow CLI 仍不可用，沿用现有任务直接维护证据；未下载替代 CLI。
+
+## 2026-10-24 差异警告恢复
+
+- 新失败回归先复现旧警告缓存问题，修改后存储/保存队列 35/35 通过。
+- 真实 Chromium OPFS/IndexedDB 的 11 条目录检查通过，确认后原件按字节保留、标准备份恢复、刷新后当前警告不复现；API 和原生目录选择仍隔离模拟。
+- 学习规划两视口回归通过，验证右键移除菜单后文件和目录拖拽及权限确认仍生效。
+- 限定堆内存的生产构建、源码差异检查通过；目录服务及 Sidebar lint 无诊断，Setting 无新增诊断，保留既有 unused error。
+- 完整边界、早期脚本失败及最终证据：[差异恢复记录](runs/2026-10-24-conflict-recovery.md)。没有在用户真实目录执行恢复。

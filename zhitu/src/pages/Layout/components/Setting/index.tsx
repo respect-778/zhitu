@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { loadUserResumes } from '@/store/modules/resumeStore'
 import { loadPathWorkspace } from '@/store/modules/pathStore'
 import { personalDirectory } from '@/utils/personalDirectory'
+import { backupRootSegments } from '@/utils/personalDirectoryPlan'
 
 const directoryPhaseLabels = {
   unconfigured: '尚未选择目录', checking: '正在恢复目录授权', permission: '目录需要重新授权',
@@ -109,6 +110,10 @@ const Setting = ({ className }: { className?: string }) => {
   const resume = useAppSelector(state => state.resume)
   const path = useAppSelector(state => state.path)
   const directoryStatus = useSyncExternalStore(personalDirectory.subscribe, personalDirectory.getStatus)
+  const directoryRoot = directoryStatus.name && directoryStatus.userId === uid
+    ? [directoryStatus.name, ...backupRootSegments(uid, directoryStatus.name)] : null
+  const [resolvingDirectory, setResolvingDirectory] = useState(false)
+  const hasDirectoryConflicts = Object.values(directoryStatus.modules).some(module => module?.conflict)
 
   useEffect(() => {
     if (!uid) return
@@ -118,6 +123,32 @@ const Setting = ({ className }: { className?: string }) => {
 
   const handleDirectoryDisconnect = () => {
     void personalDirectory.disconnect().catch(() => message.error('解除绑定失败，请重试'))
+  }
+
+  const handleDirectoryResolve = () => {
+    const approvedStatus = personalDirectory.getStatus()
+    Modal.confirm({
+      title: '处理本地文件差异',
+      content: <div>
+        <p>所选目录：{approvedStatus.name} · 账号：user-{approvedStatus.userId}</p>
+        <p>本地文件与备份记录不一致，也可能是旧记录缺失，不一定是你手工修改过。</p>
+        <p>确认后，会先把有差异的电脑文件另存为带“电脑原件”的副本，再用当前平台数据更新正常备份。保留的原件和已有平台副本都不会删除，本地内容不会反向覆盖云端。</p>
+      </div>,
+      okText: '保留原件并恢复备份',
+      cancelText: '取消',
+      centered: true,
+      onOk: async () => {
+        setResolvingDirectory(true)
+        try {
+          await personalDirectory.resolveConflicts(approvedStatus)
+          message.success('电脑原件已保留，正常备份已恢复')
+        } catch (error) {
+          message.error(error instanceof Error ? error.message : '处理失败，请重新检查')
+          // Close this expired confirmation; retrying must review the current
+          // files/directory again, rather than reuse an earlier authorization.
+        } finally { setResolvingDirectory(false) }
+      },
+    })
   }
 
   const [isEditing, setIsEditing] = useState(false) // 是否处于编辑状态
@@ -215,7 +246,7 @@ const Setting = ({ className }: { className?: string }) => {
       message.success("模型配置成功")
       handleConfigCancel()
       getAiModel()
-    } catch (error) {
+    } catch {
       setConfigLoading(false)
       setApiKey('')
       message.error("API密钥错误")
@@ -260,11 +291,11 @@ const Setting = ({ className }: { className?: string }) => {
         </div>
         <div className={styles.right}>
           <div className={styles.content}>
+            {/* 账号与身份区域 */}
             <div id="account" className={styles.title} style={{ fontSize: '15px' }}>
               <div><UserOutlined /></div>
               <div>账号与身份</div>
             </div>
-            {/* 账号与身份区域 */}
             <div className={styles.contentContainer}>
               <div className={styles.accountTop}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -462,16 +493,16 @@ const Setting = ({ className }: { className?: string }) => {
               <div className={styles.contentContainer}>
                 <div>
                   <div className={styles.contentTitle}>个人资料文件夹</div>
-                  <div className={styles.contentSubtitle}>学习规划和简历共用此文件夹，编辑后自动保存本地副本。</div>
+                  <div className={styles.contentSubtitle}>学习规划和简历共用此文件夹，编辑后自动保存本地副本。可选择父目录、KNOWVIA 或当前账号的 user-{uid} 文件夹，已有目录会复用。</div>
                 </div>
                 <div className={styles.directoryLocation}>
                   <span>所选文件夹</span>
                   <strong data-testid="personal-directory-name">{directoryStatus.name || '未选择'}</strong>
-                  {directoryStatus.name && <>
+                  {directoryRoot && <>
                     <span>学习规划保存位置</span>
-                    <code>{directoryStatus.name}/KNOWVIA/user-{uid}/学习规划/</code>
+                    <code>{[...directoryRoot, '学习规划', ''].join('/')}</code>
                     <span>简历保存位置</span>
-                    <code>{directoryStatus.name}/KNOWVIA/user-{uid}/简历/</code>
+                    <code>{[...directoryRoot, '简历', ''].join('/')}</code>
                   </>}
                 </div>
                 <Typography.Paragraph role="status" className={styles.directoryText}>
@@ -489,7 +520,12 @@ const Setting = ({ className }: { className?: string }) => {
                   >{directoryStatus.name ? '更换电脑目录' : '选择电脑目录'}</Button>
                   {directoryStatus.name && <>
                     <Button onClick={() => { void personalDirectory.authorize() }}>重新授权</Button>
-                    <Button onClick={() => { void personalDirectory.flush() }}>立即保存副本</Button>
+                    <Button onClick={() => { void personalDirectory.flush(true) }}>立即保存副本</Button>
+                    {hasDirectoryConflicts && <Button
+                      loading={resolvingDirectory}
+                      disabled={directoryStatus.phase === 'writing' || directoryStatus.phase === 'checking'}
+                      onClick={handleDirectoryResolve}
+                    >处理本地差异</Button>}
                     <Button onClick={handleDirectoryDisconnect}>解除目录绑定</Button>
                   </>}
                 </Space>

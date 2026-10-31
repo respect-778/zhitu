@@ -122,51 +122,204 @@
 }
 
 .quoteStyle() {
-  margin: 0 0 16px;
-  padding: 10px 16px;
+  position: relative;
+  margin: 8px 0 16px;
+  padding: 0 0 0 20px;
   border: 0;
-  border-radius: 4px;
-  background: var(--bg-secondary);
-  color: var(--text-color);
+  border-radius: 0;
+  background: transparent;
+  color: var(--wiki-text);
+
+  &::before {
+    content: '“';
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    color: var(--wiki-syntax-marker);
+    font-size: 18px;
+    line-height: 1;
+    pointer-events: none;
+  }
 
   > :first-child { margin-top: 0; }
   > :last-child { margin-bottom: 0; }
+}
+
+.externalLinkIcon() {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  vertical-align: -1px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3h7v7'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .readingView {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 16px max(24px, calc((100% - 800px) / 2));
-  color: var(--text-color);
+  // Keep the same 800px editorial column as IR, with a restrained 8px
+  // reading-only inset so mode switching feels stable instead of redesigned.
+  padding: 16px max(43px, calc((100% - 800px) / 2 + 8px));
+  color: var(--wiki-text);
+
+  @media (max-width: 520px) {
+    padding-inline: max(18px, calc((100% - 800px) / 2 + 8px));
+  }
 
   :global(.markdown-body) {
-    color: var(--text-color);
+    color: var(--wiki-text);
     background: transparent;
-    font-size: 15px;
-    line-height: 1.8;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", "Hiragino Sans GB", "Microsoft Yahei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol";
+    font-variant-ligatures: no-common-ligatures;
+    font-size: 16px;
+    line-height: 1.5;
+    word-break: break-word;
     overflow-wrap: anywhere;
   }
 
-  :global(.markdown-body pre), :global(.markdown-body code) { background: var(--bg-secondary); }
-  :global(.markdown-body pre code) { color: var(--text-color); background: transparent; }
-  :global(.markdown-body blockquote) { .quoteStyle(); }
-  :global(.markdown-body a) { color: var(--accent-color); }
-  :global(.markdown-body table) { max-width: 100%; overflow: auto; }
-  :global(.markdown-body tr) { background: transparent; }
-
-  :global([data-theme='dark']) & {
-    :global(.hljs-keyword), :global(.hljs-doctag), :global(.hljs-literal) { color: #ff7b72; }
-    :global(.hljs-string), :global(.hljs-regexp), :global(.hljs-meta .hljs-string) { color: #a5d6ff; }
-    :global(.hljs-number), :global(.hljs-attr), :global(.hljs-variable) { color: #79c0ff; }
-    :global(.hljs-title) { color: #d2a8ff; }
-    :global(.hljs-comment), :global(.hljs-quote) { color: #8b949e; }
-    :global(.hljs-built_in), :global(.hljs-symbol) { color: #ffa657; }
+  :global(.markdown-body h1),
+  :global(.markdown-body h2),
+  :global(.markdown-body h3),
+  :global(.markdown-body h4),
+  :global(.markdown-body h5),
+  :global(.markdown-body h6) {
+    margin-top: 22px;
+    margin-bottom: 12px;
+    padding-bottom: 0;
+    border-bottom: 0;
+    color: var(--wiki-text);
+    font-weight: 600;
+    line-height: 1.25;
   }
+
+  :global(.markdown-body h1) { font-size: 1.75em; }
+  :global(.markdown-body h2) { font-size: 1.55em; }
+  :global(.markdown-body h3) { font-size: 1.38em; }
+  :global(.markdown-body h4) { font-size: 1.25em; }
+  :global(.markdown-body h5) { font-size: 1.13em; }
+  :global(.markdown-body h6) { font-size: 1em; }
+
+  // Vditor IR is a pre-wrap editing surface. Preserve the same soft line
+  // breaks in reading mode so directory trees and note outlines do not fold
+  // into one long paragraph.
+  :global(.markdown-body p) { white-space: pre-wrap; }
+
+  :global(.markdown-body p),
+  :global(.markdown-body ul),
+  :global(.markdown-body ol),
+  :global(.markdown-body dl),
+  :global(.markdown-body table),
+  :global(.markdown-body details) {
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+
+  :global(.markdown-body ul),
+  :global(.markdown-body ol) { padding-left: 2em; }
+  :global(.markdown-body li + li) { margin-top: 0.2em; }
+
+  :global(.markdown-body pre), :global(.markdown-body code) { background: var(--wiki-code-bg); }
+  :global(.markdown-body pre) { margin: 12px 0; border-radius: 6px; }
+  :global(.markdown-body pre code) { color: var(--wiki-text); background: transparent; }
+  :global(.markdown-body blockquote) { .quoteStyle(); margin: 8px 0 12px; }
+  :global(.markdown-body blockquote.path-tree-block) {
+    padding: 14px 16px;
+    overflow-x: auto;
+    border-radius: 6px;
+    background: var(--wiki-code-bg);
+    color: var(--wiki-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.92em;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  :global(.markdown-body blockquote.path-tree-block::before) { content: none; }
+  :global(.markdown-body blockquote.path-tree-block p) { margin: 0; white-space: pre; }
+
+  :global(.markdown-body pre[data-language]) {
+    position: relative;
+    padding-top: 36px;
+  }
+  :global(.markdown-body pre[data-language]::before) {
+    content: attr(data-language);
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    color: var(--wiki-syntax-marker);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    pointer-events: none;
+  }
+  :global(.markdown-body a),
+  :global(.markdown-body a:visited) {
+    color: var(--wiki-link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  :global(.markdown-body a[href^='http://']::after),
+  :global(.markdown-body a[href^='https://']::after),
+  :global(.markdown-body a[href^='mailto:']::after),
+  :global(.markdown-body a[href^='tel:']::after) {
+    .externalLinkIcon();
+  }
+  :global(.markdown-body li::marker) { color: var(--wiki-syntax-marker); }
+  :global(.markdown-body .path-table-scroll) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) transparent;
+  }
+  :global(.markdown-body .path-table-scroll table) {
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
+    margin: 0;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  :global(.markdown-body .path-table-scroll::-webkit-scrollbar) { height: 8px; }
+  :global(.markdown-body .path-table-scroll::-webkit-scrollbar-thumb) {
+    min-width: 32px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: var(--scrollbar-color);
+    background-clip: padding-box;
+  }
+  :global(.markdown-body .path-table-scroll::-webkit-scrollbar-track) {
+    border-radius: 999px;
+    background: var(--wiki-border-subtle);
+  }
+  :global(.markdown-body tr) { background: transparent; }
+  :global(.markdown-body hr) { height: 2px; margin: 18px 0; border: 0; background: var(--wiki-border-subtle); }
+  :global(.markdown-body > :first-child) { margin-top: 0; }
+  :global(.markdown-body > :last-child) { margin-bottom: 0; }
+
+  :global(.hljs-keyword), :global(.hljs-doctag), :global(.hljs-literal), :global(.hljs-selector-tag) { color: var(--wiki-code-keyword); }
+  :global(.hljs-string), :global(.hljs-regexp), :global(.hljs-meta .hljs-string) { color: var(--wiki-code-string); }
+  :global(.hljs-number), :global(.hljs-symbol), :global(.hljs-bullet) { color: var(--wiki-code-number); }
+  :global(.hljs-title.function_), :global(.hljs-function .hljs-title) { color: var(--wiki-code-function); }
+  :global(.hljs-title.class_), :global(.hljs-type), :global(.hljs-built_in) { color: var(--wiki-code-type); }
+  :global(.hljs-attr), :global(.hljs-property), :global(.hljs-attribute) { color: var(--wiki-code-property); }
+  :global(.hljs-comment), :global(.hljs-quote) { color: var(--wiki-code-comment); }
+  :global(.hljs-punctuation), :global(.hljs-operator) { color: var(--wiki-code-punctuation); }
+  :global(.hljs-tag), :global(.hljs-name), :global(.hljs-selector-id), :global(.hljs-selector-class) { color: var(--wiki-code-keyword); }
+  :global(.hljs-meta), :global(.hljs-template-tag) { color: var(--wiki-code-property); }
+  :global(.hljs-variable), :global(.hljs-template-variable), :global(.hljs-params), :global(.hljs-subst) { color: var(--wiki-text); }
 }
 
 .readingTitle {
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   font-size: 28px;
   line-height: 1.4;
   font-weight: 700;
@@ -180,16 +333,22 @@
 }
 
 .inlineTitle {
-  padding: 16px 50px 0;
+  padding: 16px max(35px, calc((100% - 800px) / 2)) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
+
+  @media (max-width: 520px) {
+    padding-inline: max(10px, calc((100% - 800px) / 2));
+  }
 }
 
 .titleInput {
-  width: 60%;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
   font-size: 28px;
   font-weight: 700;
   line-height: 1.4;
@@ -216,15 +375,60 @@
   padding-left: 2px;
 }
 
-.graphCanvas {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  cursor: default;
 
-  canvas {
-    cursor: default !important;
+.wikiLinkPicker {
+  position: fixed;
+  z-index: 1400;
+  width: min(332px, calc(100vw - 16px));
+  max-height: 304px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--wiki-border-subtle);
+  border-radius: 8px;
+  background: var(--wiki-surface);
+  color: var(--wiki-text);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+
+  button {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    padding: 7px 9px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    strong,
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    strong {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    span {
+      margin-top: 2px;
+      color: var(--wiki-text-secondary);
+      font-size: 11px;
+    }
   }
+}
+
+.wikiLinkCandidateActive {
+  background: var(--wiki-selection-bg) !important;
+}
+
+.wikiLinkEmpty {
+  padding: 9px;
+  color: var(--wiki-text-secondary);
+  font-size: 12px;
 }
 
 .graphEmpty {
@@ -257,19 +461,25 @@
     .vditor {
       border: none !important;
       border-radius: 0 !important;
-      background: var(--bg-color) !important;
+      background: var(--wiki-surface) !important;
+      --ir-heading-color: var(--wiki-syntax-marker);
+      --ir-title-color: var(--wiki-syntax-marker);
+      --ir-bi-color: var(--wiki-syntax-marker);
+      --ir-link-color: var(--wiki-syntax-marker);
+      --ir-bracket-color: var(--wiki-syntax-marker);
+      --ir-paren-color: var(--wiki-syntax-marker);
     }
 
     .vditor-ir, .vditor-sv {
       font-size: 15px !important;
       line-height: 1.8 !important;
-      background: var(--bg-color) !important;
+      background: var(--wiki-surface) !important;
       overflow-y: auto !important;
     }
 
     .vditor-reset {
-      color: var(--text-color) !important;
-      background: var(--bg-color) !important;
+      color: var(--wiki-text) !important;
+      background: var(--wiki-surface) !important;
     }
 
     // Vditor may initialize while hidden in reading/graph mode; its measured
@@ -288,33 +498,146 @@
     .vditor-reset h4,
     .vditor-reset h5,
     .vditor-reset h6 {
-      color: var(--text-color) !important;
+      color: var(--wiki-text) !important;
       border-bottom: none !important;
     }
+
+    // Vditor assigns different default colors to each Markdown token type.
+    // Use one theme-aware blue for every visible editing/source marker.
+    .vditor-ir__marker,
+    .vditor-sv__marker,
+    [data-type='code-block-open-marker'],
+    [data-type='code-block-close-marker'] {
+      color: var(--wiki-syntax-marker) !important;
+    }
+
+    .vditor-reset li::marker { color: var(--wiki-syntax-marker); }
 
     .vditor-reset blockquote {
       .quoteStyle();
     }
 
+    .vditor-reset blockquote[data-path-quote-source]::before { content: none; }
+
     .vditor-reset a {
-      color: var(--primary-color) !important;
+      color: var(--wiki-link) !important;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .vditor-reset .vditor-ir__link {
+      color: var(--wiki-link) !important;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .vditor-reset [data-type='a'][data-external-link] > .vditor-ir__link::after {
+      .externalLinkIcon();
+    }
+
+    // Preserve raw [[...]] in Vditor's DOM/serializer while presenting the
+    // resolved title like an Obsidian-style internal link.
+    .vditor-reset [data-wiki-link] {
+      position: relative;
+      display: inline-block;
+      color: transparent !important;
+      font-size: 0;
+      line-height: 1.8;
+      vertical-align: baseline;
+      cursor: pointer;
+      white-space: nowrap;
+
+      &::after {
+        display: inline-block;
+        content: attr(data-wiki-link-label);
+        color: var(--wiki-link);
+        font-size: 15px;
+        line-height: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+        transition: color 120ms ease, opacity 120ms ease;
+      }
+
+      &:hover::after { color: var(--wiki-accent); }
+    }
+
+    .vditor-reset [data-wiki-link-status='missing']::after,
+    .vditor-reset [data-wiki-link-status='ambiguous']::after {
+      color: var(--wiki-text-secondary);
+      text-decoration-style: dotted;
     }
 
     .vditor-reset code:not(.hljs) {
-      background: var(--theme-color-hover) !important;
-      color: var(--text-color) !important;
+      background: var(--wiki-code-bg) !important;
+      color: var(--wiki-text) !important;
     }
 
     .vditor-reset pre {
-      background: var(--bg-secondary) !important;
+      background: var(--wiki-code-bg) !important;
+      border-radius: 6px;
+    }
+
+    .vditor-reset .vditor-ir__preview code.hljs {
+      background: var(--wiki-code-bg) !important;
+      color: var(--wiki-text) !important;
+    }
+
+    // Vditor normally shows a plain source surface above a second highlighted
+    // preview while a fenced block is active. Keep one in-place editing surface
+    // and decorate that editable source instead.
+    [data-type='code-block'].vditor-ir__node--expand {
+      .vditor-ir__preview {
+        display: none !important;
+      }
+
+      .vditor-ir__marker--pre code[data-path-code-highlight] {
+        display: block;
+        background: var(--wiki-code-bg) !important;
+        color: var(--wiki-text) !important;
+      }
+
+      .vditor-ir__marker--pre,
+      .vditor-ir__marker--pre code,
+      .vditor-ir__marker--pre code * {
+        cursor: text !important;
+      }
     }
 
     .vditor-reset ::selection {
-      background: rgba(46, 89, 149, 0.2) !important;
+      background: var(--wiki-selection-bg) !important;
     }
 
     .vditor-reset input[type="checkbox"] {
-      accent-color: var(--primary-color) !important;
+      accent-color: var(--wiki-accent) !important;
+    }
+
+    // Keep wide Markdown tables inside the editorial column. Vditor renders
+    // tables as their own scroll surface, so the horizontal thumb stays
+    // directly below the table instead of moving the whole document.
+    .vditor-reset table {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-color) transparent;
+    }
+
+    .vditor-reset table::-webkit-scrollbar { height: 8px; }
+
+    .vditor-reset table::-webkit-scrollbar-thumb {
+      min-width: 32px;
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: var(--scrollbar-color);
+      background-clip: padding-box;
+    }
+
+    .vditor-reset table::-webkit-scrollbar-track {
+      border-radius: 999px;
+      background: var(--wiki-border-subtle);
     }
 
     .vditor-toolbar {
@@ -326,7 +649,8 @@
     }
 
     [data-path-list-marker] {
-      color: var(--text-secondary);
+      color: var(--wiki-syntax-marker);
+      font-weight: 600;
       white-space: pre;
       cursor: text;
     }
@@ -340,7 +664,8 @@
       top: 10px;
       left: 0;
       width: 16px;
-      color: var(--text-secondary);
+      color: var(--wiki-syntax-marker);
+      font-weight: 600;
       font-size: 15px;
       line-height: 1.8;
       text-align: center;
@@ -354,7 +679,8 @@
 
       > [data-type='code-block-close-marker'] {
         display: block !important;
-        color: var(--text-secondary);
+        color: var(--wiki-syntax-marker);
+        font-weight: 600;
         white-space: pre;
         cursor: text;
       }
@@ -389,5 +715,14 @@
     .vditor-ir::-webkit-scrollbar-track {
       background: transparent;
     }
+
+    .hljs-keyword, .hljs-doctag, .hljs-literal, .hljs-selector-tag { color: var(--wiki-code-keyword) !important; }
+    .hljs-string, .hljs-regexp, .hljs-meta .hljs-string { color: var(--wiki-code-string) !important; }
+    .hljs-number, .hljs-symbol, .hljs-bullet { color: var(--wiki-code-number) !important; }
+    .hljs-title.function_, .hljs-function .hljs-title { color: var(--wiki-code-function) !important; }
+    .hljs-title.class_, .hljs-type, .hljs-built_in { color: var(--wiki-code-type) !important; }
+    .hljs-attr, .hljs-property, .hljs-attribute { color: var(--wiki-code-property) !important; }
+    .hljs-comment, .hljs-quote { color: var(--wiki-code-comment) !important; }
+    .hljs-punctuation, .hljs-operator { color: var(--wiki-code-punctuation) !important; }
   }
 }
