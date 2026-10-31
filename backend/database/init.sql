@@ -107,6 +107,40 @@ CREATE TABLE IF NOT EXISTS follows (
     INDEX idx_following_id (following_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='关注表';
 
+-- AI 聊天会话表
+CREATE TABLE IF NOT EXISTS ai_chat_session (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) NOT NULL UNIQUE COMMENT '对外使用的会话 UUID',
+    user_id INT NOT NULL COMMENT '用户ID',
+    session_title VARCHAR(255) NOT NULL DEFAULT '' COMMENT '会话标题',
+    scene_type VARCHAR(50) NOT NULL DEFAULT 'chat' COMMENT '会话场景',
+    source_id INT DEFAULT NULL COMMENT '场景关联资源ID',
+    history_summary LONGTEXT DEFAULT NULL COMMENT '压缩后的历史摘要',
+    summary_up_to_id BIGINT UNSIGNED DEFAULT NULL COMMENT '摘要覆盖到的消息ID',
+    is_deleted TINYINT NOT NULL DEFAULT 0 COMMENT '是否已删除',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    INDEX idx_chat_session_user_updated (user_id, updated_at),
+    INDEX idx_chat_session_scene_source (user_id, scene_type, source_id),
+    CONSTRAINT fk_chat_session_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI聊天会话表';
+
+-- AI 聊天消息表
+CREATE TABLE IF NOT EXISTS ai_chat_message (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    session_id INT NOT NULL COMMENT '会话ID',
+    role VARCHAR(20) NOT NULL COMMENT '消息角色: user / ai',
+    content LONGTEXT NOT NULL COMMENT '消息正文',
+    reasoning_content LONGTEXT DEFAULT NULL COMMENT '模型推理内容',
+    content_type VARCHAR(20) NOT NULL DEFAULT 'text' COMMENT '内容类型: text / voice',
+    audio_url TEXT DEFAULT NULL COMMENT '语音地址',
+    thinking_mode TINYINT NOT NULL DEFAULT 0 COMMENT '是否启用深度思考',
+    token_usage INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Token 使用量',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    INDEX idx_chat_message_session_created (session_id, created_at, id),
+    CONSTRAINT fk_chat_message_session FOREIGN KEY (session_id) REFERENCES ai_chat_session(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI聊天消息表';
+
 -- 成长规划工作区表
 CREATE TABLE IF NOT EXISTS growth_workspace (
     id INT AUTO_INCREMENT PRIMARY KEY,

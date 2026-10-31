@@ -3,7 +3,7 @@
 USE zhitu;
 
 -- 测试用户（密码均为示例加密值）
-INSERT INTO users (username, password, mobile, gender, birthday, degree, photo) VALUES
+INSERT INTO users (username, password, mobile, gender, birthday, degree, avatar) VALUES
 ('testuser', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '13800138000', 1, '1995-06-15', '本科', 'https://api.dicebear.com/7.x/avataaars/svg?seed=testuser'),
 ('admin', '$2a$10$8Z3.3Qz3gXqLJk4xVJXxo.OBBhM6yR2F8wFp9F0QjPs.RKOc2mZjO', '13900139000', 1, '1990-01-01', '硕士', 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'),
 ('alice', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '13700137000', 2, '1998-03-20', '本科', 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice'),
