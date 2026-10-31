@@ -60,7 +60,7 @@ jobs:
           foreign_key_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
             "SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema = 'zhitu';")"
 
-          test "$table_count" -eq 9
+          test "$table_count" -eq 11
           test "$user_count" -eq 5
           test "$post_count" -eq 10
           test "$foreign_key_count" -gt 0
