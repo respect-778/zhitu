@@ -1,0 +1,184 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - "codex/**"
+  pull_request:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schema:
+    name: Database schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: zhitu
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci-root-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Verify fresh schema and seed data
+        env:
+          MYSQL_PWD: ci-root-password
+        run: |
+          set -euo pipefail
+
+          mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot < backend/database/init.sql
+          mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot < backend/database/init.sql
+          mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot < backend/database/seed.sql
+
+          table_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'zhitu';")"
+          user_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM zhitu.users;")"
+          post_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM zhitu.posts;")"
+          foreign_key_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema = 'zhitu';")"
+
+          test "$table_count" -eq 9
+          test "$user_count" -eq 5
+          test "$post_count" -eq 10
+          test "$foreign_key_count" -gt 0
+
+      - name: Verify OAuth migration from a legacy schema
+        env:
+          MYSQL_PWD: ci-root-password
+        run: |
+          set -euo pipefail
+
+          mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot <<'SQL'
+          CREATE DATABASE zhitu_migration CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          USE zhitu_migration;
+          CREATE TABLE users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            avatar VARCHAR(255) DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+          INSERT INTO users (username, password, avatar)
+          VALUES ('legacy-user', 'legacy-test-hash', 'legacy-avatar');
+          SQL
+
+          sed 's/^USE zhitu;/USE zhitu_migration;/' backend/database/migrate_oauth.sql \
+            | mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot
+
+          email_column_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = 'zhitu_migration' AND table_name = 'users' AND column_name = 'email';")"
+          oauth_table_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'zhitu_migration' AND table_name = 'oauth_accounts';")"
+          legacy_user_count="$(mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot -Nse \
+            "SELECT COUNT(*) FROM zhitu_migration.users WHERE username = 'legacy-user';")"
+
+          test "$email_column_count" -eq 1
+          test "$oauth_table_count" -eq 1
+          test "$legacy_user_count" -eq 1
+
+  backend:
+    name: Backend build and integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: zhitu
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci-root-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Initialize the isolated test database
+        env:
+          MYSQL_PWD: ci-root-password
+        run: mysql --protocol=tcp -h 127.0.0.1 -P 3306 -uroot < database/init.sql
+
+      - name: Build backend
+        run: npm run build
+
+      - name: Run backend integration tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: ci-root-password
+          DB_NAME: zhitu
+          JWT_SECRET: ci-only-jwt-secret
+          JWT_REFRESH_SECRET: ci-only-refresh-secret
+          MODEL_CONFIG_SECRET: ci-only-model-config-secret
+        run: node --test tests/*.test.cjs
+
+  frontend:
+    name: Frontend tests and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: zhitu
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: zhitu/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run frontend tests
+        run: node --test tests/*.test.cjs
+
+      - name: Build frontend
+        run: npm run build
