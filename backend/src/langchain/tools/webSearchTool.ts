@@ -26,7 +26,7 @@
  * ========================================================================
  */
 
-import { DynamicStructuredTool } from '@langchain/core/tools';
+import { DynamicStructuredTool, type ToolSchemaBase } from '@langchain/core/tools';
 import { z } from 'zod';
 
 /**
@@ -62,6 +62,10 @@ interface BochaApiResponse {
  */
 const MAX_SUMMARY_CHARS = 160;
 const MAX_TOTAL_OUTPUT_CHARS = 2000;
+
+const webSearchInputSchema = z.object({
+  query: z.string().describe('搜索查询词，应该是简洁明确的搜索关键词或问题'),
+});
 
 export interface WebSearchToolOptions {
   maxCalls?: number;
@@ -144,15 +148,13 @@ export const createWebSearchTool = ({
   const safeMaxCalls = Math.max(0, maxCalls);
   const safeResultCount = Math.min(Math.max(1, resultCount), 8);
 
-  return new DynamicStructuredTool({
+  return new DynamicStructuredTool<ToolSchemaBase, unknown, unknown, string>({
     name: 'web_search',
     description:
       '联网搜索工具。当用户的问题涉及最新信息、实时数据、你不确定的事实、' +
       '或需要验证的知识时，使用此工具搜索互联网获取最新信息。' +
       '输入应该是一个清晰的搜索查询词。',
-    schema: z.object({
-      query: z.string().describe('搜索查询词，应该是简洁明确的搜索关键词或问题'),
-    }),
+    schema: webSearchInputSchema as unknown as ToolSchemaBase,
     /**
      * 工具执行函数
      *
@@ -167,7 +169,8 @@ export const createWebSearchTool = ({
      * 是为了让 Agent 能清晰地区分标题、URL、摘要，
      * 方便在最终回答中引用来源。
      */
-    func: async ({ query }): Promise<string> => {
+    func: async (input: unknown): Promise<string> => {
+      const { query } = webSearchInputSchema.parse(input);
       if (callCount >= safeMaxCalls) {
         return '搜索次数预算已用完。请基于已有搜索结果和上下文直接回答，不要继续搜索。';
       }
