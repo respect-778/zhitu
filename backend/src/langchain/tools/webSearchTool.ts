@@ -144,7 +144,6 @@ export const createWebSearchTool = ({
   const safeMaxCalls = Math.max(0, maxCalls);
   const safeResultCount = Math.min(Math.max(1, resultCount), 8);
 
-  // @ts-expect-error -- LangChain 的泛型嵌套层级过深，TS 编译器报 "类型实例化过深"，不影响运行
   return new DynamicStructuredTool({
     name: 'web_search',
     description:
@@ -153,7 +152,7 @@ export const createWebSearchTool = ({
       '输入应该是一个清晰的搜索查询词。',
     schema: z.object({
       query: z.string().describe('搜索查询词，应该是简洁明确的搜索关键词或问题'),
-    }) as any,  // eslint-disable-line @typescript-eslint/no-explicit-any -- 规避 zod + LangChain 类型嵌套过深
+    }),
     /**
      * 工具执行函数
      *

@@ -783,7 +783,7 @@ export class ChatController {
       if (!userId) return;
 
       const articleId = parseSourceId(req.query.article_id ?? req.query.articleId);
-      if (!Number.isInteger(articleId) || articleId <= 0) {
+      if (articleId === null || !Number.isInteger(articleId) || articleId <= 0) {
         res.status(400).json(ResponseUtil.error('Invalid article_id'));
         return;
       }

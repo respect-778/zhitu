@@ -101,7 +101,6 @@ export const createChatModel = ({
    */
   if (provider.apiStyle === 'anthropic') {
     // ==================== Anthropic 供应商 ====================
-    // @ts-expect-error -- LangChain 的泛型嵌套层级过深，TS 编译器报 "类型实例化过深"，不影响运行
     return new ChatAnthropic({
       anthropicApiKey: apiKey,
       modelName,
