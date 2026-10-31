@@ -9,7 +9,7 @@ from playwright.sync_api import expect, sync_playwright
 
 sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
-BASE_URL = os.environ.get("PATH_UI_BASE_URL", "http://localhost:5173")
+BASE_URL = os.environ.get("PATH_UI_BASE_URL", "http://127.0.0.1:5175")
 RUNS = Path(__file__).parents[1] / ".agent-workflow/tasks/path-obsidian-navigation/runs"
 CODE = "const answer = 42;\nconsole.log(answer);"
 QUOTE = "> Quote sample **kept bold**.\n>\n> Second paragraph.\n>\n> ```js\n> const quoted = 7;\n> ```\n>\n> - Quoted item\n>\n> > Nested quote.\n\nOutside quote.\n"
@@ -31,6 +31,20 @@ def select_contents(target, end=False):
         if (end) range.collapse(false);
         getSelection().removeAllRanges(); getSelection().addRange(range);
     }""", end)
+
+
+def activate_code_block(code):
+    if not code.evaluate("node => node.classList.contains('vditor-ir__node--expand')"):
+        code.locator('.vditor-ir__preview').click()
+    editable = code.locator('.vditor-ir__marker--pre code')
+    expect(editable).to_be_visible()
+    expect(editable).to_have_attribute('data-path-code-highlight', '')
+    assert editable.locator('span').count() > 0
+    visible_surfaces = code.locator('.vditor-ir__marker--pre, .vditor-ir__preview').evaluate_all(
+        "nodes => nodes.filter(node => { const style = getComputedStyle(node); "
+        "return style.display !== 'none' && style.visibility !== 'hidden' && node.getClientRects().length > 0 }).length"
+    )
+    assert visible_surfaces == 1, visible_surfaces
 
 
 with sync_playwright() as playwright:
@@ -79,7 +93,7 @@ with sync_playwright() as playwright:
                 expect(root.locator(":scope > blockquote > blockquote")).to_have_count(0)
                 expect(root.locator("blockquote")).to_have_count(1)  # Nested quote retained.
                 expect(root.locator("strong")).to_have_text("kept bold")
-                expect(root.locator("pre code")).to_contain_text("const quoted = 7;")
+                expect(root.locator(".vditor-ir__preview code")).to_contain_text("const quoted = 7;")
                 expect(root.locator("li")).to_have_text("Quoted item")
                 expect(root.locator(":scope > p").first).to_contain_text("Quote sample")
                 page.keyboard.press("Control+z")
@@ -97,7 +111,7 @@ with sync_playwright() as playwright:
                 expect(quote).to_contain_text("Nested quote.")
                 page.keyboard.press("Control+z")
                 expect(root.locator("blockquote")).to_have_count(2)
-                quote.locator("pre code").click()
+                activate_code_block(quote.locator('[data-type="code-block"]'))
                 expect(quote_marker).to_be_visible()
                 expect(quote.locator('[data-type="code-block-close-marker"]')).to_be_visible()
                 page.screenshot(path=str(RUNS / f"path-direct-quote-{width}.png"), full_page=True)
@@ -120,7 +134,7 @@ with sync_playwright() as playwright:
                 page.get_by_test_id("path-tabs").get_by_text("Typing fixture", exact=True).click()
                 page.get_by_test_id("path-tabs").get_by_text("Quote fixture", exact=True).click()
                 expect(root.locator("blockquote")).to_have_count(2)
-                expect(quote.locator("pre code")).to_contain_text("const quoted = 7;")
+                expect(quote.locator(".vditor-ir__preview code")).to_contain_text("const quoted = 7;")
                 page.get_by_test_id("path-tabs").get_by_text("Typing fixture", exact=True).click()
                 root.click(position={"x": 45, "y": 16})
                 page.keyboard.type("- ", delay=50)
@@ -186,7 +200,7 @@ with sync_playwright() as playwright:
 
                 page.get_by_test_id("path-tabs").get_by_text("Code fixture", exact=True).click()
                 code = root.locator('[data-type="code-block"]')
-                code.locator("pre code").click()
+                activate_code_block(code)
                 fence = code.locator('[data-type="code-block-close-marker"]')
                 expect(fence).to_be_visible(timeout=3000)
                 page.screenshot(path=str(RUNS / f"path-direct-markdown-{width}.png"), full_page=True)
@@ -197,22 +211,23 @@ with sync_playwright() as playwright:
                 expect(root).to_contain_text("console.log(answer);")
                 page.keyboard.press("Control+z")
                 expect(root.locator('[data-type="code-block"]')).to_have_count(1)
-                code.locator("pre code").click()
+                activate_code_block(code)
                 expect(fence).to_be_visible()
                 fence.click()
                 page.keyboard.press("End")
                 page.keyboard.press("Enter")
                 assert not page.evaluate("!!getSelection().anchorNode.parentElement.closest('[data-type=code-block]')")
                 page.keyboard.type("After fence.")
-                expect(code.locator("pre code")).to_have_text(CODE + "\n")
+                expect(code.locator(".vditor-ir__marker--pre code")).to_have_text(CODE + "\n")
                 expect(root.locator(":scope > p")).to_contain_text("After fence.")
                 page.wait_for_timeout(900)
-                select_contents(code.locator("pre code"), end=True)
+                activate_code_block(code)
+                select_contents(code.locator(".vditor-ir__marker--pre code"), end=True)
                 page.keyboard.press("ArrowDown")
                 assert page.evaluate("(() => { const node = getSelection().anchorNode; return (node instanceof Element ? node : node.parentElement).closest('[data-type=code-block-close-marker]') !== null })()")
                 page.keyboard.press("Enter")
                 page.keyboard.type("Keyboard exit.")
-                expect(code.locator("pre code")).to_have_text(CODE + "\n")
+                expect(code.locator(".vditor-ir__marker--pre code")).to_have_text(CODE + "\n")
                 page.get_by_role("button", name="切换到阅读模式").click()
                 reader = page.get_by_test_id("path-reading-view")
                 expect(reader.locator("pre code")).to_have_text(CODE + "\n")

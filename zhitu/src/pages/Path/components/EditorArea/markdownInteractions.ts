@@ -1,11 +1,19 @@
 import type Vditor from 'vditor'
+import hljs from 'highlight.js'
 import { cancelMarkdownFormat, getEditorSelection } from './markdownEditing'
 
 const LIST_MARKER = '[data-path-list-marker]'
 const QUOTE_MARKER = '[data-path-quote-marker]'
 const EDITING_MARKERS = `${LIST_MARKER}, ${QUOTE_MARKER}`
 const CLOSE_FENCE = '[data-type="code-block-close-marker"]'
+const EDITABLE_CODE = '.vditor-ir__marker--pre code'
+const CODE_HIGHLIGHT = 'data-path-code-highlight'
 const ZWSP = '\u200b'
+const CODE_NAVIGATION_KEYS = new Set([
+  'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
+  'End', 'Escape', 'Home', 'PageDown', 'PageUp',
+  'Alt', 'Control', 'Meta', 'Shift',
+])
 
 function anchorElement(range: Range) {
   return range.startContainer instanceof Element ? range.startContainer : range.startContainer.parentElement
@@ -19,6 +27,45 @@ function placeCaret(element: Node, end = false) {
   window.getSelection()?.addRange(range)
 }
 
+function textSelectionOffsets(element: HTMLElement) {
+  const selection = window.getSelection()
+  if (!selection?.rangeCount) return null
+  const range = selection.getRangeAt(0)
+  if (!element.contains(range.startContainer) || !element.contains(range.endContainer)) return null
+  const beforeStart = range.cloneRange()
+  beforeStart.selectNodeContents(element)
+  beforeStart.setEnd(range.startContainer, range.startOffset)
+  const beforeEnd = range.cloneRange()
+  beforeEnd.selectNodeContents(element)
+  beforeEnd.setEnd(range.endContainer, range.endOffset)
+  return { start: beforeStart.toString().length, end: beforeEnd.toString().length }
+}
+
+function textPointAt(element: HTMLElement, offset: number) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+  let remaining = offset
+  let node = walker.nextNode()
+  while (node) {
+    const length = node.textContent?.length || 0
+    if (remaining <= length) return { node, offset: remaining }
+    remaining -= length
+    node = walker.nextNode()
+  }
+  return { node: element as Node, offset: element.childNodes.length }
+}
+
+function restoreTextSelection(element: HTMLElement, offsets: { start: number; end: number } | null) {
+  if (!offsets) return
+  const start = textPointAt(element, offsets.start)
+  const end = textPointAt(element, offsets.end)
+  const range = document.createRange()
+  range.setStart(start.node, start.offset)
+  range.setEnd(end.node, end.offset)
+  const selection = window.getSelection()
+  selection?.removeAllRanges()
+  selection?.addRange(range)
+}
+
 /** Extend IR at its DOM boundary; source mode and the installed package stay native. */
 export function installMarkdownInteractions(editor: Vditor, onChange: (markdown: string) => void) {
   const root = editor.vditor.ir!.element
@@ -28,18 +75,62 @@ export function installMarkdownInteractions(editor: Vditor, onChange: (markdown:
 
   // Revealed prefixes are editing chrome, never part of the stored Markdown.
   const withoutEditingMarkers = (html: string) => {
-    if (!/data-path-(list|quote)-/.test(html)) return html
+    if (!/data-path-(list|quote|code)-/.test(html)) return html
     const clone = document.createElement('div')
     clone.innerHTML = html
     clone.querySelectorAll(EDITING_MARKERS).forEach(marker => marker.remove())
     clone.querySelectorAll('[data-path-list-source]').forEach(item => item.removeAttribute('data-path-list-source'))
     clone.querySelectorAll('[data-path-quote-source]').forEach(quote => quote.removeAttribute('data-path-quote-source'))
+    clone.querySelectorAll<HTMLElement>(`[${CODE_HIGHLIGHT}]`).forEach(code => {
+      code.replaceChildren(code.textContent || '')
+      code.classList.remove('hljs')
+      code.removeAttribute(CODE_HIGHLIGHT)
+    })
     return clone.innerHTML
   }
   lute.VditorIRDOM2Md = (html: string) => toMarkdown.call(lute, withoutEditingMarkers(html))
   lute.SpinVditorIRDOM = (html: string) => spin.call(lute, withoutEditingMarkers(html))
 
   const getRange = () => editor.getCurrentMode() === 'ir' ? getEditorSelection(editor) : null
+  const stripCodeHighlight = (code: HTMLElement) => {
+    if (!code.hasAttribute(CODE_HIGHLIGHT)) return
+    const offsets = textSelectionOffsets(code)
+    code.replaceChildren(code.textContent || '')
+    code.classList.remove('hljs')
+    code.removeAttribute(CODE_HIGHLIGHT)
+    restoreTextSelection(code, offsets)
+  }
+  const highlightCode = (code: HTMLElement) => {
+    if (code.hasAttribute(CODE_HIGHLIGHT)) return
+    const offsets = textSelectionOffsets(code)
+    const languageClass = Array.from(code.classList).find(className => className.startsWith('language-'))
+    const requestedLanguage = languageClass?.slice('language-'.length) || 'plaintext'
+    const language = hljs.getLanguage(requestedLanguage) ? requestedLanguage : 'plaintext'
+    code.innerHTML = hljs.highlight(code.textContent || '', { language, ignoreIllegals: true }).value
+    code.classList.add('hljs')
+    code.setAttribute(CODE_HIGHLIGHT, '')
+    restoreTextSelection(code, offsets)
+  }
+  let codeHighlightFrame: number | null = null
+  const syncCodeHighlight = () => {
+    codeHighlightFrame = null
+    root.querySelectorAll<HTMLElement>(`[${CODE_HIGHLIGHT}]`).forEach(code => {
+      if (!code.closest('[data-type="code-block"]')?.classList.contains('vditor-ir__node--expand')) {
+        stripCodeHighlight(code)
+      }
+    })
+    root.querySelectorAll<HTMLElement>(`[data-type="code-block"].vditor-ir__node--expand ${EDITABLE_CODE}`)
+      .forEach(highlightCode)
+  }
+  const scheduleCodeHighlight = () => {
+    if (codeHighlightFrame !== null) cancelAnimationFrame(codeHighlightFrame)
+    codeHighlightFrame = requestAnimationFrame(syncCodeHighlight)
+  }
+  const prepareEditableCode = () => {
+    const range = getRange()
+    const code = range && anchorElement(range)?.closest<HTMLElement>(EDITABLE_CODE)
+    if (code) stripCodeHighlight(code)
+  }
   const clearListMarkers = () => {
     root.querySelectorAll(LIST_MARKER).forEach(marker => marker.remove())
     root.querySelectorAll('[data-path-list-source]').forEach(item => item.removeAttribute('data-path-list-source'))
@@ -191,6 +282,7 @@ export function installMarkdownInteractions(editor: Vditor, onChange: (markdown:
 
   const onBeforeInput = (event: InputEvent) => {
     if (event.isComposing) return
+    prepareEditableCode()
     const range = getRange()
     const marker = range && anchorElement(range)?.closest<HTMLElement>(EDITING_MARKERS)
     if (!range || !marker || !marker.contains(range.endContainer)) return
@@ -205,6 +297,10 @@ export function installMarkdownInteractions(editor: Vditor, onChange: (markdown:
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
+    // Keep the highlighted DOM intact while the caret merely moves. Vditor
+    // needs plain text nodes for mutating keys, but stripping on arrows made
+    // the code flash unhighlighted until the next animation frame.
+    if (!CODE_NAVIGATION_KEYS.has(event.key)) prepareEditableCode()
     const range = getRange()
     if (!range) return
     const anchor = anchorElement(range)
@@ -267,15 +363,24 @@ export function installMarkdownInteractions(editor: Vditor, onChange: (markdown:
       })
     }
     revealMarkers()
+    scheduleCodeHighlight()
   }
+
+  const onInteraction = () => {
+    revealMarkers()
+    scheduleCodeHighlight()
+  }
+  const onCompositionStart = () => { prepareEditableCode() }
 
   const observer = new MutationObserver(revealMarkers)
   observer.observe(root, { childList: true, subtree: true })
   root.addEventListener('beforeinput', onBeforeInput, true)
   root.addEventListener('keydown', onKeyDown, true)
   root.addEventListener('input', onInput)
-  root.addEventListener('click', revealMarkers)
-  root.addEventListener('keyup', revealMarkers)
+  root.addEventListener('click', onInteraction)
+  root.addEventListener('keyup', onInteraction)
+  root.addEventListener('compositionstart', onCompositionStart, true)
+  root.addEventListener('compositionend', scheduleCodeHighlight)
   document.addEventListener('selectionchange', revealMarkers)
 
   return () => {
@@ -283,9 +388,13 @@ export function installMarkdownInteractions(editor: Vditor, onChange: (markdown:
     root.removeEventListener('beforeinput', onBeforeInput, true)
     root.removeEventListener('keydown', onKeyDown, true)
     root.removeEventListener('input', onInput)
-    root.removeEventListener('click', revealMarkers)
-    root.removeEventListener('keyup', revealMarkers)
+    root.removeEventListener('click', onInteraction)
+    root.removeEventListener('keyup', onInteraction)
+    root.removeEventListener('compositionstart', onCompositionStart, true)
+    root.removeEventListener('compositionend', scheduleCodeHighlight)
     document.removeEventListener('selectionchange', revealMarkers)
+    if (codeHighlightFrame !== null) cancelAnimationFrame(codeHighlightFrame)
+    root.querySelectorAll<HTMLElement>(`[${CODE_HIGHLIGHT}]`).forEach(stripCodeHighlight)
     clearListMarkers()
     clearQuoteMarkers()
     lute.VditorIRDOM2Md = toMarkdown

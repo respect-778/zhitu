@@ -26,3 +26,16 @@
 
 ## Out of scope
 改业务存储格式、原生目录反向导入、区块链、Wiki、提交/推送及已有无关修改。
+
+## 2026-10-24 目录重选修复
+
+- Goal：选择父目录、已有 KNOWVIA 或当前账号 user-ID 时复用同一账号目录，保留账号分层和手工文件保护。
+- Scope：repo path: src/utils/personalDirectory.ts；repo path: src/utils/personalDirectoryPlan.ts；repo path: src/pages/Layout/components/Setting/index.tsx；repo path: tests/personal-storage.test.cjs；repo path: tests/personal-directory-reuse-ui.py；repo path: .agent-workflow/tasks/storage-settings-status/；repo path: .agent-workflow/memory/architecture.md。
+- 验收：三个入口、旧句柄恢复、取消选择、其他账号目录拒绝、保护清单兼容、设置预览、1440/1024px 布局和现有保存回归。
+- 边界：不删除或合并此前误生成的嵌套目录，不反向导入本地笔记，不访问用户真实 Windows 资料目录，不改 AI 助手。
+
+## 2026-10-24 本地警告处理与移动菜单
+
+- 用户要求解释并消除本地差异警告，同时移除学习规划右键“移动到…”，继续通过拖拽移动。
+- 补充范围：repo path: src/pages/Path/components/Sidebar/index.tsx；repo path: tests/path-wiki-foundation-ui.py；repo path: .agent-workflow/tasks/learning-wiki-foundation/。其余目录服务、设置页、存储测试沿用上述范围。
+- 明确确认后先保留电脑原件、再恢复平台备份；不自动消音真实差异，不执行用户真实目录修复，不反向上传本地内容。

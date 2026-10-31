@@ -130,7 +130,9 @@ with sync_playwright() as playwright:
                 expect(top_navigation.get_by_role("button", name="搜索")).to_be_visible()
                 expect(activity_bar.get_by_role("button", name="导师")).to_be_visible()
                 expect(activity_bar.get_by_role("button", name="知识图谱")).to_be_visible()
-                assert activity_bar.get_by_role("button").count() == 2
+                expect(activity_bar.get_by_role("button", name="Agent 权限")).to_be_visible()
+                expect(activity_bar.get_by_role("button", name="Markdown 说明")).to_be_visible()
+                assert activity_bar.get_by_role("button").count() == 4
                 assert "active" not in (activity_bar.get_by_role("button", name="知识图谱").get_attribute("class") or "").lower()
                 expect(page.get_by_text("当前计划", exact=True)).to_have_count(0)
                 expect(page.get_by_test_id("file-tree").get_by_text("我的规划", exact=True)).to_be_visible()

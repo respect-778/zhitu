@@ -1,3 +1,7 @@
+export type AgentPermission = 'none' | 'read' | 'manage'
+
+export type WikiCreatedByKind = 'bootstrap' | 'user' | 'agent'
+
 /** 虚拟文件系统节点（文件或文件夹） */
 export interface VFile {
   id: string
@@ -5,6 +9,10 @@ export interface VFile {
   type: 'file' | 'folder'
   parentId: string | null
   content?: string
+  /** 由真实业务入口写入；旧工作区缺失时按用户创建处理。 */
+  createdByKind?: WikiCreatedByKind
+  /** Agent 自身权限；最终有效权限还要考虑不可访问的祖先目录。 */
+  agentPermission?: AgentPermission
   fileType?: 'note' | 'plan' | 'weekly_summary' | 'article_cite' | 'chat_save' | 'growth_record'
   metadata?: {
     sourceId?: string
@@ -16,6 +24,20 @@ export interface VFile {
     updatedAt: string
   }
   order: number
+}
+
+/** Wiki 链接的稳定绑定。正文保留用户输入，跳转关系使用文件 ID。 */
+export interface WikiLinkBinding {
+  id: string
+  sourceFileId: string
+  from: number
+  to: number
+  raw: string
+  targetPath: string
+  headingText?: string
+  displayText?: string
+  targetFileId?: string
+  status: 'resolved' | 'missing' | 'ambiguous'
 }
 
 /** 成长计划 */
@@ -70,7 +92,7 @@ export interface MentorPersona {
 }
 
 /** 侧栏面板类型 */
-export type SidebarPanel = 'files' | 'search' | 'mentor'
+export type SidebarPanel = 'files' | 'search' | 'mentor' | 'permissions' | 'markdown-guide'
 
 /** 关系图谱节点 */
 export interface GraphNode {

@@ -1,19 +1,20 @@
 import type React from 'react'
 import { useEffect, useMemo, useCallback, useRef, useState } from 'react'
-import { Alert, Button, message } from 'antd'
+import { Alert, Button, Modal, message } from 'antd'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   loadPathWorkspace,
   createFile, deleteFile, renameFile, updateFileContent,
-  moveFile, batchDeleteFiles, batchCreateFiles,
+  batchMoveFiles, batchDeleteFiles, batchCreateFiles,
   openTab, closeTab, closeAllTabs, setActiveTab,
   toggleFolder, collapseAllFolders, expandAllFolders,
   setSidebarPanel, setSidebarVisible, toggleSidebar, sortFiles,
+  setAgentPermission,
   flushSync,
   workspaceSaveQueue,
   recoverPathWorkspace,
 } from '@/store/modules/pathStore'
-import type { SidebarPanel } from '@/types/path'
+import type { AgentPermission, SidebarPanel } from '@/types/path'
 import ActivityBar from './components/ActivityBar'
 import WorkspaceHeader from './components/WorkspaceHeader'
 import Sidebar from './components/Sidebar'
@@ -25,6 +26,8 @@ import PersonalSaveStatus from '@/components/PersonalStorage/PersonalSaveStatus'
 import { getMentor } from './data/mentors'
 import QuickSwitcher from './components/QuickSwitcher'
 import styles from './index.module.less'
+import type { PermissionRequest } from './components/Sidebar/panels/PermissionPanel/PermissionPanel'
+import { AGENT_PERMISSION_LABEL, collectSubtreeIds, getEffectiveAgentPermission } from './utils/wikiPermissions'
 
 
 /** 成长规划主页面 — 仿 Obsidian 三栏布局：ActivityBar | Sidebar | MainArea */
@@ -34,7 +37,7 @@ const Path: React.FC = () => {
   const {
     files, openTabs, activeTabId,
     sidebarPanel, sidebarVisible, expandedFolderIds,
-    mentorId, revision, syncStatus, syncError,
+    mentorId, revision, syncStatus, syncError, linkBindings,
   } = useAppSelector(state => state.path)
 
   // 标签页前进/后退导航历史
@@ -45,8 +48,14 @@ const Path: React.FC = () => {
   const [quickSwitcherOpen, setQuickSwitcherOpen] = useState(false)
   const [recovering, setRecovering] = useState(false)
   const [restoredUserId, setRestoredUserId] = useState<string | null>(null)
+  const [permissionRequest, setPermissionRequest] = useState<PermissionRequest | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isNavAction = useRef(false)
+  const navIndexRef = useRef(-1)
+  const updateNavIndex = useCallback((nextIndex: number) => {
+    navIndexRef.current = nextIndex
+    setNavIndex(nextIndex)
+  }, [])
 
   // 初始化：加载用户工作区数据
   useEffect(() => {
@@ -83,11 +92,11 @@ const Path: React.FC = () => {
       return
     }
     setNavHistory(prev => {
-      const sliced = prev.slice(0, navIndex + 1)
+      const sliced = prev.slice(0, navIndexRef.current + 1)
       return [...sliced, activeTabId]
     })
-    setNavIndex(prev => prev + 1)
-  }, [activeTabId])
+    updateNavIndex(navIndexRef.current + 1)
+  }, [activeTabId, updateNavIndex])
 
   // 派生数据：标签页对应的文件对象列表
   const tabFiles = useMemo(() =>
@@ -134,22 +143,37 @@ const Path: React.FC = () => {
     if (!canGoBack) return
     isNavAction.current = true
     const newIdx = navIndex - 1
-    setNavIndex(newIdx)
+    updateNavIndex(newIdx)
     dispatch(setActiveTab(navHistory[newIdx]))
-  }, [navIndex, navHistory, canGoBack, dispatch])
+  }, [navIndex, navHistory, canGoBack, dispatch, updateNavIndex])
 
   // 导航前进
   const handleNavForward = useCallback(() => {
     if (!canGoForward) return
     isNavAction.current = true
     const newIdx = navIndex + 1
-    setNavIndex(newIdx)
+    updateNavIndex(newIdx)
     dispatch(setActiveTab(navHistory[newIdx]))
-  }, [navIndex, navHistory, canGoForward, dispatch])
+  }, [navIndex, navHistory, canGoForward, dispatch, updateNavIndex])
 
   // 切换侧栏面板
   const handlePanelChange = useCallback((panel: SidebarPanel) => {
     dispatch(setSidebarPanel(panel))
+  }, [dispatch])
+
+  const handleRequestAgentPermission = useCallback((id: string, permission: AgentPermission) => {
+    const resource = files.find(file => file.id === id)
+    if (!resource) return
+    if (resource.type === 'file') {
+      dispatch(setAgentPermission({ ids: [id], permission }))
+      return
+    }
+    setPermissionRequest({ resourceId: id, permission })
+    dispatch(setSidebarPanel('permissions'))
+  }, [dispatch, files])
+
+  const handleSetAgentPermissions = useCallback((ids: string[], permission: AgentPermission) => {
+    dispatch(setAgentPermission({ ids, permission }))
   }, [dispatch])
 
   // 选中文件 → 打开标签页
@@ -163,9 +187,9 @@ const Path: React.FC = () => {
     setGraphOpen(false)
     setGraphActive(false)
     setNavHistory([])
-    setNavIndex(-1)
+    updateNavIndex(-1)
     isNavAction.current = false
-  }, [dispatch])
+  }, [dispatch, updateNavIndex])
 
   // 新建文件或文件夹
   const handleCreateFile = useCallback((parentId: string | null, type: 'file' | 'folder') => {
@@ -188,6 +212,58 @@ const Path: React.FC = () => {
     dispatch(renameFile({ id, name }))
     return true
   }, [files, dispatch])
+
+  const handleBatchMoveFiles = useCallback((ids: string[], newParentId: string | null): boolean | Promise<boolean> => {
+    const movedIds = new Set(ids)
+    const affectedIds = new Set(ids.flatMap(id => collectSubtreeIds(files, id)))
+    const nextFiles = files.map(file => movedIds.has(file.id) ? { ...file, parentId: newParentId } : file)
+    const changed = [...affectedIds].flatMap(id => {
+      const beforeFile = files.find(file => file.id === id)
+      const afterFile = nextFiles.find(file => file.id === id)
+      if (!beforeFile || !afterFile) return []
+      const before = getEffectiveAgentPermission(beforeFile, files).permission
+      const after = getEffectiveAgentPermission(afterFile, nextFiles).permission
+      return before === after ? [] : [{ id, before, after }]
+    })
+
+    const applyMove = () => dispatch(batchMoveFiles({ ids, newParentId }))
+    if (changed.length === 0) {
+      applyMove()
+      return true
+    }
+
+    const transitionCounts = new Map<string, number>()
+    for (const item of changed) {
+      const key = `${item.before}:${item.after}`
+      transitionCounts.set(key, (transitionCounts.get(key) ?? 0) + 1)
+    }
+    const destination = newParentId ? files.find(file => file.id === newParentId)?.name ?? '目标文件夹' : '根目录'
+
+    return new Promise(resolve => {
+      Modal.confirm({
+        title: '移动后 Agent 有效权限将改变',
+        content: (
+          <div>
+            <p>移动到「{destination}」会改变 {changed.length} 个项目对 Agent 的有效权限。</p>
+            {[...transitionCounts].map(([transition, count]) => {
+              const [before, after] = transition.split(':') as [AgentPermission, AgentPermission]
+              return <p key={transition}>{AGENT_PERMISSION_LABEL[before]} → {AGENT_PERMISSION_LABEL[after]}：{count} 项</p>
+            })}
+            <p>项目自身设置不变；变化来自新目录的父级限制。</p>
+          </div>
+        ),
+        okText: '确认移动',
+        cancelText: '取消',
+        okCancel: true,
+        centered: true,
+        onOk: () => {
+          applyMove()
+          resolve(true)
+        },
+        onCancel: () => resolve(false),
+      })
+    })
+  }, [dispatch, files])
 
   // 导入多个文件（md/txt/markdown）
   const handleImportFiles = useCallback(async (fileList: FileList) => {
@@ -317,11 +393,14 @@ const Path: React.FC = () => {
       </div>
       <div className={styles.workspace} style={recovering ? { pointerEvents: 'none' } : undefined}>
         <ActivityBar
+          activePanel={sidebarPanel}
           onShowMentor={() => handlePanelChange('mentor')}
           onShowGraph={() => {
             setGraphOpen(true)
             setGraphActive(true)
           }}
+          onShowPermissions={() => handlePanelChange('permissions')}
+          onShowMarkdownGuide={() => handlePanelChange('markdown-guide')}
         />
 
         <ResizableSidebar visible={sidebarVisible} onVisibilityChange={handleSidebarVisibilityChange} onWidthChange={handleSidebarWidthChange}>
@@ -336,7 +415,7 @@ const Path: React.FC = () => {
             onCreateFile={handleCreateFile}
             onDeleteFile={(id) => dispatch(deleteFile(id))}
             onRenameFile={(id, name) => { handleRenameFile(id, name) }}
-            onMoveFile={(id, newParentId) => dispatch(moveFile({ id, newParentId }))}
+            onBatchMoveFiles={handleBatchMoveFiles}
             onBatchDeleteFiles={(ids) => dispatch(batchDeleteFiles(ids))}
             onBatchCreateFiles={(items) => dispatch(batchCreateFiles(items))}
             onImportFiles={handleImportFiles}
@@ -344,6 +423,10 @@ const Path: React.FC = () => {
             onExpandAll={() => dispatch(expandAllFolders())}
             onCollapseAll={() => dispatch(collapseAllFolders())}
             onSort={handleSort}
+            permissionRequest={permissionRequest}
+            onPermissionRequestHandled={() => setPermissionRequest(null)}
+            onRequestAgentPermission={handleRequestAgentPermission}
+            onSetAgentPermissions={handleSetAgentPermissions}
           />
         </ResizableSidebar>
 
@@ -351,6 +434,8 @@ const Path: React.FC = () => {
           <EditorArea
             file={activeFile}
             files={files}
+            linkBindings={linkBindings}
+            graphOpen={graphOpen}
             showGraph={graphActive}
             onContentChange={handleContentChange}
             onRenameFile={handleRenameFile}
@@ -368,7 +453,7 @@ const Path: React.FC = () => {
         mentorName={mentor?.nameZh}
         fileCount={fileCount}
         wordCount={wordCount}
-        saveStatus={<PersonalSaveStatus kind="workspace" />}
+        saveStatus={<PersonalSaveStatus kind="workspace" notifyUnconfigured />}
       />
 
       <QuickSwitcher

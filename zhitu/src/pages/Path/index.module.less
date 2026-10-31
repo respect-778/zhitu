@@ -1,9 +1,50 @@
 .container {
+  --wiki-surface: #fefdfb;
+  --wiki-surface-muted: #f5f5f7;
+  --wiki-text: #1d1d1f;
+  --wiki-text-secondary: #5e636e;
+  --wiki-syntax-marker: #2e5995;
+  --wiki-link: #2e5995;
+  --wiki-accent: #2e5995;
+  --wiki-border-subtle: #e3e5e9;
+  --wiki-code-bg: #f6f7f9;
+  --wiki-selection-bg: #dce8f7;
+  --wiki-danger: #b42318;
+  --wiki-code-keyword: #9f2e80;
+  --wiki-code-string: #19693b;
+  --wiki-code-number: #945600;
+  --wiki-code-function: #235eab;
+  --wiki-code-type: #6f42a8;
+  --wiki-code-property: #8c432e;
+  --wiki-code-comment: #656d76;
+  --wiki-code-punctuation: #5b626d;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 65px);
   overflow: hidden;
-  background: var(--bg-color);
+  background: var(--wiki-surface);
+}
+
+:global([data-theme='dark']) .container {
+  --wiki-surface: #0f172a;
+  --wiki-surface-muted: #1e293b;
+  --wiki-text: #e6edf3;
+  --wiki-text-secondary: #a1adbf;
+  --wiki-syntax-marker: #85b2e5;
+  --wiki-link: #85b2e5;
+  --wiki-accent: #85b2e5;
+  --wiki-border-subtle: #344155;
+  --wiki-code-bg: #182235;
+  --wiki-selection-bg: #294568;
+  --wiki-danger: #ff9b91;
+  --wiki-code-keyword: #e5a0d9;
+  --wiki-code-string: #9fd5a6;
+  --wiki-code-number: #e8bf7a;
+  --wiki-code-function: #8dc1ff;
+  --wiki-code-type: #c6acf2;
+  --wiki-code-property: #e5a795;
+  --wiki-code-comment: #a5afbf;
+  --wiki-code-punctuation: #aebace;
 }
 
 .topRow {

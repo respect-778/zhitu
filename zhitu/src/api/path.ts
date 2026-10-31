@@ -1,5 +1,6 @@
 import httpInstance from '@/utils/http'
 import type { SaveSnapshot } from '@/utils/workspaceSaveQueue'
+import type { WikiLinkBinding } from '@/types/path'
 
 /** 后端存储的工作区数据结构 */
 export interface WorkspaceData {
@@ -9,6 +10,9 @@ export interface WorkspaceData {
   expandedFolderIds: string[]     // 已展开的文件夹 id 列表
   activePlan: unknown | null      // 成长计划（预留）
   mentorId: string | null         // 当前导师 id
+  wikiTemplateVersion?: number | null
+  wikiInitializedAt?: string | null
+  linkBindings?: WikiLinkBinding[]
 }
 
 /** 获取用户工作区数据，新用户返回 { data: null } */

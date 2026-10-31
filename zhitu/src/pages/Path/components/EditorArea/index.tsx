@@ -1,18 +1,24 @@
-import React, { useRef, useEffect, useMemo, useCallback, useState, memo } from 'react'
+import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react'
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
-import ForceGraph2D from 'react-force-graph-2d'
+import { message } from 'antd'
 import { Viewer } from '@bytemd/react'
-import { markdownPlugins } from '@/utils/markdown'
-import type { VFile, GraphNode, GraphLink } from '@/types/path'
+import type { VFile, WikiLinkBinding } from '@/types/path'
+import KnowledgeGraph from '../KnowledgeGraph'
+import type { GraphPosition } from '../KnowledgeGraph/model'
 import DocumentToolbar from './DocumentToolbar'
 import { revealMarkdownLink, getEditorSelection, restoreEditorSelection, canCancelMarkdownFormat, cancelMarkdownFormat, switchMarkdownMode } from './markdownEditing'
 import { installMarkdownInteractions } from './markdownInteractions'
+import { decodeWikiFragment, getWikiFilePath, parseWikiLinks, projectWikiLinksForReading } from '../../utils/wikiLinks'
+import { decorateEditingWikiLinks, editingWikiLinkAtPoint, resolveEditingWikiLink } from '../../utils/wikiLinkInteraction'
+import { enhancePathReadingView, normalizePathReadingMarkdown, pathReadingPlugins } from './readingMarkdown'
 import styles from './index.module.less'
 
 interface Props {
   file: VFile | null
   files: VFile[]
+  linkBindings: WikiLinkBinding[]
+  graphOpen: boolean
   showGraph: boolean
   onContentChange: (id: string, content: string) => void
   onRenameFile: (id: string, name: string) => boolean
@@ -24,323 +30,6 @@ interface Props {
   onCreateFile: () => void
 }
 
-function extractWikilinks(content: string): string[] {
-  return Array.from(content.matchAll(/\[\[([^\]]+)\]\]/g), m => m[1])
-}
-
-function useGraphData(files: VFile[]) {
-  return useMemo(() => {
-    const fileNodes = files.filter(f => f.type === 'file')
-    const nodes: GraphNode[] = fileNodes.map(f => ({ id: f.id, name: f.name }))
-    const links: GraphLink[] = []
-    const nameToId = new Map(fileNodes.map(f => [f.name, f.id]))
-    const degreeMap = new Map<string, number>()
-
-    const addLink = (source: string, target: string, type: GraphLink['type']) => {
-      links.push({ source, target, type })
-      degreeMap.set(source, (degreeMap.get(source) ?? 0) + 1)
-      degreeMap.set(target, (degreeMap.get(target) ?? 0) + 1)
-    }
-
-    for (const f of fileNodes) {
-      if (f.content) {
-        for (const linked of extractWikilinks(f.content)) {
-          const targetId = nameToId.get(linked)
-          if (targetId && targetId !== f.id) addLink(f.id, targetId, 'wikilink')
-        }
-      }
-      const tags = f.metadata?.tags ?? []
-      if (tags.length > 0) {
-        for (const other of fileNodes) {
-          if (other.id <= f.id) continue
-          if (tags.some(t => (other.metadata?.tags ?? []).includes(t)))
-            addLink(f.id, other.id, 'tag')
-        }
-      }
-      if (f.parentId) {
-        for (const sib of fileNodes.filter(o => o.parentId === f.parentId && o.id > f.id))
-          addLink(f.id, sib.id, 'folder')
-      }
-    }
-    return { nodes, links, degreeMap }
-  }, [files])
-}
-
-function getNodeId(n: string | GraphNode): string {
-  return typeof n === 'string' ? n : n.id
-}
-
-const PRIMARY = '#2e5995'
-const NEIGHBOR_LIGHT = '#3a3a3a'
-const NEIGHBOR_DARK = '#c8c8c8'
-const GRAY_NODE_LIGHT = '#b0b8c8'
-const GRAY_NODE_DARK = '#505868'
-const GRAY_LINK_LIGHT = 'rgba(160,160,160,0.28)'
-const GRAY_LINK_DARK = 'rgba(120,120,120,0.28)'
-const DIM_ALPHA = 0.06
-
-// lerp between two hex/rgba colors via alpha — simpler: just lerp the highlight alpha
-function lerpColor(from: string, to: string, t: number): string {
-  // We only need to lerp opacity for the dim effect; use t directly in rgba
-  // For node fill we blend between gray and primary via t
-  const parse = (hex: string) => [
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16),
-  ]
-  const f = parse(from.startsWith('#') ? from : PRIMARY)
-  const tC = parse(to.startsWith('#') ? to : PRIMARY)
-  const r = Math.round(f[0] + (tC[0] - f[0]) * t)
-  const g = Math.round(f[1] + (tC[1] - f[1]) * t)
-  const b = Math.round(f[2] + (tC[2] - f[2]) * t)
-  return `rgb(${r},${g},${b})`
-}
-
-// 关系图谱
-const GraphView: React.FC<{ files: VFile[]; onSelectFile: (id: string) => void }> = memo(({ files, onSelectFile }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fgRef = useRef<any>(null)
-  const { nodes, links, degreeMap } = useGraphData(files)
-  const graphData = useMemo(() => ({ nodes, links }), [nodes, links])
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-  const [size, setSize] = useState({ w: 800, h: 600 })
-
-  const hoveredIdRef = useRef<string | null>(null)
-  const highlightRef = useRef<Map<string, number>>(new Map())
-  const rafRef = useRef<number | null>(null)
-  const degreeMapRef = useRef(degreeMap)
-  useEffect(() => { degreeMapRef.current = degreeMap }, [degreeMap])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-    const ro = new ResizeObserver(([e]) => setSize({ w: e.contentRect.width, h: e.contentRect.height }))
-    ro.observe(containerRef.current)
-    setSize({ w: containerRef.current.clientWidth, h: containerRef.current.clientHeight })
-    return () => ro.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-    const canvas = containerRef.current.querySelector('canvas')
-    if (canvas) canvasRef.current = canvas
-  })
-
-  // 配置力学引擎：排斥力 + 连线距离 + 向心力 + 初始 zoomToFit
-  useEffect(() => {
-    const fg = fgRef.current
-    if (!fg) return
-
-    fg.d3Force('charge')?.strength((d: GraphNode) => {
-      const degree = degreeMapRef.current.get(d.id) ?? 0
-      return degree > 0 ? -200 - degree * 30 : -100
-    })
-
-    fg.d3Force('link')?.distance((link: GraphLink) => {
-      if (link.type === 'wikilink') return 80
-      if (link.type === 'tag') return 120
-      return 150
-    })
-
-    fg.d3Force('center')?.strength(0.03)
-
-    const timer = setTimeout(() => fg.zoomToFit(400, 60), 600)
-    return () => clearTimeout(timer)
-  }, [graphData])
-
-  const linksRef = useRef(links)
-  const nodesRef = useRef(nodes)
-  useEffect(() => { linksRef.current = links }, [links])
-  useEffect(() => { nodesRef.current = nodes }, [nodes])
-
-  const animateHighlight = useCallback(() => {
-    const hovered = hoveredIdRef.current
-    const neighbors = new Set<string>()
-    if (hovered) {
-      for (const l of linksRef.current) {
-        const s = getNodeId(l.source), t = getNodeId(l.target)
-        if (s === hovered) neighbors.add(t)
-        if (t === hovered) neighbors.add(s)
-      }
-    }
-
-    let needsFrame = false
-    for (const node of nodesRef.current) {
-      const target = hovered === node.id ? 2 : neighbors.has(node.id) ? 1 : 0
-      const current = highlightRef.current.get(node.id) ?? 0
-      const next = current + (target - current) * 0.15
-      if (Math.abs(next - target) < 0.005) {
-        highlightRef.current.set(node.id, target)
-      } else {
-        highlightRef.current.set(node.id, next)
-        needsFrame = true
-      }
-    }
-
-    if (needsFrame) {
-      rafRef.current = requestAnimationFrame(animateHighlight)
-    } else {
-      rafRef.current = null
-    }
-  }, [])
-
-  const startAnimation = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(animateHighlight)
-  }, [animateHighlight])
-
-  useEffect(() => () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }, [])
-
-  const nodeCanvasObject = useCallback((node: object, ctx: CanvasRenderingContext2D, globalScale: number) => {
-    const n = node as GraphNode & { x: number; y: number }
-    const v = highlightRef.current.get(n.id) ?? 0
-    const anyHovered = hoveredIdRef.current !== null
-    const degree = degreeMapRef.current.get(n.id) ?? 0
-
-    // 基础半径按连接数缩放：3 ~ 10px
-    const baseR = 3 + Math.min(degree, 8) * 0.9
-    const r = anyHovered
-      ? (v > 1.5 ? baseR + (v - 1) * 3 : v > 0.5 ? baseR - 0.5 + v * 1.5 : baseR - 0.5 + v * 0.3)
-      : baseR
-
-    ctx.beginPath()
-    ctx.arc(n.x, n.y, r, 0, 2 * Math.PI)
-
-    if (!anyHovered) {
-      ctx.fillStyle = isDark ? GRAY_NODE_DARK : GRAY_NODE_LIGHT
-    } else if (v > 1.5) {
-      ctx.fillStyle = PRIMARY
-    } else if (v > 0.5) {
-      const neighborColor = isDark ? NEIGHBOR_DARK : NEIGHBOR_LIGHT
-      const grayColor = isDark ? GRAY_NODE_DARK : GRAY_NODE_LIGHT
-      ctx.fillStyle = lerpColor(grayColor, neighborColor, Math.min(v, 1))
-    } else {
-      const grayColor = isDark ? GRAY_NODE_DARK : GRAY_NODE_LIGHT
-      const dimAlpha = DIM_ALPHA + (1 - DIM_ALPHA) * v
-      const [rr, gg, bb] = [
-        parseInt(grayColor.slice(1, 3), 16),
-        parseInt(grayColor.slice(3, 5), 16),
-        parseInt(grayColor.slice(5, 7), 16),
-      ]
-      ctx.fillStyle = `rgba(${rr},${gg},${bb},${dimAlpha})`
-    }
-    ctx.fill()
-
-    // 缩放太小时不显示文字标签，避免密密麻麻
-    const showLabel = globalScale >= 0.6 || v > 0.5
-    if (!showLabel) return
-
-    const label = n.name.length > 20 ? n.name.slice(0, 20) + '...' : n.name
-    const fs = v > 1.5 ? Math.max(12, 14 / globalScale) : Math.max(10, 12 / globalScale)
-    ctx.font = v > 1.5 ? `bold ${fs}px sans-serif` : `${fs}px sans-serif`
-    ctx.textAlign = 'center'
-
-    // 标签透明度：缩放渐显 + hover 状态
-    let labelAlpha: number
-    if (!anyHovered) {
-      const scaleAlpha = globalScale < 1.0 ? Math.max(0.15, (globalScale - 0.6) / 0.6) : 0.6
-      labelAlpha = scaleAlpha
-    } else if (v > 1.5) {
-      labelAlpha = 1
-    } else if (v > 0.5) {
-      labelAlpha = 0.5 + Math.min(v, 1) * 0.5
-    } else {
-      labelAlpha = DIM_ALPHA + (0.3 - DIM_ALPHA) * v
-    }
-    ctx.fillStyle = isDark ? `rgba(220,220,220,${labelAlpha})` : `rgba(50,50,50,${labelAlpha})`
-    ctx.fillText(label, n.x, n.y + r + fs * 0.9)
-  }, [isDark])
-
-  const linkCanvasObject = useCallback((link: object, ctx: CanvasRenderingContext2D, globalScale: number) => {
-    const l = link as GraphLink & { source: GraphNode; target: GraphNode }
-    if (!l.source.x || !l.target.x) return
-    const hovered = hoveredIdRef.current
-    const sId = l.source.id, tId = l.target.id
-    const sVal = highlightRef.current.get(sId) ?? 0
-    const tVal = highlightRef.current.get(tId) ?? 0
-    const isConnected = hovered && (sId === hovered || tId === hovered)
-    const linkVal = isConnected ? Math.min(sVal, tVal) : 0
-
-    let color: string
-    let width: number
-    if (!hovered) {
-      color = isDark ? GRAY_LINK_DARK : GRAY_LINK_LIGHT
-      width = 1
-    } else if (linkVal > 0.3) {
-      const alpha = 0.3 + linkVal * 0.7
-      color = `rgba(46,89,149,${alpha})`
-      width = 1 + linkVal * 0.8
-    } else {
-      const alpha = DIM_ALPHA + (0.28 - DIM_ALPHA) * linkVal
-      color = isDark ? `rgba(120,120,120,${alpha})` : `rgba(160,160,160,${alpha})`
-      width = 0.5
-    }
-
-    const { x: sourceX, y: sourceY } = l.source
-    const { x: targetX, y: targetY } = l.target
-    // 力学布局初始化期间节点坐标尚未确定，先跳过这条连线。
-    if (sourceX === undefined || sourceY === undefined || targetX === undefined || targetY === undefined) return
-    ctx.beginPath()
-    ctx.moveTo(sourceX, sourceY)
-    ctx.lineTo(targetX, targetY)
-    ctx.strokeStyle = color
-    ctx.lineWidth = width / globalScale
-    ctx.stroke()
-  }, [isDark])
-
-  const handleNodeHover = useCallback((n: object | null) => {
-    hoveredIdRef.current = n ? (n as GraphNode).id : null
-    if (canvasRef.current) canvasRef.current.style.cursor = n ? 'pointer' : 'default'
-    startAnimation()
-  }, [startAnimation])
-
-  const handleNodeDrag = useCallback((n: object) => {
-    hoveredIdRef.current = (n as GraphNode).id
-    if (canvasRef.current) canvasRef.current.style.cursor = 'grabbing'
-    startAnimation()
-  }, [startAnimation])
-
-  const handleNodeDragEnd = useCallback(() => {
-    hoveredIdRef.current = null
-    if (canvasRef.current) canvasRef.current.style.cursor = 'default'
-    startAnimation()
-  }, [startAnimation])
-
-  if (nodes.length === 0) {
-    return (
-      <div className={styles.graphEmpty}>
-        <p>暂无文件</p>
-        <p className={styles.graphEmptyHint}>新建笔记后图谱将自动生成</p>
-      </div>
-    )
-  }
-
-  return (
-    <div ref={containerRef} className={styles.graphCanvas}>
-      <ForceGraph2D
-        ref={fgRef}
-        graphData={graphData}
-        width={size.w}
-        height={size.h}
-        nodeLabel=""
-        nodeRelSize={3.5}
-        backgroundColor={isDark ? '#1e1e2e' : '#ffffff'}
-        onNodeClick={(n: object) => onSelectFile((n as GraphNode).id)}
-        onNodeHover={handleNodeHover}
-        onNodeDrag={handleNodeDrag}
-        onNodeDragEnd={handleNodeDragEnd}
-        nodeCanvasObject={nodeCanvasObject}
-        nodeCanvasObjectMode={() => 'replace'}
-        linkCanvasObject={linkCanvasObject}
-        linkCanvasObjectMode={() => 'replace'}
-        cooldownTicks={Infinity}
-        d3AlphaDecay={0.02}
-        d3VelocityDecay={0.3}
-      />
-    </div>
-  )
-})
 
 // 内联标题输入
 const InlineTitle: React.FC<{
@@ -354,17 +43,11 @@ const InlineTitle: React.FC<{
   const prevNameRef = useRef(file.name)
 
   useEffect(() => {
-    setValue(file.name)
-    prevNameRef.current = file.name
-    setError(false)
-  }, [file.id, file.name])
-
-  useEffect(() => {
     if (file.name === '未命名笔记' || file.name === '新建文件夹') {
       inputRef.current?.focus()
       inputRef.current?.select()
     }
-  }, [file.id])
+  }, [file.id, file.name])
 
   const handleBlur = () => {
     const trimmed = value.trim()
@@ -417,19 +100,267 @@ const InlineTitle: React.FC<{
   )
 }
 
+interface WikiLinkPickerState {
+  query: string
+  candidateIds: string[]
+  selectedIndex: number
+  left: number
+  top: number
+}
+
 // 编辑区
-const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, onRenameFile, onSelectFile, canGoBack, canGoForward, onNavBack, onNavForward, onCreateFile }) => {
+const EditorArea: React.FC<Props> = ({ file, files, linkBindings, graphOpen, showGraph, onContentChange, onRenameFile, onSelectFile, canGoBack, canGoForward, onNavBack, onNavForward, onCreateFile }) => {
   const editorRef = useRef<HTMLDivElement>(null)
+  const readingViewRef = useRef<HTMLDivElement>(null)
   const vditorRef = useRef<Vditor | null>(null)
   const selectionRef = useRef<Range | null>(null)
   const editingModeRef = useRef<'ir' | 'sv'>('ir')
   const latestContentRef = useRef(file?.content ?? '')
+  const fileRef = useRef(file)
+  const filesRef = useRef(files)
+  const linkBindingsRef = useRef(linkBindings)
+  const graphPositionCacheRef = useRef(new Map<string, GraphPosition>())
+  const pendingHeadingRef = useRef<{ fileId: string; heading: string } | null>(null)
+  const wikiLinkRangeRef = useRef<Range | null>(null)
+  const wikiLinkPickerRef = useRef<WikiLinkPickerState | null>(null)
+  const pickerFrameRef = useRef<number | null>(null)
+  const wikiDecorationFrameRef = useRef<number | null>(null)
+  const readingEnhancementFrameRef = useRef<number | null>(null)
+  const readingObserverRef = useRef<MutationObserver | null>(null)
   const [reading, setReading] = useState(false)
   const [sourceMode, setSourceMode] = useState(false)
   const [canCancelFormat, setCanCancelFormat] = useState(false)
   const [canInsertAfter, setCanInsertAfter] = useState(false)
+  const [wikiLinkPicker, setWikiLinkPicker] = useState<WikiLinkPickerState | null>(null)
   const fileId = file?.id
   const fileContent = file?.content ?? ''
+  const readingMarkdown = useMemo(() => file
+    ? normalizePathReadingMarkdown(projectWikiLinksForReading(file, files, linkBindings))
+    : '', [file, files, linkBindings])
+
+  const attachReadingView = useCallback((node: HTMLDivElement | null) => {
+    readingObserverRef.current?.disconnect()
+    readingObserverRef.current = null
+    if (readingEnhancementFrameRef.current !== null) {
+      window.cancelAnimationFrame(readingEnhancementFrameRef.current)
+      readingEnhancementFrameRef.current = null
+    }
+    readingViewRef.current = node
+    if (!node) return
+    const enhance = () => {
+      const markdownBody = node.querySelector<HTMLElement>('.markdown-body')
+      if (markdownBody) enhancePathReadingView(markdownBody)
+    }
+    enhance()
+    const observer = new MutationObserver(enhance)
+    observer.observe(node, { childList: true, subtree: true })
+    readingObserverRef.current = observer
+    readingEnhancementFrameRef.current = window.requestAnimationFrame(() => {
+      readingEnhancementFrameRef.current = null
+      enhance()
+    })
+  }, [readingMarkdown])
+
+  useEffect(() => {
+    fileRef.current = file
+    filesRef.current = files
+    linkBindingsRef.current = linkBindings
+  }, [file, files, linkBindings])
+
+  const updateWikiLinkPicker = useCallback((next: WikiLinkPickerState | null) => {
+    wikiLinkPickerRef.current = next
+    wikiLinkRangeRef.current = next ? wikiLinkRangeRef.current : null
+    setWikiLinkPicker(next)
+  }, [])
+
+  const detectWikiLinkPicker = useCallback(() => {
+    const root = editorRef.current
+    const selection = window.getSelection()
+    if (!root || !selection?.rangeCount || !selection.isCollapsed) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    const range = selection.getRangeAt(0)
+    if (!root.contains(range.startContainer)) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    let textNode: Text | null = range.startContainer.nodeType === Node.TEXT_NODE ? range.startContainer as Text : null
+    let textOffset = range.startOffset
+    if (!textNode && range.startContainer.nodeType === Node.ELEMENT_NODE) {
+      const container = range.startContainer as Element
+      const previousChild = container.childNodes[Math.max(0, range.startOffset - 1)]
+      if (previousChild?.nodeType === Node.TEXT_NODE) {
+        textNode = previousChild as Text
+        textOffset = textNode.data.length
+      }
+    }
+    const parent = textNode?.parentElement ?? (range.startContainer as HTMLElement)
+    if (parent?.closest('code,.vditor-ir__marker--pre')) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    if (!textNode) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    const beforeCursor = textNode.data.slice(0, textOffset)
+    const match = beforeCursor.match(/(?:^|[^\\])\[\[([^\]\n]{0,80})$/)
+    if (!match) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    const query = match[1]
+    const targetQuery = query.split(/[|#]/, 1)[0].trim().toLocaleLowerCase('zh-CN')
+    const candidates = filesRef.current
+      .filter(candidate => candidate.type === 'file')
+      .map(candidate => ({ candidate, path: getWikiFilePath(candidate, filesRef.current) }))
+      .filter(({ candidate, path }) => !targetQuery
+        || candidate.name.toLocaleLowerCase('zh-CN').includes(targetQuery)
+        || path.toLocaleLowerCase('zh-CN').includes(targetQuery))
+      .sort((a, b) => {
+        const aStarts = a.candidate.name.toLocaleLowerCase('zh-CN').startsWith(targetQuery) ? 0 : 1
+        const bStarts = b.candidate.name.toLocaleLowerCase('zh-CN').startsWith(targetQuery) ? 0 : 1
+        return aStarts - bStarts || a.path.localeCompare(b.path, 'zh-CN')
+      })
+      .slice(0, 8)
+    const normalizedRange = range.cloneRange()
+    normalizedRange.setStart(textNode, textOffset)
+    normalizedRange.collapse(true)
+    const rect = normalizedRange.getBoundingClientRect()
+    const fallbackRect = parent?.getBoundingClientRect()
+    wikiLinkRangeRef.current = normalizedRange
+    const previous = wikiLinkPickerRef.current
+    const candidateIds = candidates.map(item => item.candidate.id)
+    const preservesSelection = previous?.query === query
+      && previous.candidateIds.length === candidateIds.length
+      && previous.candidateIds.every((id, index) => id === candidateIds[index])
+    updateWikiLinkPicker({
+      query,
+      candidateIds,
+      selectedIndex: preservesSelection ? Math.min(previous.selectedIndex, Math.max(0, candidateIds.length - 1)) : 0,
+      left: Math.max(8, Math.min(rect.left || fallbackRect?.left || 8, window.innerWidth - 340)),
+      top: Math.max(8, Math.min((rect.bottom || fallbackRect?.bottom || 8) + 6, window.innerHeight - 320)),
+    })
+  }, [updateWikiLinkPicker])
+
+  const scheduleWikiLinkPicker = useCallback(() => {
+    if (pickerFrameRef.current !== null) cancelAnimationFrame(pickerFrameRef.current)
+    pickerFrameRef.current = requestAnimationFrame(() => {
+      pickerFrameRef.current = requestAnimationFrame(() => {
+        pickerFrameRef.current = null
+        detectWikiLinkPicker()
+      })
+    })
+  }, [detectWikiLinkPicker])
+
+  const decorateWikiLinks = useCallback(() => {
+    const editor = vditorRef.current
+    const currentFile = fileRef.current
+    const root = editor?.vditor?.ir?.element
+    if (!editor?.vditor?.lute || !currentFile || !root || editor.getCurrentMode() !== 'ir') return
+    const currentMarkdown = editor.getValue()
+    decorateEditingWikiLinks(root, { ...currentFile, content: currentMarkdown }, filesRef.current, linkBindingsRef.current)
+  }, [])
+
+  const scheduleWikiLinkDecoration = useCallback(() => {
+    if (wikiDecorationFrameRef.current !== null) cancelAnimationFrame(wikiDecorationFrameRef.current)
+    wikiDecorationFrameRef.current = requestAnimationFrame(() => {
+      wikiDecorationFrameRef.current = null
+      decorateWikiLinks()
+    })
+  }, [decorateWikiLinks])
+
+  useEffect(() => {
+    const pending = pendingHeadingRef.current
+    if (!reading || !file || !pending || pending.fileId !== file.id) return
+    const timer = window.setTimeout(() => {
+      const heading = Array.from(readingViewRef.current?.querySelectorAll('h1,h2,h3,h4,h5,h6') ?? [])
+        .find(element => element.textContent?.trim() === pending.heading)
+      if (heading) heading.scrollIntoView({ block: 'start' })
+      else message.info('已打开笔记，但目标标题已变化')
+      pendingHeadingRef.current = null
+    }, 0)
+    return () => window.clearTimeout(timer)
+  }, [file, reading])
+
+  const handleReadingLinkClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a')
+    const href = anchor?.getAttribute('href') ?? ''
+    if (!href.startsWith('#knowvia-')) return
+    event.preventDefault()
+    event.stopPropagation()
+    const resolvedMatch = href.match(/^#knowvia-file-([0-9a-f]+?)(?:-heading-([0-9a-f]+))?$/)
+    if (!resolvedMatch) {
+      message.info('这个内部链接尚未解析，请检查文件名或路径')
+      return
+    }
+    const targetFileId = decodeWikiFragment(resolvedMatch[1])
+    const heading = resolvedMatch[2] ? decodeWikiFragment(resolvedMatch[2]) : null
+    if (!targetFileId) return
+    if (heading) pendingHeadingRef.current = { fileId: targetFileId, heading }
+    onSelectFile(targetFileId)
+  }, [onSelectFile])
+
+  const handleEditingLinkClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    if (!file || event.button !== 0 || event.altKey) return
+    const eventElement = event.target instanceof Element ? event.target : null
+    const decorated = eventElement?.closest<HTMLElement>('[data-wiki-link]')
+    const root = eventElement?.closest<HTMLElement>('[contenteditable="true"]') ?? null
+    if (!root || !editorRef.current?.contains(root)) return
+    const decoratedRaw = decorated?.getAttribute('data-wiki-link-raw') ?? ''
+    const link = decoratedRaw ? parseWikiLinks(decoratedRaw)[0] : (event.ctrlKey || event.metaKey
+      ? editingWikiLinkAtPoint(root, event.clientX, event.clientY)
+      : undefined)
+    if (!link) return
+    event.preventDefault()
+    event.stopPropagation()
+    const currentMarkdown = vditorRef.current?.vditor?.lute ? vditorRef.current.getValue() : file.content
+    const resolved = resolveEditingWikiLink(link, { ...file, content: currentMarkdown }, files, linkBindings)
+    if (resolved.status !== 'resolved' || !resolved.targetFileId) {
+      message.info(resolved.status === 'ambiguous'
+        ? '此处有同名或不同绑定的笔记，请使用完整目录路径，或在阅读模式打开'
+        : '未找到对应笔记，请检查名称或路径，目标也可能已被删除')
+      return
+    }
+    if (resolved.headingText) {
+      pendingHeadingRef.current = { fileId: resolved.targetFileId, heading: resolved.headingText }
+      setReading(true)
+    }
+    onSelectFile(resolved.targetFileId)
+  }, [file, files, linkBindings, onSelectFile])
+
+  const commitWikiLink = useCallback((targetFileId: string) => {
+    const picker = wikiLinkPickerRef.current
+    const range = wikiLinkRangeRef.current
+    const editor = vditorRef.current
+    const target = filesRef.current.find(candidate => candidate.id === targetFileId && candidate.type === 'file')
+    if (!picker || !range || !editor?.vditor?.lute || !target || range.startContainer.nodeType !== Node.TEXT_NODE) return
+    const targetName = target.name.replace(/\.md$/i, '')
+    const sameNameCount = filesRef.current.filter(candidate => candidate.type === 'file' && candidate.name.replace(/\.md$/i, '') === targetName).length
+    const targetText = sameNameCount > 1 ? getWikiFilePath(target, filesRef.current) : targetName
+    const startOffset = range.startOffset - picker.query.length - 2
+    if (startOffset < 0 || !range.startContainer.isConnected) {
+      updateWikiLinkPicker(null)
+      return
+    }
+    const selection = window.getSelection()
+    range.setStart(range.startContainer, startOffset)
+    range.deleteContents()
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    editor.insertValue(`[[${targetText}]]`, true)
+    updateWikiLinkPicker(null)
+    requestAnimationFrame(() => {
+      if (!file || !editor.vditor?.lute) return
+      const content = editor.getValue()
+      if (content !== latestContentRef.current) {
+        latestContentRef.current = content
+        onContentChange(file.id, content)
+      }
+    })
+  }, [file, onContentChange, updateWikiLinkPicker])
 
   const toggleReading = () => {
     const editor = vditorRef.current
@@ -495,6 +426,8 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
     const captureInput = () => {
       const current = vd.vditor?.[vd.getCurrentMode()]
       if (!disposed && vd.vditor?.lute && current && !current.composingLock) captureContent(vd.getValue())
+      scheduleWikiLinkPicker()
+      scheduleWikiLinkDecoration()
     }
     const editorHost = editorRef.current
     const captureMode = () => {
@@ -506,6 +439,41 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
       // Capture after Vditor's handler, before React can replay older props.
       captureInput()
     }
+    const captureWikiPickerKeys = (event: KeyboardEvent) => {
+      const picker = wikiLinkPickerRef.current
+      if (!picker || event.isComposing) return
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        updateWikiLinkPicker(null)
+        return
+      }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if (picker.candidateIds.length === 0) return
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+        const direction = event.key === 'ArrowDown' ? 1 : -1
+        const next = {
+          ...picker,
+          selectedIndex: (picker.selectedIndex + direction + picker.candidateIds.length) % picker.candidateIds.length,
+        }
+        wikiLinkPickerRef.current = next
+        setWikiLinkPicker(next)
+        return
+      }
+      if (event.key === 'Enter' && picker.candidateIds[picker.selectedIndex]) {
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+        commitWikiLink(picker.candidateIds[picker.selectedIndex])
+      }
+    }
+    const captureWikiPickerKeyUp = (event: KeyboardEvent) => {
+      if (wikiLinkPickerRef.current && ['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(event.key)) return
+      scheduleWikiLinkPicker()
+    }
+    const captureSelection = () => { if (wikiLinkPickerRef.current) scheduleWikiLinkPicker() }
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const vd = new Vditor(editorRef.current, {
       mode: editingModeRef.current, value: file.content ?? '', height: '100%',
@@ -518,8 +486,8 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
       preview: {
         mode: 'editor',
         theme: { current: isDark ? 'dark' : 'light' },
-        hljs: { style: isDark ? 'native' : 'github', lineNumber: true },
-        markdown: { codeBlockPreview: false, mathBlockPreview: false },
+        hljs: { style: isDark ? 'native' : 'github', lineNumber: false },
+        markdown: { codeBlockPreview: true, mathBlockPreview: false },
       },
       input: captureContent,
       after: () => {
@@ -529,10 +497,14 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
           editor.setValue(latestContentRef.current, true)
         }
         if (editor?.vditor.ir?.element) removeInteractions = installMarkdownInteractions(editor, captureContent)
+        scheduleWikiLinkDecoration()
         // Vditor 的 input 回调有延迟；及时记录输入，避免快速切换时遗漏最后一次编辑。
         editorHost.addEventListener('input', captureInput)
         editorHost.addEventListener('compositionend', captureInput)
         editorHost.addEventListener('keydown', captureMode)
+        editorHost.addEventListener('keydown', captureWikiPickerKeys, true)
+        editorHost.addEventListener('keyup', captureWikiPickerKeyUp)
+        document.addEventListener('selectionchange', captureSelection)
       },
     })
     vditorRef.current = vd
@@ -545,12 +517,20 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
         editorHost.removeEventListener('input', captureInput)
         editorHost.removeEventListener('compositionend', captureInput)
         editorHost.removeEventListener('keydown', captureMode)
+        editorHost.removeEventListener('keydown', captureWikiPickerKeys, true)
+        editorHost.removeEventListener('keyup', captureWikiPickerKeyUp)
+        document.removeEventListener('selectionchange', captureSelection)
         clearTimeout(vd.vditor.ir?.processTimeoutId)
         clearTimeout(vd.vditor.sv?.processTimeoutId)
         vd.destroy()
       }
       vditorRef.current = null
+      updateWikiLinkPicker(null)
+      if (pickerFrameRef.current !== null) cancelAnimationFrame(pickerFrameRef.current)
+      if (wikiDecorationFrameRef.current !== null) cancelAnimationFrame(wikiDecorationFrameRef.current)
     }
+  // Vditor is an imperative editor instance: recreate only when the active file changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file?.id])
 
   useEffect(() => {
@@ -560,6 +540,17 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
       editor.setValue(fileContent, true)
     }
   }, [fileId, fileContent, onContentChange])
+
+  useEffect(() => { scheduleWikiLinkDecoration() }, [files, linkBindings, scheduleWikiLinkDecoration])
+
+  useEffect(() => {
+    if (!wikiLinkPicker) return
+    const frame = requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('[data-testid="wiki-link-picker"] [role="option"][aria-selected="true"]')
+        ?.scrollIntoView({ block: 'nearest' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [wikiLinkPicker])
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -571,13 +562,97 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
     return () => observer.disconnect()
   }, [])
 
+  const handleTableWheel = useCallback((event: WheelEvent) => {
+    const target = event.target instanceof Element ? event.target : null
+    const scrollArea = target?.closest<HTMLElement>('.path-table-scroll')
+      ?? target?.closest<HTMLElement>('table')
+    if (!scrollArea) return
+
+    const horizontalDelta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY
+    if (horizontalDelta && scrollArea.scrollWidth > scrollArea.clientWidth) {
+      const previousLeft = scrollArea.scrollLeft
+      scrollArea.scrollLeft += horizontalDelta
+      if (scrollArea.scrollLeft !== previousLeft) {
+        event.preventDefault()
+        event.stopPropagation()
+        return
+      }
+    }
+
+    if (!event.deltaY) return
+
+    let verticalScroller: HTMLElement | null = scrollArea.parentElement
+    while (verticalScroller) {
+      const { overflowY } = getComputedStyle(verticalScroller)
+      if (/auto|scroll|overlay/.test(overflowY) && verticalScroller.scrollHeight > verticalScroller.clientHeight) {
+        const previousTop = verticalScroller.scrollTop
+        verticalScroller.scrollTop += event.deltaY
+        if (verticalScroller.scrollTop !== previousTop) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        return
+      }
+      verticalScroller = verticalScroller.parentElement
+    }
+  }, [])
+
+  useEffect(() => {
+    const hosts = [editorRef.current, readingViewRef.current].filter((host): host is HTMLDivElement => Boolean(host))
+    hosts.forEach(host => host.addEventListener('wheel', handleTableWheel, { passive: false }))
+    return () => hosts.forEach(host => host.removeEventListener('wheel', handleTableWheel))
+  }, [handleTableWheel, reading])
+
   return (
     <>
       <DocumentToolbar file={file} files={files} showGraph={showGraph} reading={reading} sourceMode={sourceMode} canCancelFormat={canCancelFormat} canInsertAfter={canInsertAfter} onPrepareEditorActions={prepareEditorActions} onEditorAction={handleEditorAction} canGoBack={canGoBack} canGoForward={canGoForward} onNavBack={onNavBack} onNavForward={onNavForward} onToggleReading={toggleReading} />
-      {showGraph && (
-        <div className={styles.editor}>
+      {wikiLinkPicker && !reading && !showGraph && (
+        <div
+          className={styles.wikiLinkPicker}
+          style={{ left: wikiLinkPicker.left, top: wikiLinkPicker.top }}
+          role="listbox"
+          aria-label="内部链接候选"
+          aria-activedescendant={wikiLinkPicker.candidateIds[wikiLinkPicker.selectedIndex]
+            ? `wiki-link-option-${wikiLinkPicker.candidateIds[wikiLinkPicker.selectedIndex]}`
+            : undefined}
+          data-testid="wiki-link-picker"
+        >
+          {wikiLinkPicker.candidateIds.length === 0 ? (
+            <div className={styles.wikiLinkEmpty}>未找到文件；保存不会自动新建页面</div>
+          ) : wikiLinkPicker.candidateIds.map((candidateId, index) => {
+            const candidate = files.find(item => item.id === candidateId)
+            if (!candidate) return null
+            const path = getWikiFilePath(candidate, files)
+            return (
+              <button
+                type="button"
+                key={candidate.id}
+                id={`wiki-link-option-${candidate.id}`}
+                role="option"
+                data-wiki-link-candidate-id={candidate.id}
+                aria-selected={index === wikiLinkPicker.selectedIndex}
+                className={index === wikiLinkPicker.selectedIndex ? styles.wikiLinkCandidateActive : ''}
+                onMouseDown={event => {
+                  event.preventDefault()
+                  commitWikiLink(candidate.id)
+                }}
+                onMouseEnter={() => {
+                  const next = { ...wikiLinkPicker, selectedIndex: index }
+                  wikiLinkPickerRef.current = next
+                  setWikiLinkPicker(next)
+                }}
+              >
+                <strong>{candidate.name}</strong>
+                <span>{path}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+      {graphOpen && (
+        <div className={styles.editor} style={{ display: showGraph ? 'flex' : 'none' }}>
           <div className={styles.editorContent}>
-            <GraphView files={files} onSelectFile={onSelectFile} />
+            <KnowledgeGraph files={files} linkBindings={linkBindings} positionCache={graphPositionCacheRef.current} onSelectFile={onSelectFile} />
           </div>
         </div>
       )}
@@ -592,15 +667,15 @@ const EditorArea: React.FC<Props> = ({ file, files, showGraph, onContentChange, 
         ) : (
           <div className={styles.editor}>
             {reading && (
-              <div className={styles.readingView} data-testid="path-reading-view">
+              <div ref={attachReadingView} className={styles.readingView} data-testid="path-reading-view" onClickCapture={handleReadingLinkClick}>
                 <h1 className={styles.readingTitle}>{file.name}</h1>
-                <Viewer value={file.content ?? ''} plugins={markdownPlugins} />
+                <Viewer value={readingMarkdown} plugins={pathReadingPlugins} />
               </div>
             )}
             <div className={styles.editingView} style={{ display: reading ? 'none' : 'flex' }}>
-              <InlineTitle file={file} onRename={onRenameFile} onConfirm={() => vditorRef.current?.focus()} />
+              <InlineTitle key={`${file.id}:${file.name}`} file={file} onRename={onRenameFile} onConfirm={() => vditorRef.current?.focus()} />
               <div className={styles.editorContent}>
-                <div ref={editorRef} className={styles.vditorContainer} />
+                <div ref={editorRef} className={styles.vditorContainer} onClickCapture={handleEditingLinkClick} />
               </div>
             </div>
           </div>
