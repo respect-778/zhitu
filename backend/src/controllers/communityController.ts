@@ -1218,7 +1218,10 @@ export class CommunityController {
       const pageSize = parseInt(req.query.pageSize as string) || 10;
       const folderId = req.query.folder_id ? parseInt(req.query.folder_id as string) : undefined;
       const keyword = (req.query.keyword as string) || '';
-      const sort = (req.query.sort as string) === 'oldest' ? 'oldest' : 'newest';
+      const requestedSort = req.query.sort as string;
+      const sort = requestedSort === 'oldest' || requestedSort === 'most_read'
+        ? requestedSort
+        : 'newest';
       const date = (req.query.date as string) || undefined;
 
       const { list, total } = await ReadingHistoryModel.findPage(userId, { page, pageSize, folderId, keyword: keyword || undefined, sort, date });

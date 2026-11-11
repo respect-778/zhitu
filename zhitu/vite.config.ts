@@ -13,10 +13,12 @@ export default defineConfig({
   },
 
   server: {
+    port: 5174,
+    strictPort: true,
     // 配置代理
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'http://localhost:4100',
         // 是否开启代理
         changeOrigin: true,
         // 路径重写，去掉 /api 前缀

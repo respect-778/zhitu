@@ -184,9 +184,9 @@ with sync_playwright() as playwright:
                 expect(page.get_by_text("知识图谱", exact=True)).to_have_count(2)
 
                 page.get_by_role("button", name="搜索").click()
-                expect(page.get_by_placeholder("搜索笔记内容...")).to_be_visible()
+                expect(page.get_by_role("combobox", name="搜索笔记")).to_be_visible()
                 expect(page.get_by_text("知识图谱", exact=True)).to_have_count(2)
-                page.get_by_placeholder("搜索笔记内容...").fill("图谱切换后的正文")
+                page.get_by_role("combobox", name="搜索笔记").fill("图谱切换后的正文")
                 page.get_by_test_id("path-sidebar").get_by_text("图谱切换后的正文", exact=True).last.click()
                 editor = page.locator('.vditor-ir [contenteditable="true"]')
                 expect(editor).to_be_visible(timeout=30000)

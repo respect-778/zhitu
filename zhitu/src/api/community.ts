@@ -1,4 +1,4 @@
-import type { IContent } from "@/types/community";
+import type { IArticleListResponse, IContent } from "@/types/community";
 import httpInstance from "@/utils/http";
 
 export interface UploadImageResponse {
@@ -195,7 +195,7 @@ export const renameFolderAPI = (id: number, name: string) => {
 
 // 阅读历史相关
 // 获取阅读历史
-export const getReadingHistoryAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: string; date?: string }) => {
+export const getReadingHistoryAPI = (params: { page: number; pageSize: number; folder_id?: number; keyword?: string; sort?: 'newest' | 'oldest' | 'most_read'; date?: string }): Promise<IArticleListResponse> => {
   return httpInstance({ url: '/community/history', method: 'get', params })
 }
 

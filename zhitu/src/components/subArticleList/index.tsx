@@ -3,7 +3,9 @@ import { SearchOutlined, FolderOutlined, PlusOutlined, BookOutlined, SortAscendi
 import { message, Popconfirm, Modal, Select, DatePicker } from 'antd'
 import { createFolderAPI, deleteFolderAPI, getFoldersAPI } from '@/api/community'
 import { formatDateTime } from '@/utils/formatDateTime'
+import { resolveMediaUrl } from '@/utils/resolveMediaUrl'
 import styles from './index.module.less'
+import ContentSkeleton from '@/components/ContentSkeleton'
 import type { IArticleItem, IFolder } from '@/types/community'
 import locale from 'antd/locale/zh_CN';
 import 'dayjs/locale/zh-cn';
@@ -13,6 +15,9 @@ interface SubArticleListProps {
   headerDesc?: string
   title: string
   count: number
+  loading?: boolean
+  error?: boolean
+  onRetry?: () => void
   folderType: 'collection' | 'history'
   searchPlaceholder?: string
   emptyIcon?: React.ReactNode
@@ -39,6 +44,9 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
   headerDesc,
   title,
   count,
+  loading = false,
+  error = false,
+  onRetry,
   folderType,
   searchPlaceholder = '搜索文章...',
   emptyIcon,
@@ -186,7 +194,7 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
             onClick={() => handleSelectFolder(null)}
             style={{ cursor: 'pointer' }}
           >
-            {title} ({count})
+            {title} ({loading ? '…' : count})
           </div>
 
           {/* 文件夹 */}
@@ -311,13 +319,15 @@ const SubArticleList: React.FC<SubArticleListProps> = ({
 
           {/* 内容区域 */}
           <div className={styles.listArea}>
-            {list.length > 0 ? (
+            {loading ? <ContentSkeleton label={`正在加载${headerTitle}`} /> : error ? (
+              <div className={styles.empty} role="alert">加载失败，请重试<button className={styles.emptyBtn} onClick={onRetry}>重新加载</button></div>
+            ) : list.length > 0 ? (
               <div className={styles.cardList}>
                 {list.map(item => (
                   <div key={item.id} className={styles.card}>
                     <div className={styles.cardTop}>
                       {item.cover ? (
-                        <img src={item.cover} alt="封面" className={styles.cardCover} loading='lazy' decoding='async' />
+                        <img src={resolveMediaUrl(item.cover)} alt="封面" className={styles.cardCover} loading='lazy' decoding='async' />
                       ) : (
                         <img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} loading='lazy' decoding='async' />
                       )}

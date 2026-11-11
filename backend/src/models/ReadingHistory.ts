@@ -16,6 +16,8 @@ export interface HistoryRow extends RowDataPacket {
   avatar?: string;
 }
 
+export type ReadingHistorySort = 'newest' | 'oldest' | 'most_read';
+
 export class ReadingHistoryModel {
   private static tableChecked = false;
 
@@ -52,7 +54,7 @@ export class ReadingHistoryModel {
 
   static async findPage(
     userId: number,
-    options: { page: number; pageSize: number; folderId?: number; keyword?: string; sort?: 'newest' | 'oldest'; date?: string }
+    options: { page: number; pageSize: number; folderId?: number; keyword?: string; sort?: ReadingHistorySort; date?: string }
   ): Promise<{ list: HistoryRow[]; total: number }> {
     await ReadingHistoryModel.ensureTable();
 
@@ -81,7 +83,9 @@ export class ReadingHistoryModel {
     }
 
     const whereStr = whereClauses.join(' AND ');
-    const orderDir = sort === 'oldest' ? 'ASC' : 'DESC';
+    const orderBy = sort === 'most_read'
+      ? 'rh.read_count DESC, rh.last_read_at DESC'
+      : `rh.last_read_at ${sort === 'oldest' ? 'ASC' : 'DESC'}`;
 
     const countSql = `
       SELECT COUNT(*) as total
@@ -98,7 +102,7 @@ export class ReadingHistoryModel {
       LEFT JOIN posts p ON rh.post_id = p.id
       LEFT JOIN users u ON p.user_id = u.id
       WHERE ${whereStr}
-      ORDER BY rh.last_read_at ${orderDir}
+      ORDER BY ${orderBy}
       LIMIT ${validSize} OFFSET ${offset}
     `;
     const list = await query<HistoryRow[]>(listSql, params);

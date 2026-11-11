@@ -20,6 +20,18 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 
+-- 用户成长方向与内容偏好
+CREATE TABLE IF NOT EXISTS user_learning_preferences (
+    user_id INT PRIMARY KEY,
+    learning_direction VARCHAR(80) NOT NULL DEFAULT '' COMMENT '专业或发展方向',
+    learning_stage VARCHAR(30) NOT NULL DEFAULT '' COMMENT '当前阶段',
+    learning_goal VARCHAR(120) NOT NULL DEFAULT '' COMMENT '近期目标',
+    recommendation_keywords TEXT NOT NULL COMMENT '推荐关键词JSON数组',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_learning_preferences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户成长方向与内容偏好';
+
 -- OAuth 第三方账号绑定表
 CREATE TABLE IF NOT EXISTS oauth_accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,

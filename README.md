@@ -138,11 +138,11 @@ npm --prefix zhitu run dev
 
 默认访问地址：
 
-- 前端：<http://localhost:5173>
-- 后端：<http://localhost:4000>
-- 健康检查：<http://localhost:4000/health>
+- 前端：<http://localhost:5174>
+- 后端：<http://localhost:4100>
+- 健康检查：<http://localhost:4100/health>
 
-前端通过 `/api` 访问后端；开发环境由 Vite 代理到 `4000` 端口并移除 `/api` 前缀。
+前端通过 `/api` 访问后端；开发环境由 Vite 代理到 `4100` 端口并移除 `/api` 前缀。
 
 ## 构建与测试
 

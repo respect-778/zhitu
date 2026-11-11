@@ -12,7 +12,7 @@ import {
   getGoogleUser
 } from '../utils/oauthProviders';
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174';
 const STATE_COOKIE = 'oauth_state';
 const STATE_MAX_AGE = 5 * 60 * 1000;
 

@@ -1,5 +1,6 @@
 # Architecture
 
+- 本地前端开发固定使用 Vite 5174（strictPort），代理仍指向后端 4100；后端 CORS_ORIGIN/FRONTEND_URL 本地默认均为 http://localhost:5174，生产可用环境变量覆盖。
 - 前端入口：`src/main.tsx`，React + React Router，Redux Toolkit，Ant Design 6。
 - 主题选择：`src/store/modules/themeStore.ts`；`src/hooks/useTheme.ts` 解析明亮、暗黑和跟随系统。
 - `src/components/AppThemeProvider/index.tsx` 位于 Redux Provider 内、路由外，统一 Ant Design 算法、HTML `data-theme` 和本地持久化。

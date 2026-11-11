@@ -3,7 +3,8 @@ import axios from 'axios'
 import { delStore, getStore } from './store'
 import { refreshAccessTokenByFetch } from '@/api/token'
 
-const BASE_URL = import.meta.env.VITE_BASE_URL
+// 本地环境变量缺失时仍走 Vite 的后端代理，避免把 API 请求误发给前端路由。
+const BASE_URL = import.meta.env.VITE_BASE_URL || '/api'
 
 const httpInstance = axios.create({
   baseURL: BASE_URL,

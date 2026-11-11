@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { message } from 'antd';
 import SubArticleList from '@/components/subArticleList';
 import type { IArticleItem } from '@/types/community';
@@ -12,12 +12,18 @@ interface MyCollectionProps {
 const MyCollection = ({ onExploreClick }: MyCollectionProps) => {
   const [list, setList] = useState<IArticleItem[]>([]);
   const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const requestId = useRef(0);
   const [activeFolderId, setActiveFolderId] = useState<number | null>(null);
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState<'newest' | 'oldest'>('newest');
   const [date, setDate] = useState<string | null>(null);
 
   const fetchList = useCallback(async () => {
+    const current = ++requestId.current;
+    setLoading(true);
+    setError(false);
     try {
       const res: any = await getCollectionListAPI({
         page: 1,
@@ -27,14 +33,22 @@ const MyCollection = ({ onExploreClick }: MyCollectionProps) => {
         sort,
         date: date || undefined,
       });
+      if (current !== requestId.current) return;
       if (res?.data) {
         setList(res.data.list || []);
         setCount(res.data.count || 0);
       }
-    } catch { /* ignore */ }
+    } catch {
+      if (current === requestId.current) setError(true);
+    } finally {
+      if (current === requestId.current) setLoading(false);
+    }
   }, [activeFolderId, keyword, sort, date]);
 
-  useEffect(() => { fetchList(); }, [fetchList]);
+  useEffect(() => {
+    fetchList();
+    return () => { requestId.current += 1; };
+  }, [fetchList]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -77,6 +91,9 @@ const MyCollection = ({ onExploreClick }: MyCollectionProps) => {
         emptyDesc="在阅读文章时点击收藏按钮，好内容不会错过"
         onEmptyBtnClick={onExploreClick}
         list={list}
+        loading={loading}
+        error={error}
+        onRetry={fetchList}
         onSearch={setKeyword}
         onFolderChange={setActiveFolderId}
         onSortChange={setSort}

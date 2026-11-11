@@ -10,7 +10,7 @@ const PAGE_SIZE = 10;
 
 const WeeklyDigest = () => {
   const [list, setList] = useState<IWeeklyItem[]>([]); // 精选周刊列表
-  const [loading, setLoading] = useState(false); // 加载状态
+  const [loading, setLoading] = useState(true); // 首帧即显示加载状态
   const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: PAGE_SIZE, total: 0 }); // 分页参数
 
   // 获取精选周刊

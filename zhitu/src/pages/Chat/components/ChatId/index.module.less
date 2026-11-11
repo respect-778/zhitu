@@ -31,6 +31,9 @@
   }
 
   .chatConversation {
+    // 共用消息列边界，避免气泡用固定右边距与回复错位。
+    --message-width: calc(59.6% + 32px);
+    --message-left: min(280px, calc(100% - var(--message-width) - 16px));
     width: 100%;
     flex: 1;
     display: flex;
@@ -39,7 +42,9 @@
 
     .userQuestion {
       align-self: flex-end;
-      max-width: 59.6%;
+      box-sizing: border-box;
+      min-width: 0;
+      max-width: var(--message-width);
       background: var(--primary-color);
       color: #ffffff;
       padding: 10px 16px;
@@ -49,17 +54,18 @@
       line-height: 1.5;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin: 20px 0px;
-      margin-right: 260px;
+      margin-right: calc(100% - var(--message-left) - var(--message-width));
     }
 
     .aiReply {
       align-self: flex-start;
-      max-width: 59.6%;
+      box-sizing: border-box;
+      max-width: var(--message-width);
       color: #1d1d1f;
       padding: 10px 16px;
       word-wrap: break-word;
       line-height: 1.5;
-      margin-left: 280px;
+      margin-left: var(--message-left);
     }
 
     // 流式生成内容样式

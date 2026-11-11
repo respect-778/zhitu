@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined, FormOutlined, LeftOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import { Input, Select, DatePicker, message, Modal, Button, Space, Alert, Typography } from 'antd'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { EditOutlined, MailOutlined, SettingOutlined, UserOutlined, PhoneOutlined, ManOutlined, WomanOutlined, CalendarOutlined, BookOutlined, CheckOutlined, CloseOutlined, CameraOutlined, KeyOutlined, FormOutlined, LeftOutlined, FolderOpenOutlined, AimOutlined, TagsOutlined } from '@ant-design/icons'
+import { Input, Select, DatePicker, message, Modal, Button, Space, Alert, Typography, Tag } from 'antd'
 import styles from './index.module.less'
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 import { getUserInfo } from '@/store/modules/userStore'
-import { updateUserInfoAPI } from '@/api/user'
+import { generateLearningKeywordsAPI, getLearningPreferencesAPI, updateLearningPreferencesAPI, updateUserInfoAPI } from '@/api/user'
+import type { ILearningPreferences } from '@/types/user'
 import { useSingleImageUpload } from '@/hooks/useSingleImageUpload'
 import dayjs from 'dayjs'
 import Config from '@/pages/Chat/components/Config'
@@ -17,6 +18,16 @@ import { loadPathWorkspace } from '@/store/modules/pathStore'
 import { personalDirectory } from '@/utils/personalDirectory'
 import { backupRootSegments } from '@/utils/personalDirectoryPlan'
 
+const { TextArea } = Input
+const MAX_KEYWORDS = 20
+
+const EMPTY_PREFERENCES: ILearningPreferences = {
+  direction: '',
+  stage: '',
+  goal: '',
+  keywords: [],
+}
+
 const directoryPhaseLabels = {
   unconfigured: '尚未选择目录', checking: '正在恢复目录授权', permission: '目录需要重新授权',
   pending: '等待保存本地副本', writing: '正在保存本地副本', saved: '本地副本已保存',
@@ -26,8 +37,10 @@ const directoryPhaseLabels = {
 // 标签页列表
 const tabList = [
   { key: 'account', tab: '账户与身份', icon: <UserOutlined /> },
+  { key: 'growth-direction', tab: '成长方向', icon: <AimOutlined /> },
+  { key: 'content-preference', tab: '内容偏好', icon: <TagsOutlined /> },
   { key: 'personal-key', tab: '个人密钥', icon: <KeyOutlined /> },
-  { key: 'personal-directory', tab: '路径配置', icon: <FolderOpenOutlined /> }
+  { key: 'personal-directory', tab: '路径配置', icon: <FolderOpenOutlined /> },
 ]
 
 // 性别映射
@@ -46,6 +59,27 @@ const degreeOptions = [
   { label: '硕士', value: '硕士' },
   { label: '博士', value: '博士' },
 ]
+
+const stageOptions = [
+  { label: '探索方向', value: '探索方向' },
+  { label: '学习基础', value: '学习基础' },
+  { label: '课程学习', value: '课程学习' },
+  { label: '项目实践', value: '项目实践' },
+  { label: '准备实习', value: '准备实习' },
+  { label: '准备求职', value: '准备求职' },
+]
+
+const normalizeKeywords = (values: string[]): string[] => {
+  const seen = new Set<string>()
+  return values
+    .map(value => Array.from(value.trim()).slice(0, 24).join(''))
+    .filter(value => {
+      const key = value.toLocaleLowerCase()
+      if (!value || seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+}
 
 // 模型提供商
 const aiProviders: IProvider[] = [
@@ -157,6 +191,13 @@ const Setting = ({ className }: { className?: string }) => {
   const [apiKey, setApiKey] = useState('') // API Key
   const [configuredAI, setConfiguredAI] = useState('') // 当前配置好的AI
   const [configLoading, setConfigLoading] = useState(false) // 配置API Key加载状态
+  const [growthDraft, setGrowthDraft] = useState<ILearningPreferences>(EMPTY_PREFERENCES)
+  const [keywordDraft, setKeywordDraft] = useState<string[]>([])
+  const [keywordSuggestions, setKeywordSuggestions] = useState<string[]>([])
+  const [generatingKeywords, setGeneratingKeywords] = useState(false)
+  const learningPreferencesLoadedRef = useRef(false)
+  const lastSavedPreferencesRef = useRef('')
+  const preferenceSaveQueueRef = useRef<Promise<void>>(Promise.resolve())
 
   // 表单数据
   const [form, setForm] = useState({
@@ -167,6 +208,92 @@ const Setting = ({ className }: { className?: string }) => {
     degree: userInfo.data.degree,
     bio: userInfo.data.bio || '',
   })
+
+  useEffect(() => {
+    void getLearningPreferencesAPI()
+      .then(res => {
+        const loadedPreferences = res.data || EMPTY_PREFERENCES
+        lastSavedPreferencesRef.current = JSON.stringify(loadedPreferences)
+        setGrowthDraft({ ...loadedPreferences, keywords: [...loadedPreferences.keywords] })
+        setKeywordDraft([...loadedPreferences.keywords])
+        learningPreferencesLoadedRef.current = true
+      })
+      .catch(() => message.error('成长方向加载失败'))
+  }, [])
+
+  useEffect(() => {
+    if (!learningPreferencesLoadedRef.current) return
+
+    const nextPreferences: ILearningPreferences = {
+      direction: growthDraft.direction,
+      stage: growthDraft.stage,
+      goal: growthDraft.goal,
+      keywords: keywordDraft,
+    }
+    const serializedPreferences = JSON.stringify(nextPreferences)
+    if (serializedPreferences === lastSavedPreferencesRef.current) return
+
+    const timer = window.setTimeout(() => {
+      preferenceSaveQueueRef.current = preferenceSaveQueueRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          await updateLearningPreferencesAPI(nextPreferences)
+          lastSavedPreferencesRef.current = serializedPreferences
+        })
+        .catch(() => {
+          message.error('自动保存失败，请稍后重试')
+        })
+    }, 700)
+
+    return () => window.clearTimeout(timer)
+  }, [growthDraft.direction, growthDraft.stage, growthDraft.goal, keywordDraft])
+
+  const canGenerateKeywords = Boolean(growthDraft.direction || growthDraft.stage || growthDraft.goal)
+  const selectedSuggestionKeys = useMemo(
+    () => new Set(keywordDraft.map(item => item.toLocaleLowerCase())),
+    [keywordDraft],
+  )
+
+  const updateKeywordDraft = (values: string[]) => {
+    const normalized = normalizeKeywords(values)
+    if (normalized.length > MAX_KEYWORDS) message.warning(`最多使用 ${MAX_KEYWORDS} 个关键词`)
+    setKeywordDraft(normalized.slice(0, MAX_KEYWORDS))
+  }
+
+  const handleGenerateKeywords = async () => {
+    if (!canGenerateKeywords) return
+    setGeneratingKeywords(true)
+    try {
+      const res = await generateLearningKeywordsAPI({
+        direction: growthDraft.direction,
+        stage: growthDraft.stage,
+        goal: growthDraft.goal,
+      })
+      setKeywordSuggestions(res.data || [])
+    } catch {
+      message.error('关键词生成暂不可用，请稍后重试')
+    } finally {
+      setGeneratingKeywords(false)
+    }
+  }
+
+  const toggleKeywordSuggestion = (keyword: string, checked: boolean) => {
+    if (checked) {
+      if (keywordDraft.length >= MAX_KEYWORDS) {
+        message.warning(`最多使用 ${MAX_KEYWORDS} 个关键词`)
+        return
+      }
+      updateKeywordDraft([...keywordDraft, keyword])
+      return
+    }
+    setKeywordDraft(keywordDraft.filter(item => item.toLocaleLowerCase() !== keyword.toLocaleLowerCase()))
+  }
+
+  const useAllKeywordSuggestions = () => {
+    const next = normalizeKeywords([...keywordDraft, ...keywordSuggestions])
+    if (next.length > MAX_KEYWORDS) message.warning(`最多使用 ${MAX_KEYWORDS} 个关键词`)
+    setKeywordDraft(next.slice(0, MAX_KEYWORDS))
+  }
 
   // 图片上传 hook
   const { imgUrl, setImgUrl, handleSingleImg } = useSingleImageUpload()
@@ -463,6 +590,115 @@ const Setting = ({ className }: { className?: string }) => {
                     }
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className={styles.line}></div>
+
+            {/* 成长方向区域 */}
+            <div id="growth-direction" className={styles.title} style={{ fontSize: '15px' }}>
+              <div><AimOutlined /></div>
+              <div>成长方向</div>
+            </div>
+            <div className={styles.contentContainer}>
+              <div className={styles.accountTop}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <div className={styles.contentTitle}>成长方向</div>
+                  <div className={styles.contentSubtitle}>记录专业方向、当前阶段和近期目标（选填，修改后自动保存）</div>
+                </div>
+              </div>
+
+              <div className={styles.growthForm}>
+                <label>
+                  <span>专业或发展方向</span>
+                  <Input
+                    value={growthDraft.direction}
+                    maxLength={80}
+                    placeholder="如：软件工程、前端开发"
+                    onChange={event => setGrowthDraft({ ...growthDraft, direction: event.target.value })}
+                  />
+                </label>
+                <label>
+                  <span>当前阶段</span>
+                  <Select
+                    allowClear
+                    value={growthDraft.stage || undefined}
+                    placeholder="请选择当前阶段"
+                    options={stageOptions}
+                    onChange={value => setGrowthDraft({ ...growthDraft, stage: value || '' })}
+                  />
+                </label>
+                <label className={styles.goalField}>
+                  <span>近期目标</span>
+                  <TextArea
+                    value={growthDraft.goal}
+                    maxLength={50}
+                    autoSize={{ minRows: 2, maxRows: 3 }}
+                    placeholder="用一句话描述近期想完成的事情"
+                    onChange={event => setGrowthDraft({ ...growthDraft, goal: event.target.value })}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className={styles.line}></div>
+
+            {/* 内容偏好区域 */}
+            <div id="content-preference" className={styles.title} style={{ fontSize: '15px' }}>
+              <div><TagsOutlined /></div>
+              <div>内容偏好</div>
+            </div>
+            <div className={styles.contentContainer}>
+              <div className={styles.accountTop}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <div className={styles.contentTitle}>内容偏好</div>
+                  <div className={styles.contentSubtitle}>管理影响知识广场推荐的关键词，最多 {MAX_KEYWORDS} 个（选填，修改后自动保存）</div>
+                </div>
+              </div>
+
+              <div className={styles.keywordEditor}>
+                <Select
+                  mode="tags"
+                  className={styles.keywordSelect}
+                  open={false}
+                  suffixIcon={null}
+                  value={keywordDraft}
+                  tokenSeparators={[',', '，']}
+                  placeholder="输入关键词后按回车添加"
+                  options={[]}
+                  onChange={updateKeywordDraft}
+                />
+                <div className={styles.keywordActions}>
+                  <span>{keywordDraft.length}/{MAX_KEYWORDS}</span>
+                  <Button
+                    size="small"
+                    disabled={!canGenerateKeywords}
+                    loading={generatingKeywords}
+                    onClick={() => { void handleGenerateKeywords() }}
+                  >AI 生成</Button>
+                </div>
+                {keywordSuggestions.length > 0 && (
+                  <div className={styles.suggestionArea}>
+                    <div className={styles.suggestionHeader}>
+                      <span>AI 推荐关键词</span>
+                      <Space size={4}>
+                        <Button type="link" size="small" onClick={() => setKeywordSuggestions([])}>取消</Button>
+                        <Button type="link" size="small" onClick={useAllKeywordSuggestions}>全部使用</Button>
+                      </Space>
+                    </div>
+                    <div className={styles.suggestionTags}>
+                      {keywordSuggestions.map(keyword => (
+                        <Tag.CheckableTag
+                          key={keyword}
+                          checked={selectedSuggestionKeys.has(keyword.toLocaleLowerCase())}
+                          onChange={checked => toggleKeywordSuggestion(keyword, checked)}
+                        >
+                          {keyword}
+                        </Tag.CheckableTag>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

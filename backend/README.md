@@ -82,7 +82,7 @@ npm run build
 npm start
 ```
 
-使用本仓库 `.env.example` 时，服务运行在 `http://localhost:4000`，与前端开发代理一致；未设置 `PORT` 时源码回退到 `3000`。
+使用本仓库 `.env.example` 时，服务运行在 `http://localhost:4100`，与前端开发代理一致；未设置 `PORT` 时源码同样回退到 `4100`。
 
 ## API 示例
 

@@ -373,3 +373,101 @@
 
 .directoryChoose { min-width: 144px; }
 .directoryText { margin-bottom: 0; }
+
+.growthForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: var(--setting-lab-title-color);
+    font-size: 13px;
+  }
+
+  .goalField {
+    grid-column: 1 / -1;
+  }
+}
+
+.keywordEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.keywordSelect {
+  width: 100%;
+
+  :global(.ant-select-selector) {
+    height: auto !important;
+    min-height: 42px;
+    padding: 6px 8px !important;
+    align-items: flex-start !important;
+  }
+
+  :global(.ant-select-selection-wrap) {
+    align-self: stretch;
+  }
+
+  :global(.ant-select-selection-overflow) {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 6px;
+  }
+
+  :global(.ant-select-selection-search) {
+    min-width: 160px;
+  }
+
+  :global(.ant-select-selection-item) {
+    color: var(--text-color) !important;
+    background: rgba(62, 137, 205, 0.12) !important;
+    border-color: rgba(62, 137, 205, 0.28) !important;
+  }
+
+  :global(.ant-select-selection-item-remove) {
+    color: var(--text-secondary) !important;
+  }
+}
+
+.keywordActions,
+.suggestionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.suggestionArea {
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+}
+
+.suggestionHeader {
+  margin-bottom: 8px;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.suggestionTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 4px;
+}
+
+@media (max-width: 760px) {
+  .growthForm {
+    grid-template-columns: 1fr;
+
+    .goalField {
+      grid-column: auto;
+    }
+  }
+}

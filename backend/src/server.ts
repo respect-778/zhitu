@@ -14,8 +14,8 @@ import { ResumeWorkspaceModel } from './models/ResumeWorkspace';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
+const PORT = process.env.PORT || 4100;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5174';
 
 // 中间件配置
 app.use(

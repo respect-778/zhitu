@@ -3,6 +3,14 @@
   width: 100%;
 }
 
+@media (max-width: 640px) {
+  .wrapper .container { flex-direction: column; }
+  .wrapper .sidebar { width: 100%; min-width: 0; box-sizing: border-box; padding: 16px 0; }
+  .wrapper .toolbar { flex-wrap: wrap; padding: 12px 0; }
+  .wrapper .searchBox { flex-basis: 100%; min-width: 0; }
+  .wrapper .cardBottom { flex-wrap: wrap; gap: 12px; }
+}
+
 .header {
   display: flex;
   align-items: baseline;
