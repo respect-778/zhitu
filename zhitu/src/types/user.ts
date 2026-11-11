@@ -42,3 +42,20 @@ export interface IUserInfo {
   }
   token?: string // 双 token 模式一般不依赖 /user/info 返回 token
 }
+
+export interface ILearningPreferences {
+  direction: string
+  stage: string
+  goal: string
+  keywords: string[]
+}
+
+export interface ILearningPreferencesResponse {
+  message: string
+  data: ILearningPreferences
+}
+
+export interface IKeywordSuggestionsResponse {
+  message: string
+  data: string[]
+}

@@ -1,7 +1,9 @@
-import { ConfigProvider, Pagination, Skeleton } from 'antd';
+import { ConfigProvider, Pagination } from 'antd';
+import ContentSkeleton from '@/components/ContentSkeleton';
 import styles from './index.module.less';
 import { TagOutlined } from '@ant-design/icons';
 import { formatDateTime } from '@/utils/formatDateTime';
+import { resolveMediaUrl } from '@/utils/resolveMediaUrl';
 import zhCN from 'antd/lib/locale/zh_CN';
 
 interface ArticleListProps {
@@ -31,18 +33,19 @@ const ArticleList = ({ content, loading, activeTab, pageParams, searchValue, tit
         <div style={{ fontSize: '13px', color: '#8e9aa7' }}>{subTitle}</div>
       </div>
       <div style={{ borderBottom: '1px solid #b4b4bd80' }}></div>
-      {content.length !== 0 &&
+      {loading && <ContentSkeleton label={`正在加载${title}`} />}
+      {!loading && content.length !== 0 &&
         <div className={styles.feed}>
           {
             content.map(item => {
               return (
-                <Skeleton key={item.id} loading={loading} active avatar>
+                <div key={item.id}>
                   <div className={styles.cardSty}>
                     <div className={styles.content}>
                       <div onClick={() => handleDetail(item.id!)}>
                         <div className={styles.cardTop}>
                           {item.cover ?
-                            <div><img src={item.cover} loading="lazy" decoding="async" alt="封面" className={styles.cardCover} /></div>
+                            <div><img src={resolveMediaUrl(item.cover)} loading="lazy" decoding="async" alt="封面" className={styles.cardCover} /></div>
                             :
                             <div><img src={item.avatar || './imgs/admin.png'} alt="头像" className={styles.cardAvatar} /></div>
                           }
@@ -67,7 +70,7 @@ const ArticleList = ({ content, loading, activeTab, pageParams, searchValue, tit
                       </div>
                     </div>
                   </div>
-                </Skeleton>
+                </div>
               )
             })
           }
@@ -81,7 +84,7 @@ const ArticleList = ({ content, loading, activeTab, pageParams, searchValue, tit
         </div>
       }
 
-      {isEmpty ?
+      {!loading && isEmpty ?
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', width: '100%', height: '800px' }}>
           <div><img style={{ width: '300px' }} src="imgs/empty.png" alt="404" draggable="false" /></div>
           <div style={{ display: 'flex', fontSize: '18px' }}>抱歉没有找到相关的内容</div>

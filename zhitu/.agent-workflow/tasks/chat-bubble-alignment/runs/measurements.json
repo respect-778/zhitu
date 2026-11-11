@@ -1,0 +1,342 @@
+[
+  {
+    "viewport": 2543,
+    "users": [
+      {
+        "left": 1936.09375,
+        "right": 2000.09375,
+        "width": 64,
+        "height": 44,
+        "scrollWidth": 64,
+        "clientWidth": 64,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 1475.796875,
+        "right": 2000.09375,
+        "width": 524.296875,
+        "height": 44,
+        "scrollWidth": 524,
+        "clientWidth": 524,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 706.890625,
+        "right": 2000.09375,
+        "width": 1293.203125,
+        "height": 188,
+        "scrollWidth": 1293,
+        "clientWidth": 1293,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 1920.09375,
+        "right": 2000.09375,
+        "width": 80,
+        "height": 68,
+        "scrollWidth": 80,
+        "clientWidth": 80,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 706.890625,
+        "right": 2000.09375,
+        "width": 1293.203125,
+        "height": 116,
+        "scrollWidth": 1293,
+        "clientWidth": 1293,
+        "boxSizing": "border-box"
+      }
+    ],
+    "ai": {
+      "left": 706.875,
+      "right": 2000.078125,
+      "width": 1293.203125,
+      "height": 588.5625,
+      "scrollWidth": 1293,
+      "clientWidth": 1293,
+      "boxSizing": "border-box"
+    },
+    "conversation": {
+      "left": 426.875,
+      "right": 2543,
+      "width": 2116.125,
+      "height": 704,
+      "scrollWidth": 2116,
+      "clientWidth": 2116,
+      "boxSizing": "content-box"
+    }
+  },
+  {
+    "viewport": 1920,
+    "users": [
+      {
+        "left": 1524.515625,
+        "right": 1588.515625,
+        "width": 64,
+        "height": 44,
+        "scrollWidth": 64,
+        "clientWidth": 64,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 1064.21875,
+        "right": 1588.515625,
+        "width": 524.296875,
+        "height": 44,
+        "scrollWidth": 524,
+        "clientWidth": 524,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 607.203125,
+        "right": 1588.515625,
+        "width": 981.3125,
+        "height": 236,
+        "scrollWidth": 981,
+        "clientWidth": 981,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 1508.515625,
+        "right": 1588.515625,
+        "width": 80,
+        "height": 68,
+        "scrollWidth": 80,
+        "clientWidth": 80,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 607.203125,
+        "right": 1588.515625,
+        "width": 981.3125,
+        "height": 140,
+        "scrollWidth": 981,
+        "clientWidth": 981,
+        "boxSizing": "border-box"
+      }
+    ],
+    "ai": {
+      "left": 607.1875,
+      "right": 1588.5,
+      "width": 981.3125,
+      "height": 751.6875,
+      "scrollWidth": 981,
+      "clientWidth": 981,
+      "boxSizing": "border-box"
+    },
+    "conversation": {
+      "left": 327.1875,
+      "right": 1920,
+      "width": 1592.8125,
+      "height": 704,
+      "scrollWidth": 1593,
+      "clientWidth": 1593,
+      "boxSizing": "content-box"
+    }
+  },
+  {
+    "viewport": 1440,
+    "users": [
+      {
+        "left": 1207.40625,
+        "right": 1271.40625,
+        "width": 64,
+        "height": 44,
+        "scrollWidth": 64,
+        "clientWidth": 64,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 747.109375,
+        "right": 1271.40625,
+        "width": 524.296875,
+        "height": 44,
+        "scrollWidth": 524,
+        "clientWidth": 524,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 530.40625,
+        "right": 1271.40625,
+        "width": 741,
+        "height": 308,
+        "scrollWidth": 741,
+        "clientWidth": 741,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 1191.40625,
+        "right": 1271.40625,
+        "width": 80,
+        "height": 68,
+        "scrollWidth": 80,
+        "clientWidth": 80,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 530.40625,
+        "right": 1271.40625,
+        "width": 741,
+        "height": 188,
+        "scrollWidth": 741,
+        "clientWidth": 741,
+        "boxSizing": "border-box"
+      }
+    ],
+    "ai": {
+      "left": 530.390625,
+      "right": 1271.390625,
+      "width": 741,
+      "height": 996.375,
+      "scrollWidth": 741,
+      "clientWidth": 741,
+      "boxSizing": "border-box"
+    },
+    "conversation": {
+      "left": 250.390625,
+      "right": 1440,
+      "width": 1189.609375,
+      "height": 704,
+      "scrollWidth": 1190,
+      "clientWidth": 1190,
+      "boxSizing": "content-box"
+    }
+  },
+  {
+    "viewport": 768,
+    "users": [
+      {
+        "left": 688,
+        "right": 752,
+        "width": 64,
+        "height": 44,
+        "scrollWidth": 64,
+        "clientWidth": 64,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 347.4375,
+        "right": 752,
+        "width": 404.5625,
+        "height": 68,
+        "scrollWidth": 405,
+        "clientWidth": 405,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 347.4375,
+        "right": 752,
+        "width": 404.5625,
+        "height": 572,
+        "scrollWidth": 405,
+        "clientWidth": 405,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 672,
+        "right": 752,
+        "width": 80,
+        "height": 68,
+        "scrollWidth": 80,
+        "clientWidth": 80,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 347.4375,
+        "right": 752,
+        "width": 404.5625,
+        "height": 308,
+        "scrollWidth": 405,
+        "clientWidth": 405,
+        "boxSizing": "border-box"
+      }
+    ],
+    "ai": {
+      "left": 347.421875,
+      "right": 751.984375,
+      "width": 404.5625,
+      "height": 1812,
+      "scrollWidth": 405,
+      "clientWidth": 405,
+      "boxSizing": "border-box"
+    },
+    "conversation": {
+      "left": 142.875,
+      "right": 768,
+      "width": 625.125,
+      "height": 704,
+      "scrollWidth": 625,
+      "clientWidth": 625,
+      "boxSizing": "content-box"
+    }
+  },
+  {
+    "viewport": 390,
+    "users": [
+      {
+        "left": 310,
+        "right": 374,
+        "width": 64,
+        "height": 44,
+        "scrollWidth": 64,
+        "clientWidth": 64,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 158.671875,
+        "right": 374,
+        "width": 215.328125,
+        "height": 92,
+        "scrollWidth": 215,
+        "clientWidth": 215,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 158.671875,
+        "right": 374,
+        "width": 215.328125,
+        "height": 1148,
+        "scrollWidth": 215,
+        "clientWidth": 215,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 294,
+        "right": 374,
+        "width": 80,
+        "height": 68,
+        "scrollWidth": 80,
+        "clientWidth": 80,
+        "boxSizing": "border-box"
+      },
+      {
+        "left": 158.671875,
+        "right": 374,
+        "width": 215.328125,
+        "height": 620,
+        "scrollWidth": 215,
+        "clientWidth": 215,
+        "boxSizing": "border-box"
+      }
+    ],
+    "ai": {
+      "left": 158.65625,
+      "right": 373.984375,
+      "width": 215.328125,
+      "height": 3579.1875,
+      "scrollWidth": 215,
+      "clientWidth": 215,
+      "boxSizing": "border-box"
+    },
+    "conversation": {
+      "left": 82.390625,
+      "right": 390,
+      "width": 307.609375,
+      "height": 671,
+      "scrollWidth": 308,
+      "clientWidth": 308,
+      "boxSizing": "content-box"
+    }
+  }
+]

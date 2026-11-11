@@ -1,0 +1,25 @@
+.list { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.article, .person { padding: 20px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-color); }
+.main { display: flex; gap: 16px; }
+.lines { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.avatar, .title, .meta, .line, .short, .action {
+  display: block; background: var(--border-color); border-radius: 4px; animation: breathe 1.6s ease-in-out infinite;
+}
+.avatar { width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; }
+.title { width: 68%; height: 20px; }
+.meta { width: 32%; height: 12px; }
+.line { width: 100%; height: 14px; }
+.short { width: 80%; height: 14px; }
+.footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+.action { width: 72px; height: 24px; }
+.person { padding: 24px 16px 18px; }
+.person .main { flex-direction: column; align-items: center; }
+.person .avatar { width: 64px; height: 64px; }
+.person .lines { width: 100%; align-items: center; }
+.person .line, .person .short, .person .footer .meta { display: none; }
+.person .footer { justify-content: center; margin-top: 16px; }
+@keyframes breathe { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .avatar, .title, .meta, .line, .short, .action { animation: none; } }
+@media (max-width: 700px) { .people { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .people { grid-template-columns: 1fr; } }

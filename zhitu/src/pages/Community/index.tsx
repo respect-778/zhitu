@@ -25,7 +25,7 @@ const Community = () => {
     const pageNum = parseInt(search || '1') // 初始化 -> 如果获取到的 page 参数为空，就默认显示第一页
     return { pageNum, pageSize: 10, total: 0 }
   }) // 分页
-  const [loading, setLoading] = useState(false) // 帖子加载效果
+  const [loading, setLoading] = useState(true) // 首帧显示骨架屏
   const [isEmpty, setIsEmpty] = useState(false) // 这个 state 不是证明搜索框是否空，而是搜索的内容是否存在
 
 
@@ -171,14 +171,19 @@ const Community = () => {
   // 分页（也是推荐）
   const handlePageSize = async (page: number, pageSize: number, navType: string, keyword?: string) => {
     setLoading(true)
-    if (navType === 'recommend') {
-      const res = await searchCommunityAPI({ keyword, pageNum: page, pageSize })
-      tabPage(res.data, page, pageSize)
-    } else if (navType === 'new') {
-      const res = await getNewCommunityListAPI({ keyword, pageNum: page, pageSize })
-      tabPage(res.data, page, pageSize)
+    try {
+      if (navType === 'recommend') {
+        const res = await searchCommunityAPI({ keyword, pageNum: page, pageSize })
+        tabPage(res.data, page, pageSize)
+      } else if (navType === 'new') {
+        const res = await getNewCommunityListAPI({ keyword, pageNum: page, pageSize })
+        tabPage(res.data, page, pageSize)
+      }
+    } catch (error) {
+      console.error('加载文章列表失败:', error)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
 
     // setSearchParams 里会自动修改浏览器地址的查询字符串（内部自动使用了 ）
     setSearchParams(pre => { // 把当前选中的页数给到 searchParams

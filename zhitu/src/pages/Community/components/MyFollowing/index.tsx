@@ -5,12 +5,13 @@ import { getFollowingListAPI, followCommunityAPI } from '@/api/community'
 import type { IFollowingUser } from '@/types/community'
 import styles from './index.module.less'
 import { useNavigate } from 'react-router'
+import ContentSkeleton from '@/components/ContentSkeleton'
 
 const MyFollowing = () => {
   const navigate = useNavigate()
 
   const [list, setList] = useState<IFollowingUser[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // 获取关注列表
   const getFollowingList = useCallback(async () => {
@@ -56,11 +57,7 @@ const MyFollowing = () => {
       {/* 内容区 */}
       <div className={styles.content}>
         {loading ? (
-          <div className={styles.loadingWrap}>
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className={styles.skeletonCard} />
-            ))}
-          </div>
+          <ContentSkeleton people label="正在加载我的关注" />
         ) : list.length > 0 ? (
           <div className={styles.grid}>
             {list.map(user => (

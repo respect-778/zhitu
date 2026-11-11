@@ -92,6 +92,11 @@ export interface IUserProfile {
   isFollowed: boolean
 }
 
+export interface IUserProfileResponse {
+  message: string
+  data: IUserProfile
+}
+
 export interface IArticleItem {
   id: number
   post_id: number
@@ -103,4 +108,13 @@ export interface IArticleItem {
   last_read_at?: string
   created_at?: string
   read_count?: number
+}
+
+export interface IArticleListResponse {
+  message: string
+  data: {
+    list: IArticleItem[]
+    total: number
+    count: number
+  }
 }

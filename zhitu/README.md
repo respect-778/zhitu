@@ -268,7 +268,7 @@ DB_PASSWORD=xxx                     # 数据库密码
 DB_NAME=zhitu                       # 数据库名
 JWT_SECRET=xxx                      # JWT 密钥
 JWT_EXPIRES_IN=7d                   # JWT 过期时间
-CORS_ORIGIN=http://localhost:5173   # CORS 允许来源
+CORS_ORIGIN=http://localhost:5174   # CORS 允许来源
 GLM_MODEL_FAST=xxx                  # AI 模型 API Key
 ```
 
@@ -337,7 +337,7 @@ VITE_BASE_URL=/api    # API 基础路径（开发时代理到 localhost:3000）
 2. 初始化数据库（执行 `init.sql` 和 `seed.sql`）
 3. 启动后端服务：`cd backend && npm run dev`
 4. 启动前端开发服务器：`cd zhitu && npm run dev`
-5. 访问前端页面（默认 http://localhost:5173）
+5. 访问前端页面（默认 http://localhost:5174；端口占用时启动报错，不自动切换端口）
 
 ## 部署说明
 
