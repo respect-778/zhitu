@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+.next/
+.next-website/
+.turbo/
+out/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+*.log
+
+# Enterprise (commercial license) — kept out of the OSS repo.
+# Exception: packages/ee is the open-core seam STUB (inert defaults,
+# Apache-2.0) — tracked in OSS; downstream distributions replace its contents.
+ee/
+!packages/ee/
+
+# Product spec / internal design docs (kept local, not published)
+site/
+
+# Local agent instructions — never publish
+CLAUDE.md
+
+# Supabase CLI local state (project ref, pooler URL)
+supabase/.temp/
+
+# Avatar media is never committed (docs/AVATARS.md): local-dev drop-in only;
+# accepted packs are published as GitHub Release artifacts + CDN.
+apps/web/public/avatars/
+
+# Local trace store (WP-12): `deepinterview traces` reads this; per-run JSONL,
+# machine-local and never committed. Override location with TRACE_DIR.
+.deepinterview/

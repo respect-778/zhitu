@@ -1,0 +1,561 @@
+.desktop {
+  display: none;
+}
+.page {
+  max-width: 720px;
+  margin: auto;
+  padding: 48px 24px;
+}
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    max-width: none;
+    min-height: 100dvh;
+    padding: 0;
+    background: #f5f7fa;
+    color: #243447;
+    font-family:
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      "Microsoft YaHei",
+      sans-serif;
+  }
+  .pageHeader {
+    max-width: 1480px;
+    margin: auto;
+    padding: 24px 36px 0;
+  }
+  .embedded .pageHeader {
+    display: none;
+  }
+  .mobile {
+    display: none;
+  }
+  .desktop {
+    display: block;
+    --color-accent: #2e5995;
+    --color-accent-soft: #edf3fc;
+    --color-line: #dce3ed;
+  }
+  .workspace {
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 36px;
+    display: grid;
+    grid-template-columns: 182px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+  .steps {
+    padding-top: 20px;
+  }
+  .steps h1 {
+    margin: 0 0 36px;
+    font-size: 24px;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  .steps ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .steps li {
+    position: relative;
+    padding-bottom: 44px;
+  }
+  .steps li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 38px;
+    bottom: 6px;
+    left: 16px;
+    width: 1px;
+    background: #ccd6e3;
+  }
+  .steps button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 42px;
+    border: 0;
+    padding: 3px 0;
+    text-align: left;
+    color: #566579;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .steps button:disabled {
+    cursor: default;
+    color: #64748b;
+  }
+  .steps li[data-current="true"] button {
+    color: #234f88;
+    font-weight: 600;
+  }
+  .stepNumber {
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    height: 34px;
+    border: 1px solid #b6c3d4;
+    border-radius: 50%;
+    color: #566579;
+    background: #f5f7fa;
+    font-size: 15px;
+  }
+  [data-current="true"] .stepNumber {
+    background: #2e5995;
+    border-color: #2e5995;
+    color: #fff;
+  }
+  .stepNumber[data-complete="true"] {
+    color: #2e5995;
+    border-color: #2e5995;
+  }
+  .panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 620px;
+    padding: 28px;
+    border: 1px solid #dce3ed;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .headerActions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .panel h2,
+  .dialog h2 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  .panel h2:focus {
+    outline: none;
+  }
+  .desktop button,
+  .desktop summary,
+  .teacher {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .desktop button:focus-visible,
+  .desktop summary:focus-visible,
+  .desktop input:focus-visible,
+  .desktop textarea:focus-visible,
+  .desktop select:focus-visible,
+  .teacher:focus-within {
+    outline: 2px solid #2e5995;
+    outline-offset: 4px;
+  }
+  .desktop textarea,
+  .settingsFields input,
+  .settingsFields select {
+    width: 100%;
+    border: 1px solid #bac7d8;
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: #243447;
+    background: #fff;
+    font: inherit;
+    line-height: 1.7;
+  }
+  .desktop textarea {
+    resize: vertical;
+    min-height: 160px;
+  }
+  .desktop textarea[aria-invalid="true"] {
+    border-color: #a42d35;
+  }
+  .desktop ::selection {
+    background: #d6e6fa;
+    color: #18395f;
+  }
+  .resume,
+  .job {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 260px;
+    width: 100%;
+    padding: 28px;
+    border: 1px dashed #a9bcd3;
+    border-radius: 10px;
+    color: #2e5995;
+    background: #fafcff;
+    cursor: pointer;
+  }
+  .dropzone:hover,
+  .dropzone[data-dragging="true"] {
+    background: #eef4fc;
+    border-color: #2e5995;
+  }
+  .dropzone span {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dropzone small {
+    font-size: 13px;
+    color: #566579;
+  }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #f4f7fb;
+    color: #44566c;
+    font-size: 14px;
+  }
+  .file span {
+    overflow-wrap: anywhere;
+  }
+  .file button {
+    margin-left: auto;
+    display: grid;
+    place-items: center;
+    flex: 0 0 32px;
+    height: 32px;
+    border: 0;
+    background: transparent;
+    color: #44566c;
+    cursor: pointer;
+  }
+  .paste summary {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #2e5995;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .samples {
+    position: relative;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+  .samples summary {
+    color: #2e5995;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .samples > div {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    top: 100%;
+    min-width: 230px;
+    padding: 6px;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgb(36 52 71 / 10%);
+  }
+  .samples button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    color: #243447;
+    cursor: pointer;
+  }
+  .samples button:hover {
+    background: #edf3fc;
+  }
+  .job > label {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .job textarea {
+    flex: 1;
+    min-height: 300px;
+  }
+  .teachers {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .teacher {
+    position: relative;
+    min-width: 0;
+    padding: 8px 8px 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d6dfeb;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition:
+      border-color 150ms,
+      background-color 150ms;
+  }
+  .teacher:hover {
+    border-color: #7198bb;
+  }
+  .teacher[data-selected="true"] {
+    border-color: #2e5995;
+    background: #edf3fc;
+  }
+  .teacher input {
+    align-self: flex-end;
+    width: 17px;
+    height: 17px;
+    margin: 4px 4px 10px;
+    accent-color: #2e5995;
+    cursor: pointer;
+  }
+  .portrait {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4.6;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #e7ebf0;
+  }
+  .portrait img {
+    object-fit: cover;
+    object-position: center 22%;
+  }
+  .teacherName {
+    margin: 16px 4px 8px;
+    text-align: center;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .teacherDescription {
+    margin: 0 6px;
+    font-size: 14px;
+    color: #4b5d73;
+    line-height: 1.7;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: auto;
+    padding-top: 28px;
+  }
+  .actions > div {
+    display: flex;
+    gap: 12px;
+  }
+  .primary,
+  .secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 9px 20px;
+    border: 1px solid #2e5995;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+  .primary {
+    color: #fff;
+    background: #2e5995;
+  }
+  .primary:hover {
+    background: #244879;
+  }
+  .primary:disabled {
+    color: #fff;
+    background: #7c94b3;
+    border-color: #7c94b3;
+    cursor: default;
+  }
+  .secondary {
+    color: #2e5995;
+    background: #fff;
+  }
+  .secondary:hover {
+    background: #edf3fc;
+  }
+  .error {
+    margin: 12px 0 0;
+    color: #a42d35;
+    font-size: 14px;
+  }
+  .dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(620px, calc(100vw - 64px));
+    max-height: calc(100dvh - 48px);
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: #fff;
+    color: #243447;
+    box-shadow: 0 20px 64px rgb(17 35 59 / 22%);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .dialog::backdrop {
+    background: rgb(29 44 64 / 42%);
+  }
+  .dialogContent {
+    padding: 28px;
+  }
+  .dialogContent > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .dialogContent > header button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #566579;
+    cursor: pointer;
+  }
+  .settingsFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .settingsFields label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .settingsFields input,
+  .settingsFields select {
+    padding: 9px 12px;
+  }
+  .mixed {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #44566c;
+  }
+  .mixed input {
+    width: 16px;
+    height: 16px;
+    accent-color: #2e5995;
+  }
+  .device {
+    margin-top: 28px;
+  }
+  .device h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+  .dialogContent > footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #dce3ed;
+    margin-top: 28px;
+    padding-top: 20px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .workspace {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 40px;
+    padding: 40px;
+  }
+  .steps button {
+    font-size: 17px;
+  }
+  .panel {
+    padding: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teacher {
+    transition: none;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 760px) {
+  .workspace {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  .panel {
+    min-height: calc(100dvh - 48px);
+    padding: 24px;
+  }
+  .panelHeader {
+    margin-bottom: 18px;
+  }
+  .portrait {
+    height: clamp(160px, calc(100dvh - 400px), 340px);
+    aspect-ratio: auto;
+  }
+  .teacher {
+    padding-bottom: 16px;
+  }
+  .teacherName {
+    margin-top: 12px;
+    margin-bottom: 6px;
+  }
+  .actions {
+    padding-top: 20px;
+  }
+}

@@ -8,6 +8,7 @@ import Layout from "@/pages/Layout";
 
 // 二级路由（懒加载）
 import Welcome from "@/pages/Welcome";
+const MockInterview = React.lazy(() => import('@/pages/MockInterview'))
 const Path = React.lazy(() => import('@/pages/Path'))
 const Resume = React.lazy(() => import('@/pages/Resume'))
 const ResumeWorkbench = React.lazy(() => import('@/pages/Resume/components/Workbench'))
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <AuthRouter><Layout /></AuthRouter>,
     children: [
+      { path: '/interview', element: <Suspense fallback={<Loading withHeader />}><MockInterview /></Suspense> },
       // 二级路由
       {
         index: true,

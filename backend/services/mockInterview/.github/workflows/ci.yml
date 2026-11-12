@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref (e.g. a force-push to a PR branch) so
+# CI isn't wasting minutes on stale commits.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Secret scan — fail on committed keys/tokens before building anything.
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        # Version comes from package.json `packageManager` (pnpm@11.5.2).
+        # Pinning it here too makes pnpm/action-setup error with
+        # ERR_PNPM_BAD_PM_VERSION ("Multiple versions of pnpm specified").
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install JS deps
+        run: pnpm install
+
+      - name: Sync Python deps (agent)
+        run: cd apps/agent && uv sync
+
+      - name: Generate schema
+        run: pnpm gen:schema
+
+      - name: Schema is up to date
+        run: git diff --exit-code packages/shared/schema
+
+      - name: Build
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test (Vitest + pytest)
+        run: pnpm test
+
+      # WP-12: the knowledge sidecar has its own uv project + offline tests
+      # (naive RAG backend); run them here so the full stack is covered in CI.
+      - name: Test lightrag sidecar
+        run: uv --directory services/lightrag run pytest
+
+      - name: Validate docker compose
+        # Profiled services are skipped unless their profile is named, so the
+        # `local` (model servers) and `live` (voice worker) blocks need their own
+        # pass or a typo in them would ship unvalidated.
+        run: |
+          docker compose config -q
+          docker compose --profile local --profile live config -q
+
+  # Actually BUILD the images so Dockerfile breakage (copy paths, --frozen
+  # lockfile drift, the worker model-bake step) surfaces in CI, not at deploy.
+  # No push — build-only validation, with a layer cache to keep it fast.
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build agent API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/agent/Dockerfile
+          target: api
+          push: false
+          cache-from: type=gha,scope=agent-api
+          cache-to: type=gha,mode=max,scope=agent-api
+
+      - name: Build lightrag image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./services/lightrag
+          push: false
+          cache-from: type=gha,scope=lightrag
+          cache-to: type=gha,mode=max,scope=lightrag

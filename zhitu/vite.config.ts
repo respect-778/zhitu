@@ -15,8 +15,10 @@ export default defineConfig({
   server: {
     port: 5174,
     strictPort: true,
+    fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/backend/**', '**/@knowvia/job-catalog/**'] },
     // 配置代理
     proxy: {
+      '^/mock-interview(?:/|$)': { target: 'http://127.0.0.1:3001', changeOrigin: false, ws: true, timeout: 660000, proxyTimeout: 660000 },
       '/api': {
         target: 'http://localhost:4100',
         // 是否开启代理

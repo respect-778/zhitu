@@ -1,0 +1,2830 @@
+[
+  {
+    "source": "ai-mock-interview/apps/web/public/images/interview/professor.png",
+    "target": "backend/services/mockInterview/apps/web/public/images/interview/professor.png",
+    "sourceSha256": "e6a2cc2bc16badb4100e134ace3f08355cef71f08b9ae891a949732d129b39c4",
+    "sha256": "e6a2cc2bc16badb4100e134ace3f08355cef71f08b9ae891a949732d129b39c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/public/images/interview/superhero.png",
+    "target": "backend/services/mockInterview/apps/web/public/images/interview/superhero.png",
+    "sourceSha256": "9ddc1dfdb6a771189341e558124e9c07ef6c162a95320ce2ff14d3435128c120",
+    "sha256": "9ddc1dfdb6a771189341e558124e9c07ef6c162a95320ce2ff14d3435128c120",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/demo.gif",
+    "target": "backend/services/mockInterview/assets/demo.gif",
+    "sourceSha256": "30c3f08c3ad42ddd1043dfbcce0d0833dd0f51e6b60fea6422a0d5bed5064958",
+    "sha256": "30c3f08c3ad42ddd1043dfbcce0d0833dd0f51e6b60fea6422a0d5bed5064958",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/public/images/interview/anime.png",
+    "target": "backend/services/mockInterview/apps/web/public/images/interview/anime.png",
+    "sourceSha256": "39a73f073a00d7c25db2e9e816e8df91859aa28e6ad41c79525f19616fb0907e",
+    "sha256": "39a73f073a00d7c25db2e9e816e8df91859aa28e6ad41c79525f19616fb0907e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/public/images/interview/recruiter.png",
+    "target": "backend/services/mockInterview/apps/web/public/images/interview/recruiter.png",
+    "sourceSha256": "15dcbee69f3dbf91919e7779eb0060725fc10ee73ae63427c1525c90fbc0d2e8",
+    "sha256": "15dcbee69f3dbf91919e7779eb0060725fc10ee73ae63427c1525c90fbc0d2e8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/uv.lock",
+    "target": "backend/services/mockInterview/apps/agent/uv.lock",
+    "sourceSha256": "8e651bf97bc272ead44b0f263006f6b9a0b9d69a93a621cb4cc7c94deb7148fe",
+    "sha256": "8e651bf97bc272ead44b0f263006f6b9a0b9d69a93a621cb4cc7c94deb7148fe",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/uv.lock",
+    "target": "backend/services/mockInterview/services/lightrag/uv.lock",
+    "sourceSha256": "f6362cb492e850e27140010845779f37238e416f7fc80150e7c4eb91343a132e",
+    "sha256": "e4c970b8ef839a7c800ad5060f938b45c60fcc5e278a3af70c507a07baa77504",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/pnpm-lock.yaml",
+    "target": "backend/services/mockInterview/pnpm-lock.yaml",
+    "sourceSha256": "3dfd3a6ee5bbe7f2fc099d254e9d37d92c2b7b7435e3f8b007f238629b8b58ac",
+    "sha256": "3147b31e124dd7554541f1414d57497d0efdcc867734703a17f9c91cbbbcfefd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/screenshot-report.png",
+    "target": "backend/services/mockInterview/assets/screenshot-report.png",
+    "sourceSha256": "e3cab9df165ed7835654d6cda550bbe22f63b35c778c4217662c8481cd1d63d4",
+    "sha256": "e3cab9df165ed7835654d6cda550bbe22f63b35c778c4217662c8481cd1d63d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/screenshot-setup.png",
+    "target": "backend/services/mockInterview/assets/screenshot-setup.png",
+    "sourceSha256": "edfc83a4d6d03fc2e9276e535094f544b663184a28eb3daf7e0ab468eb86088a",
+    "sha256": "edfc83a4d6d03fc2e9276e535094f544b663184a28eb3daf7e0ab468eb86088a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/worker.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/worker.py",
+    "sourceSha256": "a382fc4727d1ac86c0699153324b86392286c5863a156bd289166965652bc817",
+    "sha256": "57010f8acaf7f643ec63f0f1b47dc9066478c1b710a30bb9b49b68204592b984",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_worker_livekit.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_worker_livekit.py",
+    "sourceSha256": "596776ee1f6fba406f603eedf7d906ac2ccf2cb139a6c15ac677cb56de829c4d",
+    "sha256": "c31ad32e35519c2101e7b5736d44c837c4f620d7fe9cecc32b4f8c6c23ef78c5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/screenshot-interview.png",
+    "target": "backend/services/mockInterview/assets/screenshot-interview.png",
+    "sourceSha256": "7e6d2f38029ea4150e0c0547d3da2a3f96f4487a3321b0258b6d57e55ead4239",
+    "sha256": "7e6d2f38029ea4150e0c0547d3da2a3f96f4487a3321b0258b6d57e55ead4239",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/screenshot-setup-2.png",
+    "target": "backend/services/mockInterview/assets/screenshot-setup-2.png",
+    "sourceSha256": "80a07418990dbddc1d49b468778e76ce6aa5eb2f0cf5246856d241c8072db351",
+    "sha256": "80a07418990dbddc1d49b468778e76ce6aa5eb2f0cf5246856d241c8072db351",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/session/prep-summary.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/session/prep-summary.tsx",
+    "sourceSha256": "a779e4b815627697c63ef9eca866d84f8419f27d125e117ecbbeb13c596696c1",
+    "sha256": "a779e4b815627697c63ef9eca866d84f8419f27d125e117ecbbeb13c596696c1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/tracing.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/tracing.py",
+    "sourceSha256": "17f5d030418cb38ecb5eae558ded0d3f04bbd4801beb8d4feb37f660b3c97d12",
+    "sha256": "066d82324b8c9305f7b916cca5755bb6093d93c33d4db41f2b80f9609d466c83",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/README.vi.md",
+    "target": "backend/services/mockInterview/README.vi.md",
+    "sourceSha256": "182c05ec4016a3a862e80e23b0ba20a7f5089853c93c0a53d988159eca8d1782",
+    "sha256": "5813d92debeb485f7bac7f434865188d421de450fe2d33bca6c107dae4bcfde6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/live-room.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/live-room.tsx",
+    "sourceSha256": "3c1d51782f00d7376b23f0eb9034e263aab85981c56f4527ed3da369a84f1d93",
+    "sha256": "3c1d51782f00d7376b23f0eb9034e263aab85981c56f4527ed3da369a84f1d93",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/setup-form.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/setup/setup-form.tsx",
+    "sourceSha256": "c6e661ac8c031e3c3df39320f510933cabf1a02f018e5e43e3dd7bf8a1b8b757",
+    "sha256": "c6e661ac8c031e3c3df39320f510933cabf1a02f018e5e43e3dd7bf8a1b8b757",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/scripts/veo/render.mjs",
+    "target": "backend/services/mockInterview/scripts/veo/render.mjs",
+    "sourceSha256": "f833fdbb1557db983877f482feb499e807ddbed35f5ed9a9201cadbac81944b7",
+    "sha256": "284dbb714d750269a466eec1a76501ba5b843bf8eb75b22a12595c665c75e04d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_skilllib.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_skilllib.py",
+    "sourceSha256": "5a2a79467546376a179a066f46c8beaac342a22e388c9a7178ea141f8543e27c",
+    "sha256": "ebdebe66249e06aa7cdc5796c07a05bb56fbb59116d4a0e25f7980582cca43db",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/README.md",
+    "target": "backend/services/mockInterview/README.md",
+    "sourceSha256": "86d5432439e873232250f612536b2ee324fd82024f8af4a24545619eb07d297a",
+    "sha256": "686324ca80f348dc0b63acecf73176b0284910ba908ae21752f94ea13b68f9d0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/report/[id]/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/report/[id]/page.tsx",
+    "sourceSha256": "34d71e45da9b9d241107a6887225b91b29495a6e34161c859af503fb7231dde1",
+    "sha256": "34d71e45da9b9d241107a6887225b91b29495a6e34161c859af503fb7231dde1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/i18n/messages/zh.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/i18n/messages/zh.ts",
+    "sourceSha256": "a2fe31b2410fb4390acf2bbc448a2da5f6f30d56dfc68576033d75c20cc4c314",
+    "sha256": "a2fe31b2410fb4390acf2bbc448a2da5f6f30d56dfc68576033d75c20cc4c314",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/i18n/messages/en.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/i18n/messages/en.ts",
+    "sourceSha256": "c775ae121e291561720c65d7021a95ed1229f043dcff100d450db43cfc04ebfe",
+    "sha256": "c775ae121e291561720c65d7021a95ed1229f043dcff100d450db43cfc04ebfe",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_live.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_live.py",
+    "sourceSha256": "18d717865ec29f35454465fb7bfe0dbcaaa1bd03476885852188fe5c8d35dd32",
+    "sha256": "37a3acbbfd984c9456518f2a5bd9f3155612a6e38c08c322378a8565c2eb205c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_report_regression.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_report_regression.py",
+    "sourceSha256": "c16012485b2c0e2225d23ce82c51629419a306d4af7ee472eabd6398759a3a33",
+    "sha256": "f50f4dc2aab0ead7149b13df3d41bba12f82d5b4c00e7bb7c113db3c0aed3f2a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/LOCAL_MODELS.md",
+    "target": "backend/services/mockInterview/docs/LOCAL_MODELS.md",
+    "sourceSha256": "564dcf3ec5882c17c8ccbb654d94590fb7362178482f24fabc5c3f6676b8b20b",
+    "sha256": "d45e14d57ffdee6340636d32d0ac1ab1ea1a06b4c7c8045faa3b9bd3674ac216",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/commands/init.ts",
+    "target": "backend/services/mockInterview/cli/src/commands/init.ts",
+    "sourceSha256": "6e70091832314962e015e38b764bc57c11579f21beabd318090fc8f87a2c2c5e",
+    "sha256": "475ea6b757d1d2b1f007cc8710ef2497d809bdee90c49d04a020d38fbaaca1fd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/InterviewContext.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/InterviewContext.json",
+    "sourceSha256": "01d384b249fdb839dcf1566876f1c9bff3518315749d629e1c7c24f2e5ac57ce",
+    "sha256": "9a30ceaceb0e816e832ddf4d5e2f126dfb27cdf4ad42db1a9b65942e7b39ca8e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/config.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/config.py",
+    "sourceSha256": "1b8b31885fd4acc011b98f70c59012c57efb41b0c6767c5b68fb3bf90a27f125",
+    "sha256": "e9627925f462680fddf6db939bafa7a7a55a4e0a0186ef321912e96cd4640196",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/setup-wizard.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/setup/setup-wizard.tsx",
+    "sourceSha256": "481446f0e966d44b76ff2d3be5cda6638c383cf9855b0a0a4482625e4d66d207",
+    "sha256": "faeef1ee8e3e85ff90309ccfb8b67a271025f64681893377ec6e8b192758ab23",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/persistence/repository.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/persistence/repository.py",
+    "sourceSha256": "b64b24187b4f4dd6de383befaa8c1d3065e1c05bbf1e6076104bc84e4b149e28",
+    "sha256": "c03db5ee4a825807acff88c9bdf21a246837fdaa86e998a0a037ccb232313fbb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/state.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/state.py",
+    "sourceSha256": "dc8db9700b82041a16df96438b09bb8aeba5425835f52e5700c0e79379124f4f",
+    "sha256": "f0efe6485a26dabde600dcd611f2f747c510457b00deea534503421c6005a3a5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_repository.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_repository.py",
+    "sourceSha256": "d8f7cfc9385b55eeb1f1ab379abd38ae2c84c88b29a4f2e5897b3ba49b9843c9",
+    "sha256": "7f530c31cdaf8aad1ac668cf4699cc6162b30ce7f6e5d5b6b3f3333bcf9dbacf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/__init__.py",
+    "sourceSha256": "a1b715c403a88aa9bfff53f661ebd909b6bbcc7fa803850c5b4c9bf98377d717",
+    "sha256": "81ad3468a5851d6d38ebe278ed68983113385cd30938805719c3060376714600",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/nodes.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/nodes.py",
+    "sourceSha256": "74527faae904e55edeaf2c7fa159b181268a9b475d70ca6ceccaf2024087c9e4",
+    "sha256": "8f7f646018621d11f1bdc510a1740bab70f94c1d06c8c068ca3bd3c69c74ea35",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/cv_extract.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/cv_extract.py",
+    "sourceSha256": "c53b88b715afc38e55fcc9900abdc253cf5c0a5b56376c7d18ec9f9ab66eb3d7",
+    "sha256": "97da773e58dc670da622f5994d43a5572b254dbfb89d49c9d83d8bcc4d668643",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/llm.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/llm.py",
+    "sourceSha256": "6c4697ff9d4737927cbc8de0c87d3426cc7cdaea16555d0922719f8eb8e62d63",
+    "sha256": "c360099ec82527730a89153f86cf54511ea7f90b9a906b66854ab27d86833ee5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/interviewer.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/interviewer.py",
+    "sourceSha256": "7ddfcc7fc2707f73923cc571f6fee1bcab2a97e0903bb5959e24c4024b2e67de",
+    "sha256": "31fbf64c41937f88d71d99b018f3f3a9618163513975b3a0a004c0a245a06287",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_score.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_score.py",
+    "sourceSha256": "515fdb34cb9e6a5994cebc4d585e9b930f38e66a0ca71818544ae6a0d6ab6762",
+    "sha256": "e3571aaf513dde3007a4ba9f7845183b0cfb9e04bb5ba34d6292b48c2234c6b7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/LICENSE",
+    "target": "backend/services/mockInterview/LICENSE",
+    "sourceSha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/ARCHITECTURE.md",
+    "target": "backend/services/mockInterview/docs/ARCHITECTURE.md",
+    "sourceSha256": "a09a3b30fb93cc81968193dcedde832563c35296cacda23c3aa9e18be5111fb5",
+    "sha256": "17e2221cfced614f4e60a9ac48ad4c9d24ef7932a16bc27c5693ce0952b19453",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/shared_models.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/shared_models.py",
+    "sourceSha256": "5381069faaca6b76bd290e0d8fc459b571ded47c14fda6c8968800698c181da3",
+    "sha256": "edae3f7537b8091bf6f09446726ccb727d2da640c5f20d36ad6d89ff0338d245",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/store.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/store.py",
+    "sourceSha256": "f0c99f26b4e8a87276330970b6ced0f5da6a68c49af1985893c4d20ed63355f7",
+    "sha256": "9966c322a14c507951cda0e395aaa66ddf052a0dde8cd5322bf9fea7d718e6b9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/setup-wizard.module.css",
+    "target": "backend/services/mockInterview/apps/web/components/setup/setup-wizard.module.css",
+    "sourceSha256": "a8cc4b71055987027d6d049846e0946ecb8fa6aa60b52d054a67baba5fdd4ef0",
+    "sha256": "a8cc4b71055987027d6d049846e0946ecb8fa6aa60b52d054a67baba5fdd4ef0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/dashscope_voice.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/dashscope_voice.py",
+    "sourceSha256": "8ffb56be4a8d75005eed628a792223c66f5f6e4ef80f177035b1900a1f1c4877",
+    "sha256": "8ffb56be4a8d75005eed628a792223c66f5f6e4ef80f177035b1900a1f1c4877",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/DEPLOY.md",
+    "target": "backend/services/mockInterview/docs/DEPLOY.md",
+    "sourceSha256": "b3744213837bf936c1e71103116b91f31f22acaefb2cb53ffd85ecea55679556",
+    "sha256": "5eeab1bc67e85f79ce0ee9c87aed6ba0cc956843e9fd1a26b910fb614e2399ef",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_tracing.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_tracing.py",
+    "sourceSha256": "ea599747e1d7f8109ff880d1e481c652d4301651c9324502c18cb7bf355dcfa1",
+    "sha256": "f9250a304372e6f0e8f9fcebcb9c3cb2e1c116c94103aa59d3a1d0c17423aa53",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/flashcards.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/flashcards.tsx",
+    "sourceSha256": "f06225e0f6116413c25f5d8d2f2e8ad227f80fe2d83bfbf65e1628c21a06c782",
+    "sha256": "12d0c9a617de70dda18a4e1a28a158a89f73a15cd685795e2d5fac78de064507",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.env.example",
+    "target": "backend/services/mockInterview/.env.example",
+    "sourceSha256": "3fcf53a1444b71a3fcc07c477567a56c098f9354960e2b7444b5afb61461d550",
+    "sha256": "8acabf19cad3010c4d756ba42ead9a436e3cfc6d370df2fa2684610991b9d893",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/CONTRIBUTING.md",
+    "target": "backend/services/mockInterview/CONTRIBUTING.md",
+    "sourceSha256": "999df6b92b96d97d1e1682d85560aa44ce316a0facb3fbb80733effd95642a3b",
+    "sha256": "4fb1a58a388253a8c2d0cd357619a08ae06f66689a2bf280348b2965b6f576a5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/i18n/messages/vi.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/i18n/messages/vi.ts",
+    "sourceSha256": "90b32830c427ebe43f9b5a8320c2ff029aa31db27deb894d872cf4d9202f60de",
+    "sha256": "90b32830c427ebe43f9b5a8320c2ff029aa31db27deb894d872cf4d9202f60de",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/validation.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/validation.py",
+    "sourceSha256": "842f0fc11752babd9b67aba12d997287cc4399b8a71ef7d199d6b3148c31b4b3",
+    "sha256": "73ec9a6ebeea25e2d663792c7265fd4d729a39ea733f4608c7601c36e026aeac",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/grounded-chat.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/grounded-chat.tsx",
+    "sourceSha256": "f772dc6c71d5d97d355a28fcddbab48a3a9770eb3079ca1672d9bb964d583495",
+    "sha256": "089e9fe8a03f52617c606dc9e734046971359d9192c65490df8f40ec7b237340",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/src/lightrag_service/backend.py",
+    "target": "backend/services/mockInterview/services/lightrag/src/lightrag_service/backend.py",
+    "sourceSha256": "7e7474c61f00b79fe6daddf7b4a63732ffc9b4a070fe9d61abd58fe1501544a3",
+    "sha256": "3188d1661beb3929f643331f7d34ee326f4642b71d83a6cd8f3204cabf5bafd9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/prompts.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/prompts.py",
+    "sourceSha256": "44c30d24d624e2c688a7fe516dd6733480a8d0efc2e171a373719cad10e95994",
+    "sha256": "44c30d24d624e2c688a7fe516dd6733480a8d0efc2e171a373719cad10e95994",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/prompts.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/prompts.py",
+    "sourceSha256": "2712fa39e1880e66357a5e5e375d8d985217d2aaa166f402c7c85d6f6f7c0486",
+    "sha256": "2712fa39e1880e66357a5e5e375d8d985217d2aaa166f402c7c85d6f6f7c0486",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/samples.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/samples.ts",
+    "sourceSha256": "e220368b74e3e817221e98705434b0a3adf2c32e5226475654699525c7c52ab6",
+    "sha256": "644a182155bfac20bdf5520a4b5bef865e60fb622cf0f68f4cab5f667827935f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/trace-view.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/trace-view.ts",
+    "sourceSha256": "71161cbfe29e546613cb366fcf2e361eb77597318ec6a69c6b3d5719f3d2cdf0",
+    "sha256": "3351c524b8fa3bef875a9b3fb1394f791518273f0d8ae1828f4a044ef8ebbbcb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/fixtures/interview-context.sample.json",
+    "target": "backend/services/mockInterview/packages/shared/fixtures/interview-context.sample.json",
+    "sourceSha256": "39d093983a8afd052f1625463afdc51bbb1c80d0450467861850cac355cbb5f2",
+    "sha256": "4a29f17230427d751ce6916b69b34eb181d01b7c5a2f9c7d64afd69b8042d7dc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docker-compose.yml",
+    "target": "backend/services/mockInterview/docker-compose.yml",
+    "sourceSha256": "4b16c4cfda723d037a18ab1dcd6a210db42612de18075d4ab2f89dfe8b04f451",
+    "sha256": "6010b9ccfcdaef831524b350a9da86df10a42a4482d9dcfc15e22ab180803baf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/avatar/avatar-stage.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/avatar/avatar-stage.tsx",
+    "sourceSha256": "d651a9cff9101812253dcddd5aac307018421425364b9e406d3e586dc9dc5a48",
+    "sha256": "d651a9cff9101812253dcddd5aac307018421425364b9e406d3e586dc9dc5a48",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/scripts/veo/prompts.ts",
+    "target": "backend/services/mockInterview/scripts/veo/prompts.ts",
+    "sourceSha256": "2c1b3e66402734d3c3b3fb56e6db22c5ba7531e0926aa5c26e1f3bd5f55cb004",
+    "sha256": "a90b0edf13a578c302e832837ac1b387856db3617fa4bdeefcbb855857da0e72",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/GOOD_FIRST_ISSUES.md",
+    "target": "backend/services/mockInterview/docs/GOOD_FIRST_ISSUES.md",
+    "sourceSha256": "dcfe836e6d3d91c678dae2c01b8ec4591bde7fc282db962bba2e6aa1c02e5518",
+    "sha256": "48a9b80c809888394a09d3e6ffecdef3588f61c57b8060f89ce1d59f49b96fff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/__init__.py",
+    "sourceSha256": "8cc1b69df28675a2cb17178fa125d51ce1b8f9bd129335fe8497472ddceddf8a",
+    "sha256": "8d9178c374c35a4aaf05bd67dc6d1ac088b675028fe382d167747dc9935acf37",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/distiller.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/distiller.py",
+    "sourceSha256": "d793492983454da7c501f497a55cde36c5ed3321d9b3cc4d096362518632ba1d",
+    "sha256": "bac55bfa85a906974eb1ea498c30de600cd0cdd286db7869333ca5b3b44b52af",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/sample-mastery.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/sample-mastery.ts",
+    "sourceSha256": "90e38d1c4efce78f08828d6fb8a1ed68d855d2c1475e1d432dc6e64088164086",
+    "sha256": "bfca22802b9527f41d751f1115cf5b769c5729e82b65f734e320a98b5830fed5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/worker_coach.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/worker_coach.py",
+    "sourceSha256": "1154d39c4273888a0193bb65aee2b2dab33cb7509405ffa7353126c4f0b5bd5a",
+    "sha256": "80956b402635616b25522511062b8c4dcd0619b09a3ea453e1e6491684818c0f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_session_history.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_session_history.py",
+    "sourceSha256": "3f741c7fa4ad69242d3de363d50acd4fce07a60286942f5de07bec946e3e61fc",
+    "sha256": "3f741c7fa4ad69242d3de363d50acd4fce07a60286942f5de07bec946e3e61fc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/observability.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/observability.py",
+    "sourceSha256": "224af1c389153c92c190dae8bf4fe9745310503ab80c34f3a13b982561e79c94",
+    "sha256": "5411754572b7f4e8a2c3697aa432ceb3238dac6bd03df75c8de11f19ea1ab36f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/sample-scorecard.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/sample-scorecard.ts",
+    "sourceSha256": "577104dc0e9514c183f6254d0dcbaae0a6cab930293c0fd9960f0a8c5165bf90",
+    "sha256": "6e0b51484bdbccffd80ee6bf15cc417417df2b61408155477d626fac024a6f4c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_adapters.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_adapters.py",
+    "sourceSha256": "3ab3d29773a9508c61d0866053d60a3eed4fb80b4bd97cd9e0c69e8635b88853",
+    "sha256": "0cc42a8f338ea390456454a2f44d6ea28055c4797746474b1a3838eb392553a6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/prep/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/prep/page.tsx",
+    "sourceSha256": "7fc7e2304b2c96232e5c654fe9877ad98d946844e87eacdee53c19ab5837b8fc",
+    "sha256": "7fc7e2304b2c96232e5c654fe9877ad98d946844e87eacdee53c19ab5837b8fc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/evaluator.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/evaluator.py",
+    "sourceSha256": "d27c1a140535c4b2294ede9936dbdb82930a05100407c1f74bf0784ffa1e578f",
+    "sha256": "5c2ff656d2eb9105f22a407b99fcfe03588cf1a9363508885c914a6e9307eba0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/workflows/deploy.yml",
+    "target": "backend/services/mockInterview/.github/workflows/deploy.yml",
+    "sourceSha256": "e9eac2057946d31ef405a870a651603515baf3cf35b7acab76bde63e52e5c20a",
+    "sha256": "518a92d59d7aa245bddc1a69d45c02a904c548870dbdcf0b607c423937fdd5f9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/README.md",
+    "target": "backend/services/mockInterview/skills/README.md",
+    "sourceSha256": "9a53e0b86ff1b1db8170cd71879f2d9ed436bad48fac75674800efc70e068465",
+    "sha256": "17f94996bf736721d1bb79679d85611044c9a83b3f6d4fe12b8b952712fa12aa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/src/lightrag_service/app.py",
+    "target": "backend/services/mockInterview/services/lightrag/src/lightrag_service/app.py",
+    "sourceSha256": "4d23ef4761f75ff85f2e495b08997e602d135ca59bae304fd3d67d993949bca0",
+    "sha256": "374a1aa522aec2dfbf0b0fff71213b7824e04ed37b7aef281ef15b9335a03904",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/coach/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/coach/__init__.py",
+    "sourceSha256": "6a8578d1b62561807aeda4eeb4eba6f8d454a2dd21b6f8edf7a723e4de92691c",
+    "sha256": "3d8049c1821132cae1f4c795a1860cf491975e1b5b5aff38c35ec5bb9eb441d6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/device-check.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/setup/device-check.tsx",
+    "sourceSha256": "3e604d037b7ffe27bd8e020109709ae7ce7b9b6a283dc4f9a5d8de370bfdb8d0",
+    "sha256": "3e604d037b7ffe27bd8e020109709ae7ce7b9b6a283dc4f9a5d8de370bfdb8d0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_cv_extract.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_cv_extract.py",
+    "sourceSha256": "ad5403f53e6f2796f27cb439c2470e39a16228fe1c6d1c1bd5924c5f4908bcc1",
+    "sha256": "be505c02d2462d17d8645c6272c976b5f820d18adbc8adacba8df3b9338baa3f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/interview-history.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/setup/interview-history.tsx",
+    "sourceSha256": "79a8f7c4cb1e5cffbf7025649ace537ea341b034184bf88efc0ac87a631b58c4",
+    "sha256": "79a8f7c4cb1e5cffbf7025649ace537ea341b034184bf88efc0ac87a631b58c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/transcript-panel.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/transcript-panel.tsx",
+    "sourceSha256": "1d028c5aade0061cfcb3f515f608ce3e9e90996ff58f2bde4259efac17f6f52a",
+    "sha256": "726aa776c3577e4c4c26f46009977d4dd888d1a6486bdac96105fffdde549470",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_dashscope_voice.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_dashscope_voice.py",
+    "sourceSha256": "e7c0e54743483abeef8a1d0e3b5905d448a180a3afa6b96125ea3d9b201d2c3d",
+    "sha256": "e7c0e54743483abeef8a1d0e3b5905d448a180a3afa6b96125ea3d9b201d2c3d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/voice-stage.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/voice-stage.tsx",
+    "sourceSha256": "cfbaa27944d8b6ba10d5fbf1ab31492e6dc8d007d33dab498f05864f977ee4f4",
+    "sha256": "cfbaa27944d8b6ba10d5fbf1ab31492e6dc8d007d33dab498f05864f977ee4f4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/CODE_OF_CONDUCT.md",
+    "target": "backend/services/mockInterview/CODE_OF_CONDUCT.md",
+    "sourceSha256": "332934bccedbb17aa3c065c131ad0f39872df0b5940585bba808bf7c2d2af3ce",
+    "sha256": "c9c0d1b40cd15689a9ab960fd1f7e8526c3e5917ab1691ebcb24521f5bda166f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/report.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/report.py",
+    "sourceSha256": "6c326614ccdf993dc72d942e47a287196dc051a5a0d76eb8393f5c23fe8908de",
+    "sha256": "f5198e4e7062d3800e8a4190fbb738827752ab36b6627cd4407ff88cbe488037",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/CHANGELOG.md",
+    "target": "backend/services/mockInterview/CHANGELOG.md",
+    "sourceSha256": "c6592356646b8cf822fea8c8e3cf199189827a7ae36a20b76f436d66baef7f5a",
+    "sha256": "4e3e8bbb7d2f04b7d4b978586c18ab84ef536073e5080535504f3a7f414af5a7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_verifier.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_verifier.py",
+    "sourceSha256": "f48cf9edf3d106b882cae19df9ddfef6f20db2ffa79d0265623a984d2421f2ec",
+    "sha256": "53654f8628de9653141425d83a06c372744c6c869b7a4e3456b590ac3042085e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/session.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/session.ts",
+    "sourceSha256": "49cb7476188b37da85b619fdba65b2a3ec437959245f5726c4d5ef68085456a9",
+    "sha256": "49cb7476188b37da85b619fdba65b2a3ec437959245f5726c4d5ef68085456a9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_adaptive.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_adaptive.py",
+    "sourceSha256": "2857cc187c3040f08a2e6a6c8d6e1f55f429701dc6f1b7f793be616992279aab",
+    "sha256": "c3d273c42f672a3be8a44f00a77b3e36a36af51d6cddb668756526bd0354eab8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/commands/traces.ts",
+    "target": "backend/services/mockInterview/cli/src/commands/traces.ts",
+    "sourceSha256": "70274a84ed01f694a84c1d41055be3a88d88a74b4d6b5192d486e118c064f25a",
+    "sha256": "f028f10e81560e9ce94683166bb53314e2689f3f190dc28ddb6e3e30c18d80fb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/persistence/sqlite_repository.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/persistence/sqlite_repository.py",
+    "sourceSha256": "35a7127330cc228cd34abf894fe2b6793784f7b7a9f1039fe705932064917ea3",
+    "sha256": "35a7127330cc228cd34abf894fe2b6793784f7b7a9f1039fe705932064917ea3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/knowledge.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/knowledge.py",
+    "sourceSha256": "1d9e346be680ba6d3080dd3e284085997ebc409d7f6b44c0c3a72a870b0601f5",
+    "sha256": "9c4b03d390c07cf2cbed3853e3b93bfb99535a53cfd447949aba2d82990d8303",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/skill-lint.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/skill-lint.ts",
+    "sourceSha256": "df074a58fe277248a0911f35e5e64f318a4530afa554abf96c5810f132185a57",
+    "sha256": "e2cfb06faf46f9d79c5e82b282707fc8c724c33c0618880e40686b09f356bf7d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_prep.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_prep.py",
+    "sourceSha256": "7bea41f47d74ed00601b8c88b5c3e5dda11af65e38154805eef79595cf629b3d",
+    "sha256": "d37209c8c3eb513ea7408e528e451b91728c272b698e4bf2b43106192e510c0e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/guard.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/guard.py",
+    "sourceSha256": "c6ea6125e21751a271b3ad08e532691a608cbd5242cd0fc1af6d0df29793f3f4",
+    "sha256": "1ed5acd6193bf3a2ba9c1ccad346da049d8fde4fee0ce5197f189acef7c2cb7c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0002_billing.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0002_billing.sql",
+    "sourceSha256": "b674b54bf4cadc4d76ca85244e0d018fb0c5cdfdd4237d1fe29840d25b79bd42",
+    "sha256": "932e1dea8e2f85871e12e167834ad5907c450b4b3da3e00e970dfdebcd64a937",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/product.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/product.tsx",
+    "sourceSha256": "c195c042caa981b262e83cb2daa7a4514a1ec39fba54f6bb5f38feff7ba86eed",
+    "sha256": "d0cc5c85f2e045da404cbd3d3d6ea5365023ca55aa9a8c75670a47d691b35c1b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_validation.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_validation.py",
+    "sourceSha256": "8bfcd9a2b0683cb9dbe6d06ee03c77b2a9be6ca3852e48a76cf12b786ed869bd",
+    "sha256": "a5be86d8aed13e35bc71ba376b1189cd2784befbc40c235db39cc3a3a542e500",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/mastery-graph.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/mastery-graph.tsx",
+    "sourceSha256": "30373e957db400e41d9e8bc642f4075b9e349eb73b69fb847c03889ee49bb3cf",
+    "sha256": "9897021623339de21cb14985fd56f8bf2d525f635bebbfec8ae8b7e5546c2f72",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/avatar-manifest.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/avatar-manifest.ts",
+    "sourceSha256": "174eb8aa5197e639b9924208cf1f63a39d81c233fdf309877946d0dd0b2b7090",
+    "sha256": "e46fbd2263e93cd60307b2c43e9aeed9cc2ca1e73b2920b7a226f97214aeec23",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/login/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/login/page.tsx",
+    "sourceSha256": "aff51ee4ff582d277c41e29c199cd15184b5657eb2014bd2d4e9f342286711b7",
+    "sha256": "4e0e9ac9749b7c671b73727a1b7e8b4d494418bd349ba26ade8cb2937479b090",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_parity.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_parity.py",
+    "sourceSha256": "87274ec6614ef13c51cf7881773881bc465386862e39dcb80deda2f319cfd348",
+    "sha256": "13be41c26aebcf9f91374641d1ae066d53eee04dc0dab5131f51a9726482e220",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/mock.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/mock.py",
+    "sourceSha256": "c0300ae74811093a8fd5417c8979b222a0596e71f750709501733f4b5cb6c3a4",
+    "sha256": "d74be7aa090a2a89e644b6533bf25394e558fa3824a44f28f4addad530334df6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/verifier.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/verifier.py",
+    "sourceSha256": "c448e3638b7c9774490f932aca2e7ff4b26fc0df2fb7fc97b9f400cb4da4a676",
+    "sha256": "debe8c93f978f4f9130015bef630a7bc96005307784dd67702ac1e992afb139e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/AVATARS.md",
+    "target": "backend/services/mockInterview/docs/AVATARS.md",
+    "sourceSha256": "762758848b450c45f2d12e79995a7de03f855e0aece65190332c7cad7d6aadc8",
+    "sha256": "4223c5c17b949a35f495402f9c505a61ac1cec457074f5688d86a4154b4cdc9f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/promote.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/promote.py",
+    "sourceSha256": "aa12b5d6014c1189d29a814d96addd469ce8c5603b2bcb1f97222c2986c96e7e",
+    "sha256": "49722a22eb597521c01243dafd1503518b853c58bf9ef4ddd7fb81c1f6089ce3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/scripts/veo/README.md",
+    "target": "backend/services/mockInterview/scripts/veo/README.md",
+    "sourceSha256": "937a9267b592b746915ef1f445651748669cbed688b98ca9614e0a832724ae25",
+    "sha256": "1cfcdf157c940e352d9728f7930f5382d9399619b9d1fdab2856877bd1811290",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/signup/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/signup/page.tsx",
+    "sourceSha256": "74779875e26c5e61f13ce2daf7b3377ea6e77d816207224d444d52ed440212dd",
+    "sha256": "74779875e26c5e61f13ce2daf7b3377ea6e77d816207224d444d52ed440212dd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/commands/avatars.ts",
+    "target": "backend/services/mockInterview/cli/src/commands/avatars.ts",
+    "sourceSha256": "4e7f6b83c4755b44c356fc368093a775c8b3d40ceb8a611505425259049047a5",
+    "sha256": "935c3ac505aba7bf8ec4751f276c3323c87bce5a91de41aa1c30d95efead30c0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/hero-mock.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/hero-mock.tsx",
+    "sourceSha256": "47d7facc7c00b93815bbe0cccb994510f22df8b4e287578c4f881a4a503d2651",
+    "sha256": "e553e36a7fbd1a2b96058e323eb19962c4e82762930303ebb658522cd8fdcf91",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/kb/query/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/kb/query/route.ts",
+    "sourceSha256": "863d4ca7e5e52f96eb77a05faaa6086956a8d7f9f8911a86f8fbf274c5bf8ebb",
+    "sha256": "5aefba13482878e59905466edaf9cc0e66bf6bb1a1596e601527bb473727b22a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/interview/[id]/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/interview/[id]/page.tsx",
+    "sourceSha256": "3a82413ff28ccce20f2e3943b44a34648961e52381ba9e557e242b15afbd524b",
+    "sha256": "f170f758442086a385fe24ad09d6e89d6f6795b12dc7736097bf90e2024f12eb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/README.md",
+    "target": "backend/services/mockInterview/supabase/README.md",
+    "sourceSha256": "21dda7e24d90da1e0d1b136878bb0cc883cc4e2f30867b10c570c9f389d75cd3",
+    "sha256": "4653ff007c962043f726f1e996b5a2020fe8eeeeca3aa8d9a92c54d37bba5144",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/control-bar.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/control-bar.tsx",
+    "sourceSha256": "ff2ed9b9fa83d0062158f2c1c338713ac10f102de1eb46602cbc66e33efc1e22",
+    "sha256": "ddb9ae130b70e9cf53760b4d50e84e823fa05eefb55445837043993ca36caca8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/localize-content.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/localize-content.ts",
+    "sourceSha256": "e3ff2de82fc33ad4c0fb36e4e56fedc2725a55781e7a35222ae8553387263c42",
+    "sha256": "e3ff2de82fc33ad4c0fb36e4e56fedc2725a55781e7a35222ae8553387263c42",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/Dockerfile",
+    "target": "backend/services/mockInterview/apps/agent/Dockerfile",
+    "sourceSha256": "a48f754c5b9da5605eec466b83cc92270d58063f9bfb7b0d9dcca6e1474e88f2",
+    "sha256": "4913b997fadfd905bce6f6ac0a729ea0caa9ff362ba93c0d7c86f508d238e73a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/score-bento.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/score-bento.tsx",
+    "sourceSha256": "9b2a925c227c5af5babf04fb43e21e1b694b832b85c8b710bf7ff6e1ef5f5a8f",
+    "sha256": "9b2a925c227c5af5babf04fb43e21e1b694b832b85c8b710bf7ff6e1ef5f5a8f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/README.md",
+    "target": "backend/services/mockInterview/services/lightrag/README.md",
+    "sourceSha256": "8827b6f32cf7acb92b8bdc9b2dcf607ee80b3312f0e97ea03f6e761fab2dcf34",
+    "sha256": "e1bc361a8f81a078d153cc1d8d8d57636b6974b38461018b1387ec6939a606c0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/session.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/session.py",
+    "sourceSha256": "29a63f44acc7dee44117bb4136d451b9c384f1cbae26be26ab19357c3fc0848c",
+    "sha256": "e45b44c012ab50d1b9c5454c64808a56a08b198e0ada43b3216d6d127541e8c2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/env.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/env.ts",
+    "sourceSha256": "bea397ad3ce90590b429328ad01f06619cb956ab97066abe3c4cb3b1f1e6cc41",
+    "sha256": "bea397ad3ce90590b429328ad01f06619cb956ab97066abe3c4cb3b1f1e6cc41",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/study-plan.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/study-plan.tsx",
+    "sourceSha256": "5f4b87395b831e553f27e5ac93d175dc0a6541602c60e11bb6e2a55490f5041a",
+    "sha256": "f4c82fed634ed4245d8dc6d4cb8dae4d37521139bb40863542af4d294e848da2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/director.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/director.py",
+    "sourceSha256": "689ee2a27091e6325b263b1df481361455bc4bce6b0b1288dd06268141b36148",
+    "sha256": "fc0babe0344caf8f64b96bd3fb45dfbe21e4298575608b3d7e9d1b05e151a993",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/coach/chat/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/coach/chat/route.ts",
+    "sourceSha256": "63f0a88b71cd7d82e196b021a92cafd77035d3a6fb8ac5fa731435b412ea324c",
+    "sha256": "63f0a88b71cd7d82e196b021a92cafd77035d3a6fb8ac5fa731435b412ea324c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_conversation_report.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_conversation_report.py",
+    "sourceSha256": "ff1b9b78264c5d92767fe5c03eb621b595f83ddb778565fce5160d19b84ffab4",
+    "sha256": "ff1b9b78264c5d92767fe5c03eb621b595f83ddb778565fce5160d19b84ffab4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/tests/test_kb.py",
+    "target": "backend/services/mockInterview/services/lightrag/tests/test_kb.py",
+    "sourceSha256": "f548dab8ab5a833bfec066002b4a29a3fdd11dc5d914a9f04c805f3287d2d4c0",
+    "sha256": "d142854de9239cff17b7daae6c3afd0011d941a4f33c1f89fb0877e152d4d5e9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_coach.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_coach.py",
+    "sourceSha256": "d0077d301f8554e5e8d16af3b3739e48e9ba9990b02255e0bc9424de41ed7a2e",
+    "sha256": "2330456f74a2eeb96153013051c8bb1b2cf02a650d49a13f41a166f1eae5b9dc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_session_view.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_session_view.py",
+    "sourceSha256": "d5ed58469d12a76f54490d7cdda5bd08e47e3148276a52cb9b2b7ebb428d4662",
+    "sha256": "28163214ae2d1eaef485db67de714d651d46d1fb430b7a57df659f446754e0ca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/kb.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/kb.py",
+    "sourceSha256": "ff1a89990264905c84e372fa1607163cbccf9815ccff1774e15c4db346dcdf5e",
+    "sha256": "3a98748b2ecd7a94de1313756354a3876386a64c5cf0f9f3e991fe8ebba7f052",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/Dockerfile",
+    "target": "backend/services/mockInterview/apps/web/Dockerfile",
+    "sourceSha256": "ce23a33fc3974c30cb11d6f546a0f3cb068bcbf39abf6a2fa7fb5afe4add0e34",
+    "sha256": "14ca8d88b54fdf740e63094ddc172fe65f1e4648afe5a659547d1cdc0a35c5fd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_guard.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_guard.py",
+    "sourceSha256": "ddbf48e6dcd482c8728ffdc28f6bcc82f40aad20ce07c4a601ac852315975b0d",
+    "sha256": "2be391b4cdf5a8b9a3448ba5044de181aa5113df72bf77692645ed4adfdfeb96",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/localize-content.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/localize-content.test.ts",
+    "sourceSha256": "06ce871ff5291053b9db1ed1181b193077fd148fb34927063ead1b96ce99f4c1",
+    "sha256": "06ce871ff5291053b9db1ed1181b193077fd148fb34927063ead1b96ce99f4c1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/session-history.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/session-history.test.ts",
+    "sourceSha256": "cb5d691520f765bb3973d5b2a6c24648c912e99a3184ee170d194e2a685ca025",
+    "sha256": "cb5d691520f765bb3973d5b2a6c24648c912e99a3184ee170d194e2a685ca025",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/docs/OPENROUTER_AND_CPU_ONLY.md",
+    "target": "backend/services/mockInterview/docs/OPENROUTER_AND_CPU_ONLY.md",
+    "sourceSha256": "3941348ebe5d68bce910495e6501eac9b66b67fadd820633c6c874a323cd6edc",
+    "sha256": "1d9f7c1f5d722db7439fd5ebfbc8b99ef0a714db96499ab0285577f1e36b8f1c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/gen_index.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/gen_index.py",
+    "sourceSha256": "cef9b40758cd9d4d1b98beb92f2f1e13bf854aa2fe22d9f594dd84a67a21fd7a",
+    "sha256": "b58a52e3e2c6563345edfde18b1430211802bc5f68d0c809cb26b044020e6270",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/personas.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/personas.ts",
+    "sourceSha256": "901e529150870086068bc178003573b3fac2e675d8de63d878565d0a45ee7994",
+    "sha256": "901e529150870086068bc178003573b3fac2e675d8de63d878565d0a45ee7994",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/ScoreResponse.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/ScoreResponse.json",
+    "sourceSha256": "e5a6109126083b3b1b244f6c3ef1f6b698bba1ffd601b2ec8bffafc40ff62d80",
+    "sha256": "9873392158928e52b15079ff6371cd4bcfec674b2fe7436427d47bb77e14f0b5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_llm_json.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_llm_json.py",
+    "sourceSha256": "9cf1ebd6525867b70f0f78c4df9cab115333e6dc49517c7eca2181060ae97cea",
+    "sha256": "4e403b701342aa746b3ad63ff836af3d220fdeb36d48072f57ee3fe5389b759a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/handoffs.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/handoffs.py",
+    "sourceSha256": "85d2125943085b8b63e0c88f668d47abb6ba778e5622c78d18616ed5492199a1",
+    "sha256": "c91bf336b9cc4d2a629b823edfba2b18330a2d2d0f000ce7884dd502dd12b537",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/workflows/ci.yml",
+    "target": "backend/services/mockInterview/.github/workflows/ci.yml",
+    "sourceSha256": "3a8af0b4c40eeb951a092cf62c101449e7db697e8d3de512cb82429af5aa3a5b",
+    "sha256": "6e81b5d290c19078d68e8fc27a9195de739ea99e36f3e53d1c8429248a9542b2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/srs.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/srs.ts",
+    "sourceSha256": "927a57f575274c4082ce5a737364f5bb87744a9c26ee1b27cd78adc930874716",
+    "sha256": "bbc16106f11a2ef2ce853c9f91dbb6097ca8ee40b4400586af702f60dd31f14f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/observability.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/observability.ts",
+    "sourceSha256": "4f1edacdcc7dcab064983cf85f1242caee76ad47025e666b4fbf975e629e9317",
+    "sha256": "2540c42283fc2a6c36667f1a38dd98584770781baf5b9e4bba2b0b635d5c59cd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/avatar-manifest.test.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/avatar-manifest.test.ts",
+    "sourceSha256": "99bb57b964a56651c69593a1fd07972a093c96eca40ae169ea7e3224350dc8bb",
+    "sha256": "b492589af7f9b94d7d5d4e2c5eb8d1f4f5c271dc4a79797a7fed291c44799599",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/setup/interview-history.module.css",
+    "target": "backend/services/mockInterview/apps/web/components/setup/interview-history.module.css",
+    "sourceSha256": "321defa80fd8742925a1d146bad828a79fb3f711661eee2fc7f176aec5b23d91",
+    "sha256": "321defa80fd8742925a1d146bad828a79fb3f711661eee2fc7f176aec5b23d91",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/upload/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/upload/route.ts",
+    "sourceSha256": "1fffea3e8f26a51fc6d27e73ab4ef3cefb8d57049d49117414e5c23830111780",
+    "sha256": "1e9a279c9bf98f82e33bc17852c54a6a2f76e5ce669aadf5f031628ec137018c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/SECURITY.md",
+    "target": "backend/services/mockInterview/SECURITY.md",
+    "sourceSha256": "171f620fff6353317f40972c0700f54e94f213076ec42f0c6201ee7f32237151",
+    "sha256": "e91533d89e8018f316010507e17c77c930138e36d385c10f262fa7a40b26c6a1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/flusher.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/flusher.py",
+    "sourceSha256": "d8e7dff7c458a77d9bc790eaa559b437aa1232b898cf443b3e5177566a1cc56f",
+    "sha256": "64f076bcabc20dbe7f5407960f181e2fc2a24af509b8586b00a8878f32a60cf9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/avatar/avatar-gallery.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/avatar/avatar-gallery.tsx",
+    "sourceSha256": "7dc5771ff77edf48cd28174f94382a4bcc455eaf72c624d9f627fa841614b8f9",
+    "sha256": "ff6338893801c7305459491c24d5bcbb6ef28487600ca12e3ccf0e49b5d00442",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/ISSUE_TEMPLATE/bug_report.yml",
+    "target": "backend/services/mockInterview/.github/ISSUE_TEMPLATE/bug_report.yml",
+    "sourceSha256": "560461f2ddfcf7b288965b431b3cdfde3e54108f1200f03213a62c2d14c959ec",
+    "sha256": "37d39c3a20c76b1949d68095915d6891b18ece44b52dfcf7e3f8583a27b93784",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/open-source.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/open-source.tsx",
+    "sourceSha256": "a1a2c77db2361acd47a0c6e00ad41d20a7ae445805804b1a5879058cc8df9db1",
+    "sha256": "8e952fa150ff4a142f52b34b40529d99246128dd7e32f215a240d0c433c23733",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/coach/prompts.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/coach/prompts.py",
+    "sourceSha256": "439541bea735354db73bc9302c6d74e7838bad59f6ffaa434eb0353bcccbb444",
+    "sha256": "299aa9b181e15e7678639c3a9e588a252f65ccc642c64f268e76190b804ae65a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/footer.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/footer.tsx",
+    "sourceSha256": "bed4d3dd294ada39c2063fa3e897c374e28fa596de15252521722c3c3a559ba0",
+    "sha256": "58e92f0951bb561918824eb3792557f6a05c25643df837a9423d26c7f89aa61d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_flusher.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_flusher.py",
+    "sourceSha256": "2ad26049fca965107b5ab98b85d3fa6d6e5fed4ec04c0a8b46b5412237679914",
+    "sha256": "f33a6d49b18290152fba8e375b4593caff4802b7f0aa7340f9de70320ae26869",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/trace-view.test.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/trace-view.test.ts",
+    "sourceSha256": "96bc62f627522698ccb62c99335d9aeb3728fbb8e4e4899df75781081947b911",
+    "sha256": "3fbfb43f0d0a236cc8a527e1ab9d14147d26600da42bbc5720a90cf89f33f41c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/QuestionPlan.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/QuestionPlan.json",
+    "sourceSha256": "fb50a08970720ff338783d68ec5f7b12e5eb8e02d1601ea03864493d7ad3a2fd",
+    "sha256": "db7b2ae9e0a009d9a962ed690ecb6873f07bcf3a958cbb69fcdd3e807a8aaee1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/skill-lint.test.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/skill-lint.test.ts",
+    "sourceSha256": "472d199c0b1610ba06afd25d20297623611d4d8cd9d71993f0f68deb903e5881",
+    "sha256": "61305a4d47f5c0ee0a8be25f0811cc41f1050adea0dd7ef66b3e3a529fb5b43b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/views.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/views.py",
+    "sourceSha256": "5486423d5de2461cb2775e92f2d3f165f265588759fdc2fbd55eacd42415ab55",
+    "sha256": "39e831e5a044aca3706f6679e5564b27b234fe3727b06dc0c7dfdedd778c6aaa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_app.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_app.py",
+    "sourceSha256": "41e03d1bbc078c62e989ea8187b235552db9a81ea174d71aa160a448a018368f",
+    "sha256": "69d18a0ee837a5d8cd1d80b70109b44b7adab554b35490df8e57be1972904622",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/text-fallback.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/text-fallback.tsx",
+    "sourceSha256": "2cdffebd39c42ba188ea830f370350b5ef420b10877d6283754a8677510746f3",
+    "sha256": "a970274fa234a19212f463be359d54ec9f36773cdbca3be5b07131ed584aa520",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/livekit.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/livekit.test.ts",
+    "sourceSha256": "99d46b43517f06dddee27f09b084a7407d6622b8869fde6a03d1c4fad77817ad",
+    "sha256": "83d78634d2824359cc5d33d90eece829aea685a74c65e14e35a35054641ef948",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_knowledge.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_knowledge.py",
+    "sourceSha256": "209683150e14bdfc38b5d55e1caef396afb12c995dcf75300b43479a4eb014d3",
+    "sha256": "1f60586f92b7f2548da929f7c24b87d6e2d5c2c793e8a1dbd9238af6b0b3b5c5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/env-template.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/env-template.ts",
+    "sourceSha256": "a3d0a62693a54a43e62be0733c5e341d4eeaee08bfe8844b1599a393b0b60f14",
+    "sha256": "b58f33934498598299dc0ad1c92bed6f974e9e0d7495004fbf160548575ca244",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/ScoreCard.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/ScoreCard.json",
+    "sourceSha256": "118e704a12c88d7215f57d6a3d0ebe5e9b10322176a054be28c62f9c221a9e7d",
+    "sha256": "2b019098b1d4a6eecfeabb14412412b8f35eaf873cfb392cbb6f62bfa6085ea0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/livekit.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/livekit.ts",
+    "sourceSha256": "2f1e7607a2876764e77379fabfae95fd061082e024050f4f3a720b56c8c0c876",
+    "sha256": "260ddfa10b54f4db59b9f218e54b9a1359b7336720463f41b9ae24b37f14fd42",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/setup/actions.ts",
+    "target": "backend/services/mockInterview/apps/web/app/setup/actions.ts",
+    "sourceSha256": "42a853be67c3ec0d97ade77a723e9c8df29f6fe673d1d7931edf37d4c16afd1d",
+    "sha256": "12311af8ac443bfe0066565498a0505d7252b043ef8acb9c81e166a681b1b28a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/interview/session-timer.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/interview/session-timer.tsx",
+    "sourceSha256": "c9707bbd0d6227d5cc3d1573892006db1249ac10eb987758be3de90472ec069a",
+    "sha256": "afd656766e5debb963e4c07f3d83243d166c02580ab054a9b7ed3d777e051fe0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/pyproject.toml",
+    "target": "backend/services/mockInterview/apps/agent/pyproject.toml",
+    "sourceSha256": "43757da5082cb70e51d3bb58cf895ab1d9f51e263b12fd258051ac91873f10f5",
+    "sha256": "2268e9307fa5b238d6740b9adaf59fca371ee2652569e0b858ecb9735f34e271",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/CandidateProfile.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/CandidateProfile.json",
+    "sourceSha256": "d702e0fd49e8f3ea3203888f4f7edd37ec1e3bd5bcf8d4a4f9f0e0b9a7af7f01",
+    "sha256": "0346b68f0bc8005218be2e2cfccf1e3470d5d43106f12041c7e13cd5c4f00176",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/supabase/middleware.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/supabase/middleware.ts",
+    "sourceSha256": "a1da555f4dfe55dee336ab0c1cb584a7f003d65b01db6333544bbd5eac826c0f",
+    "sha256": "a1da555f4dfe55dee336ab0c1cb584a7f003d65b01db6333544bbd5eac826c0f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/lib/env-template.test.ts",
+    "target": "backend/services/mockInterview/cli/src/lib/env-template.test.ts",
+    "sourceSha256": "c544d629b2f6ef2fa58fda4fcadd82c46224265a056e175279e458c37ddb9764",
+    "sha256": "28a2d89d17cf58b46ed70f8da571179268bd5ab74b04d02419ae608da0aa7470",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/index.ts",
+    "target": "backend/services/mockInterview/cli/src/index.ts",
+    "sourceSha256": "1c221d866df799ac10efe16742b06bd915189f0b5c18831b1fa573d34ea46437",
+    "sha256": "c321c17038ef13e2cb0b5a78929eb8faec3d6ac8b15f99482fac1f7845ef070a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/ISSUE_TEMPLATE/feature_request.yml",
+    "target": "backend/services/mockInterview/.github/ISSUE_TEMPLATE/feature_request.yml",
+    "sourceSha256": "bcb16a85e8a470e3eefcb0e564f45631968d3bca594819ce545f27d66f19ad1c",
+    "sha256": "609ea4dee18038b546eebe1225657b6b5303bfd9e09909d69effb9470f93ab2b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/src/commands/skills.ts",
+    "target": "backend/services/mockInterview/cli/src/commands/skills.ts",
+    "sourceSha256": "934e7513434b7a7a34d2bccd34ed59501fe48aee5ab57063ca674cd23fe2bcf4",
+    "sha256": "13ce553591cc6c5e2a448f6c1900e14bb836867ad2ac508cb8498e17d286bee1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/strengths-gaps.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/strengths-gaps.tsx",
+    "sourceSha256": "0f41810abe9e41e7b5be3c8331adb15b33a9779e6e2a3524b5dc25f0ee2f29d1",
+    "sha256": "0f41810abe9e41e7b5be3c8331adb15b33a9779e6e2a3524b5dc25f0ee2f29d1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_interview_progression.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_interview_progression.py",
+    "sourceSha256": "73e69c8bb1c55f6213d5ea48ea22e33b1b2253319ff43081c97a267027aa0a37",
+    "sha256": "73e69c8bb1c55f6213d5ea48ea22e33b1b2253319ff43081c97a267027aa0a37",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/layout.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/layout.tsx",
+    "sourceSha256": "631a6316a6b14c4a46b5299e2c814157349bbe1214bed870a9172ff7faf89a89",
+    "sha256": "631a6316a6b14c4a46b5299e2c814157349bbe1214bed870a9172ff7faf89a89",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_voice_coach.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_voice_coach.py",
+    "sourceSha256": "c3186992831a3d94268eb6bd04ea844dcc6b356edd523de4347ee1266f4c10e7",
+    "sha256": "2146ca10ca874103dc146c0a8779a4d27850c7effe47643f3c7cbe1e31f55746",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/i18n.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/i18n.test.ts",
+    "sourceSha256": "a31cd6a0d7f956629cba244da0f69f73c9cdb5a730803d60ee523f4735e4bcd1",
+    "sha256": "a31cd6a0d7f956629cba244da0f69f73c9cdb5a730803d60ee523f4735e4bcd1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/test/roundtrip.test.ts",
+    "target": "backend/services/mockInterview/packages/shared/test/roundtrip.test.ts",
+    "sourceSha256": "548dd349ccd8255ff6d9b596dde5c0de016df0f49c3885864adba3d30368e428",
+    "sha256": "5898e6bc726a1ef7f1e915b42105316ff7abc13566391a684c99961a1de4ca5d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/language-report-card.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/language-report-card.tsx",
+    "sourceSha256": "9862c68cfb8b7e27a771a31f7f036095a28d316d9978ce168852fa5630c9b38b",
+    "sha256": "9862c68cfb8b7e27a771a31f7f036095a28d316d9978ce168852fa5630c9b38b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/graph.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/graph.py",
+    "sourceSha256": "04befe2b96939c1f533dcd56cd7c0aef82a701704e3bf630ccf4611121fcd93f",
+    "sha256": "3a50b59f74eb3ad36c16eabf732608cef9dde20ee9d4673a50e701541eae7f3c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/hero.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/hero.tsx",
+    "sourceSha256": "8cd05b254eab7aa25b74e2b7db1747adefb6121c70ae9e182ce8134f2b519b6f",
+    "sha256": "8a6144f1268867e13a4932934d76288dadebf466ed2eb154b1807acd06291016",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-backend-engineer-staff.md",
+    "target": "backend/services/mockInterview/skills/generic-backend-engineer-staff.md",
+    "sourceSha256": "c51a816fe3ba3a81a03183902e884930bc6df8e9c20c884dfccd140f2bb98feb",
+    "sha256": "a620a194b356a4489e72fe67d111e2901b211bc86e67cff70388da5450afbe47",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/session/[id]/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/session/[id]/route.ts",
+    "sourceSha256": "6dda61fda7b187951796433f7b077f5ec54e68cf8a0eb6cd9779de4f29808145",
+    "sha256": "6dda61fda7b187951796433f7b077f5ec54e68cf8a0eb6cd9779de4f29808145",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0005_profiles_hardening.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0005_profiles_hardening.sql",
+    "sourceSha256": "1f37ebe1dbdb9d411470f0d8dfb61f962111994ba09787048c63fbdc54ea7f0b",
+    "sha256": "99838cb3a069d2f6d3af72995e0934e710a639dfa06060201d2aab0a9953cfef",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/ee/src/index.ts",
+    "target": "backend/services/mockInterview/packages/ee/src/index.ts",
+    "sourceSha256": "bb52db7a5ff41ae8fd8d69a2e035cf8c098de5a186d30b46566935dc6b498aa6",
+    "sha256": "4cfd392e7cda681d3fa1dfb802d38e16aa35b19f65b8d6d01fe2b484d13dc348",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/search.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/search.py",
+    "sourceSha256": "9621592fdbffec7fb0d7526639a39391f91a93aac7ae38d82515e93530194f5b",
+    "sha256": "42ed1f26b612a26cd83e884b41c1b34f33c52f0c13a91cfc84e782a616635508",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/deps.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/deps.py",
+    "sourceSha256": "2b8226ca70c2d29fe4a1989f28cc317d4eb7136f76cd79d931002b825c231f20",
+    "sha256": "29e4e8104336cf42d5782e56a9ef1a36f3269bfd5111a6570f2c70e86b136755",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_kb_api.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_kb_api.py",
+    "sourceSha256": "2871f46976076d639634dbb07a1f5021cc9f6f1a1ac923d90d9d07157fc9a198",
+    "sha256": "dbd997dcd2e545ed8d21c28d511f9cbc6799472a8f236d0591a95a889c61417a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/scrub.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/scrub.py",
+    "sourceSha256": "c63d19a0355dc37c18d45771f8e0fd2e1885c1b71fcc6dc452c2aabb33795c5e",
+    "sha256": "1228f1bba4363fe174dd85afaacd9c7abcb6996bc882c56e0090d38ab493983b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/conftest.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/conftest.py",
+    "sourceSha256": "058f0f9003ea443d48a522b3d3c5a596d37646baa84051e752175880783c2a58",
+    "sha256": "2fc3b65e9dd5d4685d9b4dd0340dc4fbf61bff4aeccd306ae39e0a36ce0fe517",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/setup/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/setup/page.tsx",
+    "sourceSha256": "56c822915c262f51009aa7bf0c56173619aa280596b421fadbee65a65afe873a",
+    "sha256": "56c822915c262f51009aa7bf0c56173619aa280596b421fadbee65a65afe873a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/PULL_REQUEST_TEMPLATE.md",
+    "target": "backend/services/mockInterview/.github/PULL_REQUEST_TEMPLATE.md",
+    "sourceSha256": "71f8f136618e7e994acaaa56f05ea5c1d7b292bb06adcb65a290879fcfa25631",
+    "sha256": "01a3e64a70cf47dc3c9eee9f2f8b61905ef39136c8ef2c4a5093e09bcfb6e7b4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/app.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/app.py",
+    "sourceSha256": "add097581a8cb451b9a80c88474df883cc0e34b0aeb87ea827e3a2d4d3be29aa",
+    "sha256": "41df3c798352b5b09c822dd3b535a5dd68216e8d9932827143ed2c518697813a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-frontend-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-frontend-engineer-senior.md",
+    "sourceSha256": "48288758c1210163598c94cf56ecc2227bcbff95c2b1d6a4ce3edc01a2b95839",
+    "sha256": "d083b625db392c2bced77bb2cb6c701200ecfd02759482899162d664895a0bd3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-engineering-manager-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-engineering-manager-senior.md",
+    "sourceSha256": "af6d278172413815706d8e7eccaf24d559c7e328c233e3e44861236ddad1209a",
+    "sha256": "53b54e62bb84578024ef687bc208acb662ecf36f043421a8017504cef0de64a2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-data-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-data-engineer-senior.md",
+    "sourceSha256": "9ec526cfbac667dc78e461433d412ab024a820b4b2a2ffedfb4be9b6e4e9c701",
+    "sha256": "52f87d63e02abff1397cf81568ab60e6040919ce0b054a8c2e4d9999a5acca70",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/nav.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/nav.tsx",
+    "sourceSha256": "500a7e4dfdc340d4a84ce34a73178d478d11d8323636f4fc9021bea1d1e78fba",
+    "sha256": "152819121f76b13df19eba202b29483d22ec11cb0197110b573fb502adf508c9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-ai-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-ai-engineer-senior.md",
+    "sourceSha256": "ebdb87eafebbd092c9d26f4405eb3cd43e8693332a2d006c472c1cce6e522630",
+    "sha256": "eb84bdb815dfe6c1808a641fd46b94e36ef49764ad227ccc05a0ee6baf3a44e6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-machine-learning-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-machine-learning-engineer-senior.md",
+    "sourceSha256": "983cadcf2d30d051581bc9e2cd3b0083bcdf40d4ce82e134182ff85fbad48c81",
+    "sha256": "1bc80b7f0d7cc0cc76ccb053e150a81a13879326be35db0fac1eac1c16469977",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-backend-engineer-junior.md",
+    "target": "backend/services/mockInterview/skills/generic-backend-engineer-junior.md",
+    "sourceSha256": "d62682a638dc29845174b357086787c899aabcb22df5536918c73374aad94e2a",
+    "sha256": "a5a3d30df5535b8b7e62f6fd7397f31c8ab80bff8792199e51b595c159b29231",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/env.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/env.test.ts",
+    "sourceSha256": "a2220dca5b1e6c5195a54fb5e14b5d4aeef8f188b01e242ff57c88d844412f49",
+    "sha256": "e6e9e4bd83e30e8853431556b7fbfba383d52bf4db3173bfb762490f99c889d0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/how-it-works.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/how-it-works.tsx",
+    "sourceSha256": "551888a204888583a900e82f073dba7b218a53ee92ff85fd3c14b40bd9ed9ec8",
+    "sha256": "65dfb9961aa91e71f101b4fa562b9365126f2b72c500c8e455976da8634f8d37",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/globals.css",
+    "target": "backend/services/mockInterview/apps/web/app/globals.css",
+    "sourceSha256": "31f4f7556abea887f62a26c8001af813340340879ca3d0bebbc1a9d4ea4d8578",
+    "sha256": "c9aa16fc7c32b0b02a84ca115cc40698b906727e96c464dde27869be3410626c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/api.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/api.ts",
+    "sourceSha256": "1c5a500ac739f2bc39f5d4f94712e3307e27fe6b37e03dc683716d14d01e3f98",
+    "sha256": "26313cb9577b0dc814fbf364de7efd92355c01ea6bf600a072930185f2db018e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-backend-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-backend-engineer-mid.md",
+    "sourceSha256": "96c6733cb1258a6c87f6ae92f99ee28c1039f4df21e61d11bc8dc568ad5c875a",
+    "sha256": "a8f5bd15d283d420b19c9938d597e176ba1e040014cd640de8d83b38427c8556",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-platform-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-platform-engineer-senior.md",
+    "sourceSha256": "b172b86fcc88bf054ac2ef22f34a93e4bb5c7683ffcb2f33f1096792fdb0d317",
+    "sha256": "f1e403e64406548ddd433fa90ccede89ae5f9aa246dc75d0dae8c85d8c3303a7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/r2.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/r2.ts",
+    "sourceSha256": "847c7508a3dddc22f3c2c780c9db9301107785c8f119b9a50ca22e88c3fc661b",
+    "sha256": "d51f00ddc8f349beb100314aedea1c500c842cdbf29c1540819df7b498a6432e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-security-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-security-engineer-senior.md",
+    "sourceSha256": "cd4d5a80242367f4756c3244f125e1ae8b5a3cfd234b0a145c7ea036ec38c5ee",
+    "sha256": "f30447893b9c91de192239fd71c8aad49b34d1c6e262b3ede2a44f331310ed4d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/competency-chart.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/competency-chart.tsx",
+    "sourceSha256": "ec0163e268f08562475789bc145595f9939521909d2fe41781a891687d00b0a5",
+    "sha256": "ec0163e268f08562475789bc145595f9939521909d2fe41781a891687d00b0a5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-ios-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-ios-engineer-senior.md",
+    "sourceSha256": "0f5852a5b7a7a963ca57174738bad5a367b175435d8c58f7b3249041cb6a042f",
+    "sha256": "e576070c75d03c4cd6a859922a939bc74d220ba4428117ca7ab6d44382aa8a50",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-site-reliability-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-site-reliability-engineer-senior.md",
+    "sourceSha256": "9055279513845f81065bb2e8f9ad210976b97fc6ca888442ef2c69c4d76e0f58",
+    "sha256": "b14051a61696d8ed0595fe2ac4f5c7e1e60b22c0d78047a0fa012d7f8755f6ee",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-backend-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-backend-engineer-senior.md",
+    "sourceSha256": "ead97a3f1baffe9c10695e330efd61fe13f85ed8f276bb4696eb948fe56662da",
+    "sha256": "879cc0e6b48b577140b93815fec26e788753aa7e2139c99380c7a948f15c1b0d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-technical-program-manager-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-technical-program-manager-senior.md",
+    "sourceSha256": "07d16aefb6abd6e6222d91c2ded13e6c59e4abbe3d3bb5fcd5b605410b8f653f",
+    "sha256": "570eec694383b867b51c8fe629c7d156584d60ed4e45982b90ef3fa065fbb3c7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/socratic-cta.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/socratic-cta.tsx",
+    "sourceSha256": "fa2e05d286d58c42cce281d47fc16aae7f791732eddc9820c0c0f10818295943",
+    "sha256": "2745320bb99b80e8799c729f3f872ec0854a577110e6ce118836c3a8770e68b9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-data-scientist-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-data-scientist-mid.md",
+    "sourceSha256": "47b8f6b093e0020dafa7f42638b6ae110efc1daff626cfcd90af2235230a7593",
+    "sha256": "388893c95096cad37ece54a1ab5b310b7a8cabb53c013fb305385ad267369476",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-full-stack-engineer-senior.md",
+    "target": "backend/services/mockInterview/skills/generic-full-stack-engineer-senior.md",
+    "sourceSha256": "722fb6ee378621750c648684816d8069296616d00e7d30eebf49e34bd61f83d1",
+    "sha256": "09c4b16bbe6e0bda69678c0a9ceaa54cce12ecce7e7f3229df8e607b48e209e8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/faq.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/faq.tsx",
+    "sourceSha256": "6077899b0a3879f47f0903d7523998b91d4393b434657e3d6a477b5038d913b1",
+    "sha256": "26e6297920bb0c79497281aeafd1af65e41e735a4c74a23369dd60e07bd5a635",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-full-stack-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-full-stack-engineer-mid.md",
+    "sourceSha256": "4559170e59baf28e3a43f54a413662747d5377d0f90f9c3c852428f838480aac",
+    "sha256": "10652a868448e69504f884cdd60d785b99737d1ee97380389917886ad1fccc9f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/embeddings.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/embeddings.py",
+    "sourceSha256": "1f853dfb265d72674c9666c7cafb886a947f6ba4ff309b7044bec023c479e788",
+    "sha256": "eaa78abe4fdba621cd2eb6cbd81b3a0e872e7f57f3397687d6cb732b2a33491c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-mobile-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-mobile-engineer-mid.md",
+    "sourceSha256": "f6422be34ea44753f4b2a22fbbfbaa54ce3639bd1116c1cbdef75127a6b04838",
+    "sha256": "b48be58f15ce25d6ca802cfaaef72b58e87f9fc639a681d9b2f5ccc1bb096f56",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-machine-learning-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-machine-learning-engineer-mid.md",
+    "sourceSha256": "62dbafa963aac0f86f1d3bf0e6cd38edb1a3d30968db2a6984717995ff09a66d",
+    "sha256": "74b76764c83f1beab3a83671181d127818190dd6a23eb4a7ec245277a84031ca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-software-engineer-intern.md",
+    "target": "backend/services/mockInterview/skills/generic-software-engineer-intern.md",
+    "sourceSha256": "b7fa0f43ac30f39e978d8ea37e5118262d685dfc26bfd95a74681ac203b2c5a7",
+    "sha256": "9b7bb86b6860d3bfcdae8f2c35129abf6ac93c953a4776a478c7a8de12356b4b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-frontend-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-frontend-engineer-mid.md",
+    "sourceSha256": "c8d2c54116a27f352b2d56ff76c1bd097878d80157d73ad73c38617ffdf5e25f",
+    "sha256": "d5684d8f8594b63ace4f8f2a52f6036b3f036a9b98bdfc977b9137634e5d101d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-frontend-engineer-junior.md",
+    "target": "backend/services/mockInterview/skills/generic-frontend-engineer-junior.md",
+    "sourceSha256": "83dfff7c20c663797981d55a3235a5a54073452b80637a4352fb7b21d4cf6143",
+    "sha256": "ae24ccd1d0b5ce1bf4be96dd6dcde4152a331d17424253ede694fdd7cd7adf1b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-software-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-software-engineer-mid.md",
+    "sourceSha256": "bfbab39b3c598c521bf6dad18c14c4fa11e7c138ded99137fd9106285a97149d",
+    "sha256": "41092a09a9a0df8ddf965a18aa70520efdfce7bcf1439eef4b4d7cb7b06049f4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-product-manager-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-product-manager-mid.md",
+    "sourceSha256": "b4dce84cfa6a7f12fe1a24f5566149673d5ada5a1ef2b99c0346ae43cf76491e",
+    "sha256": "f23cbd9b04e9ff40db6cef87f3fc0a4714ca1fc5ef34763a1649c2be690e95be",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-devops-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-devops-engineer-mid.md",
+    "sourceSha256": "51d5413bc71e649d70772b428379a25eeac268d6ec630c947c1119a372d6bb2c",
+    "sha256": "9700965253045aca18af6e2b025e0307c3781dfc5766e5db8f5653b6941cb017",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-data-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-data-engineer-mid.md",
+    "sourceSha256": "7d191cdc50dff9e3fa2e5842cc546e204d1f6ce396900c7a211a21cf01f38747",
+    "sha256": "6f9910aa9d78f8a6ea9ecb50b486ff5b87e70e697e255f03dd47297ba145da62",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-software-engineer-junior.md",
+    "target": "backend/services/mockInterview/skills/generic-software-engineer-junior.md",
+    "sourceSha256": "3ad9c54a8a733f2da2d1ce0e5336721c03655f9ad4b5c2c2a07f7552c01cb816",
+    "sha256": "c417e2fc49d7f41ed4ab4d0de568b0f1653141ba407c7e8670808f0df0d6b5a3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-android-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-android-engineer-mid.md",
+    "sourceSha256": "6b49c671ca0a516f4a9a2ac90460f9802d39c4071a19cd569b57276bd38917d3",
+    "sha256": "9bf5c205f33d36ce51836ee2c4cc752876467fafab93e0fcfd0e71646befee6b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/generic-qa-engineer-mid.md",
+    "target": "backend/services/mockInterview/skills/generic-qa-engineer-mid.md",
+    "sourceSha256": "2e21b81bcfdbf4e774e4c8ffefafed1f860dd6df01a9677d6b35d0549fe342eb",
+    "sha256": "7a7016ba7ae9bef3c7cd8015cc65977561e6495b2ba6207fe022477223492631",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/README.md",
+    "target": "backend/services/mockInterview/assets/README.md",
+    "sourceSha256": "76188723b5f41963342f20b280211caa6c775da30828f14745e133d267b4bf0f",
+    "sha256": "daa0fc6a8a851dd1eae436c38370ddbcd2d67e7e0b4fe672e817d08cb9d1c7c9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_coach_api.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_coach_api.py",
+    "sourceSha256": "8586935b2aba6782a21a3002d495f0026f971144f2df3c4c8ba7becab3a6a161",
+    "sha256": "3a10c1849d465dd5aea47204bde1146fccb27a0452c749d03fb2a9841f5597c2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/models.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/models.py",
+    "sourceSha256": "ac64cc9668374be1aa1480b52d6562e47118ad571a65e5dc53dfe42fed1d5c55",
+    "sha256": "92f4a1ad577fe30a8dc73838c69c184bca3ced00cf5a0f073dacef0572a92483",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/SCHEMA.md",
+    "target": "backend/services/mockInterview/skills/SCHEMA.md",
+    "sourceSha256": "3668114771cb6479f3e4275bcbffe40e3074a1820818e6ecb3790c750080c362",
+    "sha256": "64863e6cd9dbdba5763b776e57aa71467b75f2ffe5362ea6f106295c0174dfe6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/button.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/button.tsx",
+    "sourceSha256": "5fc97e084013789ad9070be4393158b97dfe58f8ddec1430825e903dbe341a50",
+    "sha256": "f9bc226cec21cd972fbf05554a42d70268f12951e2d694b8b0d9796b6396e7ff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/api.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/api.ts",
+    "sourceSha256": "588982dd48091f8f599bd40b72cc83ee08f4a29579c2c03a99a0b15a6069fde1",
+    "sha256": "588982dd48091f8f599bd40b72cc83ee08f4a29579c2c03a99a0b15a6069fde1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/registry.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/registry.ts",
+    "sourceSha256": "e969819f50bbdfe35177de853c4046d152ba00dd30f0e8f9978f93894ea1ed1f",
+    "sha256": "22dfe12ed71e699116a7ab63b5a58e7cfd84f6ca5e8393337fb068f46f790931",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/coach_agent.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/coach_agent.py",
+    "sourceSha256": "eca6571c0773e94dff2a97185f27660ca7330ad4a9444db70d798b2b5acbe628",
+    "sha256": "4d64c8bfe20868572a317569ff9b9dea0056e69c54d3eb239d6ece38e0addffc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/language-toggle.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/language-toggle.tsx",
+    "sourceSha256": "c0e164ce340b6058de7f56ad22f8945c3803663648bcc02956fa1ba87fb3c5b6",
+    "sha256": "c0e164ce340b6058de7f56ad22f8945c3803663648bcc02956fa1ba87fb3c5b6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0001_init.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0001_init.sql",
+    "sourceSha256": "8fb56ea0cbf78636a36776a0ff0ddeec6968cf54f13a9554a539a722e5fd7d13",
+    "sha256": "2f935be6ec6531b859707fcfffdedd70d9add19ebb22e5bb6ce85ba90fd85c06",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/prep/status-chip.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/prep/status-chip.tsx",
+    "sourceSha256": "52e524c86ca3077b9808d62e3596b2185746bf935cc49803db98f263dec3a741",
+    "sha256": "e72965403ad4c1d87bc11a5954f7613d71abba16869aefa3b81c3d40935f36bb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/sessions/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/sessions/route.ts",
+    "sourceSha256": "db1d253b7dcc600f56fc59f7b37bc1a1df5838f4970feec99192d57f3d8bfd7f",
+    "sha256": "db1d253b7dcc600f56fc59f7b37bc1a1df5838f4970feec99192d57f3d8bfd7f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/post/language_coach.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/post/language_coach.py",
+    "sourceSha256": "63e5b14047e5f97ce0864fb756ca84ef2781bba42510b89db582fab33e21e2d5",
+    "sha256": "4863e683f934c5d463a3683f893b2f2aa2d3cb5fe4e1b49c9853b6b3491c4f24",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/avatars/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/avatars/page.tsx",
+    "sourceSha256": "d9c79a1182fc0f89a2e4127e0b12d0f7c26b5f70f5733d2c1cc031903e34f572",
+    "sha256": "46a0747b4f6ed3db25dcf6ded2581a3a7ef746ac527c88ac244d82a31b363475",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/model-answers.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/model-answers.tsx",
+    "sourceSha256": "ac9a3404349216d3b32733410bcdecc0d3980f5ce93deefd80968b767dc43170",
+    "sha256": "ac9a3404349216d3b32733410bcdecc0d3980f5ce93deefd80968b767dc43170",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/prep.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/prep.py",
+    "sourceSha256": "73d000523e4b190cd1ffa636048b0c40c9dbcdeed3c9c134f8f184e13ce8db78",
+    "sha256": "c2d3155b4a3ea9285583a5f350d9b62074f0f43c8186111f3ba601ba397b0a2e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/feature-row.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/feature-row.tsx",
+    "sourceSha256": "7de6ef56114ee5f296786427487e36ffa12c13adfd9759ec47450d1089b588cd",
+    "sha256": "e3a27782a9f71ca6103d2e1e77d5c7545c3ee92ae401b241b06dd4cefe3da45d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/coach.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/coach.ts",
+    "sourceSha256": "acf8e3d1659df683735e07043ecd3d1562c7f83a752062afc55694a5cc79de80",
+    "sha256": "c38461d5590d67bafdab544cd31ad4951301a1946f3c4b082a84dc8ec66b4382",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/score.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/score.ts",
+    "sourceSha256": "d7a36e2193986142dabd40c2ef1574f155376e944fa7aa6a8b66511a13fb6205",
+    "sha256": "65305d7ad321b96d9824655dc3bc6f0b8dd666f0d68c24f7d3f3a9594431668a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/i18n/index.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/i18n/index.ts",
+    "sourceSha256": "c9b02b00d0c3a569761c4263dddd1175f6a67c9a8d81dbe2e2cad5d4ad991197",
+    "sha256": "c9b02b00d0c3a569761c4263dddd1175f6a67c9a8d81dbe2e2cad5d4ad991197",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/traces.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/traces.py",
+    "sourceSha256": "4c28209224ed5cda009109aaa5c7649889122c279e2dd0cab2334056dabd8e1c",
+    "sha256": "d892a0837431f467d1a682599c689c9bbc8223a3db9d2e1ab7d959085a7eb584",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/dependabot.yml",
+    "target": "backend/services/mockInterview/.github/dependabot.yml",
+    "sourceSha256": "4db2d199a18dbd9a09cab158521f27b5fada5fa24e06df102fed1dea48afe362",
+    "sha256": "b96bdcb70563a0c0530592f065d4edbc04a18293363e48f6033e1ae45d687fb2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_chinese_feedback.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_chinese_feedback.py",
+    "sourceSha256": "01470ebc53a5bad3fd8dfd024fc0d26cfe51432519fb4527b88842c03d862b99",
+    "sha256": "01470ebc53a5bad3fd8dfd024fc0d26cfe51432519fb4527b88842c03d862b99",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/transcript-section.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/transcript-section.tsx",
+    "sourceSha256": "ad1bd6ffa361206c715cac0cf0091f05a38c1850aa39045f8dc9db85237dc323",
+    "sha256": "ad1bd6ffa361206c715cac0cf0091f05a38c1850aa39045f8dc9db85237dc323",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/report/scoring-poll.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/report/scoring-poll.tsx",
+    "sourceSha256": "0eb478006122f8560db45fbb00255cc019587868076c1fb611cb778c10665603",
+    "sha256": "0eb478006122f8560db45fbb00255cc019587868076c1fb611cb778c10665603",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/report-transcript.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/report-transcript.test.ts",
+    "sourceSha256": "b41b1ce5550a1e5eb4c1d08110a11ae02b7fe1a8debe85e2ab5751af51b76305",
+    "sha256": "b41b1ce5550a1e5eb4c1d08110a11ae02b7fe1a8debe85e2ab5751af51b76305",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/CompanyIntel.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/CompanyIntel.json",
+    "sourceSha256": "7c66f6bcd610b17764bd3b22707e61d4efb4a34e6ac2e8383cb59e3ca30ae7f7",
+    "sha256": "ed4d9b59f60b8f88354466a9d73adee7544567f31f802be6532bd42d7633b41d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/supabase/server.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/supabase/server.ts",
+    "sourceSha256": "35c8f6f95051d5e526d1fce3ea34aa0a0d8a0dcf839d469b587a9c9d5d4ac272",
+    "sha256": "aa6c6196a255851299878671147289f0ff05717bf5a78f710b9e10921a8d8616",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/Dockerfile",
+    "target": "backend/services/mockInterview/services/lightrag/Dockerfile",
+    "sourceSha256": "e9df85000e3cfe8eda425dc413791655a4f3b7d1f75eb4d8bffaeca1b91ed91a",
+    "sha256": "914018f7eb08c8ab6c450e1542f28cd827c43152b8767cfaaaa9f5d0a731d6e4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/skilllib/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/skilllib/__init__.py",
+    "sourceSha256": "6be3aa62bf5c20ad74e8a02f29b477b1efe9683fa811d5296cb7885797f24755",
+    "sha256": "59276880b71a9dad81618ad4221972a17788cd32bd43c294b8594f315f59f298",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/card.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/card.tsx",
+    "sourceSha256": "93c9daec94651ab4862a319badbeb234aeb027603acc3ba6c9c61a031712038d",
+    "sha256": "8dfd329cf1c1eacd0a0f239dc726075b843ce058fa71176f4f8cd7d810a93e85",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/opengraph-image.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/opengraph-image.tsx",
+    "sourceSha256": "bc06a9040c05bceadfd08bd4fa47f6a6d29b54056c131e322635a0cff15759fb",
+    "sha256": "4ad271054d0091d2a989a826649f6f48c0dcd1bb652835143b5b3f472e3bc954",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/report-transcript.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/report-transcript.ts",
+    "sourceSha256": "f22780214c86090b2271baaaf92a87b95ed8e83a51c2d65abe45eddc938c4127",
+    "sha256": "f22780214c86090b2271baaaf92a87b95ed8e83a51c2d65abe45eddc938c4127",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0006_drop_billing.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0006_drop_billing.sql",
+    "sourceSha256": "2a3eec5b06e7bdd45c32f5e21cacd7d16db926ee2c3a6b9f01c78c7334af68cd",
+    "sha256": "558f8b22e2b8a658904e1142bfc59bd31ef4ab073c91f5bfb27ab85dfcc3e2ef",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/auth.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/auth.py",
+    "sourceSha256": "c43935f5d59a15008e1abe2a24d5cd263e188062567bb9d19795e59e660f1875",
+    "sha256": "a2d918375dfcb6cf9000c01e2b4af2bf250425222c446efa6dba0b9ead638f39",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/primitives.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/primitives.ts",
+    "sourceSha256": "7910501334a3723891be1e203700b6bda30e35dd81070e18d5aad3965fbeb355",
+    "sha256": "5bd79db9c7c6be631976769d71ef3b493b50fd2ac4e6a8ef5b8c90d33114f789",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/PlannedQuestion.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/PlannedQuestion.json",
+    "sourceSha256": "ebbf935c5aa1884099760e84b3924ba7e6147edf5ba45f790ad7c18b1b2859ee",
+    "sha256": "12b7f8da0c5463cfd1778787aabe9c2395a9e3591c3a304bbac0855289fa15aa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/reveal.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/reveal.tsx",
+    "sourceSha256": "164a336831d402bf4e40d47b8be108ed4e222f2c16dcda94b71b0665e7139482",
+    "sha256": "8590cb754c0796eb92fe88cd34a77dc2fbeba19ca7bc7d1073c0e21b7f6d98fe",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/cta-band.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/cta-band.tsx",
+    "sourceSha256": "cd251e7ca68c77de152459c50c0e48f6cc2888c5b67f76f6ee22408c59eb6b7c",
+    "sha256": "e573c85f1405c412a9dc4517dbbde0b910abe3b74b66a0eaf2bcd3d0d4481dfb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/session-history.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/session-history.ts",
+    "sourceSha256": "3c2f117b80d448a0bf35a5415833d8f18c1236ae2f444d98074632b459fd52da",
+    "sha256": "3c2f117b80d448a0bf35a5415833d8f18c1236ae2f444d98074632b459fd52da",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/app-path.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/app-path.test.ts",
+    "sourceSha256": "217380cc7b68fae084c1e737cb83d87ccc67c2fac12d761b1aae55eb3d5cf59b",
+    "sha256": "217380cc7b68fae084c1e737cb83d87ccc67c2fac12d761b1aae55eb3d5cf59b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/mobile-menu.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/mobile-menu.tsx",
+    "sourceSha256": "879b0b75557c3ee0c08394bc70fa614e1ff66dc37270d9ec24e4c301f06035ba",
+    "sha256": "7778c72890ea712ec5b8005f4c9466a3e8d771c0fc97b8cbd63d05ffc7062f73",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/brand-mark.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/brand-mark.tsx",
+    "sourceSha256": "94ec580afbe9a8922b75c0e32da386f9f01abe773738997c976485aa60ceba53",
+    "sha256": "bd8413bfae19da4c5c4c019017a1f6016078adc16cd11fb03db3ebc1c8da1102",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/answers.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/answers.py",
+    "sourceSha256": "fec10a90f0c287fd88020eb192fe95a55f38d1baff635c616655b9387f01eccd",
+    "sha256": "fec10a90f0c287fd88020eb192fe95a55f38d1baff635c616655b9387f01eccd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/src/lightrag_service/models.py",
+    "target": "backend/services/mockInterview/services/lightrag/src/lightrag_service/models.py",
+    "sourceSha256": "1e7b0285016dd3e9df65121770047f293b69ac73ed39a8d518df5c7335d291c4",
+    "sha256": "4eff095677400e5f4aad57eb88d1f192ce9848a637f5c29e9588cd01cd5c8792",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/StudyPlan.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/StudyPlan.json",
+    "sourceSha256": "5e03804d75a22748fa02b1dc350b221f491893c19e9479eccfac98a80aabfcac",
+    "sha256": "28f83dbd23a6ae2b73bdb74d65650942c082bef86b35ba794e0a4036d28d695c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/base.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/base.py",
+    "sourceSha256": "16d8a9cb8be3c912caa2e448a1dc2817c0c8f14d5b250e9b67c8655b1c675c02",
+    "sha256": "471e539625a6f08f62dc1c7d4394f6c884159fcc622c3e8a588ec9dea63a3e5b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/package.json",
+    "target": "backend/services/mockInterview/apps/web/package.json",
+    "sourceSha256": "e0ae85752cee89b64eff85cac5ca6d6b9d5fa695553f5f4fc7a0580b3355c415",
+    "sha256": "91e1779af14907a0dafef9c289f6eed5e1c1082481af8fce83a34b8db0b81a3c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/auth-return.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/auth-return.test.ts",
+    "sourceSha256": "d81533f50bb60781c2581fb796d8670c230189f0c32f77842c52553e76e44fde",
+    "sha256": "d81533f50bb60781c2581fb796d8670c230189f0c32f77842c52553e76e44fde",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/JobSpec.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/JobSpec.json",
+    "sourceSha256": "e859fc9d8e4af005fdb49d3bd2021a465868cc7635dc0d4330da33abe1433270",
+    "sha256": "c4c6959562b3e2877952efdbdf8347afd962d255f9b8e6d20856c14f60905d20",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/proxy.ts",
+    "target": "backend/services/mockInterview/apps/web/proxy.ts",
+    "sourceSha256": "19b6cde08c219f61a04599d756bed4c7f183af3827b10fe6fd630e9bab174384",
+    "sha256": "f1d0b1d6336e37be2da4d4216aa9730265a6de2d9182e00e57dbd2ba249b1c05",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/scripts/gen-schema.mts",
+    "target": "backend/services/mockInterview/packages/shared/scripts/gen-schema.mts",
+    "sourceSha256": "69ac66066009e8a9a94fccbb19f00f3b04fc0c32b48d14d66482fc72c3b600ef",
+    "sha256": "52ed95fb7c3e7d16a53a78fd6e641ff36110267d18f7098363d634ad628dca6e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/prep/state.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/prep/state.py",
+    "sourceSha256": "7fc9f4763ab3c0e430ae48a418b3b65527ca2f8227ea380d16155101d69f24c4",
+    "sha256": "8b623b0e6fd7805003d2804cac68568785fca35b132d3b709e09618855df7a69",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/session/[id]/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/session/[id]/page.tsx",
+    "sourceSha256": "0791770001dacfd9dab84cd3a7c70c04f1e0565a69948f7b732f39b3308741b1",
+    "sha256": "f81d23200f9aa99d679659221d78933b216d2bfe421257d46f06e54a4905da4d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.gitignore",
+    "target": "backend/services/mockInterview/.gitignore",
+    "sourceSha256": "168537037f6f1b7c473be895f7c28bf5c3aadd0bf4eb6b8ad0291668fa0ffa66",
+    "sha256": "431f6a0c443bc71911d14feb6543f6f46b3038843d511513ee32f57f3161bb81",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/consumer/server.mjs",
+    "target": "backend/services/mockInterview/consumer/server.mjs",
+    "sourceSha256": "771640ea1aed72e2a6b14c552265caf2e2a9cb77f7cc1c3955e4faa44220afe3",
+    "sha256": "78b8aa667e52be779b564e8a1d13358e6218eba17384946c7cf0491e9ada674e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/test_roundtrip.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/test_roundtrip.py",
+    "sourceSha256": "6f805a477c805da0c95a7ecf8e68f65c68e9655d75303bb7f2f27e9eee9f0849",
+    "sha256": "25071262a4dac781d3dd299ccc78de673bfde2439f0a5409d344d9969da0d592",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/coach.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/coach.py",
+    "sourceSha256": "8016d77e87d03bd7c8504e8f27a3707d3ba0131a07ba82afc43180c528be1999",
+    "sha256": "ff006b36765d49ea32753c1e98b0f85bc58631193008cb069c8644e894a50abd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/package.json",
+    "target": "backend/services/mockInterview/package.json",
+    "sourceSha256": "8f0bd8cd19757fee8980b156098e80258dee199d1cb1b9768c786a65e74d371f",
+    "sha256": "cc3618c844ba0952090ef0f0e171829966cbddd4a38a09aa162ad4698f0e8bb7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/pyproject.toml",
+    "target": "backend/services/mockInterview/services/lightrag/pyproject.toml",
+    "sourceSha256": "82298a856ad6f4338f5a6112944ae34839958e40976351196747039d90c78209",
+    "sha256": "59b819610dc12e1f3210a3de43a830e4100b4d67c7b6aec82dccb5a225d5925c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/assets/logo.svg",
+    "target": "backend/services/mockInterview/assets/logo.svg",
+    "sourceSha256": "a048f51405ef55c6f2eea85873e93f70a7fd6caf38a4e51c3dba0baf65064130",
+    "sha256": "07cc4818571d017c36d10dc3094b5da1c92bbff914258b0c3ce86cde3f456084",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/example-corp-backend-senior.md",
+    "target": "backend/services/mockInterview/skills/example-corp-backend-senior.md",
+    "sourceSha256": "0c495e66676bca9bf2b581283468ff3551a96d0a9ffb21f0da294601c291abb8",
+    "sha256": "3a987770259088566abf8eaaa9f53b49cf25125680a54f4dc7b9444b8e1908bd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/candidate.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/candidate.ts",
+    "sourceSha256": "fafed25493a78d3db0429a436f7462ca260ac88aa03d45f965d4f4ee276529ff",
+    "sha256": "ad79433eb27c6e06b8ed130278f37fb0935d62dcf39bc0f5cde661bc4e5859c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/PULL_REQUEST_TEMPLATE/skill_pack.md",
+    "target": "backend/services/mockInterview/.github/PULL_REQUEST_TEMPLATE/skill_pack.md",
+    "sourceSha256": "c928ebb8b0c4c1625a8c2aa69ed958f4b7303f51c5206c5112893bf8e22f600a",
+    "sha256": "b3ef5aadf646c77c1c0e5c069c2d80774b435c635265310143b4d358b56cf0ca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/question.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/question.ts",
+    "sourceSha256": "a961914031bdcd2e718a1bb5ac26bff645bed882d4b631c49fe583ae89a3c8ba",
+    "sha256": "e668a196eda760dca66198bfb602c08046cfb3b329474f99f44d76d69732fd4e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/kb.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/kb.ts",
+    "sourceSha256": "ad4739ce6a900246d638f76e143545cc7963cac72da0cb06a114e7f4a1460d95",
+    "sha256": "ad4739ce6a900246d638f76e143545cc7963cac72da0cb06a114e7f4a1460d95",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/next.config.ts",
+    "target": "backend/services/mockInterview/apps/web/next.config.ts",
+    "sourceSha256": "bf1753cf4ca3f432ca35650d23cc0a49be67f026f8531b64a2c345c0ebff074c",
+    "sha256": "bf1753cf4ca3f432ca35650d23cc0a49be67f026f8531b64a2c345c0ebff074c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/CoachReply.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/CoachReply.json",
+    "sourceSha256": "0dc135a814d91d7871354b8b475d6871b8c9b319de0e7f5dd0b0a80a4d6e8e1a",
+    "sha256": "6b3f7fe2fa213f03e5c6cf2b42f52a8469255ab7c7f4f36e1e1612a3f5697e7b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/coach.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/coach.ts",
+    "sourceSha256": "9be0b3e9e8f58e26eb7a2e26a5ee95b82360c5abf1261014be9f293b0228464a",
+    "sha256": "9be0b3e9e8f58e26eb7a2e26a5ee95b82360c5abf1261014be9f293b0228464a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/PrepRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/PrepRequest.json",
+    "sourceSha256": "049f2877dc12514054b02a8f715b70639d421b471759d3e51f887dcd888f3b25",
+    "sha256": "f508439af224d4423ea6cd87310ef1b6db8cc3b46f7862b71fa6d3f322344bd1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/page.tsx",
+    "target": "backend/services/mockInterview/apps/web/app/page.tsx",
+    "sourceSha256": "8e3594b1b5072105fea451e14f59885e97ae37ce322480de5644a1ea36778362",
+    "sha256": "4fa649481d620432f7673e9c66eb3b9a86b0ac988ba82f07b813323d761482a4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/auth/callback/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/auth/callback/route.ts",
+    "sourceSha256": "9ccb4e8a8001535be0224ae2286417df95b77978086bb5340951b9e93e208f62",
+    "sha256": "9ccb4e8a8001535be0224ae2286417df95b77978086bb5340951b9e93e208f62",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/services/lightrag/src/lightrag_service/__init__.py",
+    "target": "backend/services/mockInterview/services/lightrag/src/lightrag_service/__init__.py",
+    "sourceSha256": "038b3bb9ef9357687b0d46d6da4f8ecd925a4f0782086ed7da793597ca7e4a06",
+    "sha256": "b8876427e91fd45d0422dc7145b815a691364a6cf3ac51a0ef0c05d47842a350",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/badge.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/badge.tsx",
+    "sourceSha256": "4dd92a1753a41844ba6f1c8f9a80b77d0e6831e611914248980466437fa9a065",
+    "sha256": "71e9a2fda2e77eab517ea2a7cabc6168adfc1b51065a3e08c68a630dc616bc8b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/ee/README.md",
+    "target": "backend/services/mockInterview/packages/ee/README.md",
+    "sourceSha256": "f4b150942d33c119ab2ab5cc2071b52509cac226d5e40350bd11b83e671d631e",
+    "sha256": "6f9db9859a39cb84a048dd1bfba5ccc80098fd1e61499aec057cf5c337f7431e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/icon.svg",
+    "target": "backend/services/mockInterview/apps/web/app/icon.svg",
+    "sourceSha256": "bcc3cbf4d36c4bf9e78c32d13fb4c5bafa769ad8bc917cea540361ba3c52b516",
+    "sha256": "7afcd17aacda3b32c152ae75e51a10726fb0d0417c420ab1ef02045dc570db83",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/textarea.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/textarea.tsx",
+    "sourceSha256": "fd3db12ca07563ec0dd06d4ac2db520e0f9ea3ababb2dd63fee7bb67477ba5f3",
+    "sha256": "c77ecfb9392490c21a3ffb7c46010b775cf664fef7663602a97f02daa14ee8dc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/FUNDING.yml",
+    "target": "backend/services/mockInterview/.github/FUNDING.yml",
+    "sourceSha256": "e2a2bc135305a3c9d70d93fc86729444dbfc6ba8a17d9e4b59cf97c540a6e6bc",
+    "sha256": "45760d127c83fc34afbc9893802fe1c4dc4ab16cea9b58db8685d6952a3573be",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/logo-cloud.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/logo-cloud.tsx",
+    "sourceSha256": "c6cc07bbc8e18c94651a0406ea58b541ba4fe62766fe4695c04cf41a6f981a58",
+    "sha256": "f75ad20f2dc508a75c238d63b1361b879e79bc982ae086d1af55d09607b2303a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/package.json",
+    "target": "backend/services/mockInterview/packages/shared/package.json",
+    "sourceSha256": "6972979041fb63cb58999cd2f3beab0f9c4dfdb280481a7a2f2f2cfa3429765b",
+    "sha256": "49f22895977626fec94d17e5f7ba2f12d6cec9b872c8ff5c3e45dbf648cec79f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/GapAnalysis.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/GapAnalysis.json",
+    "sourceSha256": "77ebcb54faa3219a89188b091e89be314cd2d9a725ec532cc01e37de8a0ea494",
+    "sha256": "a20925fbb28756bf35d54356df5225546d75c0490066b052aa01833c15ba72db",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/interview-context.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/interview-context.ts",
+    "sourceSha256": "64f4c879931af25a11b676d7b17218182dbf99de1dec14a9b8c73fda89e79c12",
+    "sha256": "abf26a7ba944b6be81e1e57d2eb12ed8842cb7aecb6079e0dca8b4a369c9b1e4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/input.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/input.tsx",
+    "sourceSha256": "08d3e04cdf8dc0085a8fed015f89d8396a71a07ad793b28af8b5024be6e8e085",
+    "sha256": "a8fad58d7f40457c607db1fee8104ff7a9af6bbaabca4ddc4b57dcd616051517",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/KbQueryResponse.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/KbQueryResponse.json",
+    "sourceSha256": "f6ccb4e058efbde73bee7701ca3f7c582b7f663ffa8fce484371907ba161c3e0",
+    "sha256": "1c5ea2755d851eff878235e90b3ac21f15d37667001dcd601c9d6901062c6486",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/landing/announcement-bar.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/landing/announcement-bar.tsx",
+    "sourceSha256": "bfa013f212801e365a24fdfd6123e291288d7478e47f6169d0b4dabcb1acf13c",
+    "sha256": "3aa733f68bfaacc08296beec7c2a948a65eef1c4e1e8ca84431ca4b811d82573",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/_review/README.md",
+    "target": "backend/services/mockInterview/skills/_review/README.md",
+    "sourceSha256": "6cb5b0e1a1f2807c8f96eee8b6c4f4f12b01190d8f6beb92185256c1e4dfbc5b",
+    "sha256": "c064d5a7fe5824506af40bdab7ad04e141939961c6c97af75d4f9214e90812c5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/AnswerRecord.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/AnswerRecord.json",
+    "sourceSha256": "50970b545a9f8b0b76884b33f685a88f9a42025725b2b1499014a6d1f39ee96c",
+    "sha256": "47b829d71cd4646b0962960294db8aeb5cbae8e4179bc091f8686444ea9f6026",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/auth/signout/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/auth/signout/route.ts",
+    "sourceSha256": "58a0608897adde2db88f1b2fa0db4e0ef930a4d7e25b05dee675f3818af04408",
+    "sha256": "58a0608897adde2db88f1b2fa0db4e0ef930a4d7e25b05dee675f3818af04408",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/instrumentation.ts",
+    "target": "backend/services/mockInterview/apps/web/instrumentation.ts",
+    "sourceSha256": "c73e16a8e9aeabdcd91f1bdc678bc928a461dda61beeb1231a9ca0ae741a556c",
+    "sha256": "80a8837f5184c3463d3c52879f29e4405e1fcd0f3ba802a6b14ea0782412a9ab",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/StudyModule.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/StudyModule.json",
+    "sourceSha256": "565e5f526f0f52207ad6245b6e6fb421b8bb7d69f58e62c6d3f049ae96fad3a9",
+    "sha256": "f1b5e787030efe58088263d154005966439927c91f30fa1f828638afc5bf6954",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/Education.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/Education.json",
+    "sourceSha256": "f992f4baabf16e216030334a5051cd57bb137fb7ac0398c3ab9f2086aab5ddaa",
+    "sha256": "3160b482c3effb43aa90d01698731bafdce97075972162a4057460013c888de2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/i18n/client.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/i18n/client.ts",
+    "sourceSha256": "119544347f63cfdc3275023124ab1b272de212c945e299e98af27c8d3441bd7a",
+    "sha256": "119544347f63cfdc3275023124ab1b272de212c945e299e98af27c8d3441bd7a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/LanguageReport.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/LanguageReport.json",
+    "sourceSha256": "7018759d4bc660817e9c417cce9cab6055995ac838339b5338ad860b9efa5f72",
+    "sha256": "08c5ab76f55529e7f1941e6709a211768d4acf777625f329636c118f1d824102",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/ee/package.json",
+    "target": "backend/services/mockInterview/packages/ee/package.json",
+    "sourceSha256": "065649700bf17cbab10f181b3587acf356efdf7f5afca91e776df53363422635",
+    "sha256": "abd166751455d3fad9c11fb089e673cd40b64a0055e70e920cd1d7bdd5723bcc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.github/ISSUE_TEMPLATE/config.yml",
+    "target": "backend/services/mockInterview/.github/ISSUE_TEMPLATE/config.yml",
+    "sourceSha256": "3c330260b6a297b8d507368b872930bb2f7b262ddcc73d620ab4f06f2490af57",
+    "sha256": "599f4b8dbdc52fc7ed361ead0a4ace5951f89d9ef5c35c0832ab02c3397ad128",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0003_prep_progress.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0003_prep_progress.sql",
+    "sourceSha256": "5263491c5a37fcdf5997c3b067a58932cb22af9e6222e9e522b460229c9f78c6",
+    "sha256": "a5f38203ece906b4886be3892449ecdf0cfc40373d2dbbf0d34b73dda906c00d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/pnpm-workspace.yaml",
+    "target": "backend/services/mockInterview/pnpm-workspace.yaml",
+    "sourceSha256": "af3ea149e10fa9796ee9d09c8b19d385404e6df2d34271e297dc5a086da6e83e",
+    "sha256": "0ae28291a24d46db22233faa5c92c3af0f1c573c460de6554bdc02b8c98f5ab2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/company.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/company.ts",
+    "sourceSha256": "04e84468bbfa3e3df3cbbbfd76bae3fff77237d91ba5c25fb4dd9d5fb341fb28",
+    "sha256": "eb9204a79f626306e1479c7a00af3f82513410238d703dc5d520235f9771439e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/live/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/live/__init__.py",
+    "sourceSha256": "e3dbc7ba77e24808366388fef2878d66a44d7c1c0338ec70b0ffd801aca8327c",
+    "sha256": "88343dd5a4e86edccf91c4b9502011a10af899166ffb57e6d953aea391a17773",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/CITATION.cff",
+    "target": "backend/services/mockInterview/CITATION.cff",
+    "sourceSha256": "748b0558f83de41e008a7c6f5b0bb830c5fb7d740e2ae9ffc8bee3424573af5e",
+    "sha256": "8750cf015d264e65c135d0d90aeaa3abca75e3019905561bc408349eb7dedf72",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/package.json",
+    "target": "backend/services/mockInterview/cli/package.json",
+    "sourceSha256": "16c76548af0857028eb634dedaa37afe49ae7e14699ebfbf4c7405e02ee426c0",
+    "sha256": "41686c0bd9d70181bfb792baf4811a07c23b52e6a28a0a26328c0b1e4b410533",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/room.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/room.ts",
+    "sourceSha256": "30d0c5e067240564bd3501394155703910bf14a0702ad8ea0a8afcbdf2db7b2b",
+    "sha256": "fee17b4bf6fbf972815cc0001c445afae03d0bde001cfa4b531743fef02bfa75",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/logging.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/logging.py",
+    "sourceSha256": "a8041e3f0f497c986f9a514c248c1494dfd1a911772364a65bfde3c9a601ec4a",
+    "sha256": "ae12f9d58108a4c7ba8e29c3b79531c464047adf5fc8bd794b3c2e65ec647a57",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/spinner.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/spinner.tsx",
+    "sourceSha256": "384c876890d321a8411f77dce829df35ed980a443cd2c8bcee4394e46fa58562",
+    "sha256": "957366c7e82fbd46079f855f4a87e4b4505ca55056c33c64b8f47a681f67594c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/AGENTS.md",
+    "target": "backend/services/mockInterview/apps/agent/AGENTS.md",
+    "sourceSha256": "8868c26bed0b4d93aced797122223d95d5e5a75cab259bb790ba1992bf350ab1",
+    "sha256": "bc645d7b7b598b1b101ed43d7b080dd24e0e4e85b578c6d0e4d6570fbbe00b8d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/turbo.json",
+    "target": "backend/services/mockInterview/turbo.json",
+    "sourceSha256": "3ee714e4c57d93179cbaf96f4541ff5d2e4ebbc4e459611490b50cdf0ae30c42",
+    "sha256": "b461922f8e56c6384c36df61ec7dbe5c96f4523971fe2839ca3d776c6ac8b187",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/score.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/score.py",
+    "sourceSha256": "fd5ffd53703d4733a7f5714f3dab876d55ac1c5ce1a5b07729c67fbd6a3f7db1",
+    "sha256": "a0714e07681c80c4b1e16393caa571b4e837625133c9956fb707cda7eeda58f7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/language.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/language.py",
+    "sourceSha256": "6957d28b9c1bf39cda0a4da0acde5e1ab8e92e8acfd43d22cd515dc071d6a7c6",
+    "sha256": "6957d28b9c1bf39cda0a4da0acde5e1ab8e92e8acfd43d22cd515dc071d6a7c6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/tsconfig.base.json",
+    "target": "backend/services/mockInterview/tsconfig.base.json",
+    "sourceSha256": "009e8222fb9032f604c9144604ea4b7e921e2a743a59c20c4f53b892ee4eaea0",
+    "sha256": "e72985dd04ffab765f5c1b5f4e237944048697af5e07380997a2f7c144b1a20e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/supabase/client.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/supabase/client.ts",
+    "sourceSha256": "4d30f00209ccca5764adc5c38baa0efc854377676990228c05d9636264a58a99",
+    "sha256": "27714abcaa36694cdd213dcccc993938a56c444c10f7e78e0e2dcfcc72312cb7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/CoachChatRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/CoachChatRequest.json",
+    "sourceSha256": "acb81c4063ac4dadb72b2592aee5ff41f790da9cf6a474616cb27fef97fcdfbe",
+    "sha256": "48b4209402455422c2f390704218546424209a685ecdd06519fb378bd720cb2e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/KbQueryRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/KbQueryRequest.json",
+    "sourceSha256": "03182f848664bb299b2ea7d1229d6fbb569fb2112de970c09f2403c13c67dc6a",
+    "sha256": "16f8aef18494dfedbdd63d11651ff836f9901cc89f1ad901f712cc514421bc49",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/CompetencyScore.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/CompetencyScore.json",
+    "sourceSha256": "bd4260583bc3c66b03f266740f33efa66bd46713f0c28cec231b859f506ee2f2",
+    "sha256": "8b537ccb7534419562e7d271f289213c564bade8c84d28c7cb785852b321d0e3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/label.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/label.tsx",
+    "sourceSha256": "4c32ab0c6012b083fd22419fa23cfa389efff55467406498d7780627b32a54fa",
+    "sha256": "a5356833540ccae33d03732087f4ee658dc664ee03134d9481a28eb453c43c91",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/job.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/job.ts",
+    "sourceSha256": "a38461c5c9b585182f9a9e529a67c1f9ffface77ec818220cfd6a0cad753afbf",
+    "sha256": "1522f5a0009455626a0ae74b3145cdd138b23cd645e3e208e5b0d9acf235fa6b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packaging/README.md",
+    "target": "backend/services/mockInterview/packaging/README.md",
+    "sourceSha256": "ab91dcd3706ab65152d240d91f26776be7da1bf1c9674a3dbea56913ada0b1a3",
+    "sha256": "491a7627a6dd8fc25cb0bd88c2605084fcab7a653e674c3d43d733d1d1c9811f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/scripts/setup.sh",
+    "target": "backend/services/mockInterview/scripts/setup.sh",
+    "sourceSha256": "441323ddf5d69aecab68c0c17de91d4ea0472d250199f05a95dc8a7c9754f515",
+    "sha256": "709fb6c530d5ed5e64b4501fd60499d99b23f3a999c1d1dce1ba710d6cab16d9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/test/cn.test.ts",
+    "target": "backend/services/mockInterview/apps/web/test/cn.test.ts",
+    "sourceSha256": "cc73c64a69aa332e1f80213ecef92a2819dee2391fc8b4e5b5b212a790f845c4",
+    "sha256": "7d2c48fe89744c528861d578b9252ad4df9a9a1af7750360fb25ff897b509818",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/eyebrow.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/eyebrow.tsx",
+    "sourceSha256": "1a007da49d5a860cf8b260b0efe8d4d5cd0561af9d6fdba0c45b3aa8b0b52242",
+    "sha256": "e0ce9d0f111c1437d5de2519659531107818024259825172fe332443b6206342",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/tsconfig.json",
+    "target": "backend/services/mockInterview/apps/web/tsconfig.json",
+    "sourceSha256": "56b31fee8017683b4c852bb001da22160efae625caf3b9e4aca63303d405c0ec",
+    "sha256": "a0d11666958abfbddffffd33a859a7a51014ce09da6f13af13e394aea261d5ae",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/tests/README.md",
+    "target": "backend/services/mockInterview/tests/README.md",
+    "sourceSha256": "e78dd5a1461ff694df68512d1ad6e2524e158efd633e4dfac000490ab9331c3f",
+    "sha256": "2495327cd5b990a5899907cac1fd4c844451587db4b3743602d17220661eb13f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/TokenRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/TokenRequest.json",
+    "sourceSha256": "44b65803664b43487346bff204cc2e472b1c84841f2fa3ac57a906944cc0a9fe",
+    "sha256": "27b7a667070bbdfed2350904b8af10ba5c44f710ee9fbf535cce6fa8e5f9a414",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/LanguageMode.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/LanguageMode.json",
+    "sourceSha256": "21c5ffa865516d65b5ef029721b77c37bc73d1ef8699cafac0c0872e2db74f4a",
+    "sha256": "2f14f89dad05518a2033d8fc69568a79f0880cd08423cd6e3fc78a4c39a8606d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/Citation.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/Citation.json",
+    "sourceSha256": "c39a866f1d5eb65cde8f942976ab838e3b10ad1452792b548b617c73bf6bde8e",
+    "sha256": "70072f941fe485cfe238b1faaa3afb563bbfdf9e13acb2cb7b54fe33c071a68d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/app/api/health/route.ts",
+    "target": "backend/services/mockInterview/apps/web/app/api/health/route.ts",
+    "sourceSha256": "5b923319b0c2192c61ef684d5b84ba3144abc3df768c8e14c37a6d9823ea7b07",
+    "sha256": "206892d02cf9de65140f6ebb1c3d186ab83d533c3f35d193255f985ae6ffcdb1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/index.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/index.ts",
+    "sourceSha256": "05403d2bafda8ea3954c1cd971d9066366320b43d09cdfccce03a2bb5a04469d",
+    "sha256": "1e77dedde96009eb7174ff112799367f33bb10bf37402d922e95a4b959189eb6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/components/ui/container.tsx",
+    "target": "backend/services/mockInterview/apps/web/components/ui/container.tsx",
+    "sourceSha256": "c9433647038573fed07d8e011a7df14e9bbf8ff64f14ede244298d6cc0345f77",
+    "sha256": "c566317db6d909e2f86d3aa3e8c3a5c271e0f8c89821efcf1920bd3b73ba8fb4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/Project.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/Project.json",
+    "sourceSha256": "a81f94ab021f245424131b094b1027f138febfe1a363390b12b2d0c25440fd27",
+    "sha256": "ed7af7ff04b7f344de9bfb2ae5877c1ac845f4c7b094c5edbf78e1073bbc541f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/answer.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/answer.ts",
+    "sourceSha256": "a90c070d4463b08675eef7c54f8a978c71dc6a938bcfedf7bfe124d04210f1c5",
+    "sha256": "7f30c6ea2f5b2eebb846a2ea518d8c54def77cf0c978f666012287a75b46819a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/src/gap.ts",
+    "target": "backend/services/mockInterview/packages/shared/src/gap.ts",
+    "sourceSha256": "3a53f11c8a26061efb371f0d627cc0bacb5bd252e26c91afb0f7cd20dbafa072",
+    "sha256": "bf3decafa9481f16f6f349aebec1f0f59c22fcea7bab78c9e4faadb96413801e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/RubricItem.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/RubricItem.json",
+    "sourceSha256": "ba40e5232e22d8267e5e38eb007f6b9a2048566e12ca65a286ee1460f26cb67b",
+    "sha256": "170622205382c1032ed37167edee4ade4d60da0fce40d09f21385222980237ff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/supabase/migrations/0004_coach_transcript.sql",
+    "target": "backend/services/mockInterview/supabase/migrations/0004_coach_transcript.sql",
+    "sourceSha256": "f43e8c69fda93b674868cc4bddbdd81b9a8ceeac684ae36640e071f5dc11f6a1",
+    "sha256": "32e2f17baa2d041f41df4893e6b4d184ac57abc7be9cddfbd1de2c8fc324c87f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/KbIngestRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/KbIngestRequest.json",
+    "sourceSha256": "51002ae832e7f1a42d5a3d2db2c60dfe07b77b51f121899e85c30a26aecb0894",
+    "sha256": "93c27d3b8adfe6a8f0766899f3f6ab2323ba4c63116c3d8e47eb9890d818b537",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/TokenResponse.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/TokenResponse.json",
+    "sourceSha256": "9db81648e2288fcbd458ade5410262065ae7eb3ef57a15573b164ea204afa329",
+    "sha256": "eabcde502c900e5525328566393aa0dfde6c801b1ee6bf61c9a8d26291071731",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/vitest.config.ts",
+    "target": "backend/services/mockInterview/apps/web/vitest.config.ts",
+    "sourceSha256": "3fe2e8aca0f7f869b0b875e2b4f09d2d44bd605b1002d31427bdfefe8890a2b0",
+    "sha256": "d616a685662ddf0809931e29ed51630649ace8a4e2ef6c9c48e1abffefbe9d02",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/ModelAnswer.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/ModelAnswer.json",
+    "sourceSha256": "367dd04625a71ed14045a2eee76f1da99ee9841bd174eea9e27b60aba656c79c",
+    "sha256": "c45fb570e4234cf7d57735143aefd32366f6d5e8f8aaf31d556eec6ca64d94d2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/vercel.json",
+    "target": "backend/services/mockInterview/vercel.json",
+    "sourceSha256": "5c67eedb543ca23370cb1c091d85de7e3d99fae70a5a2fa3bd3bfa23d4c415a3",
+    "sha256": "8983e4d75d2a86a203adaf50b7d28c51b0f9df21de55a48206fe388c02ddf9bd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/next-env.d.ts",
+    "target": "backend/services/mockInterview/apps/web/next-env.d.ts",
+    "sourceSha256": "018f9010e5bdff95193ce6120d586f0d9a9da4e9bcce50f1d667f7ae22d75750",
+    "sha256": "16ce2d6c288f6dc31eb622f7657ed1b892bc10f2a83857f581a1f52cabe80d87",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/cn.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/cn.ts",
+    "sourceSha256": "1be5e4c203ef6c18b2dc754ea94c7a39dab591d179b40be6cd3eca8daffe3cf6",
+    "sha256": "b82af8605bcff1bcf0182bb07ff9fb008cf78f21d9f1172a631723cd3eb2389b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/tsconfig.json",
+    "target": "backend/services/mockInterview/cli/tsconfig.json",
+    "sourceSha256": "cf724fb181d96608d6a3dd10ee6e017a3aa87f4cfccd765ff708ba8d6c36e758",
+    "sha256": "4a825128a8278152cf9f07fe4e70716e9acc31b4bb6fcea62425f67081ed82d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.editorconfig",
+    "target": "backend/services/mockInterview/.editorconfig",
+    "sourceSha256": "776efa14f00d82aa0a5c61b516fab261dc65ae3c7e318f627b09b233c6a2f322",
+    "sha256": "85bccbd23a9070becfe1dc0dbb9ad7305fb2bb98f92f54cb9856d7d6eca4ebfe",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/PrepResponse.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/PrepResponse.json",
+    "sourceSha256": "76eb92cb9be84709ebb9b4150b7e9bac8eb8bd3cd0d8870185434dc2ae475c43",
+    "sha256": "8b6b21e8080f47965b008615c0c26e12df301f14ee4785c1295247c8813d84ff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/RoomMetadata.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/RoomMetadata.json",
+    "sourceSha256": "76eb92cb9be84709ebb9b4150b7e9bac8eb8bd3cd0d8870185434dc2ae475c43",
+    "sha256": "8b6b21e8080f47965b008615c0c26e12df301f14ee4785c1295247c8813d84ff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/ScoreRequest.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/ScoreRequest.json",
+    "sourceSha256": "76eb92cb9be84709ebb9b4150b7e9bac8eb8bd3cd0d8870185434dc2ae475c43",
+    "sha256": "8b6b21e8080f47965b008615c0c26e12df301f14ee4785c1295247c8813d84ff",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/app-path.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/app-path.ts",
+    "sourceSha256": "2707a4fcdc074101d082909d629e8d82a778ed3472831316685bf2fcefed3427",
+    "sha256": "2707a4fcdc074101d082909d629e8d82a778ed3472831316685bf2fcefed3427",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/KbIngestResponse.json",
+    "target": "backend/services/mockInterview/packages/shared/schema/KbIngestResponse.json",
+    "sourceSha256": "43791cee5731e005f18aa07cf46974e2b0cf2332e10c997b1b26c97051a68fd8",
+    "sha256": "5b508cb58287f3605a8570ffe3d5db289151131a6303007675f41400b47a0873",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/cli/tsup.config.ts",
+    "target": "backend/services/mockInterview/cli/tsup.config.ts",
+    "sourceSha256": "e3bb570e19acfae9b480b6e2a6b5c9779621ea11ae9103618e9fdd925009b04b",
+    "sha256": "e8fb05fa2cf4202df364a362aac2054ca09ab6305b23a28abeca15e1a073b9f7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/tsconfig.json",
+    "target": "backend/services/mockInterview/packages/shared/tsconfig.json",
+    "sourceSha256": "acea5d02179b3c371ddecd915d8486329d6046a484eb3d9d211f13dfb502e869",
+    "sha256": "72e85f871facf5b4d0b7d6b6f88938ee03ae793d8418ba7cf93e4560ba0fa285",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/ee/tsup.config.ts",
+    "target": "backend/services/mockInterview/packages/ee/tsup.config.ts",
+    "sourceSha256": "edf574ccbec7e46e14531d1b7bb8449ce8c380ff09d4ffc3794b8a10ae88a1eb",
+    "sha256": "d1662ba3cc72614b0a278772fa42848b742cc23a064788c90a37eefbef7cb3d3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/tsup.config.ts",
+    "target": "backend/services/mockInterview/packages/shared/tsup.config.ts",
+    "sourceSha256": "edf574ccbec7e46e14531d1b7bb8449ce8c380ff09d4ffc3794b8a10ae88a1eb",
+    "sha256": "d1662ba3cc72614b0a278772fa42848b742cc23a064788c90a37eefbef7cb3d3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/scripts/README.md",
+    "target": "backend/services/mockInterview/scripts/README.md",
+    "sourceSha256": "592740468cd9f160993f2628bab71d6bdcd07db1bda844aa82b3eab5ed602e10",
+    "sha256": "51be58131da673576ccb17695f02a54b9693730c71d0130151abebcb5bc3cc51",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/package.json",
+    "target": "backend/services/mockInterview/apps/agent/package.json",
+    "sourceSha256": "450c59bbb239c32f1eca26e0c2cb45898254896f1866d712e04a22a39841c570",
+    "sha256": "34140fadbb67296ab14a5a8706dd99f1ea772aed1c2d557f1f680dc2d8c6913c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/ee/tsconfig.json",
+    "target": "backend/services/mockInterview/packages/ee/tsconfig.json",
+    "sourceSha256": "01e182193d9e1313ffcdcbc4471df91f23ff58726edd3760c260e57b82a4fb24",
+    "sha256": "5a5d3c3cbb5926db2bde8731ec12ce5c8a5d5ae10c8a6787f42b264e6cf27dfa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.dockerignore",
+    "target": "backend/services/mockInterview/.dockerignore",
+    "sourceSha256": "6c3ec6076b675febcbb364aad6572663239c29b1986a01b9e5b20992518655b4",
+    "sha256": "0cc3b26074acbb169d9900be68f6f00c4a1ea7c9cd9050082de8818ef148645e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/vitest.config.ts",
+    "target": "backend/services/mockInterview/packages/shared/vitest.config.ts",
+    "sourceSha256": "6bac10955e88f342f94fcf08c2dbd0fe5b9c45cbc15dcda0d03c4139907d81d5",
+    "sha256": "053b20923d92ca67fe33ca3e8c42287366f7b262327152324ce9ed417a862141",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/lib/site.ts",
+    "target": "backend/services/mockInterview/apps/web/lib/site.ts",
+    "sourceSha256": "23fad7b5d6f4acfaae56f64c296accf739339a80af80877305218855dc1166bc",
+    "sha256": "fdcbdc50a68cbaa938101018fa3393a09663d95d22b9beaf15348c847bf59ab8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/avatars.manifest.json",
+    "target": "backend/services/mockInterview/avatars.manifest.json",
+    "sourceSha256": "7d1fb02838b6e7c98590c51d22b676caed0b10da587d01fe54dbfd37d1580c45",
+    "sha256": "a50027f02de6e024e37767e101b45b031df67a954149ee0ce5768e06b0a53ec8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/__init__.py",
+    "sourceSha256": "b880ebd2779b239cde92659267994b6fa4ad06c90b5b6e13d38554bfda653266",
+    "sha256": "cfcd1f77557c52db0d52813d7c5b218b3ee8a11e4e40c633bbc1801178c04307",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/NOTICE",
+    "target": "backend/services/mockInterview/NOTICE",
+    "sourceSha256": "4161c0986246004d6ea1cfcf65a1a6cd641a1c18f5c112da520635a836afd723",
+    "sha256": "fb1aabccc324f402bd1920e9fb8ad82cd555f3f2518c84096dab541b424e7c4f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/adapters/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/adapters/__init__.py",
+    "sourceSha256": "0378e62395cd47297e7400fa1f079a0c1947263537911e9cfe64afeeca7d7458",
+    "sha256": "b7d52f63687f3626aecf87b1aba557979816ffd07beb5c40fa69a03e2606ec4b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/core/persistence/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/core/persistence/__init__.py",
+    "sourceSha256": "00c2248607f12d101f536e1bb71aca767c0e3e22eb42a3ec872fe11003a4214b",
+    "sha256": "59a9d842bc5b84b80f7fa58858f9e4b1fba38b53da820dc69f83b29297109c84",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/web/postcss.config.mjs",
+    "target": "backend/services/mockInterview/apps/web/postcss.config.mjs",
+    "sourceSha256": "9dd791ad9c0238477d84d4e06c0ccfceebe8dcb37dcdb581f5682c5ad42fc77e",
+    "sha256": "5b0bc4c78be977cd81f947fb5563aaa7cc6d451e6f1c53a3260b7656a7144d20",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/api/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/api/__init__.py",
+    "sourceSha256": "53e0620a9ff7ef7e002e1ed7a61700ddc1b63a2cfe1076da2de52f6ece4cefd6",
+    "sha256": "14b9ec2e66b867b4f32c635812e1880734d7e18279395cec8f12eeed0da672da",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.npmrc",
+    "target": "backend/services/mockInterview/.npmrc",
+    "sourceSha256": "eb4d44900b1c0c79e78b181e54f1f18d1019fa160e895bdd233c40416f5e23fe",
+    "sha256": "4da021f5094d41187c3c55e7cd9c31c86b56f696c798417ed6de14cb18b5695c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/fixtures/localized-text-missing-en.invalid.json",
+    "target": "backend/services/mockInterview/packages/shared/fixtures/localized-text-missing-en.invalid.json",
+    "sourceSha256": "62cc649a96e43a287350fbc27ea58718a3c575ff2fa1d377880f0f01e81075ea",
+    "sha256": "28b9912139bbf3b29487b8a99e2e77ef45658a36984fdf82c52a3a6afd739b2e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/src/deepinterview_agent/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/src/deepinterview_agent/__init__.py",
+    "sourceSha256": "47e8470d3d871b91ddd527008e5c5f74698aa37a08d41053b8d9af0da1a5ddf6",
+    "sha256": "4a15d00558f2892387c684094b606f346dfde56e0a65fa8cc59581011d0c66b1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/.nvmrc",
+    "target": "backend/services/mockInterview/.nvmrc",
+    "sourceSha256": "12d3a4efa6646b3ece4782f70033b9785bf0d167b553c43e22579b031cea5c4d",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/apps/agent/tests/__init__.py",
+    "target": "backend/services/mockInterview/apps/agent/tests/__init__.py",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/packages/shared/schema/.gitkeep",
+    "target": "backend/services/mockInterview/packages/shared/schema/.gitkeep",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/skills/_review/.gitkeep",
+    "target": "backend/services/mockInterview/skills/_review/.gitkeep",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-mock-interview/consumer/src/InterviewPortal.tsx",
+    "target": "zhitu/src/pages/MockInterview/index.tsx",
+    "sourceSha256": "5ce81ecd8294c9d1e709549a5398d8b89fdc74260be040345739b5e348f153fd",
+    "sha256": "e31702e819d5261bf38dd65fe4a83d010dd84cae36e0bb5242d8a6ba16955446",
+    "hashFormat": "git-blob"
+  }
+]

@@ -1,0 +1,12 @@
+**/node_modules
+**/.next
+**/.next-website
+**/dist
+**/.turbo
+**/__pycache__
+**/.venv
+**/*.egg-info
+.git
+.env
+.env.*
+!.env.example

@@ -29,3 +29,21 @@ __pycache__/
 *.pfx
 
 .DS_Store
+
+# Native module runtime state
+.venv/
+.pytest_cache/
+.ruff_cache/
+.next/
+.next-website/
+.turbo/
+.boss_profile/
+.deepinterview/
+.local-preview/
+*.sqlite*
+*.db
+*.db-wal
+*.db-shm
+*.tsbuildinfo
+test-results/
+playwright-report/

@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use DeepInterview, please cite it as below."
+title: DeepInterview
+abstract: >-
+  Open-source (Apache-2.0), voice-first AI mock-interview platform. It reads a CV and
+  job description, researches the target company, runs an adaptive real-time voice
+  interview with a stylized video avatar, scores it, and coaches weak areas.
+  English-first, multilingual.
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/ngoanpv/DeepInterview"
+authors:
+  - name: "The DeepInterview contributors"
+version: 0.3.0
+date-released: 2026-08-02

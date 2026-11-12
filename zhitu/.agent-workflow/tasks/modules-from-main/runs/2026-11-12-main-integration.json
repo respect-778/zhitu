@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "summary": "从最新 main 接入独立模块并完成代码验证",
+  "base": "261f31dada303c9b0f9734ffc7b00b301fd832b7",
+  "branch": "codex/mock-interview",
+  "proofPaths": [
+    "zhitu/docs/mockInterview/verification.md",
+    "zhitu/src/pages/MockInterview",
+    "backend/services/mockInterview"
+  ],
+  "checks": [
+    "frontend build",
+    "module lint",
+    "3 portal tests",
+    "28 Next tests and typecheck",
+    "260 Python tests; 3 skips"
+  ],
+  "remoteVerification": "performed after commit/upload; see delivery receipt"
+}

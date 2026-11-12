@@ -1,0 +1,222 @@
+name: deepinterview
+
+# WP-12 full stack. `docker compose up` brings up the base stack: web +
+# agent-api + lightrag (all run offline on mock providers / naive RAG with no
+# keys). The live voice worker needs the `livekit` extra + LiveKit/STT/TTS keys,
+# so it is gated behind the `live` profile:  `docker compose --profile live up`.
+#
+# `docker compose config -q` validates this file in CI (ci.yml).
+# Healthchecks use the in-image runtime (node / python) — slim images ship
+# neither curl nor wget.
+
+services:
+  lightrag:
+    build: ./services/lightrag
+    # Bind to loopback only: the sidecar is an internal service reached by the
+    # web/agent containers over the compose network (http://lightrag:9621), not
+    # from the host LAN. Set LIGHTRAG_API_SECRET to gate it if you must expose it.
+    ports:
+      - "127.0.0.1:9621:9621"
+    env_file:
+      - path: .env
+        required: false
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:9621/health').status==200 else 1)
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  agent-api:
+    build:
+      context: .
+      dockerfile: apps/agent/Dockerfile
+      target: api
+    command:
+      - uv
+      - run
+      - uvicorn
+      - deepinterview_agent.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+    # Bind to loopback only: the agent API is trust-the-network (write endpoints
+    # are gated by INTERNAL_API_SECRET when set) and is reached by the web
+    # container over the compose network (http://agent-api:8000). Publish it
+    # beyond the host deliberately (and set INTERNAL_API_SECRET) for real hosting.
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      # Reach the knowledge sidecar over the compose network (overrides the
+      # .env localhost default, which would resolve to this container itself;
+      # unset, the agent silently falls back to the offline mock).
+      - LIGHTRAG_URL=http://lightrag:9621
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      lightrag:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  # Live voice loop (WP-5). Reuses the agent image but runs the worker module,
+  # which imports livekit.agents at load time — so this REQUIRES an image built
+  # with `--extra livekit` plus LIVEKIT_*/STT/TTS/LLM keys in .env. Gated behind
+  # the `live` profile so it does not block the base stack.
+  agent-worker:
+    build:
+      context: .
+      dockerfile: apps/agent/Dockerfile
+      target: worker
+    profiles:
+      - live
+    command:
+      - uv
+      - run
+      - python
+      - -m
+      - deepinterview_agent.worker
+      - start
+    environment:
+      # Compose-network service URLs (override the .env localhost defaults,
+      # which would resolve to this container itself):
+      #   AGENT_API_URL — the worker fetches the precomputed interview plan
+      #     from the prep/score API.
+      #   LIGHTRAG_URL  — knowledge sidecar; unset = silent mock fallback.
+      - AGENT_API_URL=http://agent-api:8000
+      - LIGHTRAG_URL=http://lightrag:9621
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      agent-api:
+        condition: service_started
+      lightrag:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Local model servers (the "no cloud model keys" path) ───────────────────
+  # Gated behind the `local` profile, exactly like the voice worker above, so
+  # the base stack never pulls these multi-GB images:
+  #   docker compose --profile local --profile live up
+  # Then select them:  LLM_PROVIDER=ollama STT_PROVIDER=whisper TTS_PROVIDER=kokoro
+  #
+  # NOTE for macOS: Docker Desktop has no GPU passthrough, so an Ollama running
+  # in this container is CPU-only and far too slow for a live voice loop. On a
+  # Mac, run Ollama natively (it uses Metal) and point the agent at it with
+  # OLLAMA_BASE_URL=http://host.docker.internal:11434/v1 instead of using this
+  # service. That is exactly why these are base URLs and not hard-coded hosts.
+  ollama:
+    image: ollama/ollama:latest
+    profiles:
+      - local
+    ports:
+      - "127.0.0.1:11434:11434"
+    environment:
+      # The truncation fix: Ollama's default context window cannot hold a CV +
+      # JD + the JSON schema, and it truncates SILENTLY — producing a well-formed
+      # plan about a candidate the model never actually read.
+      - OLLAMA_CONTEXT_LENGTH=16384
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
+  # One-shot: pulls the model so the first interview doesn't 404. Exits when done.
+  ollama-pull:
+    image: ollama/ollama:latest
+    profiles:
+      - local
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint:
+      - /bin/sh
+      - -c
+      - ollama pull ${OLLAMA_MODEL:-qwen3:8b}
+    restart: "no"
+
+  # STT: any OpenAI-compatible /v1/audio/transcriptions server.
+  whisper:
+    image: ghcr.io/speaches-ai/speaches:latest-cpu
+    profiles:
+      - local
+    ports:
+      - "127.0.0.1:8001:8000"
+    volumes:
+      - whisper-models:/home/ubuntu/.cache/huggingface
+    restart: unless-stopped
+
+  # TTS: kokoro-fastapi speaks the OpenAI /v1/audio/speech shape.
+  kokoro:
+    image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
+    profiles:
+      - local
+    ports:
+      - "127.0.0.1:8880:8880"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      # NEXT_PUBLIC_* values are inlined into the browser bundle at BUILD time
+      # by Next.js — runtime env_file values never reach client code. Pass them
+      # as build args (compose interpolates ${...} from the root .env) so
+      # `docker compose up --build` bakes them in. Mirrors the NEXT_PUBLIC_
+      # keys in .env.example.
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+        NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
+    ports:
+      - "3000:3000"
+    environment:
+      # Reach the agent + knowledge sidecar over the compose network (overrides
+      # the .env localhost defaults, which would resolve to the web container
+      # itself; an unset LIGHTRAG_URL means a silent mock fallback).
+      - AGENT_API_URL=http://agent-api:8000
+      - LIGHTRAG_URL=http://lightrag:9621
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      agent-api:
+        condition: service_started
+      lightrag:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - require('http').get('http://localhost:3000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  # Model weights for the `local` profile — multi-GB, so they persist across
+  # `docker compose down` and are never re-downloaded.
+  ollama-models:
+  whisper-models:

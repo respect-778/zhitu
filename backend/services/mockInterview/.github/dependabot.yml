@@ -1,0 +1,59 @@
+# Dependabot — grouped weekly updates for the DeepInterview monorepo.
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates
+version: 2
+updates:
+  # JS/TS workspace (pnpm). Covers apps/web, packages/shared, cli via the
+  # root pnpm-lock.yaml.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      dev-only:
+        patterns:
+          - "@types*"
+          - "eslint*"
+          - "prettier"
+          - "vitest"
+          - "typescript"
+    open-pull-requests-limit: 10
+
+  # Python (uv). Dependabot's `pip` ecosystem reads pyproject.toml/uv.lock in
+  # apps/agent and services/lightrag.
+  - package-ecosystem: pip
+    directory: /apps/agent
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+  - package-ecosystem: pip
+    directory: /services/lightrag
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+
+  # Docker base images (agent/web/lightrag Dockerfiles).
+  - package-ecosystem: docker
+    directory: /apps/agent
+    schedule:
+      interval: weekly
+      day: monday
+  - package-ecosystem: docker
+    directory: /apps/web
+    schedule:
+      interval: weekly
+      day: monday
+  - package-ecosystem: docker
+    directory: /services/lightrag
+    schedule:
+      interval: weekly
+      day: monday
+
+  # GitHub Actions (ci.yml / deploy.yml).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

@@ -181,3 +181,7 @@ node --test zhitu/tests/*.test.cjs
 ## 许可证
 
 Knowvia 使用 [MIT License](./LICENSE) 开源。第三方依赖及其资源仍遵循各自的许可证。
+
+## 模拟面试模块分支
+
+本分支从最新 main 接入模拟面试，沿用 zhitu 前端与 backend 服务目录。安装、运行、来源映射及验证记录见 [模拟面试接入说明](./zhitu/docs/mockInterview/README.md)。
