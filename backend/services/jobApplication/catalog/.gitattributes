@@ -1,0 +1,6 @@
+# Audit archives carry byte-level SHA256 references; do not rewrite their newlines.
+config/reviewed/official-internships-2026-11-11.json -text
+docs/dependency-inventory.json -text
+docs/t05-dependency-inventory.json -text
+licenses/npm/THIRD_PARTY_LICENSES.txt -text
+licenses/npm/T05_THIRD_PARTY_LICENSES.txt -text

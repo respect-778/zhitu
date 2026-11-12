@@ -1,0 +1,37 @@
+{
+  "totalPublished": 104,
+  "batchRows": 100,
+  "companies": 40,
+  "maximumPerCompany": 5,
+  "numericGraduationStated": 24,
+  "firstImport": {
+    "mode": "reviewed-official-import",
+    "batchId": "official-internships-2026-11-11",
+    "rows": 100,
+    "companies": 40,
+    "accepted": 100,
+    "inserted": 100,
+    "updated": 0,
+    "duplicates": 0,
+    "rejected": 0,
+    "published": 100,
+    "alreadyPublished": 0
+  },
+  "repeatImport": {
+    "mode": "reviewed-official-import",
+    "batchId": "official-internships-2026-11-11",
+    "rows": 100,
+    "companies": 40,
+    "accepted": 100,
+    "inserted": 0,
+    "updated": 0,
+    "duplicates": 100,
+    "rejected": 0,
+    "published": 0,
+    "alreadyPublished": 100
+  },
+  "stableIds": 100,
+  "fieldMismatches": 0,
+  "websiteProxy": "http://127.0.0.1:5186/api/catalog/v1",
+  "publicPrivateFieldLeaks": 0
+}

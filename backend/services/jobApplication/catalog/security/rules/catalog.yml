@@ -1,0 +1,106 @@
+rules:
+  - id: catalog.js.dynamic-execution
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Dynamic execution requires removal or explicit security review; never execute fetched content.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+      - pattern: Function(...)
+  - id: catalog.js.process-execution
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Review command source, argument boundaries and shell options for every process launch.
+    pattern-either:
+      - pattern: require("child_process")
+      - pattern: require("node:child_process")
+      - pattern: import $X from "child_process"
+      - pattern: import $X from "node:child_process"
+      - pattern: import { ... } from "child_process"
+      - pattern: import { ... } from "node:child_process"
+  - id: catalog.js.environment-read
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Inventory environment access; verify allowed names, redaction and absence of outbound propagation.
+    pattern: process.env
+  - id: catalog.js.network-sink
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Inventory outbound requests; check destination allowlist, redirects, DNS/address checks and request body.
+    pattern-either:
+      - pattern: fetch(...)
+      - pattern: $CLIENT.post(...)
+      - pattern: $CLIENT.request(...)
+      - pattern: new WebSocket(...)
+  - id: catalog.js.file-read
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Inventory file reads; verify scoped paths and that source, credentials and arbitrary files cannot be uploaded.
+    pattern-either:
+      - pattern: $FS.readFile(...)
+      - pattern: $FS.readFileSync(...)
+      - pattern: $FS.createReadStream(...)
+      - pattern: readFile(...)
+      - pattern: readFileSync(...)
+      - pattern: createReadStream(...)
+  - id: catalog.js.disabled-tls-verification
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: TLS certificate verification must remain enabled.
+    pattern-either:
+      - pattern: "{..., rejectUnauthorized: false, ...}"
+      - pattern: process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+  - id: catalog.js.unsafe-raw-sql
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Unsafe raw SQL requires parameterization and explicit review.
+    pattern-either:
+      - pattern: $DB.$queryRawUnsafe(...)
+      - pattern: $DB.$executeRawUnsafe(...)
+  - id: catalog.python.dynamic-execution
+    languages: [python]
+    severity: ERROR
+    message: Dynamic code evaluation is a review blocker when data is externally controlled.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+      - pattern: subprocess.$METHOD(...)
+      - pattern: os.system(...)
+  - id: catalog.python.environment-read
+    languages: [python]
+    severity: WARNING
+    message: Inventory environment access and trace possible external disclosure.
+    pattern-either:
+      - pattern: os.environ
+      - pattern: os.getenv(...)
+  - id: catalog.python.network-sink
+    languages: [python]
+    severity: WARNING
+    message: Inventory upstream parser outbound requests and inspect destinations and request data.
+    pattern-either:
+      - pattern: requests.$METHOD(...)
+      - pattern: httpx.$METHOD(...)
+      - pattern: urllib.request.urlopen(...)
+  - id: catalog.go.process-execution
+    languages: [go]
+    severity: WARNING
+    message: Review external commands, arguments and shell use in migrated Go source.
+    pattern-either:
+      - pattern: exec.Command(...)
+      - pattern: exec.CommandContext(...)
+  - id: catalog.go.environment-read
+    languages: [go]
+    severity: WARNING
+    message: Inventory environment access before adapting upstream code.
+    pattern-either:
+      - pattern: os.Getenv(...)
+      - pattern: os.Environ()
+  - id: catalog.go.network-sink
+    languages: [go]
+    severity: WARNING
+    message: Inventory outbound requests and check URL, headers and body sources.
+    pattern-either:
+      - pattern: http.Get(...)
+      - pattern: http.Post(...)
+      - pattern: http.NewRequest(...)
+      - pattern: http.NewRequestWithContext(...)

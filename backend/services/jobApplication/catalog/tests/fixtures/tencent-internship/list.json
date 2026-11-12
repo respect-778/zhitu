@@ -1,0 +1,39 @@
+{
+  "message": "",
+  "status": 0,
+  "data": {
+    "positionList": [
+      {
+        "id": 21417,
+        "position": 101,
+        "positionTitle": "后台开发",
+        "positionFamily": 2,
+        "projectId": 2,
+        "bgs": "CDG CSIG IEG PCG TEG WXG S1 S2 ",
+        "workCities": "深圳总部 北京 上海 广州 成都 杭州 ",
+        "positionUrl": null,
+        "positionSource": "oa",
+        "projectName": "应届实习",
+        "recruitLabelName": "应届实习",
+        "groupTag": null,
+        "postId": "1200791473415778304"
+      },
+      {
+        "id": 21415,
+        "position": 257,
+        "positionTitle": "算法-多模态方向",
+        "positionFamily": 2,
+        "projectId": 2,
+        "bgs": "CDG CSIG IEG PCG WXG ",
+        "workCities": "深圳总部 北京 上海 广州 成都 ",
+        "positionUrl": null,
+        "positionSource": "oa",
+        "projectName": "应届实习",
+        "recruitLabelName": "应届实习",
+        "groupTag": null,
+        "postId": "1199423750186201088"
+      }
+    ],
+    "count": 517
+  }
+}

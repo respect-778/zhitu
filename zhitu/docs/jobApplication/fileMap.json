@@ -1,0 +1,2725 @@
+[
+  {
+    "source": "ai-job-application/consumer/src/reader.ts",
+    "target": "zhitu/src/utils/jobApplication/reader.ts",
+    "sourceSha256": "754042b2fdd1f92ba82d511e6e3510f169dc65b5c4435eb7e4e72288b60004f4",
+    "sha256": "dab25450631d5304358bc915ea520d5dcb86b2fdb90a30162f58c2618a67e0f7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/JobSearch.tsx",
+    "target": "zhitu/src/pages/JobApplication/index.tsx",
+    "sourceSha256": "9d0b0cbc8b58945950faec831f96ba022727a922461e9c1b78797d4f35bffcf1",
+    "sha256": "8029e9b6d542b18f05c6c4839a5928434d6d7d0722ba6548b6db710434fb5345",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/JobSearch.module.less",
+    "target": "zhitu/src/pages/JobApplication/index.module.less",
+    "sourceSha256": "687635bf9fd197e1b8ae3d47b3bd0859dba2cc6bc22fe4c0baa33b7597c3e014",
+    "sha256": "fdbf3654ec7ad8f9a9fbaec4aa52e3e81712accedc50aff61cd5031f7df93040",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/model.ts",
+    "target": "zhitu/src/utils/jobApplication/model.ts",
+    "sourceSha256": "6313505d6077a177e0f60532b5d443135b4f4cb3ba852b0b1ebe756bd440210f",
+    "sha256": "082b03a0ba74937967d39d0e551a188226d3500690780b0c1bd1815a26f1e469",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/CatalogJobSearch.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/CatalogJobSearch/index.tsx",
+    "sourceSha256": "f93087daeed01170f0e588ed1c566c7c23717d6860664f3c5ee482e901aebaf1",
+    "sha256": "13f84c1128a159548914c7c9f5e01c531044427ff893be556afc61c8d95293f6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/catalogViewModel.ts",
+    "target": "zhitu/src/utils/jobApplication/catalogViewModel.ts",
+    "sourceSha256": "9c57f783a6c3a9de80fb77321041e35b58a694b08e5ac6989c50c3fbd3ce7e82",
+    "sha256": "1ac16a77392bf4894620f6fdf8463eeeb7fd757e6ca89de62f2cb289501db672",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/companies.ts",
+    "target": "zhitu/src/utils/jobApplication/companies.ts",
+    "sourceSha256": "c03fa1c9bde2343d59ad9ae1011c0d97107f1474be8b631fa7958522b5024e55",
+    "sha256": "c03fa1c9bde2343d59ad9ae1011c0d97107f1474be8b631fa7958522b5024e55",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/catalogClient.ts",
+    "target": "zhitu/src/api/jobApplication/catalogClient.ts",
+    "sourceSha256": "e766db0b45a3e001967bac554a98a9c9f9b38c912df5b78d3589d2010ad73e5c",
+    "sha256": "4566e1bfc5cce360338b22688622a0dd44cbbd78492e94a0545697652256498c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/company-data/internet.ts",
+    "target": "zhitu/src/utils/jobApplication/company-data/internet.ts",
+    "sourceSha256": "2e6e85f355fb09d2881f029614766e1225da4c9bc7c485bafc3b491d479a0b4d",
+    "sha256": "1cd3c8ca888fa9039b3b3e6c326b21c1010427201c00241d93b8510caecd8afd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/OfficialAutofillAction.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/OfficialAutofillAction/index.tsx",
+    "sourceSha256": "9183aa3c64bc15c815a3b59d78b5f70a565f8545a849bb17c98cef177c36bb83",
+    "sha256": "bda9918af0bd9ba2bf3b995533db991aa59b02fb3d6104c9d35de4c001aa6698",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/jobCache.ts",
+    "target": "zhitu/src/utils/jobApplication/jobCache.ts",
+    "sourceSha256": "5b5dd7a187e0a7b87750618eda120459335dc1045b3a140a5f5dd3f78f735048",
+    "sha256": "8fe1645a0e9694b2dabde471557be336f4011cdac9e493a3f7fa3fc1cd844ce7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/emailApplications.ts",
+    "target": "zhitu/src/api/jobApplication/emailApplications.ts",
+    "sourceSha256": "871f3b22c1f1cdebe63bd2bfe7ceb43f13ff3c33b09d35771c00502152d3060a",
+    "sha256": "af0ee3f2fc2f80b040268888ba87df6dd603daeaeb99562c8b1fc5c0edcfcc8e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/useBossNavigation.tsx",
+    "target": "zhitu/src/hooks/jobApplication/useBossNavigation.tsx",
+    "sourceSha256": "6b0b1a270667ae01685312486a576de76185d3684c58711f87d464f8dd10505a",
+    "sha256": "213d5f93c943334e243795d876056095fadc18dd7397a2fab30ef4c47fb99f1e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/JobResults.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/JobResults/index.tsx",
+    "sourceSha256": "250cffd69b29c1b98363964331ef18248a06d18035b41af809953a7498bd88ca",
+    "sha256": "779d22ddf0e1fa27c7d8191386f456f5008a4fdfb259e7a0f56e8b146fcdf140",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/EmailApplicationPanel.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/EmailApplicationPanel/index.tsx",
+    "sourceSha256": "1050c223b391caf9753caf375bb7f5acf6acd0eb66fc7da0779b31e33bc0b170",
+    "sha256": "a753765ecc3bdeeeca8ac61d111ca327f949b54f2d684fd775515bdcc279daba",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/company-data/state.ts",
+    "target": "zhitu/src/utils/jobApplication/company-data/state.ts",
+    "sourceSha256": "fb9e3912d00dfe393d8396910b75c139669f077b88c75bc2045df63bd857eef7",
+    "sha256": "06a22f9e5d84d3d3a5db9d360cc249171ca7e460f8fe3a84afe3bcf12d7f3d37",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/jobActions.ts",
+    "target": "zhitu/src/api/jobApplication/jobActions.ts",
+    "sourceSha256": "c84090f6d045997067cc6ba86e708098f38bb7a07a39aa85353afaf4da52c40f",
+    "sha256": "34565a0c2e9819d70069b3f08f836cf60e302b0fab4f6efe8cea5902da1a25c8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/company-data/specialists.ts",
+    "target": "zhitu/src/utils/jobApplication/company-data/specialists.ts",
+    "sourceSha256": "e4eee64bf1245ec45931d700d707615d44328bd9d2cae4f7ee90c33eb1804efb",
+    "sha256": "e4daf9e78779298b5b9cc40f267a51ac115eb07ba0b24cdaf669ab33a6693e26",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/JobSearchChrome.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/JobSearchChrome/index.tsx",
+    "sourceSha256": "a76e7bbccec5b3fa2e7d6eab40df2ac97f45d803c73e25e9322fb0e032d8c6d9",
+    "sha256": "0020525f8829cc3b90269f68d11894dc7992a66d501bbd402c67e0b8219d66e9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/autofillClient.ts",
+    "target": "zhitu/src/api/jobApplication/autofillClient.ts",
+    "sourceSha256": "82a90937d16ed052f5f29ed2c9a2c054878c451777a993465761f8d99b4fadf5",
+    "sha256": "d4009f0dd30d4515dcef44595b644e37185357cd33753686b500ca07ad005131",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/bridge.ts",
+    "target": "zhitu/src/api/jobApplication/bridge.ts",
+    "sourceSha256": "a9da8cd49ff3de4a1a4bd9c01cbfefde760d72b26f78b1fe439153ab57fc610e",
+    "sha256": "1a8adf401a088c32c5ebb30f52181418854ba74a9a8ad26412bc07afb23f1334",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/company-data/international.ts",
+    "target": "zhitu/src/utils/jobApplication/company-data/international.ts",
+    "sourceSha256": "4d72488d1f303fbd425af81dcae1508417d1fe676fbdd8813e4f8d5623bc9b3e",
+    "sha256": "bdf96e090f0c9ad3a838c4031d8923d9dc5841b0d352f44680d4c622e614fd2d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/jobKeywords.ts",
+    "target": "zhitu/src/utils/jobApplication/jobKeywords.ts",
+    "sourceSha256": "5529fc54408ab71e9d9f2b6802e56222282fb92441cc506aeaaf0415f13f22b1",
+    "sha256": "5529fc54408ab71e9d9f2b6802e56222282fb92441cc506aeaaf0415f13f22b1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/JobBatchAction.tsx",
+    "target": "zhitu/src/pages/JobApplication/components/JobBatchAction/index.tsx",
+    "sourceSha256": "79ec532df51111a58e02ebaf4b0c381278afebd4ca42b654ae4f76e7af643600",
+    "sha256": "db6095d5fbbc25ced88945157b1155fe84f23c1fb7f294de9e0ac8dade215c43",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/cities.ts",
+    "target": "zhitu/src/utils/jobApplication/cities.ts",
+    "sourceSha256": "e6d94ab46fcf9b19bf27d186cd5729406cc1fc30e2d026f3fb8a538a3ac0c7a5",
+    "sha256": "ffbc9d3f6ffeda6a1461f533f9728d1b2211e610eb116bfbe6d32ea242254d65",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/jobTime.ts",
+    "target": "zhitu/src/utils/jobApplication/jobTime.ts",
+    "sourceSha256": "a9f71c8a9cd2a1fe1b653f90bbb206862ab0aeb59c5242eb70b218830da8a2cd",
+    "sha256": "a9f71c8a9cd2a1fe1b653f90bbb206862ab0aeb59c5242eb70b218830da8a2cd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/autofillTypes.ts",
+    "target": "zhitu/src/types/jobApplication/autofillTypes.ts",
+    "sourceSha256": "3bb998e89a026787835030da38aad7778ef28c8183dc8cbf0bf76eaf797bd15c",
+    "sha256": "3bb998e89a026787835030da38aad7778ef28c8183dc8cbf0bf76eaf797bd15c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/platforms.ts",
+    "target": "zhitu/src/utils/jobApplication/platforms.ts",
+    "sourceSha256": "79f862e3f865cc11fb48ed4562eef98ee79414b5578291efa5dd69d24ba64fb0",
+    "sha256": "79f862e3f865cc11fb48ed4562eef98ee79414b5578291efa5dd69d24ba64fb0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/useJobSelection.ts",
+    "target": "zhitu/src/hooks/jobApplication/useJobSelection.ts",
+    "sourceSha256": "c05bf04c5df6f974dab4174be819446871f54006833b7c31da474462a1f9b080",
+    "sha256": "6b1f7e7b9b62ff33b153f13c03724e9bbaa24c48b574d132c1d379c46825e206",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/OfficialAutofillAction.module.less",
+    "target": "zhitu/src/pages/JobApplication/components/OfficialAutofillAction/index.module.less",
+    "sourceSha256": "5fc443be365bcd5fae93133ad4d0f6ccf28545a2c19312681290ab8cbccdd62a",
+    "sha256": "e041ec7fc13dcfccb55d2a8926e4d7fcc33c3d358398c0f64d3e5073a5f5ce4a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/application-channels.json",
+    "target": "zhitu/src/api/jobApplication/applicationChannels.json",
+    "sourceSha256": "514b30ddf70b3c9bbf8719c9ae874ca679afb5f514d22c7fc0beb044b7f3ed0e",
+    "sha256": "514b30ddf70b3c9bbf8719c9ae874ca679afb5f514d22c7fc0beb044b7f3ed0e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/api.ts",
+    "target": "zhitu/src/api/jobApplication/api.ts",
+    "sourceSha256": "b6dc27eee7cffc99e8a327691881e4d163fceb0f72ea65f5ed872c133e81479f",
+    "sha256": "c71e522c651a78f6b82614f1a096fcddd2cf7cb89c75c0c00ad4a2ec4fb6ee23",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/src/autofillProfiles.ts",
+    "target": "zhitu/src/utils/jobApplication/autofillProfiles.ts",
+    "sourceSha256": "ad5465690ad2b4758db1ad11685f8315010eece419b60d9cf17ac9d0873d278f",
+    "sha256": "dfaff23e3f3118d0e7123c0b3ca96112f2d5f3db135770350194d858ccc46cf9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/t05-dependency-inventory.json",
+    "target": "backend/services/jobApplication/catalog/docs/t05-dependency-inventory.json",
+    "sourceSha256": "74f00b9612578a2abaeb312db93478fa5843214093d52cc38f230e0396bf81e3",
+    "sha256": "74f00b9612578a2abaeb312db93478fa5843214093d52cc38f230e0396bf81e3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/licenses/npm/T05_THIRD_PARTY_LICENSES.txt",
+    "target": "backend/services/jobApplication/catalog/licenses/npm/T05_THIRD_PARTY_LICENSES.txt",
+    "sourceSha256": "1cff3fc276b6a19c6e736a0010ebb916593cc1eaabe94b13187f60488bc1ab15",
+    "sha256": "1cff3fc276b6a19c6e736a0010ebb916593cc1eaabe94b13187f60488bc1ab15",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/config/reviewed/official-internships-2026-11-11.json",
+    "target": "backend/services/jobApplication/catalog/config/reviewed/official-internships-2026-11-11.json",
+    "sourceSha256": "60fbee4f3b99dc19389299f211ceb212c7e478cd55092f90935c7d2e9aea2c69",
+    "sha256": "60fbee4f3b99dc19389299f211ceb212c7e478cd55092f90935c7d2e9aea2c69",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/licenses/npm/THIRD_PARTY_LICENSES.txt",
+    "target": "backend/services/jobApplication/catalog/licenses/npm/THIRD_PARTY_LICENSES.txt",
+    "sourceSha256": "09fb351eda0e643cce2e299d6ea70f388bf397748b0d639d037732cc343e5351",
+    "sha256": "09fb351eda0e643cce2e299d6ea70f388bf397748b0d639d037732cc343e5351",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/static/dashboard.html",
+    "target": "backend/services/jobApplication/static/dashboard.html",
+    "sourceSha256": "8f802a93741418bd84ab5119127f27809bb310363462b74e38397ac3b3b3ddc6",
+    "sha256": "8f802a93741418bd84ab5119127f27809bb310363462b74e38397ac3b3b3ddc6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/automation.py",
+    "target": "backend/services/jobApplication/boss_app/services/automation.py",
+    "sourceSha256": "9b6a8e0557676aa4cca49c49abc4c64f4261ffad7923527f92b43e797383297b",
+    "sha256": "9b6a8e0557676aa4cca49c49abc4c64f4261ffad7923527f92b43e797383297b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/dependency-inventory.json",
+    "target": "backend/services/jobApplication/catalog/docs/dependency-inventory.json",
+    "sourceSha256": "42ef88bbe7d0ccb70bd10b46d941ad2391a77a3f0717678220fc54f89f71109d",
+    "sha256": "42ef88bbe7d0ccb70bd10b46d941ad2391a77a3f0717678220fc54f89f71109d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/package-lock.json",
+    "target": "backend/services/jobApplication/frontend/package-lock.json",
+    "sourceSha256": "25d1dfe314d5e2bc1a23c8bb72d087a00dc9cd78af0b69233ddaab4ba28755f5",
+    "sha256": "25d1dfe314d5e2bc1a23c8bb72d087a00dc9cd78af0b69233ddaab4ba28755f5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/plans/2026-06-03-structural-refactor.md",
+    "target": "backend/services/jobApplication/docs/superpowers/plans/2026-06-03-structural-refactor.md",
+    "sourceSha256": "3c9a833c21ec20ddd1985308f7511eaa793e0bea0d465f998f4b4cd7272ab0bb",
+    "sha256": "3c9a833c21ec20ddd1985308f7511eaa793e0bea0d465f998f4b4cd7272ab0bb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/scraper.py",
+    "target": "backend/services/jobApplication/boss_app/services/scraper.py",
+    "sourceSha256": "50d8888b1b1bb31729e38d81adf77e8ab5e9b46942aad1e9b27c7b0fc2dd6f44",
+    "sha256": "50d8888b1b1bb31729e38d81adf77e8ab5e9b46942aad1e9b27c7b0fc2dd6f44",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent-internship/ordinary-detail.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent-internship/ordinary-detail.json",
+    "sourceSha256": "2a7f290bbe3c8dc3ec9d05fa4299ef93e4da02c3b75fb387e0ec669b74b78743",
+    "sha256": "2a7f290bbe3c8dc3ec9d05fa4299ef93e4da02c3b75fb387e0ec669b74b78743",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/jobs.py",
+    "target": "backend/services/jobApplication/boss_app/routes/jobs.py",
+    "sourceSha256": "5c876a09260f748d7b5db8c06f9076af19b38c9c5a5639e4952713679c6e0520",
+    "sha256": "5c876a09260f748d7b5db8c06f9076af19b38c9c5a5639e4952713679c6e0520",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/resume_agent.py",
+    "target": "backend/services/jobApplication/boss_app/agents/resume_agent.py",
+    "sourceSha256": "b1e911746bddf13386cf77f7d637737cc7345658ddae138d10d0ffa2242c6d0a",
+    "sha256": "b1e911746bddf13386cf77f7d637737cc7345658ddae138d10d0ffa2242c6d0a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/autofill-form.js",
+    "target": "zhitu/extensions/jobApplication/autofill-form.js",
+    "sourceSha256": "a118a92ef5e99395912b448dfb3aa0434c6b734fad3ebf425b07d079fc919395",
+    "sha256": "21ac85f1129ae28967980e6d981a18fe6e2d592a2d2c177a326f9d11269b63fc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/profiles.py",
+    "target": "backend/services/jobApplication/boss_app/agents/profiles.py",
+    "sourceSha256": "b12e5053a74c93b66468430e2337041fcc5d4a3a0293ac6e3fb502b4ff5d93bc",
+    "sha256": "b12e5053a74c93b66468430e2337041fcc5d4a3a0293ac6e3fb502b4ff5d93bc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_e2e_user_experience.py",
+    "target": "backend/services/jobApplication/tests/test_e2e_user_experience.py",
+    "sourceSha256": "1e39116fa7d1228065db8069663e2e3b4eaa5f2ee9200320aeb8997f69cbfe44",
+    "sha256": "cc751ea58cdec66d1671e8a26c58080abf948ae763e1a8c3b16f1703b0ae420f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/static/index.html",
+    "target": "backend/services/jobApplication/interview/static/index.html",
+    "sourceSha256": "29317282686673d57ce7649151b1465ca03e8fb40985d4b5a6daad537be325bc",
+    "sha256": "29317282686673d57ce7649151b1465ca03e8fb40985d4b5a6daad537be325bc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/README.md",
+    "target": "backend/services/jobApplication/consumer/README.md",
+    "sourceSha256": "8f8339969027db16f1c70db8c814c2e1a8385e9bf623721e77bf2500150a36da",
+    "sha256": "bfad954441d1cb2a92151484db4672273436e0afaa55a01f605ed1ec6e2bbe1e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/t05-dependency-security.md",
+    "target": "backend/services/jobApplication/catalog/docs/t05-dependency-security.md",
+    "sourceSha256": "7b176b791d4704311b4b4badb3b50f938cef135ff9bb5fc4e52f7504b80bdf93",
+    "sha256": "5c4845959c66413dc20b9c242357c3481bfcd5fe42c2d5b88753430f429aeb7b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/fast_qa.py",
+    "target": "backend/services/jobApplication/interview/fast_qa.py",
+    "sourceSha256": "edb447966993da8b3f2df4e58102d85abc8655be2c76f13a872ebfd0ab9c36bd",
+    "sha256": "edb447966993da8b3f2df4e58102d85abc8655be2c76f13a872ebfd0ab9c36bd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/application.py",
+    "target": "backend/services/jobApplication/boss_app/models/application.py",
+    "sourceSha256": "65b40a9ba1e301a5e3902fa30c5a4e1b948b3168f6105118a7b43490ac4fc5b4",
+    "sha256": "65b40a9ba1e301a5e3902fa30c5a4e1b948b3168f6105118a7b43490ac4fc5b4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/background.js",
+    "target": "zhitu/extensions/jobApplication/background.js",
+    "sourceSha256": "d283e183934a68d8eb409383869f19948295751bf0c108b94675c1332e7f7214",
+    "sha256": "a3e363538ed1f3b19c88e6f371a60ff3f7080c8e8bdfd05430490d6931df5bc7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/ChatView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/ChatView.vue",
+    "sourceSha256": "53965537c6d92e7429b7fca5d984b738b90f8c66088ae95fabe7b62b97d2bfa2",
+    "sha256": "8eca6747b703dc94acb84d9fc32f43a0f9cad1ac593c750b9dfde062c1d75ef7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/plans/2026-06-02-code-architecture-refactoring.md",
+    "target": "backend/services/jobApplication/docs/superpowers/plans/2026-06-02-code-architecture-refactoring.md",
+    "sourceSha256": "ce8eec73d3bc8d510b2155e9cdd96974d0516f63aa8870159011dc6ba9015f58",
+    "sha256": "ce8eec73d3bc8d510b2155e9cdd96974d0516f63aa8870159011dc6ba9015f58",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/official-internship-collection.md",
+    "target": "backend/services/jobApplication/catalog/docs/official-internship-collection.md",
+    "sourceSha256": "376bd7e9d92932ab646dd64ddd2bd3f6df6c1a3a7f8679bf37fd991cc5ad4383",
+    "sha256": "376bd7e9d92932ab646dd64ddd2bd3f6df6c1a3a7f8679bf37fd991cc5ad4383",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/scorer.py",
+    "target": "backend/services/jobApplication/boss_app/services/scorer.py",
+    "sourceSha256": "9e76ebe1527de4a03d8c4d43f50ddeeb59152fbd384af2fdc3e055daed7217ea",
+    "sha256": "9e76ebe1527de4a03d8c4d43f50ddeeb59152fbd384af2fdc3e055daed7217ea",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/ingest.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/ingest.test.ts",
+    "sourceSha256": "a4e2018d9ccaf69559d740e04ac79dea524b2fc47130f7645120d63d5785461b",
+    "sha256": "a4e2018d9ccaf69559d740e04ac79dea524b2fc47130f7645120d63d5785461b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/legacy/scraper.py",
+    "target": "backend/services/jobApplication/legacy/scraper.py",
+    "sourceSha256": "bb55d0eaf959ae79a5e65d3d3ba4041aaf2021df28b4823d50acda2ef298ae2e",
+    "sha256": "bb55d0eaf959ae79a5e65d3d3ba4041aaf2021df28b4823d50acda2ef298ae2e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/internship-metadata.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/internship-metadata.test.ts",
+    "sourceSha256": "cb02211fc5eda34cf06b450bca9a0e9e82fa2169057d8d3e06a0a5dc83a9ffea",
+    "sha256": "cb02211fc5eda34cf06b450bca9a0e9e82fa2169057d8d3e06a0a5dc83a9ffea",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/replier.py",
+    "target": "backend/services/jobApplication/boss_app/services/replier.py",
+    "sourceSha256": "7fbf1199e96e520e551c77b29a5690ae44b75a93a4a29f9ae94633d192716d40",
+    "sha256": "7fbf1199e96e520e551c77b29a5690ae44b75a93a4a29f9ae94633d192716d40",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/adapters/internship-metadata.ts",
+    "target": "backend/services/jobApplication/catalog/src/adapters/internship-metadata.ts",
+    "sourceSha256": "9ef737387edcaf40debd74a4ffa393737fce905e50d52c4976b71b0e9e10f5aa",
+    "sha256": "9ef737387edcaf40debd74a4ffa393737fce905e50d52c4976b71b0e9e10f5aa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/plans/2026-06-02-chat-ux-optimization.md",
+    "target": "backend/services/jobApplication/docs/superpowers/plans/2026-06-02-chat-ux-optimization.md",
+    "sourceSha256": "44000112b12ad73a29affc7628fc74c028e81b2d0cbb1911be5897de731a9147",
+    "sha256": "44000112b12ad73a29affc7628fc74c028e81b2d0cbb1911be5897de731a9147",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/ResumeView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/ResumeView.vue",
+    "sourceSha256": "e6b5f14e239fe180c0cf7b1c463e1bfb0fe719c3bef12dc195de946b5f815fd4",
+    "sha256": "ecc0ee62e302a2243615e4779450a3c6d9b51b18e751ca0ecee611c8fbd33cf8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/app.css",
+    "target": "backend/services/jobApplication/frontend/src/app.css",
+    "sourceSha256": "f532f9345f61cd895763ae2499bfed8911b42d98af6a94854f46539847d50d2b",
+    "sha256": "22ff3f0e0df31ac9baf529c55ef87f07f55c690a89935e1184ff37106e361a93",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_models.py",
+    "target": "backend/services/jobApplication/tests/test_models.py",
+    "sourceSha256": "8c8de302b7b5ef624c153579a896a6480c492dcf830cfeb6052c9fdf45fcfa8a",
+    "sha256": "8c8de302b7b5ef624c153579a896a6480c492dcf830cfeb6052c9fdf45fcfa8a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/database.py",
+    "target": "backend/services/jobApplication/boss_app/core/database.py",
+    "sourceSha256": "2230adf4d10d9a6261693fa52afc1cb690ba46d8db38dbcede62a4c8c2489eeb",
+    "sha256": "2230adf4d10d9a6261693fa52afc1cb690ba46d8db38dbcede62a4c8c2489eeb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/tencent-internship.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/tencent-internship.test.ts",
+    "sourceSha256": "857bf25150106e8d0aaa0a3a6659b2f776430403503f6d9ef07affd9ff6feb15",
+    "sha256": "857bf25150106e8d0aaa0a3a6659b2f776430403503f6d9ef07affd9ff6feb15",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/contracts.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/contracts.test.ts",
+    "sourceSha256": "008fa0f7bcd462e95d4f830af5e7f5499af93d7075b68ff20b76822bc3cad2bc",
+    "sha256": "008fa0f7bcd462e95d4f830af5e7f5499af93d7075b68ff20b76822bc3cad2bc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_features.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_features.py",
+    "sourceSha256": "f50c104725310aecb823de29d7ac39ab0752863aacf132d316d8e968b6049078",
+    "sha256": "f50c104725310aecb823de29d7ac39ab0752863aacf132d316d8e968b6049078",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/specs/2026-06-03-structural-refactor-design.md",
+    "target": "backend/services/jobApplication/docs/superpowers/specs/2026-06-03-structural-refactor-design.md",
+    "sourceSha256": "aedba136cf0c200eead638da9bbfa46714de18c6890ab7cc3471d1bdbd61899f",
+    "sha256": "aedba136cf0c200eead638da9bbfa46714de18c6890ab7cc3471d1bdbd61899f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/SettingsView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/SettingsView.vue",
+    "sourceSha256": "547937ddcaa6301d95b16654eed633d032f783a8d7d7d15d90f20097df0a9d4f",
+    "sha256": "b9d0fb9295bd1f0ebf08f18ca83c35eff2b8569771479ac38f6c4e9f9d1a5343",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/chat-actions.js",
+    "target": "zhitu/extensions/jobApplication/chat-actions.js",
+    "sourceSha256": "cde551437abcf00273248a4b4a79a30082800446c344545e13fbc5ef3b42fb3f",
+    "sha256": "cde551437abcf00273248a4b4a79a30082800446c344545e13fbc5ef3b42fb3f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/specs/2026-06-02-chat-ux-optimization-design.md",
+    "target": "backend/services/jobApplication/docs/superpowers/specs/2026-06-02-chat-ux-optimization-design.md",
+    "sourceSha256": "6fdb3693cf5723a65941634bad4f3953ae2180ae3fcd5dc935b0424ce0ab57ca",
+    "sha256": "6fdb3693cf5723a65941634bad4f3953ae2180ae3fcd5dc935b0424ce0ab57ca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/chat.js",
+    "target": "zhitu/extensions/jobApplication/chat.js",
+    "sourceSha256": "661931e5d61298d563dfd79bd1aec8a3e3f3df8ed070b169b5dfb0e42647338f",
+    "sha256": "661931e5d61298d563dfd79bd1aec8a3e3f3df8ed070b169b5dfb0e42647338f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/settings.py",
+    "target": "backend/services/jobApplication/boss_app/routes/settings.py",
+    "sourceSha256": "c78da6c2064c44f30eaad80986e0cc850f50b3e7160877525ccf32beaed8b3bf",
+    "sha256": "c78da6c2064c44f30eaad80986e0cc850f50b3e7160877525ccf32beaed8b3bf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/normalize/job.ts",
+    "target": "backend/services/jobApplication/catalog/src/normalize/job.ts",
+    "sourceSha256": "56eb38f2bdf9b909ff3ae6df1cb05c7cc7f9a05d0b6aac47a47db7354927e0bb",
+    "sha256": "56eb38f2bdf9b909ff3ae6df1cb05c7cc7f9a05d0b6aac47a47db7354927e0bb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/engine.py",
+    "target": "backend/services/jobApplication/interview/engine.py",
+    "sourceSha256": "872403b063000f6f4ebe4200b721f1dda2e9c3e1419132d6f74123879a5928f0",
+    "sha256": "872403b063000f6f4ebe4200b721f1dda2e9c3e1419132d6f74123879a5928f0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_core_features_live.py",
+    "target": "backend/services/jobApplication/tests/test_core_features_live.py",
+    "sourceSha256": "e41dfe1b3f3ddda375972c9fd5de8aea518c026b1a061c617c5036b5c4ead2be",
+    "sha256": "e41dfe1b3f3ddda375972c9fd5de8aea518c026b1a061c617c5036b5c4ead2be",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/playwright_smoke.py",
+    "target": "backend/services/jobApplication/tests/playwright_smoke.py",
+    "sourceSha256": "0ed7162683e8a6c03f68d9ade43db666d44475f4029a8391760b1a7edd200fdd",
+    "sha256": "0ed7162683e8a6c03f68d9ade43db666d44475f4029a8391760b1a7edd200fdd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/ingestion.md",
+    "target": "backend/services/jobApplication/catalog/docs/ingestion.md",
+    "sourceSha256": "c257b9766e0c6a42bd1e19342a660d807bffc7111c2327dadec46971cb97e3d2",
+    "sha256": "c257b9766e0c6a42bd1e19342a660d807bffc7111c2327dadec46971cb97e3d2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/server/application_mail.py",
+    "target": "backend/services/jobApplication/consumer/server/application_mail.py",
+    "sourceSha256": "177b4d847e11ed56d39cb91bf2db40eb1845a02055b5fc983cb1e3b2c51aa465",
+    "sha256": "af949ac3c2c506835409aedb8df2acd49b120ebb85cb35b7b36571f69b47f276",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/adapter-first.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/adapter-first.test.ts",
+    "sourceSha256": "4567c6d78f9955b6ee6b4ff35a03051cf3674cb13a23da9d5cb24b53328dddc9",
+    "sha256": "4567c6d78f9955b6ee6b4ff35a03051cf3674cb13a23da9d5cb24b53328dddc9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/autofill.js",
+    "target": "zhitu/extensions/jobApplication/autofill.js",
+    "sourceSha256": "3885fb0a50d17b687f3bcd82944a035865c2460133826b67142742a53654f006",
+    "sha256": "3885fb0a50d17b687f3bcd82944a035865c2460133826b67142742a53654f006",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/http/controlled-get.ts",
+    "target": "backend/services/jobApplication/catalog/src/http/controlled-get.ts",
+    "sourceSha256": "0681c21110cc09412f60c8eda2dc30bb95eafcda8647e2588a5881c610162f75",
+    "sha256": "0681c21110cc09412f60c8eda2dc30bb95eafcda8647e2588a5881c610162f75",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/AgentsView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/AgentsView.vue",
+    "sourceSha256": "f2e7a3c0fd1a9d33f8b470589fbc58c431d3f153a85cffcbea354dd83f26d5cb",
+    "sha256": "c32a6fce7d0e812af47a3ece7529877320d67986938f90219104a04bd98c2c7e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/ingest-capture.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/ingest-capture.test.ts",
+    "sourceSha256": "91f521641fed7bc0c89aee141444f14ede097bc24fa5c100b60ad80ef9345228",
+    "sha256": "91f521641fed7bc0c89aee141444f14ede097bc24fa5c100b60ad80ef9345228",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/zip.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/zip.ts",
+    "sourceSha256": "992b02d022341c5ecf13aa045f3f7686f9f7826e4dda8dd6aab97358073a0aa9",
+    "sha256": "992b02d022341c5ecf13aa045f3f7686f9f7826e4dda8dd6aab97358073a0aa9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/search-storage.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/search-storage.test.ts",
+    "sourceSha256": "3b04463c8c1aec7feae7829600bf76e9754bbd451783b057567c85d4252a9f48",
+    "sha256": "3b04463c8c1aec7feae7829600bf76e9754bbd451783b057567c85d4252a9f48",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/ApplicationsView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/ApplicationsView.vue",
+    "sourceSha256": "b2631b5b2e9a8d4b8bd3adb685268280797ab6a49c709a581cd00b7e3f68ea15",
+    "sha256": "f45d83521313bfb63d25d2323e9f138b21a90a6e9e9f71acd2e0db111bbfe127",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/README.md",
+    "target": "backend/services/jobApplication/README.md",
+    "sourceSha256": "e25e142d2856973f69de646ac797ee0d3c71dbfde4722677d553bcf19d5b927f",
+    "sha256": "e25e142d2856973f69de646ac797ee0d3c71dbfde4722677d553bcf19d5b927f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_user_journey.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_user_journey.py",
+    "sourceSha256": "53df707075aeece416d26f9f235e3f4600a3a67a1a4809bf4ec8988367ff3f0e",
+    "sha256": "53df707075aeece416d26f9f235e3f4600a3a67a1a4809bf4ec8988367ff3f0e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_real_user_flow.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_real_user_flow.py",
+    "sourceSha256": "e98ad45a91df3e99e2f4c8b6b481e0ee4446d6d5641190d6c627ed5def0da952",
+    "sha256": "e98ad45a91df3e99e2f4c8b6b481e0ee4446d6d5641190d6c627ed5def0da952",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/conversations.py",
+    "target": "backend/services/jobApplication/boss_app/routes/conversations.py",
+    "sourceSha256": "c3247c85b5c4f3329f465383df66c83bbe0123b069013587854f64bb1687de64",
+    "sha256": "c3247c85b5c4f3329f465383df66c83bbe0123b069013587854f64bb1687de64",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/agents.py",
+    "target": "backend/services/jobApplication/boss_app/routes/agents.py",
+    "sourceSha256": "5d6c889c9368add7c248bd3db5fac5e3cf751f180308a2dbdc6f9ec0aae2e7c2",
+    "sha256": "5d6c889c9368add7c248bd3db5fac5e3cf751f180308a2dbdc6f9ec0aae2e7c2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/batch_seed.py",
+    "target": "backend/services/jobApplication/interview/batch_seed.py",
+    "sourceSha256": "e60798256cf15946462b133c8c1af0b85e537b72057e66ba3f6b6daa32ed7341",
+    "sha256": "e60798256cf15946462b133c8c1af0b85e537b72057e66ba3f6b6daa32ed7341",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/http-boundary.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/http-boundary.test.ts",
+    "sourceSha256": "64fe0cbee1c67f509bed0f834bda844477db154a3bcdb894db8395f8b1d74d75",
+    "sha256": "64fe0cbee1c67f509bed0f834bda844477db154a3bcdb894db8395f8b1d74d75",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/document-boundary.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/document-boundary.test.ts",
+    "sourceSha256": "19b5aeccfc01abbb710a955e95cd3ce287c8094e4707c8c9fecf7890ebc71a77",
+    "sha256": "b7d131550ddf4f7e58a7ab34822dfe287cd540d330d114b6a7834a0a22c20f50",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/README.md",
+    "target": "backend/services/jobApplication/catalog/README.md",
+    "sourceSha256": "487d6565346c4cf782157070cedc752cb4589e0dab202c2ab9f4db860e62dbe2",
+    "sha256": "487d6565346c4cf782157070cedc752cb4589e0dab202c2ab9f4db860e62dbe2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/seed_data.py",
+    "target": "backend/services/jobApplication/interview/seed_data.py",
+    "sourceSha256": "ecef53ee33365e0f0f5b4438bf17303bb1be3c279af5c1b125d24b3981191c79",
+    "sha256": "ecef53ee33365e0f0f5b4438bf17303bb1be3c279af5c1b125d24b3981191c79",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/invoke-local-scan.ps1",
+    "target": "backend/services/jobApplication/catalog/security/invoke-local-scan.ps1",
+    "sourceSha256": "4481f5f3df4a6b3bab6cefc2e5c99dba24ce2e7fd39ce16b4f59638e33ac7049",
+    "sha256": "4481f5f3df4a6b3bab6cefc2e5c99dba24ce2e7fd39ce16b4f59638e33ac7049",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_services.py",
+    "target": "backend/services/jobApplication/tests/test_services.py",
+    "sourceSha256": "db03d2ad6126c22daacff1c69726265e573f76d761cd45184cb0aa06ffae62cc",
+    "sha256": "db03d2ad6126c22daacff1c69726265e573f76d761cd45184cb0aa06ffae62cc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/search/JobCard.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/search/JobCard.vue",
+    "sourceSha256": "e4f20d2a1a70f0bc99c12b0f84b7a00be35cc0661a0bce8d2ada0fc2b9b1da0a",
+    "sha256": "9097ea3b39215e3377251a90cae61c73e214bb52811f778d52306a27178153b6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_business_flows.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_business_flows.py",
+    "sourceSha256": "d59c3d6392e7083f27aed76e2b0a1087f6ab28c9a0086ad439a2232e551ae86a",
+    "sha256": "d59c3d6392e7083f27aed76e2b0a1087f6ab28c9a0086ad439a2232e551ae86a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/shared/CommandPalette.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/shared/CommandPalette.vue",
+    "sourceSha256": "46fffa3d1cdae44785b919275aa3a753bf64e1887102aadc1b159c910aee0552",
+    "sha256": "35aac583629263216535d2a310a305fdebe2f0eb8ed2622c0d0ae8d883e66157",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/test-boundaries.ps1",
+    "target": "backend/services/jobApplication/catalog/security/test-boundaries.ps1",
+    "sourceSha256": "b36e7419eab32ce893e83ebf4573a45a68b37e7f700561d732c8d1b084d0105b",
+    "sha256": "b36e7419eab32ce893e83ebf4573a45a68b37e7f700561d732c8d1b084d0105b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/run-tencent.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/run-tencent.ts",
+    "sourceSha256": "3363bfbd97a8c8921b6685b0b94882a380eb7454e2cab518dd192afbf5a279d4",
+    "sha256": "3363bfbd97a8c8921b6685b0b94882a380eb7454e2cab518dd192afbf5a279d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/collect-internship-metadata.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/collect-internship-metadata.ts",
+    "sourceSha256": "7585ce8d6006c366a1bd61bdb5c9e0f5c9084785fcc3cc04789aa835da5739ec",
+    "sha256": "7585ce8d6006c366a1bd61bdb5c9e0f5c9084785fcc3cc04789aa835da5739ec",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/superpowers/specs/2026-06-02-code-architecture-refactoring-design.md",
+    "target": "backend/services/jobApplication/docs/superpowers/specs/2026-06-02-code-architecture-refactoring-design.md",
+    "sourceSha256": "db8327e2343700bc7c878f362fd2ae9e05a24070c6826e7e78cbbbbd1a282095",
+    "sha256": "db8327e2343700bc7c878f362fd2ae9e05a24070c6826e7e78cbbbbd1a282095",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/zhaopin-page.js",
+    "target": "zhitu/extensions/jobApplication/zhaopin-page.js",
+    "sourceSha256": "f10903620dca703b43e476733fc321a1996d86b2dfd4f44547e9eda64f4168fa",
+    "sha256": "f10903620dca703b43e476733fc321a1996d86b2dfd4f44547e9eda64f4168fa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/adapter-contract.md",
+    "target": "backend/services/jobApplication/catalog/docs/adapter-contract.md",
+    "sourceSha256": "ae07d36dc0e3689576b153a6a9ef6d2c6b32a10280f1df9453b15cf50a48bb31",
+    "sha256": "ae07d36dc0e3689576b153a6a9ef6d2c6b32a10280f1df9453b15cf50a48bb31",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-ingest.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-ingest.test.ts",
+    "sourceSha256": "05ba9aabffae520c084f2f6f894be6430cb5317f7ea7ebad38f7025ad5c435c5",
+    "sha256": "05ba9aabffae520c084f2f6f894be6430cb5317f7ea7ebad38f7025ad5c435c5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/server/test_application_mail.py",
+    "target": "backend/services/jobApplication/consumer/server/test_application_mail.py",
+    "sourceSha256": "1552835f9cbf118f635e374050cdcf8faa0db17121620be0f6db02746caf8a89",
+    "sha256": "7190a17c9828702fad49fc5457e36c061796d20c8800ef727f3a5022fb61658d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/dependency-security.md",
+    "target": "backend/services/jobApplication/catalog/docs/dependency-security.md",
+    "sourceSha256": "5f25e76bb7f98c0d7e085f19b599a9f7dd3061330816605436b8c127642a03b0",
+    "sha256": "5f25e76bb7f98c0d7e085f19b599a9f7dd3061330816605436b8c127642a03b0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/main.py",
+    "target": "backend/services/jobApplication/boss_app/main.py",
+    "sourceSha256": "a6e2be01dd5b1d3ff3cdc537337da2a16b484f8f02dc3a48c4322b148f9b8009",
+    "sha256": "a6e2be01dd5b1d3ff3cdc537337da2a16b484f8f02dc3a48c4322b148f9b8009",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/system.py",
+    "target": "backend/services/jobApplication/boss_app/routes/system.py",
+    "sourceSha256": "04b3c2ff87b8a686b5db2299cf13f175a757dc55f38124290a496bc5893f5c9a",
+    "sha256": "04b3c2ff87b8a686b5db2299cf13f175a757dc55f38124290a496bc5893f5c9a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/public/favicon.svg",
+    "target": "backend/services/jobApplication/frontend/public/favicon.svg",
+    "sourceSha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66",
+    "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_data_lifecycle.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_data_lifecycle.py",
+    "sourceSha256": "e0adc4011e5334f76cf4782e60a187dcaca69a77388636c60af680ac85775850",
+    "sha256": "e0adc4011e5334f76cf4782e60a187dcaca69a77388636c60af680ac85775850",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_pages_render.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_pages_render.py",
+    "sourceSha256": "d9b3f9e16be33d8f2625f153f460058ea96e4eaffa85f71a969767862fbd334b",
+    "sha256": "d9b3f9e16be33d8f2625f153f460058ea96e4eaffa85f71a969767862fbd334b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/storage.md",
+    "target": "backend/services/jobApplication/catalog/docs/storage.md",
+    "sourceSha256": "0722066a929701d307b6949b20adf059955133caff19c56173a4f2b078dde516",
+    "sha256": "0722066a929701d307b6949b20adf059955133caff19c56173a4f2b078dde516",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-upsert.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-upsert.test.ts",
+    "sourceSha256": "316032b4f69ff962adeb6918c3e6a5766a8b5ddb993eeeaf6d74a36280ca929b",
+    "sha256": "316032b4f69ff962adeb6918c3e6a5766a8b5ddb993eeeaf6d74a36280ca929b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/db.py",
+    "target": "backend/services/jobApplication/interview/db.py",
+    "sourceSha256": "d854b2b4047ec0e424478b31768b9779fcdb1f459e63a776ef392d48f46e5f33",
+    "sha256": "d854b2b4047ec0e424478b31768b9779fcdb1f459e63a776ef392d48f46e5f33",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/adapters/tencent-internship.ts",
+    "target": "backend/services/jobApplication/catalog/src/adapters/tencent-internship.ts",
+    "sourceSha256": "b556eaeb584551a464469d395c98b1636e971196f3e83e5a4f189096cd985fb4",
+    "sha256": "b556eaeb584551a464469d395c98b1636e971196f3e83e5a4f189096cd985fb4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/document-parse.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/document-parse.test.ts",
+    "sourceSha256": "276cd8191eb8bc5be29403cd7202995070ab5413b1ec2223680bf3be2ca48bbd",
+    "sha256": "276cd8191eb8bc5be29403cd7202995070ab5413b1ec2223680bf3be2ca48bbd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_edge_cases.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_edge_cases.py",
+    "sourceSha256": "05020c3af599294aa3648dff192a1fc0293c119fb61c50a068a4fde7daace3d4",
+    "sha256": "05020c3af599294aa3648dff192a1fc0293c119fb61c50a068a4fde7daace3d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/reviewed-metadata.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/reviewed-metadata.test.ts",
+    "sourceSha256": "0c607b490f8bfd1d5f27220155d9539d7878937c38584dc94f0eb2c47078d2fc",
+    "sha256": "0c607b490f8bfd1d5f27220155d9539d7878937c38584dc94f0eb2c47078d2fc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/collect-tencent-internship.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/collect-tencent-internship.ts",
+    "sourceSha256": "b1ecd43f0cd677ee362cd87849329a989e95636854bf6e8b3edf3977c4b486bf",
+    "sha256": "b1ecd43f0cd677ee362cd87849329a989e95636854bf6e8b3edf3977c4b486bf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/capture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/capture.ts",
+    "sourceSha256": "b460bc82cbcbb25a1e6c4ef73336292b4c14e3c12994480867ff9450c1c3a235",
+    "sha256": "b460bc82cbcbb25a1e6c4ef73336292b4c14e3c12994480867ff9450c1c3a235",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_routes.py",
+    "target": "backend/services/jobApplication/tests/test_routes.py",
+    "sourceSha256": "fa390be34b989c2031d18190f880b972862fc1300848e3ce110c90921346ea38",
+    "sha256": "fa390be34b989c2031d18190f880b972862fc1300848e3ce110c90921346ea38",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/llm_client.py",
+    "target": "backend/services/jobApplication/interview/llm_client.py",
+    "sourceSha256": "093a52986f7bde6d0051f717944a01e1c5e2b5f41fa956280be72b2ae248f5b9",
+    "sha256": "093a52986f7bde6d0051f717944a01e1c5e2b5f41fa956280be72b2ae248f5b9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/resume_parser.py",
+    "target": "backend/services/jobApplication/boss_app/services/resume_parser.py",
+    "sourceSha256": "5ca8d6e597abd60b52240ba0725119c3e080220a59bf7798479807c9bd02920a",
+    "sha256": "5ca8d6e597abd60b52240ba0725119c3e080220a59bf7798479807c9bd02920a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/document-fixtures.ts",
+    "target": "backend/services/jobApplication/catalog/tests/document-fixtures.ts",
+    "sourceSha256": "8dd48614dcfdc1dded0a2701d5db5f70a776778d9175468b0d24e2ae9fc9afd9",
+    "sha256": "8dd48614dcfdc1dded0a2701d5db5f70a776778d9175468b0d24e2ae9fc9afd9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_real_workflows.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_real_workflows.py",
+    "sourceSha256": "ff71e62d9704a7b776092bda30cbb06bfd3634205dbd02eec08106188499ccf8",
+    "sha256": "ff71e62d9704a7b776092bda30cbb06bfd3634205dbd02eec08106188499ccf8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/contracts/artifacts.ts",
+    "target": "backend/services/jobApplication/catalog/contracts/artifacts.ts",
+    "sourceSha256": "18ab62db3b6e0823556cfc81a71ba15ecafc4d5dacc2641fb74baa4629b3ff1e",
+    "sha256": "18ab62db3b6e0823556cfc81a71ba15ecafc4d5dacc2641fb74baa4629b3ff1e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/internship-capture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/internship-capture.ts",
+    "sourceSha256": "12f6b0e05d37cd3084409f0f0b1b5926f20c21cea6ef23b11b2f4b05b6558ff5",
+    "sha256": "12f6b0e05d37cd3084409f0f0b1b5926f20c21cea6ef23b11b2f4b05b6558ff5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-search.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-search.test.ts",
+    "sourceSha256": "0537a441b7b677b3e84401ea788749ad1d644ba7b9a4ce37d66400698a70b9be",
+    "sha256": "0537a441b7b677b3e84401ea788749ad1d644ba7b9a4ce37d66400698a70b9be",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/autofill-contract.js",
+    "target": "zhitu/extensions/jobApplication/autofill-contract.js",
+    "sourceSha256": "9f479090498348cadde146c3f741aae2426288611ab9dd47b627b0e4a03b472d",
+    "sha256": "9f479090498348cadde146c3f741aae2426288611ab9dd47b627b0e4a03b472d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/lakejob_cli/cli.py",
+    "target": "backend/services/jobApplication/lakejob_cli/cli.py",
+    "sourceSha256": "ecdbae0427c1722be45d18b95af2c8b1d3ff7a43d5f849a3959c9b1c96c50c4a",
+    "sha256": "ecdbae0427c1722be45d18b95af2c8b1d3ff7a43d5f849a3959c9b1c96c50c4a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/liepin-page.js",
+    "target": "zhitu/extensions/jobApplication/liepin-page.js",
+    "sourceSha256": "b4d561edfa22268de4f0d010cee03bb4b622cb689172282224da3c9b4e5589dc",
+    "sha256": "b4d561edfa22268de4f0d010cee03bb4b622cb689172282224da3c9b4e5589dc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/contracts/records.ts",
+    "target": "backend/services/jobApplication/catalog/contracts/records.ts",
+    "sourceSha256": "2363a0877bdcd50a885d547b2cec16e7de1efaf6393bd808fdadeae59125eae9",
+    "sha256": "2363a0877bdcd50a885d547b2cec16e7de1efaf6393bd808fdadeae59125eae9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/scheduler.py",
+    "target": "backend/services/jobApplication/boss_app/core/scheduler.py",
+    "sourceSha256": "f0b3ee18af77101f214db90cc2166511f7429c05f0f66db74a767d83d2eb8939",
+    "sha256": "f0b3ee18af77101f214db90cc2166511f7429c05f0f66db74a767d83d2eb8939",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/main.py",
+    "target": "backend/services/jobApplication/interview/main.py",
+    "sourceSha256": "cbe3f4275409041ae7c468ac2286ed533960068fe55d3bd8b5ddbd7166fd2853",
+    "sha256": "cbe3f4275409041ae7c468ac2286ed533960068fe55d3bd8b5ddbd7166fd2853",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/upstream-migrations.md",
+    "target": "backend/services/jobApplication/catalog/docs/upstream-migrations.md",
+    "sourceSha256": "2585da78eebc7293131fd3e36979067af282dcb1fe1363ac0b90a0e553d6f192",
+    "sha256": "2585da78eebc7293131fd3e36979067af282dcb1fe1363ac0b90a0e553d6f192",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/tencent-adapter.md",
+    "target": "backend/services/jobApplication/catalog/docs/tencent-adapter.md",
+    "sourceSha256": "0fc9735c50bba7a45c9f938ec5f352f44f2ef09007183037e410e8ea4fc1bbb1",
+    "sha256": "0fc9735c50bba7a45c9f938ec5f352f44f2ef09007183037e410e8ea4fc1bbb1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/README.md",
+    "target": "backend/services/jobApplication/catalog/security/README.md",
+    "sourceSha256": "88a51ca57050dd1c64b52831ac7a0440826dcecf5b63c6c9233d39f10d98c1e9",
+    "sha256": "88a51ca57050dd1c64b52831ac7a0440826dcecf5b63c6c9233d39f10d98c1e9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/search-api.md",
+    "target": "backend/services/jobApplication/catalog/docs/search-api.md",
+    "sourceSha256": "a0dedea9449b0ca09a58ed7500cc96a180fbfe33238dd2fa75f15d15277a97f3",
+    "sha256": "a0dedea9449b0ca09a58ed7500cc96a180fbfe33238dd2fa75f15d15277a97f3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/monitor.py",
+    "target": "backend/services/jobApplication/boss_app/core/monitor.py",
+    "sourceSha256": "2d6fbc365ef3559cbe6b8773f20026d7cc2498c691543088289ccc14a22fb8b3",
+    "sha256": "2d6fbc365ef3559cbe6b8773f20026d7cc2498c691543088289ccc14a22fb8b3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_settings_workflow.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_settings_workflow.py",
+    "sourceSha256": "e9aa6876976f1396d7ca188d9933e75fcb077990387078f219b93ede0a84157b",
+    "sha256": "e9aa6876976f1396d7ca188d9933e75fcb077990387078f219b93ede0a84157b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/settings.py",
+    "target": "backend/services/jobApplication/boss_app/models/settings.py",
+    "sourceSha256": "6f5bac86e1184f1aa4589ac19e3b54a3515742ead4c15270bbb7ef5951545ae1",
+    "sha256": "6f5bac86e1184f1aa4589ac19e3b54a3515742ead4c15270bbb7ef5951545ae1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/jobs.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/jobs.ts",
+    "sourceSha256": "96d3b2246319ef495150801c63aca7538659473b19cbb4a4ecbbb45778362fcc",
+    "sha256": "96d3b2246319ef495150801c63aca7538659473b19cbb4a4ecbbb45778362fcc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/config/internship-profiles.ts",
+    "target": "backend/services/jobApplication/catalog/src/config/internship-profiles.ts",
+    "sourceSha256": "9e448199d7c9026ff84e2925bb475b5ca39ce85c036631e267d9d03f00c4f000",
+    "sha256": "9e448199d7c9026ff84e2925bb475b5ca39ce85c036631e267d9d03f00c4f000",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/detail.js",
+    "target": "zhitu/extensions/jobApplication/detail.js",
+    "sourceSha256": "e90c5c658d403fc40a423435ee269e354e9eafd18f43881142cd6a14cea3aacf",
+    "sha256": "e90c5c658d403fc40a423435ee269e354e9eafd18f43881142cd6a14cea3aacf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/search/SearchBar.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/search/SearchBar.vue",
+    "sourceSha256": "01c1c64a281a8c39fd719d1def217539973142d9dc8b496d8dc06ee47031c8d3",
+    "sha256": "e86fd1249d0a29f7219e189e07f64c0732ccd2fdb63c8437a89b8ada551b1109",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T06.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T06.md",
+    "sourceSha256": "dc719dd83bff1498f537da3307d95609d992fa25ee6c29cfbdbda7d50ace314d",
+    "sha256": "dc719dd83bff1498f537da3307d95609d992fa25ee6c29cfbdbda7d50ace314d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/contracts/index.ts",
+    "target": "backend/services/jobApplication/catalog/contracts/index.ts",
+    "sourceSha256": "6c1de68e3aedf05281abceeda5468b9a0db195bd363853a819433c2991e32fb1",
+    "sha256": "6c1de68e3aedf05281abceeda5468b9a0db195bd363853a819433c2991e32fb1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/contracts/validation.ts",
+    "target": "backend/services/jobApplication/catalog/contracts/validation.ts",
+    "sourceSha256": "26db8d06c49c4a5921bf1e1b147c09416edacac2a0c8a946654ddbbfe3e79be1",
+    "sha256": "26db8d06c49c4a5921bf1e1b147c09416edacac2a0c8a946654ddbbfe3e79be1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/artifact-storage.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/artifact-storage.test.ts",
+    "sourceSha256": "c81886a1c55d4534c55a0a7580c111ea75acf26f28fca8bf22ec13e49a3cdfd5",
+    "sha256": "c81886a1c55d4534c55a0a7580c111ea75acf26f28fca8bf22ec13e49a3cdfd5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/artifacts.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/artifacts.ts",
+    "sourceSha256": "e5e45e35407e0c6e6e0c1c1604fabf82bb42857e41209d34dc109bd6ccea97c1",
+    "sha256": "e5e45e35407e0c6e6e0c1c1604fabf82bb42857e41209d34dc109bd6ccea97c1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T09.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T09.md",
+    "sourceSha256": "be7faf1e31692cdb1dd77ade39dfcff7e2202820a939c09198d9356428232761",
+    "sha256": "be7faf1e31692cdb1dd77ade39dfcff7e2202820a939c09198d9356428232761",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_smart_apply.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_smart_apply.py",
+    "sourceSha256": "5474f0ec3f1802acf84d2d27f861fdf86a9c1fa381f202fbf41ba7c5a4214444",
+    "sha256": "5474f0ec3f1802acf84d2d27f861fdf86a9c1fa381f202fbf41ba7c5a4214444",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/search-api.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/search-api.test.ts",
+    "sourceSha256": "b0d5cb14b548ad645788ad152e49923a6434769c7616df53b30695328ba81849",
+    "sha256": "b0d5cb14b548ad645788ad152e49923a6434769c7616df53b30695328ba81849",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_smart_reply.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_smart_reply.py",
+    "sourceSha256": "df2d0522fad03d897fff5d5f5e5e39fb04ba437021d277c89f77d47aa1d18f52",
+    "sha256": "df2d0522fad03d897fff5d5f5e5e39fb04ba437021d277c89f77d47aa1d18f52",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/runtime.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/runtime.test.ts",
+    "sourceSha256": "8bc4c87cdc622449c06e9e76a443a68a6b91d7283f4550658c2b1203111f5a3c",
+    "sha256": "8bc4c87cdc622449c06e9e76a443a68a6b91d7283f4550658c2b1203111f5a3c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/self-test.ps1",
+    "target": "backend/services/jobApplication/catalog/security/self-test.ps1",
+    "sourceSha256": "98b32415fa915782427944e51e06652d7bc746dd6b9743c17880f4388f059a05",
+    "sha256": "98b32415fa915782427944e51e06652d7bc746dd6b9743c17880f4388f059a05",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/prepare-tools.ps1",
+    "target": "backend/services/jobApplication/catalog/security/prepare-tools.ps1",
+    "sourceSha256": "f69faad4c19b55f6e0a8f69e3786a86ff73cd14dee1e0794344906b4b4550def",
+    "sha256": "f69faad4c19b55f6e0a8f69e3786a86ff73cd14dee1e0794344906b4b4550def",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/zhaopin.js",
+    "target": "zhitu/extensions/jobApplication/zhaopin.js",
+    "sourceSha256": "49f523e83a47f6c1ba45dffa4d283f4abd42795207cdb48a50140cd71d80cc50",
+    "sha256": "49f523e83a47f6c1ba45dffa4d283f4abd42795207cdb48a50140cd71d80cc50",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T08.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T08.md",
+    "sourceSha256": "4d72684d8b2a620938178f97cd82c3df10f5558b5b68487ca4e9f1813b1307fd",
+    "sha256": "4d72684d8b2a620938178f97cd82c3df10f5558b5b68487ca4e9f1813b1307fd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T05.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T05.md",
+    "sourceSha256": "3d29ed0d7973a562a00924eb2a0995ad8950c0d6883c856639374a9d70c2dcb6",
+    "sha256": "3d29ed0d7973a562a00924eb2a0995ad8950c0d6883c856639374a9d70c2dcb6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/navigation.js",
+    "target": "zhitu/extensions/jobApplication/navigation.js",
+    "sourceSha256": "f693e614d3b3374e7777ba76287a11b98bbf8e02923beb1b9272bd68595c093a",
+    "sha256": "f693e614d3b3374e7777ba76287a11b98bbf8e02923beb1b9272bd68595c093a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_data_workflow.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_data_workflow.py",
+    "sourceSha256": "af9fd61238c9d724f4d3183083cc5f4b0055bf4407b236efe3f45d9b84b6d97d",
+    "sha256": "af9fd61238c9d724f4d3183083cc5f4b0055bf4407b236efe3f45d9b84b6d97d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_config.py",
+    "target": "backend/services/jobApplication/tests/test_config.py",
+    "sourceSha256": "e44de75b04d0d55b7148eff6c550408d06ece01048d6c76c118e40770dbc0f5c",
+    "sha256": "e44de75b04d0d55b7148eff6c550408d06ece01048d6c76c118e40770dbc0f5c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/jobs.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/jobs.ts",
+    "sourceSha256": "69e0f8e07449bb719d9e3f89e1d5ca1d1f51c0f63a35164d92668f68390aea45",
+    "sha256": "51538e979167d33dce0478a6319dc622dd4a364b8fc125bcb1b1b79d0cd8e9ba",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/liepin.js",
+    "target": "zhitu/extensions/jobApplication/liepin.js",
+    "sourceSha256": "4bad78da744e0f49259d556fd07e2c14a31b6a16b881fe2aecfb54b56e53eea1",
+    "sha256": "4bad78da744e0f49259d556fd07e2c14a31b6a16b881fe2aecfb54b56e53eea1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/import-artifact.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/import-artifact.ts",
+    "sourceSha256": "0eb670a3af6d6623d99dc7a787afa0f76b26979c8e09a8d45eab109bd3dae23d",
+    "sha256": "0eb670a3af6d6623d99dc7a787afa0f76b26979c8e09a8d45eab109bd3dae23d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T07.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T07.md",
+    "sourceSha256": "eaa4a6fb2a587adf1c2d1d1ce4c84e0cd3a0a244c3ddd629be0774996375fc4e",
+    "sha256": "eaa4a6fb2a587adf1c2d1d1ce4c84e0cd3a0a244c3ddd629be0774996375fc4e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/SKILL.md",
+    "target": "backend/services/jobApplication/docs/SKILL.md",
+    "sourceSha256": "5c6cd23e36fd121424b758a3bf161b63a44c2d0ea3d0c78260fc1ef89c516fe7",
+    "sha256": "5c6cd23e36fd121424b758a3bf161b63a44c2d0ea3d0c78260fc1ef89c516fe7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_perf_benchmark.py",
+    "target": "backend/services/jobApplication/tests/test_perf_benchmark.py",
+    "sourceSha256": "927a3a3aa302722ebc16ac3bd620b97c42b8938312284e5fda9afe2dd3240183",
+    "sha256": "927a3a3aa302722ebc16ac3bd620b97c42b8938312284e5fda9afe2dd3240183",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma/migrations/202611090001_catalog_identity/migration.sql",
+    "target": "backend/services/jobApplication/catalog/prisma/migrations/202611090001_catalog_identity/migration.sql",
+    "sourceSha256": "107fc040d83508665655fe38c68b7a549de7c9586c6c046506ed9fcc516ddca5",
+    "sha256": "107fc040d83508665655fe38c68b7a549de7c9586c6c046506ed9fcc516ddca5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/base.py",
+    "target": "backend/services/jobApplication/boss_app/agents/base.py",
+    "sourceSha256": "342cbff927449d624134fa38439f17f0eb3a65dba36a85dbaa5010f25dfee75c",
+    "sha256": "342cbff927449d624134fa38439f17f0eb3a65dba36a85dbaa5010f25dfee75c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/adapters/tencent.ts",
+    "target": "backend/services/jobApplication/catalog/src/adapters/tencent.ts",
+    "sourceSha256": "6ffec8d178e4062a664a0d1d438024794e5a78483b910988dff92c2f5b3314be",
+    "sha256": "6ffec8d178e4062a664a0d1d438024794e5a78483b910988dff92c2f5b3314be",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/public/icons.svg",
+    "target": "backend/services/jobApplication/frontend/public/icons.svg",
+    "sourceSha256": "7ca2d67c9c3aebf50cdc8709ee8aacf8cdb8cc7ea6325ea94939caef5da1c53d",
+    "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/path-safety.ps1",
+    "target": "backend/services/jobApplication/catalog/security/path-safety.ps1",
+    "sourceSha256": "983d9af8cc01886ed79fc04c6e1f24630fccc4f75075ea3852a52f547a451411",
+    "sha256": "983d9af8cc01886ed79fc04c6e1f24630fccc4f75075ea3852a52f547a451411",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/layout/AppSidebar.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/layout/AppSidebar.vue",
+    "sourceSha256": "41e605494717a81fb52afcb1261b1ce987f14179c63c0d2caf965e4883d0642f",
+    "sha256": "ebe1b9e7d168e2d1d888b760b0451ac8a241247ebc0915a75fd264c7fb8f387d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/lakejob_cli/schema.json",
+    "target": "backend/services/jobApplication/lakejob_cli/schema.json",
+    "sourceSha256": "de5b528c78f5e03fabf521ac980ad3434a690a6fed89de2b8e087c8ef812ddf8",
+    "sha256": "de5b528c78f5e03fabf521ac980ad3434a690a6fed89de2b8e087c8ef812ddf8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useWebSocket.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useWebSocket.ts",
+    "sourceSha256": "e49b4bc8689b85c2e7c7fda169eef1c176d954af9e7ea9f58e70a478189026aa",
+    "sha256": "e0a2c8a422d6c581db0ba293c2e70b2c441a6a84c08fe97dc998cd2dffef071a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/layout/AppHeader.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/layout/AppHeader.vue",
+    "sourceSha256": "99ac65441c20c434765cea428e7ba96c489ee5706000f24a5df1830991b14200",
+    "sha256": "a3f54d033ef17e0655e060768e71df2bf7395a6107d7a1414b853f4e4943d238",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/search/JobList.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/search/JobList.vue",
+    "sourceSha256": "a276b67b32ecf0e791dabeaec7683fd2dcdb292ab5a29a57d1109193c7972ae9",
+    "sha256": "f87eeadd192846f38f6d6bc53d429b0caf3dda2424cf9fb71c1e655606e0731e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma/schema.prisma",
+    "target": "backend/services/jobApplication/catalog/prisma/schema.prisma",
+    "sourceSha256": "a730696850380e57ebfa5b708bf1a7bb9f0fc7ed20913428ec6260e592224f3c",
+    "sha256": "a730696850380e57ebfa5b708bf1a7bb9f0fc7ed20913428ec6260e592224f3c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-process-group.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-process-group.test.ts",
+    "sourceSha256": "c7cc60f52ec1bf8d80ce9be6961a945d67b3bd31c0cd56fe306df1a2aa7539cc",
+    "sha256": "c7cc60f52ec1bf8d80ce9be6961a945d67b3bd31c0cd56fe306df1a2aa7539cc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/conversation.py",
+    "target": "backend/services/jobApplication/boss_app/models/conversation.py",
+    "sourceSha256": "2d2b06cb0adde50ef3530096025d5ac745a0b93e75246e9f8442b9a2c59d0e8b",
+    "sha256": "2d2b06cb0adde50ef3530096025d5ac745a0b93e75246e9f8442b9a2c59d0e8b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/scripts/batch_score.py",
+    "target": "backend/services/jobApplication/scripts/batch_score.py",
+    "sourceSha256": "ac0b035702d9668a624186fe14ad8b0f56e7273d64ae64cccb37b4512dabcb80",
+    "sha256": "ac0b035702d9668a624186fe14ad8b0f56e7273d64ae64cccb37b4512dabcb80",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/merge.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/merge.ts",
+    "sourceSha256": "4a2d4fb71c440d1db52b8825ee37c74dd34a94ec6ec4681b9cac97bc8ce22196",
+    "sha256": "4a2d4fb71c440d1db52b8825ee37c74dd34a94ec6ec4681b9cac97bc8ce22196",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/conversations.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/conversations.ts",
+    "sourceSha256": "825d855f65c2663648adaee1d119bf8baed3ff4096d76a1e5bb72e7f336313cb",
+    "sha256": "d514d5a09477e784d80739e18b9773ae0cbe5d143ce0533787e04d448e7b4c43",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/search.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/search.ts",
+    "sourceSha256": "e1e646d0e39e0b846d417eb2615ba5f5a052dda292487b348b01aa3c7491c1aa",
+    "sha256": "e1e646d0e39e0b846d417eb2615ba5f5a052dda292487b348b01aa3c7491c1aa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/current-state.md",
+    "target": "backend/services/jobApplication/catalog/docs/current-state.md",
+    "sourceSha256": "b573f2b5a3e9eacf74cb67db0b782185cf3c32fa980b0db1764228fc66eb07b9",
+    "sha256": "b573f2b5a3e9eacf74cb67db0b782185cf3c32fa980b0db1764228fc66eb07b9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/prisma-cli.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/prisma-cli.ts",
+    "sourceSha256": "0fada7b690cb2f19201d22e8c63d1c973dee8f30c4d994bd4e58ecc714a824d2",
+    "sha256": "0fada7b690cb2f19201d22e8c63d1c973dee8f30c4d994bd4e58ecc714a824d2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/chat-platform.js",
+    "target": "zhitu/extensions/jobApplication/chat-platform.js",
+    "sourceSha256": "d462430532c9e1aaa3eee933895a6d84386215759e508e648ee932c331b4695a",
+    "sha256": "d462430532c9e1aaa3eee933895a6d84386215759e508e648ee932c331b4695a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/WechatView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/WechatView.vue",
+    "sourceSha256": "914cfa03cd21eefb4204df507b3d8f5fd9c1facc1563c07f9bff809aade40c45",
+    "sha256": "0c5a6c87d80087b8381e807ba71a18b2feedfd4be41695461b36361eeccc58bd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/config/sources.ts",
+    "target": "backend/services/jobApplication/catalog/src/config/sources.ts",
+    "sourceSha256": "d0f67cab6c4b4dcfb49eed81413091c380eb319920a910df95f09ca1c587c1c7",
+    "sha256": "d0f67cab6c4b4dcfb49eed81413091c380eb319920a910df95f09ca1c587c1c7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/rules/catalog.yml",
+    "target": "backend/services/jobApplication/catalog/security/rules/catalog.yml",
+    "sourceSha256": "59b7a9f245fe959b468115dad6b57315cd8332fe2168502e881d4ca256debbc8",
+    "sha256": "59b7a9f245fe959b468115dad6b57315cd8332fe2168502e881d4ca256debbc8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-config.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-config.test.ts",
+    "sourceSha256": "cff2405b5555af6b261f9a8b889f0154695b54109e499a450ee890433e9ce748",
+    "sha256": "cff2405b5555af6b261f9a8b889f0154695b54109e499a450ee890433e9ce748",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/test-path-safety.ps1",
+    "target": "backend/services/jobApplication/catalog/security/test-path-safety.ps1",
+    "sourceSha256": "c9c6a03cbd9a587677a18e9971de681c86ffda233593e9312ae9e337cd33b0de",
+    "sha256": "c9c6a03cbd9a587677a18e9971de681c86ffda233593e9312ae9e337cd33b0de",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/FIXES_SUMMARY.md",
+    "target": "backend/services/jobApplication/docs/FIXES_SUMMARY.md",
+    "sourceSha256": "4ed09c58322c4a605889d3652c8999628dc5acf05ca2e11046475990659273ef",
+    "sha256": "4ed09c58322c4a605889d3652c8999628dc5acf05ca2e11046475990659273ef",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/internship-metadata.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/internship-metadata.json",
+    "sourceSha256": "869b18ff193b02f2fb9ce1dc6a436a1f5daa13984c86adc66ecb143feb99e54e",
+    "sha256": "869b18ff193b02f2fb9ce1dc6a436a1f5daa13984c86adc66ecb143feb99e54e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/scorer_agent.py",
+    "target": "backend/services/jobApplication/boss_app/agents/scorer_agent.py",
+    "sourceSha256": "ce00d799e3283eb410d8d13a17c620d17b404775469324da013c11455ca19ee3",
+    "sha256": "ce00d799e3283eb410d8d13a17c620d17b404775469324da013c11455ca19ee3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/pdf.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/pdf.ts",
+    "sourceSha256": "8f06dfb935a2cbcdf35635dc06956bc001dd4862ce8b7710e7990f7c183e2d24",
+    "sha256": "8f06dfb935a2cbcdf35635dc06956bc001dd4862ce8b7710e7990f7c183e2d24",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/followup.py",
+    "target": "backend/services/jobApplication/boss_app/models/followup.py",
+    "sourceSha256": "ea9c6e6c83854ac213e5c4e9e2d060d74d59680ab22b2ab026622812326728d8",
+    "sha256": "ea9c6e6c83854ac213e5c4e9e2d060d74d59680ab22b2ab026622812326728d8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/chat_agent.py",
+    "target": "backend/services/jobApplication/boss_app/agents/chat_agent.py",
+    "sourceSha256": "9288a73aa133cf98621e7be0e3314def22ce646b6cb79f0a6db228a831d1b19d",
+    "sha256": "9288a73aa133cf98621e7be0e3314def22ce646b6cb79f0a6db228a831d1b19d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/document.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/document.ts",
+    "sourceSha256": "53a6613b712f4e91e7335345944fc66520465f57e926c1da25723a1f81b14bcb",
+    "sha256": "53a6613b712f4e91e7335345944fc66520465f57e926c1da25723a1f81b14bcb",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent-internship/qingyun-detail.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent-internship/qingyun-detail.json",
+    "sourceSha256": "643b50ef2375a156652b12e5cc8ac9765fffa1d94a3d27fae2fb0c57e8f6e0a8",
+    "sha256": "643b50ef2375a156652b12e5cc8ac9765fffa1d94a3d27fae2fb0c57e8f6e0a8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/run-fixture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/run-fixture.ts",
+    "sourceSha256": "912aaec6d342ebd644e573ab776c9d9acd51a121c6934d0423e6f5508a8fc991",
+    "sha256": "912aaec6d342ebd644e573ab776c9d9acd51a121c6934d0423e6f5508a8fc991",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/debug.py",
+    "target": "backend/services/jobApplication/boss_app/routes/debug.py",
+    "sourceSha256": "261178e00b51f132fc8a1288accce48a2bdab1047b4b9a15fab1fba484a96bc7",
+    "sha256": "261178e00b51f132fc8a1288accce48a2bdab1047b4b9a15fab1fba484a96bc7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/dependencies.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/dependencies.ts",
+    "sourceSha256": "637a14cf7ef10ae17d3f0cbaad09b82fd1cb8ec30bf718261489e66e0207807d",
+    "sha256": "ed2a36fd730b3ede3f7fff2d0b13e8f86a75ca9fbe900abe1e92dc4bb7f6475e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/benchmark.py",
+    "target": "backend/services/jobApplication/interview/benchmark.py",
+    "sourceSha256": "6c4d6daae21d5b62af0122d3653d5369504445ade43e4ae1ccb118ebc72bfd0d",
+    "sha256": "6c4d6daae21d5b62af0122d3653d5369504445ade43e4ae1ccb118ebc72bfd0d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/layouts/DefaultLayout.vue",
+    "target": "backend/services/jobApplication/frontend/src/layouts/DefaultLayout.vue",
+    "sourceSha256": "52ed4ad42f3a3d8065f1d85b88205d110fe453e04a4e0b4c7821cc029e0e5f48",
+    "sha256": "8b0e5ec1e1f1ca3e935b3faa9a8a0826cdf7a4375fbe082057808549eb9343da",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/xlsx.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/xlsx.ts",
+    "sourceSha256": "7298b995d0dbbc507430de22ce170c4c199b3a8a443833c6272a7e56a9b15456",
+    "sha256": "7298b995d0dbbc507430de22ce170c4c199b3a8a443833c6272a7e56a9b15456",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/apply_agent.py",
+    "target": "backend/services/jobApplication/boss_app/agents/apply_agent.py",
+    "sourceSha256": "6d10c91d344c5f044fb9ecc2b73f038e0a2997b7623c8ba8fdb1673b84b4f141",
+    "sha256": "6d10c91d344c5f044fb9ecc2b73f038e0a2997b7623c8ba8fdb1673b84b4f141",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/views/SearchView.vue",
+    "target": "backend/services/jobApplication/frontend/src/views/SearchView.vue",
+    "sourceSha256": "26882a351df35ad202ade4da979b8921fc897be4f1e10f175310c49c17a7e6e2",
+    "sha256": "a0329cf8963e044601016a358f1ef5756da3e41ee94905df5f183b20ac7ce8bf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/ingest-reviewed-official.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/ingest-reviewed-official.ts",
+    "sourceSha256": "023fab59d16ff1d7b6357723c1a49dbac2ea5145cdf3e7b272fbff2919a194d4",
+    "sha256": "023fab59d16ff1d7b6357723c1a49dbac2ea5145cdf3e7b272fbff2919a194d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/message.py",
+    "target": "backend/services/jobApplication/boss_app/models/message.py",
+    "sourceSha256": "5653ed93e9ebf132ef3d9fcab4ffc3c81406104be21d1feff649403d7431141c",
+    "sha256": "5653ed93e9ebf132ef3d9fcab4ffc3c81406104be21d1feff649403d7431141c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/publication-policy.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/publication-policy.ts",
+    "sourceSha256": "5d293d4ec39881bf044cb57b69993877dbe630c9b61935c1294dd2c273b05691",
+    "sha256": "5d293d4ec39881bf044cb57b69993877dbe630c9b61935c1294dd2c273b05691",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/lakejob_cli/client.py",
+    "target": "backend/services/jobApplication/lakejob_cli/client.py",
+    "sourceSha256": "ff2537e9c8604c81d24c4b485b405f23d1a2348986c4ed5758c49552106de128",
+    "sha256": "ff2537e9c8604c81d24c4b485b405f23d1a2348986c4ed5758c49552106de128",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/ingest.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/ingest.ts",
+    "sourceSha256": "5454b4e6ee1a1b2bed37730ec19434729e8c606c64e96fb54c70b56974f17c25",
+    "sha256": "5454b4e6ee1a1b2bed37730ec19434729e8c606c64e96fb54c70b56974f17c25",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/docs/unslop-2026-11-09.md",
+    "target": "backend/services/jobApplication/consumer/docs/unslop-2026-11-09.md",
+    "sourceSha256": "cfee0b830ac77d2e6b297750a470c380586cb10ed419f54c8c59a6f8a0e73006",
+    "sha256": "cfee0b830ac77d2e6b297750a470c380586cb10ed419f54c8c59a6f8a0e73006",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/config.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/config.ts",
+    "sourceSha256": "14eb8ac2f8cc2eeafc75e78c8e8b29de49632d248169eaf2fabce54f71cb5efa",
+    "sha256": "14eb8ac2f8cc2eeafc75e78c8e8b29de49632d248169eaf2fabce54f71cb5efa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/docs/job-actions-contract.md",
+    "target": "backend/services/jobApplication/consumer/docs/job-actions-contract.md",
+    "sourceSha256": "6a80c2523e796e59e9d2425763e3820330ab08337b4c17f242729118c61076d4",
+    "sha256": "6a80c2523e796e59e9d2425763e3820330ab08337b4c17f242729118c61076d4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T04.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T04.md",
+    "sourceSha256": "37277146a1848bea3fee67566fa055850d6c8551b24630593b1d3f9a875ef5cd",
+    "sha256": "37277146a1848bea3fee67566fa055850d6c8551b24630593b1d3f9a875ef5cd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/t05-database-environment.md",
+    "target": "backend/services/jobApplication/catalog/docs/t05-database-environment.md",
+    "sourceSha256": "31b4ac183d2ba71b52e813fe93b66d9b4a43ca9760e10c90a81c20e8fe4d7e0e",
+    "sha256": "31b4ac183d2ba71b52e813fe93b66d9b4a43ca9760e10c90a81c20e8fe4d7e0e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/config/reviewed-official.ts",
+    "target": "backend/services/jobApplication/catalog/src/config/reviewed-official.ts",
+    "sourceSha256": "101e15ee14b4f033ab1ada4156e895ad286bb6da75cf058efc2994f9ee97e954",
+    "sha256": "101e15ee14b4f033ab1ada4156e895ad286bb6da75cf058efc2994f9ee97e954",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/input.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/input.ts",
+    "sourceSha256": "1b4aecd72262b5f355728450651c58cf2d90fb126684fa5cdaa160c1c8410c55",
+    "sha256": "1b4aecd72262b5f355728450651c58cf2d90fb126684fa5cdaa160c1c8410c55",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/layout/OverviewBar.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/layout/OverviewBar.vue",
+    "sourceSha256": "7c0e7898ec05f30d037f7220cdd637c89dd80c59e898286b24af8d7a365583ed",
+    "sha256": "eab15ef527bae10a5316e49c484f7d834a910b8c70de1c7b6d79ffb8f8db328a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/coze_client.py",
+    "target": "backend/services/jobApplication/boss_app/services/coze_client.py",
+    "sourceSha256": "2dc00d8065c9f3d3cb3366f891fed272e904aaa58880446a7984bec48e063543",
+    "sha256": "2dc00d8065c9f3d3cb3366f891fed272e904aaa58880446a7984bec48e063543",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-artifacts.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-artifacts.test.ts",
+    "sourceSha256": "e3f41b3f14d26c3498b3e9ea1db95b1645492238f39d55952168ba5d7397ed87",
+    "sha256": "e3f41b3f14d26c3498b3e9ea1db95b1645492238f39d55952168ba5d7397ed87",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/system.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/system.ts",
+    "sourceSha256": "8024f0b2a70c7f922d224d6a310a7c2e3291a3542c9f962466f29154bfb35b85",
+    "sha256": "754dbbe69902a3740ceab53dbc291c1ebf8d249a3744279d6fa23c72c6bd9aba",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/runtime/config.ts",
+    "target": "backend/services/jobApplication/catalog/src/runtime/config.ts",
+    "sourceSha256": "b3b6b5d411125e5307257e857a409f1431b248b19d493c5bc3d402d4b2c21c52",
+    "sha256": "b3b6b5d411125e5307257e857a409f1431b248b19d493c5bc3d402d4b2c21c52",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/agents.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/agents.ts",
+    "sourceSha256": "f3d1d8ff96b5605fd2063089e0b4273a62866b6b3a8303d8a0bdfd94143c7ca7",
+    "sha256": "b5d86863d14f178d6e1924b3d853fec6c549e798e205f0de0aa52f4428ce7d55",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/api/query.ts",
+    "target": "backend/services/jobApplication/catalog/src/api/query.ts",
+    "sourceSha256": "5768fd03a7b189c7b043da9be33481c798aa36f6404823d8a85402d8a26f952b",
+    "sha256": "5768fd03a7b189c7b043da9be33481c798aa36f6404823d8a85402d8a26f952b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/api/server.ts",
+    "target": "backend/services/jobApplication/catalog/src/api/server.ts",
+    "sourceSha256": "1735461c07d92813be9a8636877586476b417a61183c651d206b388bc8d23eab",
+    "sha256": "1735461c07d92813be9a8636877586476b417a61183c651d206b388bc8d23eab",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/process-group.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/process-group.ts",
+    "sourceSha256": "af8813edeaf74cdbb3fe8c46a7ae391de347b11371d37f5b83feccabd41e25ea",
+    "sha256": "af8813edeaf74cdbb3fe8c46a7ae391de347b11371d37f5b83feccabd41e25ea",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/search/SearchStatus.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/search/SearchStatus.vue",
+    "sourceSha256": "5704ec9cfd899a5de429d9d08134eeadca7ef38e886e4ac4b6c336651dc8de76",
+    "sha256": "2f32ada5b4573db1adbb969b68e0f62a9776f81f76645b5c80e2379eb75cc83d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/docs/boss-detail-diagnostic-2026-11-09.md",
+    "target": "backend/services/jobApplication/consumer/docs/boss-detail-diagnostic-2026-11-09.md",
+    "sourceSha256": "8e8e70efd758de7e957643c0096b13e9186527f8a25b8ba9d8ce9a50fb4b7a14",
+    "sha256": "8e8e70efd758de7e957643c0096b13e9186527f8a25b8ba9d8ce9a50fb4b7a14",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/connection.js",
+    "target": "zhitu/extensions/jobApplication/connection.js",
+    "sourceSha256": "b2c85bf7294154cdd038218472f1f550812fb48c3618202c57b10077b2cfc615",
+    "sha256": "b2c85bf7294154cdd038218472f1f550812fb48c3618202c57b10077b2cfc615",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_comprehensive.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_comprehensive.py",
+    "sourceSha256": "973f15b5c1b3312903a917ae302142505609785b17d6352e679b98f2b8c9beb4",
+    "sha256": "973f15b5c1b3312903a917ae302142505609785b17d6352e679b98f2b8c9beb4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/protocol.js",
+    "target": "zhitu/extensions/jobApplication/protocol.js",
+    "sourceSha256": "9856a84c7cabc8474382c85892bf2caf87e19d4c8f3f60636ac00ef1f33f5da2",
+    "sha256": "1161c7a8d829c87294a887002bf68f2b72d5c32f72cb24b888fd23f4b46e2b14",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/orchestrator.py",
+    "target": "backend/services/jobApplication/boss_app/agents/orchestrator.py",
+    "sourceSha256": "4f7821438cecfa8ffcaa912765562a6d62ba38bdd1465ddc6e8fe2a02f62c633",
+    "sha256": "4f7821438cecfa8ffcaa912765562a6d62ba38bdd1465ddc6e8fe2a02f62c633",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/resume.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/resume.ts",
+    "sourceSha256": "9c9c0ffadc223d85df86a4d5a75735e0fda1d03fc17f7e14cefca7bcb32225fc",
+    "sha256": "c3f36528556bebb82627ba465161edf4608932b1a222d684d3ac7a45600b223d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/SCRIPT.md",
+    "target": "backend/services/jobApplication/docs/SCRIPT.md",
+    "sourceSha256": "77480f6cb6c20cf1d7d681758e32e0c1ba10335d58a7139e172ea69d2d845a34",
+    "sha256": "77480f6cb6c20cf1d7d681758e32e0c1ba10335d58a7139e172ea69d2d845a34",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/config.py",
+    "target": "backend/services/jobApplication/boss_app/config.py",
+    "sourceSha256": "0e9f1f0a89f1740d177a9f0cbb0022196ee67c2f5a12f55b49a86cc33895b2e4",
+    "sha256": "0e9f1f0a89f1740d177a9f0cbb0022196ee67c2f5a12f55b49a86cc33895b2e4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent-internship/project-mapping.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent-internship/project-mapping.json",
+    "sourceSha256": "2878373ef351addd77bbdd576bf7336b7a50cfbdcbc1cfe330b2508d6a200b69",
+    "sha256": "2878373ef351addd77bbdd576bf7336b7a50cfbdcbc1cfe330b2508d6a200b69",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/reviewed-official.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/reviewed-official.test.ts",
+    "sourceSha256": "4358aee2e6e51981ad6882d6f63c036e9eb24db63fdd546859d222b02d7ec142",
+    "sha256": "4358aee2e6e51981ad6882d6f63c036e9eb24db63fdd546859d222b02d7ec142",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/search_agent.py",
+    "target": "backend/services/jobApplication/boss_app/agents/search_agent.py",
+    "sourceSha256": "70f159f56012d6a7803b259929d09652a85826d7cb5bd0729f543449b2980487",
+    "sha256": "70f159f56012d6a7803b259929d09652a85826d7cb5bd0729f543449b2980487",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/applications.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/applications.ts",
+    "sourceSha256": "e9dc74a38cb1ccf5b92251f76dda40ffac702683f74c785c591b18536326e976",
+    "sha256": "09fb3f78b8923ce67f1a079cc6d7caf9879d66cec01c31fa46ce8287d88aa317",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/ingest-internship-metadata.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/ingest-internship-metadata.ts",
+    "sourceSha256": "b42ba4a576b1dbd56e4e9b94215b87badc4f6c96190d7637ce681cdd209e579a",
+    "sha256": "b42ba4a576b1dbd56e4e9b94215b87badc4f6c96190d7637ce681cdd209e579a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/db-cli.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/db-cli.test.ts",
+    "sourceSha256": "50bfe7bc54b56750b62d7cc7f1070055a72ae5b5e5358795354a6e1dd99e1f4f",
+    "sha256": "50bfe7bc54b56750b62d7cc7f1070055a72ae5b5e5358795354a6e1dd99e1f4f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/settings.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/settings.ts",
+    "sourceSha256": "a199190de50e455df59f0c047595c1885de6c6f3c4412d2e25b648a70e163e38",
+    "sha256": "6479fc3bcb57510a5d43f218479ae463c473f62f6d0f1a5088179eed2ae47e80",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/applications/TrendChart.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/applications/TrendChart.vue",
+    "sourceSha256": "ba8b10abf89663b94c96175413744b5667fddc6c1a958a6aeb52d3689c4fc275",
+    "sha256": "7848c0dd797c20ebddf1b574bf57b58f89f6c4aafda856f755eb85be75436160",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/chat-resumes.js",
+    "target": "zhitu/extensions/jobApplication/chat-resumes.js",
+    "sourceSha256": "cdcea5eb569658f69a13583534034ca0392ec7e4b617275bb5d52deb3dd5ee99",
+    "sha256": "cdcea5eb569658f69a13583534034ca0392ec7e4b617275bb5d52deb3dd5ee99",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/test_dashboard_dedup.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/test_dashboard_dedup.py",
+    "sourceSha256": "9c50b99306f6e797538cd52dbc66247a424e6411041195f9cee2755210a5374d",
+    "sha256": "9c50b99306f6e797538cd52dbc66247a424e6411041195f9cee2755210a5374d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/helpers.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/helpers.py",
+    "sourceSha256": "5609a2d7f796cfd758dfd5c2dc13821c88dbbf2f54ee1632667c919334fb25b3",
+    "sha256": "5609a2d7f796cfd758dfd5c2dc13821c88dbbf2f54ee1632667c919334fb25b3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/layout/SidebarStatus.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/layout/SidebarStatus.vue",
+    "sourceSha256": "91ba0f622108b641b95a32997a69f95725ca6a9333bb0933a8c224864df9de33",
+    "sha256": "61dbece9709ba43c4735f41449054a59cdab2047d3b633eba0041d707487f94c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/contracts/search.ts",
+    "target": "backend/services/jobApplication/catalog/contracts/search.ts",
+    "sourceSha256": "e6be2a08e11c7a42fc3dc0f4e762a9d498c04b19e1b46a7ce37d81ffec806756",
+    "sha256": "e6be2a08e11c7a42fc3dc0f4e762a9d498c04b19e1b46a7ce37d81ffec806756",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/content.js",
+    "target": "zhitu/extensions/jobApplication/content.js",
+    "sourceSha256": "56947ed10ab50f8397d830d89992709c43c92269014d422d0a388e755bb73630",
+    "sha256": "75333f8150079414f570d338cd7b7ee37a4484006c0345eaf21839b56157981e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_llm_client.py",
+    "target": "backend/services/jobApplication/tests/test_llm_client.py",
+    "sourceSha256": "5d2617e8d1dd079a5a8c1c4791c2ffbb5da1c92d4734ada6c139e8d33de33ecd",
+    "sha256": "5d2617e8d1dd079a5a8c1c4791c2ffbb5da1c92d4734ada6c139e8d33de33ecd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/THIRD_PARTY_NOTICES.md",
+    "target": "backend/services/jobApplication/catalog/THIRD_PARTY_NOTICES.md",
+    "sourceSha256": "b5bc882fe3f5d84b8db66a8ae81dcceffc2781db83f090ff82dfdca7de822cfe",
+    "sha256": "be593f8744ad6655cccee07f7f124ebd8e9d75e46469006c0272e4057396cebf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/api/main.ts",
+    "target": "backend/services/jobApplication/catalog/src/api/main.ts",
+    "sourceSha256": "aabc864648c9c0d142483b4e7ccd66c3ca78f6e073ea555609529d32e196a1f9",
+    "sha256": "aabc864648c9c0d142483b4e7ccd66c3ca78f6e073ea555609529d32e196a1f9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma/migrations/202611110002_document_artifacts/migration.sql",
+    "target": "backend/services/jobApplication/catalog/prisma/migrations/202611110002_document_artifacts/migration.sql",
+    "sourceSha256": "9f774275be0d41ff8b7a8db63bdafb52202c50b9df84bd54686cf174761409d2",
+    "sha256": "9f774275be0d41ff8b7a8db63bdafb52202c50b9df84bd54686cf174761409d2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/test_dedup_endpoint.py",
+    "target": "backend/services/jobApplication/tests/test_dedup_endpoint.py",
+    "sourceSha256": "66d8032e394430eb21332af2b1df10273247a82e4d7fbf3ff5e0fa78e1bebcfa",
+    "sha256": "66d8032e394430eb21332af2b1df10273247a82e4d7fbf3ff5e0fa78e1bebcfa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/source-matrix.md",
+    "target": "backend/services/jobApplication/catalog/docs/source-matrix.md",
+    "sourceSha256": "f924b114846451abe224207be5185bcb2b4b68265bdd6faf43503782ec720a50",
+    "sha256": "f924b114846451abe224207be5185bcb2b4b68265bdd6faf43503782ec720a50",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/ingest-internship-capture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/ingest-internship-capture.ts",
+    "sourceSha256": "3414ccdbf57923d446a522767e53e61bf5794aa780e50b5c3bfda77ee27df6d1",
+    "sha256": "3414ccdbf57923d446a522767e53e61bf5794aa780e50b5c3bfda77ee27df6d1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/publish.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/publish.ts",
+    "sourceSha256": "7f2a74539f420625b32a1049ec10c32ed44b9bf1ea2a33f7efcdb467d0c4b2ce",
+    "sha256": "7f2a74539f420625b32a1049ec10c32ed44b9bf1ea2a33f7efcdb467d0c4b2ce",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/fixture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/fixture.ts",
+    "sourceSha256": "0221d95340f7512160f7cd5506a577e7d9c1fd15c52021834b4c11705282c756",
+    "sha256": "0221d95340f7512160f7cd5506a577e7d9c1fd15c52021834b4c11705282c756",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent/detail.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent/detail.json",
+    "sourceSha256": "101cb53b89282861fc462e2972b720e7cac61d20d49392f0336a5408fc3d0925",
+    "sha256": "101cb53b89282861fc462e2972b720e7cac61d20d49392f0336a5408fc3d0925",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/shared/ToastContainer.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/shared/ToastContainer.vue",
+    "sourceSha256": "f1be860ec47b4872c12fbdb161ac683e20a2b69ee5f9574216c063249fd4a872",
+    "sha256": "c9e2bfd43eaf74ebcbd3cd04fd3efb7a5d7c609652544c04a1ab21eaf5487b1f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent/list.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent/list.json",
+    "sourceSha256": "824e2e66beef2978f295115d103b1ada9245db630dcda22048f8b153b6842603",
+    "sha256": "824e2e66beef2978f295115d103b1ada9245db630dcda22048f8b153b6842603",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/limits.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/limits.ts",
+    "sourceSha256": "00341aa1b203f9ba7f111f53c5115391f0b7925898525a58053a7b81655c0fb8",
+    "sha256": "00341aa1b203f9ba7f111f53c5115391f0b7925898525a58053a7b81655c0fb8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/ingest-capture.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/ingest-capture.ts",
+    "sourceSha256": "e5544d7893a2df7e67bc3feba66d321e657d904c50af33eccc16bfb8cf92f0b0",
+    "sha256": "e5544d7893a2df7e67bc3feba66d321e657d904c50af33eccc16bfb8cf92f0b0",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/conftest.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/conftest.py",
+    "sourceSha256": "0c8f5b001918b93cac3b2d2a95811fe8cde104ceea8d278c81d6146b3810ee69",
+    "sha256": "0c8f5b001918b93cac3b2d2a95811fe8cde104ceea8d278c81d6146b3810ee69",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/parsers/child.ts",
+    "target": "backend/services/jobApplication/catalog/src/parsers/child.ts",
+    "sourceSha256": "9008305ac4567b45bb989398086a4e4039f013d87a904ae785e04c0c24fe399e",
+    "sha256": "9008305ac4567b45bb989398086a4e4039f013d87a904ae785e04c0c24fe399e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/publish-cli.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/publish-cli.ts",
+    "sourceSha256": "5d7cdf86b4b6b3d4cf967547bcf359403dd1040520854a0daa4f55d3bd0e3f7f",
+    "sha256": "5d7cdf86b4b6b3d4cf967547bcf359403dd1040520854a0daa4f55d3bd0e3f7f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useKeyboard.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useKeyboard.ts",
+    "sourceSha256": "a62e74eacfb7ebd2ba9baff4c6d92ce6d12c4d938fad0409e5027adaf92047d1",
+    "sha256": "05cd875a123764db5947630611b9e5a84b3faf6ab40a406ee24b9290abc4a105",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/verify-tencent.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/verify-tencent.ts",
+    "sourceSha256": "59f8003fa5f2f60936d2ec895874fca2ad1bebc11084c95e809c4b325a5033a1",
+    "sha256": "59f8003fa5f2f60936d2ec895874fca2ad1bebc11084c95e809c4b325a5033a1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useJobActions.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useJobActions.ts",
+    "sourceSha256": "36f6ac3280ba24fdfd21158c3abf5f88e846df562fa9352afd1e0e4a26e16122",
+    "sha256": "d9d30a56e18e2eaaa08224d98c9b0f2cb5d3d7f38dc0d18b117d86db67604e01",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/rendered.js",
+    "target": "zhitu/extensions/jobApplication/rendered.js",
+    "sourceSha256": "e69752bdde2021f3158444ded9f626360a51c4809294cda973ece07c2cc5a372",
+    "sha256": "e69752bdde2021f3158444ded9f626360a51c4809294cda973ece07c2cc5a372",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/constants/cities.ts",
+    "target": "backend/services/jobApplication/frontend/src/constants/cities.ts",
+    "sourceSha256": "1effa4214bc6ee356decd35bc78b9ba0636f9d6277ffbb5b4840c3c3084753e1",
+    "sha256": "b2ea5da573056d32fc67f3e43294463bf90cfff53cc459db130db757819a81ce",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useApi.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useApi.ts",
+    "sourceSha256": "06abdd4a4868bdca4b87f2c9fda3c1af2ca21ad67baa4537a9648f3243cfd3fa",
+    "sha256": "2ac0859b41178c563b3ed0f95fb981c79dd1c7020879aa8c5070102629b2c4d2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/dependencies.test.ts",
+    "target": "backend/services/jobApplication/catalog/tests/dependencies.test.ts",
+    "sourceSha256": "903c4ed68c763273a257a06a60fc2886939afa183ba096fd67725a17628623c4",
+    "sha256": "903c4ed68c763273a257a06a60fc2886939afa183ba096fd67725a17628623c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/websocket.py",
+    "target": "backend/services/jobApplication/boss_app/core/websocket.py",
+    "sourceSha256": "c4183ff0ed7d6c657cc812f533f1cb0b157df5f56d861fa05603b95674c89348",
+    "sha256": "c4183ff0ed7d6c657cc812f533f1cb0b157df5f56d861fa05603b95674c89348",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/job.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/job.ts",
+    "sourceSha256": "ec2e00f270a5512ec9920feb3b1af4d8645ab2025d72d9353af46a341a33c0ee",
+    "sha256": "bfdf3803d62c5856ecac0c76c480fa39ab224b164f4949e0ab08efef44df62c5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/lakejob_cli/output.py",
+    "target": "backend/services/jobApplication/lakejob_cli/output.py",
+    "sourceSha256": "d192fc91b530a79af282de305449a55fe2fc50b75ee29baed10d3e16b9cf831d",
+    "sha256": "d192fc91b530a79af282de305449a55fe2fc50b75ee29baed10d3e16b9cf831d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/ingest.ts",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/ingest.ts",
+    "sourceSha256": "5d40f174c8d0cd9e2f641eabee1e2fb56927aae76631b91fb0408c289cbc58bf",
+    "sha256": "5d40f174c8d0cd9e2f641eabee1e2fb56927aae76631b91fb0408c289cbc58bf",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/router/index.ts",
+    "target": "backend/services/jobApplication/frontend/src/router/index.ts",
+    "sourceSha256": "92162c1283b69adc1e1a5579e38ee26d0029de253ec6ae8b56ee644e6573f9f2",
+    "sha256": "c717da97f72cc4e07e4a5901fbe67a5f234d843f935816c250162165202ab1ce",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/applications/FollowupBar.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/applications/FollowupBar.vue",
+    "sourceSha256": "506264d7b93fd120d94ca59e0dcb8307ef059676a530176da67e47ff9a552c34",
+    "sha256": "58cd63336bf8386b7f11399c6000a2c122dae0f97ed693496086fb8c75f5755c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T03.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T03.md",
+    "sourceSha256": "fa0b622277e546c48904ea0e314b726a8934383d49c6aa1c850c83023816a487",
+    "sha256": "fa0b622277e546c48904ea0e314b726a8934383d49c6aa1c850c83023816a487",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useCountUp.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useCountUp.ts",
+    "sourceSha256": "28be6d834848b8157a73a0114d49f3cc6f9195760bda7a5d5e78a9b2b5bb0c50",
+    "sha256": "5b0ef6619ca70750d64d560f32c8d92e7bb1608a9f104cdf256ecc1ac118b69b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/applications/StatsGrid.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/applications/StatsGrid.vue",
+    "sourceSha256": "4e23e26f6103d2b8814ae5d13e134a199dbf3a88c81a524c3100c583132853e7",
+    "sha256": "a804c9f4f22264bcc50f624378981fcc57a1b654f69b6b858f1abc7a1023f788",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/package.json",
+    "target": "backend/services/jobApplication/catalog/package.json",
+    "sourceSha256": "418cb3b138182f02bfbace60626a895efd783cf5e9be1fbb3d78a768c40bcf0e",
+    "sha256": "418cb3b138182f02bfbace60626a895efd783cf5e9be1fbb3d78a768c40bcf0e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/applications/FunnelChart.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/applications/FunnelChart.vue",
+    "sourceSha256": "48c8b5fd1560a04487b08584a7d7d24f8a66ffb63e44ced46c583e7205583023",
+    "sha256": "270cc40513d744fca7d2ebe2c7529dcd7c6b689c1d441589e0b310fdef365dec",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/search-page.js",
+    "target": "zhitu/extensions/jobApplication/search-page.js",
+    "sourceSha256": "b646670161ac4ad11b63b278032a681d0eb66bac9bd93c4bac679b9f099b1437",
+    "sha256": "b646670161ac4ad11b63b278032a681d0eb66bac9bd93c4bac679b9f099b1437",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/shortlist.py",
+    "target": "backend/services/jobApplication/boss_app/models/shortlist.py",
+    "sourceSha256": "935e0ea569f069e1765e520294cb5a8d57f545a9ece6fa2674c8c8265fe8c296",
+    "sha256": "935e0ea569f069e1765e520294cb5a8d57f545a9ece6fa2674c8c8265fe8c296",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/constants/status.ts",
+    "target": "backend/services/jobApplication/frontend/src/constants/status.ts",
+    "sourceSha256": "d808327488f6c706b70fe34cc38912ea0145a92644152ef8a57841a14f3cb7d3",
+    "sha256": "aac7bb39428ef6cd2fe52a235eb75ed6c59c493708a9d4419df205d704fac8fd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/config/sources/initial.json",
+    "target": "backend/services/jobApplication/catalog/config/sources/initial.json",
+    "sourceSha256": "1a95bdebe3b76dfc14d9d06a37bb1e54fe001d7f13dcd5a07ba961d0c9510fee",
+    "sha256": "1a95bdebe3b76dfc14d9d06a37bb1e54fe001d7f13dcd5a07ba961d0c9510fee",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/updates.js",
+    "target": "zhitu/extensions/jobApplication/updates.js",
+    "sourceSha256": "29bad3b4636dae3d0aabaebf8aada8c1736557e55d8cb621bd806903226cbdfe",
+    "sha256": "29bad3b4636dae3d0aabaebf8aada8c1736557e55d8cb621bd806903226cbdfe",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/LICENSE",
+    "target": "backend/services/jobApplication/LICENSE",
+    "sourceSha256": "2197ba7747108d809cc23163c8c1c60590d17a6742f27aa1386da8b9479dbe32",
+    "sha256": "9241c4a822b850f7e4f299bc4d1fa92a4d09161636110db03f9309ed8338d729",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/licenses/freehire-LICENSE",
+    "target": "backend/services/jobApplication/catalog/licenses/freehire-LICENSE",
+    "sourceSha256": "867d48cfa3b4f92b1aeb331ad62a8919c732ebc273a16b9414fbcd1926a42328",
+    "sha256": "867d48cfa3b4f92b1aeb331ad62a8919c732ebc273a16b9414fbcd1926a42328",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent/README.md",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent/README.md",
+    "sourceSha256": "2a179ad0d07a06aa7f2f1a6ee59a30e6a92980345c44bc5f81c6fabf77492936",
+    "sha256": "2a179ad0d07a06aa7f2f1a6ee59a30e6a92980345c44bc5f81c6fabf77492936",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent-internship/list.json",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent-internship/list.json",
+    "sourceSha256": "b5be3d13044d1bba25d8c9b7f677c0a43031e4beafdbb89ff6764fdc09ce58b7",
+    "sha256": "b5be3d13044d1bba25d8c9b7f677c0a43031e4beafdbb89ff6764fdc09ce58b7",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/vite.config.ts",
+    "target": "backend/services/jobApplication/frontend/vite.config.ts",
+    "sourceSha256": "785255fafd30c32b9e57f1c24e1dcb6fb1bae5e67c35ce27b95da08a460caaba",
+    "sha256": "c796e713e753a46cbaf1c3b6cb1217e498d97aafcb315ec1a76c59a7179dea7d",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/conftest.py",
+    "target": "backend/services/jobApplication/tests/conftest.py",
+    "sourceSha256": "17cff08c2a6aedfacf8c95b0f0c61956a8721b57efc4bff94e992a9a367d3421",
+    "sha256": "17cff08c2a6aedfacf8c95b0f0c61956a8721b57efc4bff94e992a9a367d3421",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/client.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/client.ts",
+    "sourceSha256": "ebda6a7c1dca05d163f388d0a96fbf50f3786fa74cf422a1e7484e6e7cc5bb03",
+    "sha256": "ebda6a7c1dca05d163f388d0a96fbf50f3786fa74cf422a1e7484e6e7cc5bb03",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/runtime/errors.ts",
+    "target": "backend/services/jobApplication/catalog/src/runtime/errors.ts",
+    "sourceSha256": "54a9890bc13cbe13302bd6e9b3535c081d7adb2468d758de0f045dfcff1b78c9",
+    "sha256": "54a9890bc13cbe13302bd6e9b3535c081d7adb2468d758de0f045dfcff1b78c9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/legacy/setup.sh",
+    "target": "backend/services/jobApplication/legacy/setup.sh",
+    "sourceSha256": "b58cb3b5c0f7a20ec266d871a2e427909fb8d5ed8e46e377fa6dfe31d71d0924",
+    "sha256": "d854e36a4778074ea81e0c6fb882ade640bc524c5b31bf4e524e11413a7ce96a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/components/layout/ThemeToggle.vue",
+    "target": "backend/services/jobApplication/frontend/src/components/layout/ThemeToggle.vue",
+    "sourceSha256": "a71571fcdce4b887dec13db6ee74729a3eb323ebcd79a9cb86862c689a6a5417",
+    "sha256": "ec3d599fce87bdf9f6ed9eaa9032416d1f24f36eca994e19692633165f11f531",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/CHANGELOG.md",
+    "target": "backend/services/jobApplication/docs/CHANGELOG.md",
+    "sourceSha256": "a65bedcabe3f85f492809ba62c210e36a2b5695acf9cdeac050a6d07f53b703e",
+    "sha256": "a65bedcabe3f85f492809ba62c210e36a2b5695acf9cdeac050a6d07f53b703e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/docs/CONTRIBUTING.md",
+    "target": "backend/services/jobApplication/docs/CONTRIBUTING.md",
+    "sourceSha256": "26721332b30a3c17bc30ed6275c8598ba2d612ea2be6d8649e5da3848f68b7d8",
+    "sha256": "26721332b30a3c17bc30ed6275c8598ba2d612ea2be6d8649e5da3848f68b7d8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/http/address-policy.ts",
+    "target": "backend/services/jobApplication/catalog/src/http/address-policy.ts",
+    "sourceSha256": "5320745b3a8ecdf098a6814f92ec099341c3fb3aabddfb95cd91268a59f031da",
+    "sha256": "5320745b3a8ecdf098a6814f92ec099341c3fb3aabddfb95cd91268a59f031da",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useScrollReveal.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useScrollReveal.ts",
+    "sourceSha256": "77a4463144b0d9f32d4f9d40fd5c372839dd31c05834b8842d1fab88382744d6",
+    "sha256": "147e2adc9e08083a9f59c6c81a71468d68b9a457d986b6c028319b5da5c4e49f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/scripts/setup_ai.py",
+    "target": "backend/services/jobApplication/scripts/setup_ai.py",
+    "sourceSha256": "4dc1c4e2624a9d9582334ca1c8ad8c036016cae49cc477861e5c5046b5b99b59",
+    "sha256": "4dc1c4e2624a9d9582334ca1c8ad8c036016cae49cc477861e5c5046b5b99b59",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/storage/public-job.ts",
+    "target": "backend/services/jobApplication/catalog/src/storage/public-job.ts",
+    "sourceSha256": "a584e613f0f20465679fc2be606bd4af6ba38848f6cb235e14d3bc3f3ab87172",
+    "sha256": "a584e613f0f20465679fc2be606bd4af6ba38848f6cb235e14d3bc3f3ab87172",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/environment-recovery.md",
+    "target": "backend/services/jobApplication/catalog/docs/environment-recovery.md",
+    "sourceSha256": "531fd7276a5491dbb597e81c7e24098145c137a842988e180d9a3b1230e57a26",
+    "sha256": "531fd7276a5491dbb597e81c7e24098145c137a842988e180d9a3b1230e57a26",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/constants/ai-platforms.ts",
+    "target": "backend/services/jobApplication/frontend/src/constants/ai-platforms.ts",
+    "sourceSha256": "1b8f410cb20a7de3edb46d73f4615db5be2a25c11dc7ecf3ba6f9980e7a9edb5",
+    "sha256": "4712f7182bcdc2cca745f5ca5b541074787a221a0c6b678d3df0cf5c34a0e1c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/consumer/extension/manifest.json",
+    "target": "zhitu/extensions/jobApplication/manifest.json",
+    "sourceSha256": "ca07d7f231042aa1d79c36b0b8d1a4e3bf998a626252b98bf9fc34f488c13b31",
+    "sha256": "e8dcfbd42a3ae566558ec5ac9afe1b99d3010aced5fffe8936643465ca63298f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useMouseGlow.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useMouseGlow.ts",
+    "sourceSha256": "0aafefbb05851d7778e0db79f1432422a3968a7d359e221209198a97e189db31",
+    "sha256": "4a3bb1cb88e3929f03c7d00b2163677f16cbbdc3e2b6e82f137160862191c176",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/pyproject.toml",
+    "target": "backend/services/jobApplication/pyproject.toml",
+    "sourceSha256": "cd8ee711dfe071fb4ef5753cd604f48c459eb3b9fd2cfa46b45b6ac2adbd14bd",
+    "sha256": "cd8ee711dfe071fb4ef5753cd604f48c459eb3b9fd2cfa46b45b6ac2adbd14bd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/settings.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/settings.ts",
+    "sourceSha256": "b6b6016a285b92a12e458ebac587059eac68c1196500aa424a951bbfbffe19f6",
+    "sha256": "65fad9928854324c4483f66e5e96a76081d75e8440a77fa75227d01437877ca6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useToast.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useToast.ts",
+    "sourceSha256": "706df5175013901b187017c86273047549cb32a0a8307f6cb1f0104e67f0839d",
+    "sha256": "8ed6e2cd54845fe8663a3e728c8e95dc28849e544273d00c4378ef9e6c3904d8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/.env.example",
+    "target": "backend/services/jobApplication/catalog/.env.example",
+    "sourceSha256": "8f38621c383dc47786d2f2599c487f58c82bc8ac9f76fc321106352d2507f6f8",
+    "sha256": "8f38621c383dc47786d2f2599c487f58c82bc8ac9f76fc321106352d2507f6f8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/scripts/run.py",
+    "target": "backend/services/jobApplication/scripts/run.py",
+    "sourceSha256": "e714a2d0d7067df7c89531298fc91efb7fcae99f2ef225b19077cabaff225cf2",
+    "sha256": "e714a2d0d7067df7c89531298fc91efb7fcae99f2ef225b19077cabaff225cf2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/package.json",
+    "target": "backend/services/jobApplication/frontend/package.json",
+    "sourceSha256": "df0575d086014ef6d5a324e9bed4b6e45ae0c9132b0fa970d6c5c7a48abf4e9c",
+    "sha256": "df0575d086014ef6d5a324e9bed4b6e45ae0c9132b0fa970d6c5c7a48abf4e9c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tests/fixtures/tencent-internship/README.md",
+    "target": "backend/services/jobApplication/catalog/tests/fixtures/tencent-internship/README.md",
+    "sourceSha256": "7b9fe47ee5706273f1b4cc1ff091e5dfd3dacbfd6e97ff292a8905cbed225cab",
+    "sha256": "7b9fe47ee5706273f1b4cc1ff091e5dfd3dacbfd6e97ff292a8905cbed225cab",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T01.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T01.md",
+    "sourceSha256": "3dc2f63df77889bb61da54e6e09a88e247f870e62edbca8932b13bc15380b8e1",
+    "sha256": "3dc2f63df77889bb61da54e6e09a88e247f870e62edbca8932b13bc15380b8e1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/docs/reviews/T02.md",
+    "target": "backend/services/jobApplication/catalog/docs/reviews/T02.md",
+    "sourceSha256": "6d145944b473ef2120b3e88a7246662a318196d143252cca0dd1ea2e8073c28c",
+    "sha256": "6d145944b473ef2120b3e88a7246662a318196d143252cca0dd1ea2e8073c28c",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/conversation.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/conversation.ts",
+    "sourceSha256": "c41a5a2dbfe8383fb02118dac371406b3c1294e9f5933218aee13bc8384893f9",
+    "sha256": "228aab2b5c2d5ee26c10f0172d793e3dff1300102238ffd93f2af2907afbcbfa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/app.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/app.ts",
+    "sourceSha256": "2c5243a6dad0656f4f114cc23c2b4fa240ed1fa09d891b87fb78eccd873ebe9b",
+    "sha256": "decdf5f1decb53453e68441fb8ed790c0ed6c72e05f0ab513995f3882bf13c6e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/agents/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/agents/__init__.py",
+    "sourceSha256": "8bc21ebe1e57acf28f91d41dd013e7c345bb3ccbd641db2702fcc8fdf8511143",
+    "sha256": "8bc21ebe1e57acf28f91d41dd013e7c345bb3ccbd641db2702fcc8fdf8511143",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/http/environment.ts",
+    "target": "backend/services/jobApplication/catalog/src/http/environment.ts",
+    "sourceSha256": "e69d3d4c1861e65e554b9847efdf4b8ef12a85f742c173b608c17d4b1f71fd89",
+    "sha256": "e69d3d4c1861e65e554b9847efdf4b8ef12a85f742c173b608c17d4b1f71fd89",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/agent.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/agent.ts",
+    "sourceSha256": "8729b6c19d3da19dda03536f98fb095408f5e062f02c85eb4f5c14d44827fdf4",
+    "sha256": "47ebda99405068902493d44d00bf69446f53ae5aa28d9d4e1980ea8403945a89",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/tsconfig.node.json",
+    "target": "backend/services/jobApplication/frontend/tsconfig.node.json",
+    "sourceSha256": "90a22c920cbc14624fb4658b58f15c875abf3234224f3933f211849c3ada3242",
+    "sha256": "90a22c920cbc14624fb4658b58f15c875abf3234224f3933f211849c3ada3242",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/src/worker/main.ts",
+    "target": "backend/services/jobApplication/catalog/src/worker/main.ts",
+    "sourceSha256": "1dd34bb56dba9324eb91acc1991e49f05b56d9c0acc05dbb895e7962e61d6e24",
+    "sha256": "1dd34bb56dba9324eb91acc1991e49f05b56d9c0acc05dbb895e7962e61d6e24",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/stores/auth.ts",
+    "target": "backend/services/jobApplication/frontend/src/stores/auth.ts",
+    "sourceSha256": "7b858e8eea373a0e401c1ddc00c65c11e9690b938d91ce83b5fabcf1e13f172f",
+    "sha256": "2eeec91b660269cf38a7b2b63a30525cd89cad40191043c94ca9017eacee048e",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useScoreProgress.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useScoreProgress.ts",
+    "sourceSha256": "ecf68f7b9a92b789765213e587083d31dd9c11cb6e4eee157668cf1ef9fde3cc",
+    "sha256": "2a3ee54c1fa76dbb14c38f77a0298c95403ea5a0c6e54b6c0cc8cde63842480f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/websocket.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/websocket.ts",
+    "sourceSha256": "e854d4b93d0587080f527f8632ca56a2b958e91127e61af4402763f3fa0128d5",
+    "sha256": "394c41098efffb58e8f0046a9c93447d9fe6bfc3b5f8d80c4ab8e5ad5fa584d5",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/composables/useSystemStatus.ts",
+    "target": "backend/services/jobApplication/frontend/src/composables/useSystemStatus.ts",
+    "sourceSha256": "6135102395e9560a2ee43f88186c8c29e60fa123ecc343e5fb0ee12193a75525",
+    "sha256": "68de965de7fc3855cb52cdbc210dd2f81e54265985b7f0ba9d7fe7002d9064ec",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/state.py",
+    "target": "backend/services/jobApplication/boss_app/core/state.py",
+    "sourceSha256": "04092b92777c62478af2b59c8c2b89962ed57838633fa9b76d9f297da7ec88c2",
+    "sha256": "04092b92777c62478af2b59c8c2b89962ed57838633fa9b76d9f297da7ec88c2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/tsconfig.app.json",
+    "target": "backend/services/jobApplication/frontend/tsconfig.app.json",
+    "sourceSha256": "99c538396c0653ed791a3ba0f3d2f01b19c4c17a0a9e160bbddf5ea1e0b45aca",
+    "sha256": "99c538396c0653ed791a3ba0f3d2f01b19c4c17a0a9e160bbddf5ea1e0b45aca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/legacy/config.yaml",
+    "target": "backend/services/jobApplication/legacy/config.yaml",
+    "sourceSha256": "2023af48842a2e59dac0bfa30c02cc13caff98407e53feb4af7e001308d55e96",
+    "sha256": "2023af48842a2e59dac0bfa30c02cc13caff98407e53feb4af7e001308d55e96",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/README.md",
+    "target": "backend/services/jobApplication/frontend/README.md",
+    "sourceSha256": "7cdf486b009cc44709f0b33e45f2a2007f37e5f46ac98fe2aab46c8129318929",
+    "sha256": "7cdf486b009cc44709f0b33e45f2a2007f37e5f46ac98fe2aab46c8129318929",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma.config.ts",
+    "target": "backend/services/jobApplication/catalog/prisma.config.ts",
+    "sourceSha256": "256a1267c1f4ad45b8550b2d60a89260e4aede6f8db0ae1b662f15b3c7935567",
+    "sha256": "256a1267c1f4ad45b8550b2d60a89260e4aede6f8db0ae1b662f15b3c7935567",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/components.json",
+    "target": "backend/services/jobApplication/frontend/components.json",
+    "sourceSha256": "9edebf6496b784600a1128c58202f56b48dec15030612e69aa9669b20864873b",
+    "sha256": "9edebf6496b784600a1128c58202f56b48dec15030612e69aa9669b20864873b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/start.sh",
+    "target": "backend/services/jobApplication/interview/start.sh",
+    "sourceSha256": "99b264654df5a68a0e788c31c367dfc58363f3b4f72bef6962d91f765c0b844a",
+    "sha256": "72b6f992f4773cf53bf12d6a6864e21e09579a604b8cf9eb46b7e69de30710c4",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/tsconfig.json",
+    "target": "backend/services/jobApplication/catalog/tsconfig.json",
+    "sourceSha256": "64a1a9b86349f8c4598c28b8c08a68a81426d58f6f918f4303bbb7ad526f75d1",
+    "sha256": "64a1a9b86349f8c4598c28b8c08a68a81426d58f6f918f4303bbb7ad526f75d1",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/.pre-commit-config.yaml",
+    "target": "backend/services/jobApplication/.pre-commit-config.yaml",
+    "sourceSha256": "67b8939832533cf2632354a7e25dcffed1fba59697103fd10564f6997b7e4e17",
+    "sha256": "67b8939832533cf2632354a7e25dcffed1fba59697103fd10564f6997b7e4e17",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/resume.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/resume.ts",
+    "sourceSha256": "9172f4e0a86412f7f5c5dfdca6cac90c3c04e7364ff45d819c0b70d97ddc2e1c",
+    "sha256": "478129fdc5edab596b048c9002243e59549bb2c38b8591af35fe6297c596ccc9",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/index.html",
+    "target": "backend/services/jobApplication/frontend/index.html",
+    "sourceSha256": "09fa35b164e43a40217ddf06da9efec5c07847061f434d95fd791a6572809ad3",
+    "sha256": "09fa35b164e43a40217ddf06da9efec5c07847061f434d95fd791a6572809ad3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/.github/workflows/ci.yml",
+    "target": "backend/services/jobApplication/.github/workflows/ci.yml",
+    "sourceSha256": "c83ee9c9bbe89abd488dbbe43e8d6ab8ffc1114610cb1e2775b7d70eeb4cbf75",
+    "sha256": "c83ee9c9bbe89abd488dbbe43e8d6ab8ffc1114610cb1e2775b7d70eeb4cbf75",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/.gitignore",
+    "target": "backend/services/jobApplication/frontend/.gitignore",
+    "sourceSha256": "d50ab07e11fa4bf3b1c7c3312e1d7baeab56cca756832ccf40476823ad2a38b7",
+    "sha256": "fe718e7babb14f3cbad2d97f08889b9ce5215ed3fe0e43b2b8cfbfb3b9b844e8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/.gitattributes",
+    "target": "backend/services/jobApplication/catalog/.gitattributes",
+    "sourceSha256": "efaacb733c7cfd2dabfe261db46c164e9e9cf642bf15efed364c30129b6739e7",
+    "sha256": "9bb7607c7e0c0b00c06e3205ad384e74f16a07a3d2f957f75b54537d0a98f1a3",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/main.ts",
+    "target": "backend/services/jobApplication/frontend/src/main.ts",
+    "sourceSha256": "2c898ed5dab1be5a6654ea7e952d81616632159b5036c8c89c14a8a14d138ff3",
+    "sha256": "aad8b35fa406b8f7b2873a3349973fc8802f94c34425df1fae87be3859498bd2",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/types/api.ts",
+    "target": "backend/services/jobApplication/frontend/src/types/api.ts",
+    "sourceSha256": "a69f3202c20fdebea2c64da93dea7c3db584b61248f1e123aa682dbe1313fe22",
+    "sha256": "645d5392a8be1d8811d7d653115ad6b359d4292f75fb3206e397f8a80e655b32",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma/migrations/202611110001_reviewed_metadata/migration.sql",
+    "target": "backend/services/jobApplication/catalog/prisma/migrations/202611110001_reviewed_metadata/migration.sql",
+    "sourceSha256": "bb5a80bd0391a619948823eb0d9360c986e459e8864300cd1a94ae5bb69fca00",
+    "sha256": "bb5a80bd0391a619948823eb0d9360c986e459e8864300cd1a94ae5bb69fca00",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/lib/utils.ts",
+    "target": "backend/services/jobApplication/frontend/src/lib/utils.ts",
+    "sourceSha256": "4671cc4406471b19410fdcad370449360b358b33068ad334b785b53d086790bf",
+    "sha256": "746e4d9beb1a5b6f0e047ec19d5f1c542c9f8117f4ea7c80d7b9bd0fe2128e91",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/.gitattributes",
+    "target": "backend/services/jobApplication/.gitattributes",
+    "sourceSha256": "78a04e95fce203a7c4029dc282b7a99185ef58f1eb211612dc73dc204e12266c",
+    "sha256": "7c949a4d34b3735bfa8d6972aa13baa4770445ed4279e3659b4961983f027222",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/requirements.txt",
+    "target": "backend/services/jobApplication/requirements.txt",
+    "sourceSha256": "541ed55605849b19a5412c667aa65fb0cc5253521fc2accd0943f0e466cc47d4",
+    "sha256": "9b4618df5024d60e9e2c53a2e5d409509dc14660122cf24083dda163900a575b",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/tsconfig.json",
+    "target": "backend/services/jobApplication/frontend/tsconfig.json",
+    "sourceSha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+    "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/.gitignore",
+    "target": "backend/services/jobApplication/.gitignore",
+    "sourceSha256": "405b838bd73de38d64afdecf1e1b35f7fd3d2ea6d22395f19b8b0119beb40f54",
+    "sha256": "7ef90f18e605b6b5cb27a8407c226f714a56696b98f030faa06918df5c6a3e83",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/.gitignore",
+    "target": "backend/services/jobApplication/catalog/.gitignore",
+    "sourceSha256": "ff4f32c97718806d8389f15b59f6fa574665b5c088bd4fcb97a7f592c3b1fd0f",
+    "sha256": "ff4f32c97718806d8389f15b59f6fa574665b5c088bd4fcb97a7f592c3b1fd0f",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/rules/gitleaks.toml",
+    "target": "backend/services/jobApplication/catalog/security/rules/gitleaks.toml",
+    "sourceSha256": "74da8cbce6aa3d1ab8c785ddfea65c30682e61de528ed2e89e58189c2e42b759",
+    "sha256": "74da8cbce6aa3d1ab8c785ddfea65c30682e61de528ed2e89e58189c2e42b759",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/rules/empty.gitleaksignore",
+    "target": "backend/services/jobApplication/catalog/security/rules/empty.gitleaksignore",
+    "sourceSha256": "2f98b47da82fabc56e082e51ad388cdddfe7775b71b0100f991d99d9d9682f49",
+    "sha256": "2f98b47da82fabc56e082e51ad388cdddfe7775b71b0100f991d99d9d9682f49",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/src/App.vue",
+    "target": "backend/services/jobApplication/frontend/src/App.vue",
+    "sourceSha256": "f6e1f6d695cf21f54d17f8f1351febe11f8cbda3adef1b16f76688b1d4f493a7",
+    "sha256": "47ad989e6e6ffe0b47073a424b88e9d2a0ace04207351593d37371e0d6990fd6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/interview/requirements.txt",
+    "target": "backend/services/jobApplication/interview/requirements.txt",
+    "sourceSha256": "7ec8c44b70cdc1ddcc60e0ec70ff0a35a597dfba7f176182d6b51065a9c8ad5a",
+    "sha256": "8eaac8286dca25ab526488a000382497558fb0d7b3e3c11d66a2535026fabe6a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/security/rules/osv-scanner.toml",
+    "target": "backend/services/jobApplication/catalog/security/rules/osv-scanner.toml",
+    "sourceSha256": "b27c4b30401fecae736935cd3a229d9b1290d40fac815d44b7917b58511593af",
+    "sha256": "b27c4b30401fecae736935cd3a229d9b1290d40fac815d44b7917b58511593af",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/__init__.py",
+    "sourceSha256": "b314b18a8942518679b92723c75bad2083938a9c79d383485bd6a0589e57ae26",
+    "sha256": "b314b18a8942518679b92723c75bad2083938a9c79d383485bd6a0589e57ae26",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/lakejob_cli/__init__.py",
+    "target": "backend/services/jobApplication/lakejob_cli/__init__.py",
+    "sourceSha256": "39426e1a4b460fa448e876ed0857bf3ebb3c31dbd5bb67423acee222ae5171dd",
+    "sha256": "39426e1a4b460fa448e876ed0857bf3ebb3c31dbd5bb67423acee222ae5171dd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/core/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/core/__init__.py",
+    "sourceSha256": "da4c0752f36ab8c2b660109bc8a452047e97e0533193e23fe90245071c5f2a56",
+    "sha256": "da4c0752f36ab8c2b660109bc8a452047e97e0533193e23fe90245071c5f2a56",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/tests/e2e_browser/__init__.py",
+    "target": "backend/services/jobApplication/tests/e2e_browser/__init__.py",
+    "sourceSha256": "457575cf855ad61f847c9504f55dd81d7847c19cbc7415e446d5d2b4fb663afc",
+    "sha256": "457575cf855ad61f847c9504f55dd81d7847c19cbc7415e446d5d2b4fb663afc",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/frontend/.vscode/extensions.json",
+    "target": "backend/services/jobApplication/frontend/.vscode/extensions.json",
+    "sourceSha256": "70d56b550e796e3ea92922763ae03037a1a94596fda9d737982c75f6a20e88dd",
+    "sha256": "70d56b550e796e3ea92922763ae03037a1a94596fda9d737982c75f6a20e88dd",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/catalog/prisma/migrations/migration_lock.toml",
+    "target": "backend/services/jobApplication/catalog/prisma/migrations/migration_lock.toml",
+    "sourceSha256": "1db17a8d051aa136110736752c5e1f8b7ed92b6ea8e803112fbbe2497047c210",
+    "sha256": "1db17a8d051aa136110736752c5e1f8b7ed92b6ea8e803112fbbe2497047c210",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/routes/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/routes/__init__.py",
+    "sourceSha256": "1e45bfbfe848a7affffb402f81a72f26969e099197bea07cf669171f9d81344a",
+    "sha256": "1e45bfbfe848a7affffb402f81a72f26969e099197bea07cf669171f9d81344a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/services/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/services/__init__.py",
+    "sourceSha256": "c43949d80a884d4ea0213a812888ee06b138932345f9ee75c7d302d0630e7b24",
+    "sha256": "c43949d80a884d4ea0213a812888ee06b138932345f9ee75c7d302d0630e7b24",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "ai-job-application/boss_app/models/__init__.py",
+    "target": "backend/services/jobApplication/boss_app/models/__init__.py",
+    "sourceSha256": "cdab62d92cd5009f6f4fb7d69d2f01d22cd64ffdd810fd97ea400d90b53cfba8",
+    "sha256": "cdab62d92cd5009f6f4fb7d69d2f01d22cd64ffdd810fd97ea400d90b53cfba8",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/src/app/jobAutofill.ts",
+    "target": "zhitu/src/utils/jobApplication/resumeProfiles.ts",
+    "sourceSha256": "4e6e94a7e0023494c64de1f7fac9e8b2d9940aeb60a5875b9fd3b25094e97774",
+    "sha256": "45248a4be22ef75be594d0135199f5bb4e7b1e246f9c364289774ac493cf2d29",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/51job.ico",
+    "target": "zhitu/public/imgs/job-sources/51job.ico",
+    "sourceSha256": "e73bee34b76f718d3d1756a86749a6154fbc68f891b946920c2a6e84840c7b71",
+    "sha256": "e73bee34b76f718d3d1756a86749a6154fbc68f891b946920c2a6e84840c7b71",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/boss.ico",
+    "target": "zhitu/public/imgs/job-sources/boss.ico",
+    "sourceSha256": "3410ab623a5f025a6a042690c16bb7b6f1cb6a7033f80f935d8a4be9514357aa",
+    "sha256": "3410ab623a5f025a6a042690c16bb7b6f1cb6a7033f80f935d8a4be9514357aa",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/liepin.ico",
+    "target": "zhitu/public/imgs/job-sources/liepin.ico",
+    "sourceSha256": "08f595c47fdd7757e4240b0163a679cb1f332f6e6c799dae087ad3a868fa8eca",
+    "sha256": "08f595c47fdd7757e4240b0163a679cb1f332f6e6c799dae087ad3a868fa8eca",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/mohrss.jpeg",
+    "target": "zhitu/public/imgs/job-sources/mohrss.jpeg",
+    "sourceSha256": "cf14b254e16862f79b9d63b2595546d62e96c51dc84719f72484648ec331997a",
+    "sha256": "cf14b254e16862f79b9d63b2595546d62e96c51dc84719f72484648ec331997a",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/sources.json",
+    "target": "zhitu/public/imgs/job-sources/sources.json",
+    "sourceSha256": "4dbdd0562cab7b7008bb9f89a6273224ea3f18eaf09631d30fa7f546ebc06148",
+    "sha256": "a3f556ac8d1d905002212d23b99f8853e25e9a0c8a5329bbd609da96e1b2a632",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/public/imgs/job-sources/zhaopin.jpg",
+    "target": "zhitu/public/imgs/job-sources/zhaopin.jpg",
+    "sourceSha256": "abc4ab71a508a96419c74824eee7577628c5e49d11788264698e534d774c4fa6",
+    "sha256": "abc4ab71a508a96419c74824eee7577628c5e49d11788264698e534d774c4fa6",
+    "hashFormat": "git-blob"
+  },
+  {
+    "source": "website/frontend/catalogFileBoundary.ts",
+    "target": "zhitu/config/vite/catalogFileBoundary.ts",
+    "sourceSha256": "601f8e07b1153c686af65c01a28628bdc6c4d497db70dea8ce6fc4d220ad136a",
+    "sha256": "601f8e07b1153c686af65c01a28628bdc6c4d497db70dea8ce6fc4d220ad136a",
+    "hashFormat": "git-blob"
+  }
+]

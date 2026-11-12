@@ -1,0 +1,27 @@
+{
+  "officialReviewedJobs": 100,
+  "officialReviewedCompanies": 40,
+  "publishedCatalogJobs": 104,
+  "files": [
+    {
+      "name": "importVerification20261111.json",
+      "bytes": 860,
+      "sha256": "76d6564e83e607002387c2e4badd30784face574906234cb29582f3e0eb3f197"
+    },
+    {
+      "name": "officialInternships20261111.json",
+      "bytes": 730415,
+      "sha256": "603899a122484087dd5cc3352501fefa6054d7e19a74230e32570a0332365e09"
+    },
+    {
+      "name": "officialInternships20261111.xlsx",
+      "bytes": 76173,
+      "sha256": "d5525d7fe4b8be814f9c4ec61d272dc007692a13c0b0d718fc501d3bceab6a13"
+    },
+    {
+      "name": "publicCatalogSnapshot.json",
+      "bytes": 190877,
+      "sha256": "6f34e057bf08cb683b5ae224b64801157414d4dbc05aec0fbab3f219ee3fbc0f"
+    }
+  ]
+}

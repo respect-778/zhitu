@@ -10,7 +10,19 @@
     "db:init": "mysql -u root -p zhitu < database/init.sql",
     "db:seed": "mysql -u root -p zhitu < database/seed.sql",
     "abstract:backfill": "ts-node src/scripts/generatePostAbstracts.ts",
-    "keywords:backfill": "ts-node src/scripts/generatePostKeywords.ts"
+    "keywords:backfill": "ts-node src/scripts/generatePostKeywords.ts",
+    "catalog:api": "npm run api --workspace=@knowvia/job-catalog --",
+    "catalog:crawl": "npm run crawl --workspace=@knowvia/job-catalog --",
+    "catalog:verify": "npm run verify --workspace=@knowvia/job-catalog --",
+    "catalog:ingest": "npm run ingest --workspace=@knowvia/job-catalog --",
+    "catalog:publish": "npm run publish --workspace=@knowvia/job-catalog --",
+    "catalog:typecheck": "npm run typecheck --workspace=@knowvia/job-catalog --",
+    "catalog:test": "npm run test --workspace=@knowvia/job-catalog --",
+    "catalog:db:generate": "npm run db:generate --workspace=@knowvia/job-catalog --",
+    "catalog:db:validate": "npm run db:validate --workspace=@knowvia/job-catalog --",
+    "catalog:db:migrate": "npm run db:migrate --workspace=@knowvia/job-catalog --",
+    "catalog:db:status": "npm run db:status --workspace=@knowvia/job-catalog --",
+    "catalog:db:test": "npm run db:test --workspace=@knowvia/job-catalog --"
   },
   "keywords": [
     "express",
@@ -50,5 +62,16 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.0"
+  },
+  "workspaces": [
+    "services/jobApplication/catalog"
+  ],
+  "overrides": {
+    "@crawlee/core@3.18.2": {
+      "minimatch": "11.0.5"
+    },
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
   }
 }

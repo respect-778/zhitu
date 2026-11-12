@@ -1,0 +1,106 @@
+generator client {
+  provider               = "prisma-client"
+  output                 = "../src/generated/prisma"
+  engineType             = "client"
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["catalog"]
+}
+
+model Source {
+  id                 String   @id @map("source_id")
+  kind               String
+  adapter            String
+  entryUrl           String   @map("entry_url")
+  allowedHosts       String[] @map("allowed_hosts")
+  scopeKey           String   @map("scope_key")
+  recruitmentChannel String   @map("recruitment_channel")
+  company            String?
+  enabled            Boolean
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  jobs               Job[]
+  artifactReferences ArtifactReference[]
+
+  @@map("sources")
+  @@schema("catalog")
+}
+
+model Artifact {
+  sha256       String   @id
+  kind         String
+  byteSize     Int      @map("byte_size")
+  storageKey   String   @unique(map: "artifacts_storage_key_key") @map("storage_key")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  references   ArtifactReference[]
+
+  @@map("artifacts")
+  @@schema("catalog")
+}
+
+model ArtifactReference {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  artifactSha256 String   @map("artifact_sha256")
+  sourceId       String   @map("source_id")
+  sourceUrl      String   @map("source_url")
+  observedAt     DateTime @map("observed_at") @db.Timestamptz(3)
+  lastObservedAt DateTime @map("last_observed_at") @db.Timestamptz(3)
+  parserVersion  String   @map("parser_version")
+  parseState     String   @map("parse_state")
+  artifact       Artifact @relation(fields: [artifactSha256], references: [sha256], onDelete: Restrict, onUpdate: Restrict, map: "artifact_references_artifact_fk")
+  source         Source   @relation(fields: [sourceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "artifact_references_source_fk")
+
+  @@unique([artifactSha256, sourceId, sourceUrl], map: "artifact_references_identity_key")
+  @@index([sourceId], map: "artifact_references_source_idx")
+  @@map("artifact_references")
+  @@schema("catalog")
+}
+
+model Job {
+  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceId                String    @map("source_id")
+  sourceJobId             String    @map("source_job_id")
+  source                  Source    @relation(fields: [sourceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "jobs_source_fk")
+  company                 String
+  title                   String
+  employmentType          String    @map("employment_type")
+  recruitmentChannel      String    @map("recruitment_channel")
+  responsibilities        String?
+  requirements            String?
+  applicationInstructions String?   @map("application_instructions")
+  sourceUrl               String    @map("source_url")
+  detailUrl               String?   @map("detail_url")
+  applyUrl                String?   @map("apply_url")
+  applicationMethod       String    @map("application_method")
+  locationRaw             String?   @map("location_raw")
+  cityCodes               String[]  @default([]) @map("city_codes")
+  educationRaw            String?   @map("education_raw")
+  reviewedMetadata        Json?     @map("reviewed_metadata")
+  minimumDegree           String?   @map("minimum_degree")
+  salaryRaw               String?   @map("salary_raw")
+  salary                  Json?
+  publishedAt             Json?     @map("published_at")
+  sourceUpdatedAt         Json?     @map("source_updated_at")
+  deadlineAt              Json?     @map("deadline_at")
+  firstSeenAt             DateTime  @map("first_seen_at") @db.Timestamptz(3)
+  lastSeenAt              DateTime  @map("last_seen_at") @db.Timestamptz(3)
+  lastVerifiedAt          DateTime? @map("last_verified_at") @db.Timestamptz(3)
+  closedAt                DateTime? @map("closed_at") @db.Timestamptz(3)
+  recruitmentStatus       String    @map("recruitment_status")
+  verificationStatus      String    @map("verification_status")
+  visibility              String
+  evidence                Json
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt               DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([sourceId, sourceJobId], map: "jobs_source_identity_key")
+  @@index([visibility, recruitmentStatus], map: "jobs_visibility_status_idx")
+  @@map("jobs")
+  @@schema("catalog")
+}

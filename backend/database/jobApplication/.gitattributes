@@ -1,0 +1,3 @@
+# Data exports are verified by manifest.json against their exact bytes.
+*.json -text
+*.xlsx -text

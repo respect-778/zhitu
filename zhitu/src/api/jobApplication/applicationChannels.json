@@ -1,0 +1,28 @@
+{
+  "channels": [
+    {
+      "id": "antengene-campus",
+      "origin": "https://www.antengene.com",
+      "pathname": "/school.html",
+      "recipient": "recruitment@antengene.com",
+      "company": "德琪医药有限公司（Antengene）",
+      "language": "en",
+      "evidence": "Submit your resume to recruitment@antengene.com",
+      "verifiedAt": "2026-11-11"
+    },
+    {
+      "id": "zhy-ep-careers",
+      "origin": "https://zhy-ep.com",
+      "pathname": "/html/renli/zhaopin/",
+      "recipient": "zhyhbkj@163.com",
+      "company": "武汉智汇元环保科技有限公司",
+      "language": "zh",
+      "evidence": "请将简历投至公司邮箱zhyhbkj@163.com",
+      "verifiedAt": "2026-11-11"
+    }
+  ],
+  "providers": [
+    { "id": "qq", "label": "QQ邮箱", "host": "smtp.qq.com", "port": 465, "domains": ["qq.com", "foxmail.com"] },
+    { "id": "163", "label": "网易163邮箱", "host": "smtp.163.com", "port": 465, "domains": ["163.com"] }
+  ]
+}

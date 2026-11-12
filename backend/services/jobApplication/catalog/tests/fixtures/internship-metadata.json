@@ -1,0 +1,140 @@
+{
+  "xiaomi-internship": [
+    {
+      "jobPostId": "7702022431494408511",
+      "title": "顶尖实习-语音大模型算法研究员-MiMo-实习",
+      "type": 3,
+      "cityZhNames": [
+        "北京"
+      ],
+      "url": "https://xiaomi.jobs.f.mioffice.cn/topintern/position/7702022431494408511/detail",
+      "publishTime": "2026-10-29"
+    },
+    {
+      "jobPostId": "7701227462600460553",
+      "title": "顶尖实习-大语言模型算法研究员-MiMo-实习",
+      "type": 3,
+      "cityZhNames": [
+        "北京"
+      ],
+      "url": "https://xiaomi.jobs.f.mioffice.cn/topintern/position/7701227462600460553/detail",
+      "publishTime": "2026-10-27"
+    },
+    {
+      "jobPostId": "7685267664617359622",
+      "title": "顶尖实习-Robotics Agent Harness算法工程师-实习",
+      "type": 3,
+      "cityZhNames": [
+        "北京"
+      ],
+      "url": "https://xiaomi.jobs.f.mioffice.cn/topintern/position/7685267664617359622/detail",
+      "publishTime": "2026-10-26"
+    }
+  ],
+  "cicc-internship": [
+    {
+      "Id": "9f41e14e-cde4-4db8-b6c5-9b4b039613b9",
+      "JobAdName": "项目实习生-股本业务(J17857)",
+      "CategoryId": "3",
+      "Category": "项目实习",
+      "Kind": "实习",
+      "Status": 1,
+      "LocNames": [
+        "北京市",
+        "广东省·深圳市",
+        "上海市"
+      ],
+      "Salary": "面议",
+      "PostDate": "2026-11-09T17:02:06.5712542",
+      "EndTime": "2222-02-02T00:00:00"
+    },
+    {
+      "Id": "8c59d936-ef31-442c-a7d6-761c8d3bd634",
+      "JobAdName": "项目实习生-家电组(J19339)",
+      "CategoryId": "3",
+      "Category": "项目实习",
+      "Kind": "实习",
+      "Status": 1,
+      "LocNames": [
+        "北京市",
+        "上海市",
+        "广东省·深圳市"
+      ],
+      "Salary": "面议",
+      "PostDate": "2026-11-05T17:22:56.3717588",
+      "EndTime": "2222-02-02T00:00:00"
+    },
+    {
+      "Id": "5a5d1218-4114-4447-8e47-084d5ab149a2",
+      "JobAdName": "项目实习生-资金管理(J19948)",
+      "CategoryId": "3",
+      "Category": "项目实习",
+      "Kind": "实习",
+      "Status": 1,
+      "LocNames": [
+        "北京市"
+      ],
+      "Salary": "面议",
+      "PostDate": "2026-11-05T09:28:12",
+      "EndTime": "2222-02-02T00:00:00"
+    }
+  ],
+  "nvidia-china-internship": [
+    {
+      "title": "AI Infrastructure and Frameworks Intern, Cosmos Lab - 2027",
+      "externalPath": "/job/China-Shanghai/AI-Infrastructure-and-Frameworks-Intern--Cosmos-Lab---2027_JR2029468",
+      "locationsText": "China, Shanghai",
+      "postedOn": "Posted 2 Days Ago",
+      "bulletFields": [
+        "JR2029468"
+      ]
+    },
+    {
+      "title": "Reinforcement Learning Intern - 2027",
+      "externalPath": "/job/China-Shanghai/Reinforcement-Learning-Intern---2027_JR2029243-1",
+      "locationsText": "3 Locations",
+      "postedOn": "Posted 2 Days Ago",
+      "bulletFields": [
+        "JR2029243"
+      ]
+    },
+    {
+      "title": "System Software Engineer Intern, Autonomous Vehicles - 2027",
+      "externalPath": "/job/China-Shenzhen/System-Software-Engineer-Intern--Autonomous-Vehicles---2027_JR2028172",
+      "locationsText": "2 Locations",
+      "postedOn": "Posted 2 Days Ago",
+      "bulletFields": [
+        "JR2028172"
+      ]
+    }
+  ],
+  "roche-china-internship": [
+    {
+      "title": "生产部实习生(灯检)",
+      "externalPath": "/job/Shanghai/--_202609-123204",
+      "locationsText": "Shanghai",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "202609-123204"
+      ]
+    },
+    {
+      "title": "财务实习生（数字化与看板搭建方向）",
+      "externalPath": "/job/Shanghai/OE-Digital-Intern_202607-119420",
+      "locationsText": "Shanghai",
+      "postedOn": "Posted 5 Days Ago",
+      "bulletFields": [
+        "202607-119420"
+      ]
+    },
+    {
+      "title": "实习医药信息顾问",
+      "externalPath": "/job/Tianjin/_202611-128186",
+      "locationsText": "Tianjin",
+      "postedOn": "Posted 6 Days Ago",
+      "bulletFields": [
+        "202611-128186"
+      ]
+    }
+  ]
+}

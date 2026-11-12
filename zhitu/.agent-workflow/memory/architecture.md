@@ -33,3 +33,5 @@
 - Wiki 双链沿用已有 `[[笔记]]`、路径/别名解析和稳定目标 ID：阅读态投影成可点击链接；编辑态在不改变 raw text/序列化的前提下，为完成的语法加 visual-only 标记并普通单击打开，Ctrl/Cmd 命中仍兼容。IR 的 contenteditable 本身是 pre，不视为代码块；内部代码节点不装饰。候选框用 ref 保存瞬时状态，相同查询刷新时保留索引，方向键阻断 Vditor 后续处理并滚动当前项，Enter 插入所选目标。缺失/歧义目标不猜测、不创建文件；回归见 tests/path-wikilink-live-edit-ui.py 与 tests/path-wikilink-navigation-ui.py。
 - EditorArea 的普通 Markdown 链接与 Wiki 双链共用 `--wiki-link`，并覆盖 `:visited`，避免浏览历史导致紫色。编辑态从 Vditor IR 的 `.vditor-ir__marker--link` 识别目标，阅读态从 anchor `href` 识别；只有 http/https/mailto/tel 显示 12px current-color 外链图标，Wiki、相对路径和页内链接不显示。
 - EditorArea 阅读态继续使用 ByteMD 以保持真正只读和可点击链接，但其排版显式对齐 Vditor IR：16px/1.5、同一标题比例与字体栈、800px 内容列。阅读态仅每侧多 8px 内缩、块间距 12px，并对段落使用 `pre-wrap`，避免软换行目录树被 HTML 折叠。
+
+- 网申接入位于 src/pages/JobApplication，API/hooks/types/utils 按模块归档；浏览器扩展在 extensions/jobApplication，岗位库/邮件/旧 Python 服务在相邻 backend/services/jobApplication。backend 的 npm workspace 管理 catalog；公开官网数据位于 backend/database/jobApplication。简历投影读取现有 Redux 的 loaded/loadRequestId 与账号所有权，等待云端加载且立即隔离账号切换。5174、4100 与主站云端存储保持原设置。

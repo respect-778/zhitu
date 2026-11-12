@@ -1,0 +1,38 @@
+[
+  {
+    "id": "tencent-native",
+    "kind": "enterprise",
+    "adapter": "tencent",
+    "company": "腾讯",
+    "entryUrl": "https://careers.tencent.com/",
+    "allowedHosts": ["careers.tencent.com"],
+    "scopeKey": "tencent:native:all-categories:zh-cn",
+    "recruitmentChannel": "social",
+    "nativeSourceId": 1,
+    "enabled": false,
+    "status": "sample_verified"
+  },
+  {
+    "id": "tencent-internship",
+    "kind": "enterprise",
+    "adapter": "tencent-internship",
+    "company": "腾讯",
+    "entryUrl": "https://join.qq.com/",
+    "allowedHosts": ["join.qq.com"],
+    "scopeKey": "tencent:campus:internship:cn",
+    "recruitmentChannel": "campus",
+    "enabled": false,
+    "status": "sample_verified"
+  },
+  {
+    "id": "mohrss-2026-announcement-sample",
+    "kind": "announcement",
+    "adapter": "mohrss",
+    "entryUrl": "https://www.mohrss.gov.cn/xxgk2020/fdzdgknr/rcrs_4225/sydwrsgl/202603/t20260305_567916.html",
+    "allowedHosts": ["www.mohrss.gov.cn"],
+    "scopeKey": "mohrss:announcement:567916",
+    "recruitmentChannel": "unknown",
+    "enabled": false,
+    "status": "access_challenge"
+  }
+]

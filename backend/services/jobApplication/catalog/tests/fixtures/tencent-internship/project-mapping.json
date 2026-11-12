@@ -1,0 +1,89 @@
+{
+  "message": "",
+  "status": 0,
+  "data": [
+    {
+      "id": 1,
+      "recruitType": 1,
+      "recruitTypeName": "应届毕业生",
+      "ordering": 1,
+      "hasShowSub": 1,
+      "status": 1,
+      "recruitRangDesc": "毕业时间：2025年1月1日 - 2026年12月31日",
+      "subProjectList": [
+        {
+          "mappingId": 1,
+          "recruitType": 1,
+          "projectId": "1",
+          "projectName": "2027校园招聘",
+          "recruitYear": "2027",
+          "ordering": 1,
+          "status": 1,
+          "recruitRangDesc": "毕业时间：2026年1月1日-2027年12月31日"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "recruitType": 2,
+      "recruitTypeName": "实习生",
+      "ordering": 2,
+      "hasShowSub": 1,
+      "status": 1,
+      "recruitRangDesc": "毕业时间：2025年9月1日-2026年12月31日；此入口也可投递其他面向在校生的实习机会（不限毕业时间）",
+      "subProjectList": [
+        {
+          "mappingId": 2,
+          "recruitType": 2,
+          "projectId": "2",
+          "projectName": "应届实习",
+          "recruitYear": "2026",
+          "ordering": 2,
+          "status": 1,
+          "recruitRangDesc": "毕业时间：2026年9月1日-2027年12月31日"
+        },
+        {
+          "mappingId": 104,
+          "recruitType": 2,
+          "projectId": "4,12",
+          "projectName": "日常实习",
+          "recruitYear": "2026",
+          "ordering": 5,
+          "status": 1,
+          "recruitRangDesc": "面向全体在校生，提供实习机会"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "recruitType": 999,
+      "recruitTypeName": "人才专项",
+      "ordering": 999,
+      "hasShowSub": 1,
+      "status": 1,
+      "recruitRangDesc": null,
+      "subProjectList": [
+        {
+          "mappingId": 14,
+          "recruitType": 999,
+          "projectId": "14",
+          "projectName": "青云计划-应届生",
+          "recruitYear": "2027",
+          "ordering": 3,
+          "status": 1,
+          "recruitRangDesc": "毕业时间：2026年1月-2027年12月毕业的本硕博同学"
+        },
+        {
+          "mappingId": 20,
+          "recruitType": 999,
+          "projectId": "20",
+          "projectName": "青云计划-实习生",
+          "recruitYear": "2026",
+          "ordering": 4,
+          "status": 1,
+          "recruitRangDesc": "毕业时间：2026年9月以后毕业的本硕博同学"
+        }
+      ]
+    }
+  ]
+}

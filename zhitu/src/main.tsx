@@ -10,6 +10,11 @@ import store from "./store"
 import AppThemeProvider from './components/AppThemeProvider'
 // import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+import { registerAutofillProfiles } from '@/utils/jobApplication/autofillProfiles'
+import { createJobAutofillProvider } from '@/utils/jobApplication/resumeProfiles'
+
+registerAutofillProfiles(createJobAutofillProvider(store.getState, store.subscribe))
+
 // 创建一个查询客户端 用于查询缓存数据
 // const queryClient = new QueryClient()
 

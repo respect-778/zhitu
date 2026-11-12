@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>合成企业申请表</title>
+<style>body{font:16px sans-serif}section{margin:20px;padding:16px;border:1px solid #ddd}.apply-field-fixture{margin:12px}input,select{padding:8px}button{margin:8px}[hidden]{display:none!important}</style>
+<body>
+<form onsubmit="window.fixtureSubmitted=true;event.preventDefault()">
+<section data-nav-id="block-basicInfo">
+  <h2>个人信息</h2><div class="apply-fields-fixture">
+  <div class="apply-field-fixture" data-key="name"><div class="title-fixture">姓名 *</div><div class="ctrl-fixture"><input placeholder="请输入姓名" required></div></div>
+  <div class="apply-field-fixture" data-key="phone"><div class="title-fixture">手机号码 *</div><div class="ctrl-fixture"><input placeholder="请输入手机号" type="tel" required pattern="1[0-9]{10}"></div></div>
+  <div class="apply-field-fixture" data-key="email"><div class="title-fixture">邮箱 *</div><div class="ctrl-fixture"><input placeholder="请输入邮箱" type="email" required></div></div>
+  <div class="apply-field-fixture" data-key="age"><div class="title-fixture">年龄</div><div class="ctrl-fixture"><input placeholder="年龄" type="number" min="0" max="120"></div></div>
+  <div class="apply-field-fixture" data-key="birthDate"><div class="title-fixture">出生日期</div><div class="ctrl-fixture"><input placeholder="出生日期" type="date"></div></div>
+  <div class="apply-field-fixture" data-key="unknown"><div class="title-fixture">性别 *</div><select required><option value="">请选择</option><option>其他</option></select></div>
+  </div>
+</section>
+<section data-nav-id="block-educationInfo"><h2>教育背景 <button type="button">添加</button></h2>
+  <div class="apply-fields-fixture multi-fixture">
+  <div class="apply-field-fixture" data-key="school"><div class="title-fixture">学校名称 *</div><div class="ctrl-fixture"><input placeholder="请输入就读学校" required></div></div>
+  <div class="apply-field-fixture" data-key="major"><div class="title-fixture">专业名称 *</div><div class="ctrl-fixture"><input placeholder="请输入专业名称" required></div></div>
+  <div class="apply-field-fixture" data-key="degree"><div class="title-fixture">学历 *</div><div class="ctrl-fixture"><select required><option value="">请选择</option><option value="bachelor">本科</option><option value="master">硕士</option><option value="doctor">博士</option></select></div></div>
+  <div class="apply-field-fixture" data-key="startDate"><div class="title-fixture">入学时间</div><div class="ctrl-fixture"><input type="month"></div></div>
+  <div class="apply-field-fixture" data-key="endDate"><div class="title-fixture">毕业时间</div><div class="ctrl-fixture"><input type="month"></div></div>
+  </div>
+</section>
+<label><input type="checkbox" id="consent">同意隐私政策</label><button type="submit">预览并提交</button>
+</form>
+<script>
+// Synthetic widgets reproduce the researched Moka container and display-value contract.
+window.makeCustom = (field, options) => {
+  const holder = field.querySelector('.ctrl-fixture');
+  const placeholder = holder.querySelector('input')?.placeholder || '请选择';
+  holder.innerHTML = '<div class="sd-Dropdown-container-fixture"><div class="sd-Select-container-fixture"><span class="sd-Input-display-value-fixture"></span><input></div><div class="sd-Dropdown-dropdown-fixture" hidden></div></div>';
+  const input = holder.querySelector('input');
+  input.placeholder = placeholder;
+  const menu = holder.querySelector('.sd-Dropdown-dropdown-fixture');
+  for (const value of options) {
+    const option = document.createElement('div');
+    option.className = 'sd-Select-common-item-fixture';
+    const label = document.createElement('span');
+    label.className = 'option-label-fixture'; label.textContent = value;
+    option.append(label); menu.append(option);
+    option.addEventListener('click', () => { holder.querySelector('.sd-Input-display-value-fixture').textContent = value; input.value = ''; menu.hidden = true; });
+  }
+  input.addEventListener('click', () => { menu.hidden = false; });
+};
+</script>
+</body></html>

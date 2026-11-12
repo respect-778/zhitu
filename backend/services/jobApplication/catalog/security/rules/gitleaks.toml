@@ -1,0 +1,3 @@
+title = "Catalog security review: pinned default Gitleaks rules"
+[extend]
+useDefault = true

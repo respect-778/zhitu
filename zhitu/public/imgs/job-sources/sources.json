@@ -1,0 +1,15 @@
+{
+  "boss.ico": "https://static.zhipin.com/favicon.ico",
+  "liepin.ico": "https://concat.lietou-static.com/fe-www-pc/v6/static/images/favicon.371e30de.ico",
+  "51job.ico": "https://fecdn.51jobcdn.com/fe/public/icons/favicon51.ico",
+  "mohrss.jpeg": {
+    "asset": "https://cdnjdphoto.aikan.pdnews.cn/upload/ueditor/image/20221207/a_785084354668785664.jpeg",
+    "page": "https://www.peopleapp.com/author/2022708",
+    "description": "浜哄姏璧勬簮鍜岀ぞ浼氫繚闅滈儴瀹樻柟璐﹀彿澶村儚"
+  },
+  "zhaopin.jpg": {
+    "asset": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/29/18/34/2918349a-66cd-f351-05f1-b6d06baa58e3/AppIcon-0-0-1x_U007ephone-0-1-0-sRGB-85-220.png/512x512bb.jpg",
+    "page": "https://apps.apple.com/cn/app/%E6%99%BA%E8%81%94%E6%8B%9B%E8%81%98-%E6%8B%9B%E8%81%98%E6%89%BE%E5%B7%A5%E4%BD%9C%E6%B1%82%E8%81%8C%E6%8B%9B%E4%BA%BA%E8%BD%AF%E4%BB%B6/id488033535?uo=4",
+    "publisher": "Beijing Zhiliansanke Talent Service Co., Ltd."
+  }
+}

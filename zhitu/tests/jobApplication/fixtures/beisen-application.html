@@ -1,0 +1,59 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>合成北森申请表</title><style>body{font:16px sans-serif}.form-item{margin:12px}.phoenix-select{width:200px;min-height:35px}.phoenix-select__tagItem{display:block}.phoenix-selectList__listItem{padding:8px}[hidden]{display:none!important}</style><body><form onsubmit="window.fixtureSubmitted=true;event.preventDefault()"><div class="ux-standard-form"><div class="form" name="Recruitment_extPerfect_tenant_basic"><div class="fields-col"><div class="form-item form-item--phoenix" data-key="name"><div class="form-item__title"><label class="form-item__text">姓名</label><i class="form-item__required">*</i></div><div class="form-item__control"><input class="phoenix-input__input"></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="email"><div class="form-item__title"><label class="form-item__text">邮箱</label><i class="form-item__required">*</i></div><div class="form-item__control"><input class="phoenix-input__input"></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="phone"><div class="form-item__title"><label class="form-item__text">手机号码</label><i class="form-item__required">*</i></div><div class="form-item__control"><input class="phoenix-input__input" placeholder="请输入11位手机号"></div></div></div></div></div><section id="education"><h2>教育经历</h2><div class="ux-standard-form"><div class="form" name="Recruitment_extPerfect_tenant_education"><div class="fields-col"><div class="form-item form-item--phoenix" data-key="school"><div class="form-item__title"><label class="form-item__text">学校名称</label><i class="form-item__required">*</i></div><div class="form-item__control"><input class="phoenix-input__input"></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="startDate"><div class="form-item__title"><label class="form-item__text">开始时间</label><i class="form-item__required">*</i></div><div class="form-item__control"><div class="phoenix-select"><div class="phoenix-select__placeHolder">请选择</div><ul class="phoenix-select__content"><li><input class="phoenix-select__input"></li></ul><div class="phoenix-select__switchArrow" role="button">▼</div></div></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="endDate"><div class="form-item__title"><label class="form-item__text">结束时间</label><i class="form-item__required">*</i></div><div class="form-item__control"><div class="phoenix-select"><div class="phoenix-select__placeHolder">请选择</div><ul class="phoenix-select__content"><li><input class="phoenix-select__input"></li></ul><div class="phoenix-select__switchArrow" role="button">▼</div></div></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="major"><div class="form-item__title"><label class="form-item__text">专业名称</label><i class="form-item__required">*</i></div><div class="form-item__control"><input class="phoenix-input__input"></div></div></div><div class="fields-col"><div class="form-item form-item--phoenix" data-key="degree"><div class="form-item__title"><label class="form-item__text">学历</label><i class="form-item__required">*</i></div><div class="form-item__control"><div class="phoenix-select"><div class="phoenix-select__placeHolder">请选择</div><ul class="phoenix-select__content"><li><input class="phoenix-select__input"></li></ul><div class="phoenix-select__switchArrow" role="button">▼</div></div></div></div></div></div></div></section><div class="ux-standard-form unknown"><div class="form" name="Recruitment_extPerfect_tenant_other"><div class="fields-col"><div class="form-item form-item--phoenix" data-key="unknown"><div class="form-item__title"><label class="form-item__text">语言类型</label><i class="form-item__required">*</i></div><div class="form-item__control"><div class="phoenix-select"><div class="phoenix-select__placeHolder">请选择</div><ul class="phoenix-select__content"><li><input class="phoenix-select__input"></li></ul><div class="phoenix-select__switchArrow" role="button">▼</div></div></div></div></div></div></div><label><input type="checkbox" id="consent">同意隐私政策</label><button type="submit">确认投递</button><button type="button" onclick="window.fixtureSaved=true">保存</button></form>
+<script>
+window.setupBeisen = () => {
+  for (const selector of document.querySelectorAll('[data-key="degree"] .phoenix-select')) {
+    selector.querySelector('.phoenix-select__switchArrow').onclick = () => {
+      selector.querySelector('.phoenix-select__placeHolder').classList.add('phoenix-select__placeHolder--active');
+      const layer = document.createElement('div'); layer.className = 'common-unmodeled-layer__layerContent';
+      const menu = document.createElement('div'); menu.className = 'phoenix-selectList'; layer.append(menu);
+      for (const label of ['本科','硕士研究生','博士研究生']) {
+        const item = document.createElement('div'); item.className = 'phoenix-selectList__listItem';
+        item.innerHTML = '<span class="phoenix-selectList__singleLabel">' + label + '</span>';
+        item.onclick = () => {
+          let value = selector.querySelector('.phoenix-select__tagItem');
+          if (!value) { value = document.createElement('span'); value.className = 'phoenix-select__tagItem'; selector.append(value); }
+          value.textContent = label; selector.querySelector('.phoenix-select__placeHolder').classList.remove('phoenix-select__placeHolder--active'); layer.remove();
+        };
+        menu.append(item);
+      }
+      document.body.append(layer);
+    };
+  }
+  for (const selector of document.querySelectorAll('[data-key="startDate"] .phoenix-select,[data-key="endDate"] .phoenix-select')) {
+    selector.querySelector('.phoenix-select__switchArrow').onclick = () => {
+      const placeholder = selector.querySelector('.phoenix-select__placeHolder');
+      placeholder.classList.add('phoenix-select__placeHolder--active');
+      const layer = document.createElement('div'); layer.className = 'common-unmodeled-layer';
+      const picker = document.createElement('div'); picker.className = 'phoenix-date-picker'; layer.append(picker);
+      let selectedYear = 2026; let decade = 2020;
+      const months = () => {
+        picker.innerHTML = '<div class="phoenix-calendar-month-calendar"><button type="button" class="phoenix-calendar-month-panel-year-select">' + selectedYear + 'x</button></div>';
+        picker.querySelector('button').onclick = years;
+        for (let month = 1; month <= 12; month++) {
+          const cell = document.createElement('td'); cell.className = 'phoenix-calendar-month-panel-cell';
+          const link = document.createElement('a'); link.className = 'phoenix-calendar-month-panel-month'; link.textContent = month + '月'; cell.append(link);
+          link.onclick = () => {
+            let value = selector.querySelector('.phoenix-select__tagItem');
+            if (!value) { value = document.createElement('span'); value.className = 'phoenix-select__tagItem'; selector.append(value); }
+            value.textContent = selectedYear + '/' + String(month).padStart(2, '0');
+            selector.querySelector('input').value = ''; placeholder.classList.remove('phoenix-select__placeHolder--active'); layer.remove();
+          };
+          picker.firstChild.append(cell);
+        }
+      };
+      const years = () => {
+        picker.innerHTML = '<div class="phoenix-calendar-year-panel"><span class="phoenix-calendar-year-panel-decade-select-content">' + decade + '-' + (decade + 9) + '</span><button type="button" class="phoenix-calendar-year-panel-prev-decade-btn">上十年</button><button type="button" class="phoenix-calendar-year-panel-next-decade-btn">下十年</button></div>';
+        picker.querySelector('.phoenix-calendar-year-panel-prev-decade-btn').onclick = () => { decade -= 10; years(); };
+        picker.querySelector('.phoenix-calendar-year-panel-next-decade-btn').onclick = () => { decade += 10; years(); };
+        for (let year = decade - 1; year <= decade + 10; year++) {
+          const cell = document.createElement('a'); cell.className = 'phoenix-calendar-year-panel-year'; cell.textContent = year;
+          cell.onclick = () => { selectedYear = year; months(); };
+          picker.firstChild.append(cell);
+        }
+      };
+      months(); document.body.append(layer);
+    };
+  }
+};
+window.setupBeisen();
+</script></body></html>

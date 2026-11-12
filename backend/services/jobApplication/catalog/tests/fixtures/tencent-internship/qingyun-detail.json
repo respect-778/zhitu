@@ -1,0 +1,70 @@
+{
+  "message": "",
+  "status": 0,
+  "data": {
+    "postId": "1231829074687944824",
+    "id": 519,
+    "tid": 7,
+    "tidName": "青云课题",
+    "fid": 753,
+    "oldId": 1,
+    "title": "混元基座模型-大规模强化学习框架性能优化研究",
+    "desc": "",
+    "request": "",
+    "workCity": "2",
+    "workCityList": [
+      "北京"
+    ],
+    "recruitCity": "47",
+    "recruitCityList": [
+      "远程面试"
+    ],
+    "ordering": 144,
+    "status": null,
+    "selectedWorks": "0",
+    "withFile": "0",
+    "ideptId": "282",
+    "intentionBGDList": [
+      {
+        "id": 958,
+        "title": "TEG技术工程事业群",
+        "showTitle": "TEG",
+        "showTxt": "技术工程事业群",
+        "isLock": null,
+        "status": null,
+        "ordering": 958,
+        "departmentList": [
+          {
+            "id": 282,
+            "name": "腾讯混元基础模型部",
+            "bgid": 958,
+            "comment": "基础模型部负责混元大模型的前沿技术探索与基础模型研发，聚焦模型结构、数据与训练策略、强化学习及Agent能力，协同各模态研发能力，高效开发并迭代基础模型架构，面向AGI愿景探索智能上限、确保技术领先；同时构建基于大模型的AI PaaS中台能力，赋能公司内外部的产品创新与业务应用。",
+            "ordering": 1,
+            "enableFlag": 1,
+            "workCity": "2",
+            "workCityList": [
+              "北京"
+            ]
+          }
+        ]
+      }
+    ],
+    "projectId": 20,
+    "projectName": "青云计划-实习生",
+    "recruitType": 2,
+    "recruitLabelName": "实习生 青云计划",
+    "introduction": "",
+    "fileUrl": "",
+    "coverUrl": "",
+    "graduateBonus": "",
+    "internBonus": "此课题同时招聘应届实习生和低年级实习生。",
+    "isQingyun": 1,
+    "techTagId": 753,
+    "techTagName": "智能体、强化学习",
+    "topicDetail": "课题背景：\n强化学习已经成为提升模型效果最重要的一环，Agent等训练也会强化框架带来了复杂性和新的挑战。强化学习框架如何构建、如何优化加速以及和强化算法更好协同需要深入探索和研究。\n\n课题挑战：\n1. 需要对强化学习解决的问题以及算法发展方向有深入的研究，更好的指导框架迭代和性能优化；\n2. 需要结合硬件特性、模型以及框架（训练、推理、Agent Env）深入分析当前训练存在的性能问题，找到解决问题的方法和思路。\n\n具体工作：\n构建超大规模、高性能、高易用性的强化学习框架，支持序列、模型、机器规模的scaling，支持多模态数据（文本、图片、视频、语音），支持reasoning和Agent高效训练，以及支持算法强化策略自主探索，支持混元大模型的强化训练，同时基于硬件特性进行框架深层次优化，如通信和通信overlp以及通信和计算融合优化等提升强化训练效率。",
+    "topicRequirement": "学历和专业要求：\n机器学习/人工智能/计算机等相关专业硕士以上学历；\n\n技术技能要求：\n1.熟悉主流训练和推理框架PyTorch、Megatron、vLLM、SGLang等，掌握3D并行、ZeRO机制、Flash-Attn、kvcache、量化、投机采样、算子优化等的原理、使用场景、优劣势以及可优化方向；\n2.精通RL、Agent训练流程，在框架开发和优化上有深入实践，在稳定性、大规模训练上有相关经验的优先，在低精度训练、收敛稳定优化有相关经验的优先；\n\n软性素质要求：\n1.对大模型、强化学习前沿技术比较敏锐者优先；\n2.良好的沟通能力、解决问题能力，具备强烈的进取心、自驱力及跨领域学习能力，团队合作精神极佳。",
+    "projectInternDirections": null,
+    "subDirectionId": "",
+    "subDirectionDtos": null
+  }
+}

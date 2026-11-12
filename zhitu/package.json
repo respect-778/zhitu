@@ -7,7 +7,21 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:module": "playwright test",
+    "applications:api": "python ../backend/services/jobApplication/consumer/server/application_mail.py",
+    "catalog:api": "npm --prefix ../backend run catalog:api --",
+    "catalog:crawl": "npm --prefix ../backend run catalog:crawl --",
+    "catalog:verify": "npm --prefix ../backend run catalog:verify --",
+    "catalog:ingest": "npm --prefix ../backend run catalog:ingest --",
+    "catalog:publish": "npm --prefix ../backend run catalog:publish --",
+    "catalog:typecheck": "npm --prefix ../backend run catalog:typecheck --",
+    "catalog:test": "npm --prefix ../backend run catalog:test --",
+    "catalog:db:generate": "npm --prefix ../backend run catalog:db:generate --",
+    "catalog:db:validate": "npm --prefix ../backend run catalog:db:validate --",
+    "catalog:db:migrate": "npm --prefix ../backend run catalog:db:migrate --",
+    "catalog:db:status": "npm --prefix ../backend run catalog:db:status --",
+    "catalog:db:test": "npm --prefix ../backend run catalog:db:test --"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
@@ -73,6 +87,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "@playwright/test": "1.58.2"
   }
 }

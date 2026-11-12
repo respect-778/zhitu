@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>合成飞书申请表</title>
+<style>body{font:16px sans-serif}.ud-formily-item{margin:12px}.ud__select__selector,input{min-width:160px;padding:8px}.ud__select__list__item{padding:8px}[hidden]{display:none!important}</style>
+<body><form onsubmit="window.fixtureSubmitted=true;event.preventDefault()"><main class="resumeEditForm-wrapper">
+<section class="applyFormModuleWrapper__fixture"><h2 class="applyFormModuleWrapper-text">基本信息</h2>
+<div class="ud-formily-item" data-form-field-name="name"><div class="ud-formily-item-label-content"><label>姓名</label><i class="ud-formily-item-asterisk">*</i></div><input required></div>
+<div class="ud-formily-item" data-form-field-name="mobile"><div class="ud-formily-item-label-content"><label>手机号码</label><i class="ud-formily-item-asterisk">*</i></div><input type="tel" placeholder="手机号码" required></div>
+<div class="ud-formily-item" data-form-field-name="email"><div class="ud-formily-item-label-content"><label>邮箱</label><i class="ud-formily-item-asterisk">*</i></div><input type="email" required></div>
+<div class="ud-formily-item unknown" data-form-field-name="current_city"><div class="ud-formily-item-label-content"><label>所在地点</label><i class="ud-formily-item-asterisk">*</i></div><div class="ud__select__selector">请选择</div></div>
+</section><section class="applyFormModuleWrapper__fixture"><h2 class="applyFormModuleWrapper-text">教育经历</h2>
+<div class="apply-form-array-card__fixture">
+<div class="ud-formily-item" data-form-field-name="school"><div class="ud-formily-item-label-content"><label>学校名称</label><i class="ud-formily-item-asterisk">*</i></div><input required></div>
+<div class="ud-formily-item" data-form-field-name="field_of_study"><div class="ud-formily-item-label-content"><label>专业</label><i class="ud-formily-item-asterisk">*</i></div><input required></div>
+<div class="ud-formily-item" data-form-field-name="degree"><div class="ud-formily-item-label-content"><label>学历</label><i class="ud-formily-item-asterisk">*</i></div><div class="ud__select__selector"><span class="ud__select__selector__selectItem"></span><input class="ud__select__selector__search__input"></div></div>
+<div class="ud-formily-item" data-form-field-name="start_end_time"><div class="ud-formily-item-label-content"><label>起止时间</label><i class="ud-formily-item-asterisk">*</i></div><div class="throne-biz-date-range-picker-wrapper"><div class="throne-biz-date-range-picker-input"><input></div><div class="throne-biz-date-range-picker-input"><input></div></div></div>
+<div class="ud-formily-item unknown" data-form-field-name="education_type"><div class="ud-formily-item-label-content"><label>学历类型</label><i class="ud-formily-item-asterisk">*</i></div><input></div>
+</div></section></main><label><input type="checkbox" id="consent">同意隐私政策</label><button type="submit">提交</button><button type="button" onclick="window.fixtureSaved=true">保存</button></form>
+<script>
+window.setupFeishu = () => {
+  for (const [index, selector] of [...document.querySelectorAll('[data-form-field-name="degree"] .ud__select__selector')].entries()) {
+    selector.setAttribute('aria-controls', 'degree-menu-' + index);
+    selector.onclick = () => {
+      if (document.querySelector('.ud__select__dropdown')) return;
+      const menu = document.createElement('div'); menu.id = selector.getAttribute('aria-controls'); menu.className = 'ud__select__dropdown';
+      for (const label of ['本科','硕士','博士']) {
+        const item = document.createElement('div'); item.className = 'ud__select__list__item';
+        item.innerHTML = '<span class="ud__select__list__item__content">' + label + '</span>';
+        item.onclick = () => { selector.querySelector('span').textContent = label; selector.querySelector('input').value = ''; menu.remove(); };
+        menu.append(item);
+      }
+      document.body.append(menu);
+    };
+  }
+  for (const input of document.querySelectorAll('.throne-biz-date-range-picker-input input')) {
+    input.onkeydown = event => { if (event.key === 'Enter') { event.preventDefault(); input.dataset.committed = input.value; } };
+    input.onblur = () => { input.value = input.dataset.committed || ''; };
+  }
+};
+window.setupFeishu();
+</script></body></html>

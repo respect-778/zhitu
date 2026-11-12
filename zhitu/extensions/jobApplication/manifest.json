@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Knowvia 浏览器助手",
+  "version": "0.8.7",
+  "version_name": "0.8.7-local",
+  "description": "连接当前浏览器读取岗位、处理 BOSS 会话，并使用已有简历填写 Moka、飞书招聘和北森企业官网申请表。仅支持本地测试。",
+  "minimum_chrome_version": "106",
+  "permissions": ["scripting", "storage", "alarms"],
+  "host_permissions": ["https://www.zhipin.com/*", "https://www.zhaopin.com/*", "https://www.liepin.com/*", "https://app.mokahr.com/*", "https://*.jobs.feishu.cn/*", "https://*.zhiye.com/*", "http://127.0.0.1/*", "http://localhost/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "content_scripts": [{
+    "matches": ["http://127.0.0.1/*", "http://localhost/*"],
+    "js": ["content.js"],
+    "run_at": "document_start"
+  }]
+}

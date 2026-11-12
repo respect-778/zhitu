@@ -28,6 +28,7 @@ const Header: React.FC = () => {
     { key: '/path', label: '学习规划' },
     { key: '/community', label: '知识广场' },
     { key: '/resume', label: '简历制作' },
+    { key: '/applications', label: '网申投递' },
     { key: '/chat', label: '学习助手' },
     { key: '/docs', label: '使用文档' }
   ]

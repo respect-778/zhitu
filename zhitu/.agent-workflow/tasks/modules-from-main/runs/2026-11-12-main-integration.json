@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "summary": "从最新 main 接入独立模块并完成代码验证",
+  "base": "261f31dada303c9b0f9734ffc7b00b301fd832b7",
+  "branch": "codex/job-application",
+  "proofPaths": [
+    "zhitu/docs/jobApplication/verification.md",
+    "zhitu/src/pages/JobApplication",
+    "backend/services/jobApplication"
+  ],
+  "checks": [
+    "frontend/backend build",
+    "module lint",
+    "81 browser regressions",
+    "53 host unit tests",
+    "144 catalog tests; 5 DB skips",
+    "12 mail tests"
+  ],
+  "remoteVerification": "performed after commit/upload; see delivery receipt"
+}

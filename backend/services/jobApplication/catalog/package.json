@@ -1,0 +1,41 @@
+{
+  "name": "@knowvia/job-catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.12.0 <25"
+  },
+  "exports": {
+    "./contracts": "./contracts/index.ts"
+  },
+  "scripts": {
+    "api": "node src/api/main.ts",
+    "crawl": "node src/worker/main.ts",
+    "verify": "node src/worker/verify-tencent.ts",
+    "ingest": "node src/worker/ingest-capture.ts",
+    "publish": "node src/storage/publish-cli.ts",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "node --test tests/*.test.ts",
+    "db:generate": "node src/storage/prisma-cli.ts generate",
+    "db:validate": "node src/storage/prisma-cli.ts validate",
+    "db:migrate": "node src/storage/prisma-cli.ts migrate",
+    "db:status": "node src/storage/prisma-cli.ts status",
+    "db:test": "node --test tests/db-upsert.test.ts"
+  },
+  "dependencies": {
+    "@crawlee/basic": "3.18.2",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "exceljs": "4.4.0",
+    "fastify": "5.12.8",
+    "pdfjs-dist": "6.5.438",
+    "pg": "8.23.1",
+    "saxes": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.4",
+    "prisma": "7.10.1",
+    "typescript": "5.9.3"
+  }
+}
